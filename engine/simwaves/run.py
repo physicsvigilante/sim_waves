@@ -75,6 +75,10 @@ def _evaluate_inner(sc):
         except SceneError as exc:
             errors.append((name, exc))
             continue
+        except Exception as exc:                       # an engine fault in one observable only
+            errors.append((name, SceneError(f"engine internal error ({type(exc).__name__}: {exc}); "
+                                            f"please report it")))
+            continue
         if not isinstance(v, sp.logic.boolalg.BooleanAtom):
             v = sp.simplify(v)
             if isinstance(v, sp.Basic) and not isinstance(v, sp.Tuple) and \
@@ -83,14 +87,12 @@ def _evaluate_inner(sc):
                 continue
         results[name], sc.basis[name] = v, basis
     why = harmonic_problem(sc, sol, final=True)
-    if why and not errors:
-        errors.append(("modes", InconsistentError(why)))
-    if errors:
-        first = errors[0][1]
-        msg = first.args[0] if len(errors) == 1 else "; ".join(f"observe.{n}: {e}" for n, e in errors)
-        exc = type(first)(msg)
+    if why:                                   # a whole-scene contradiction, not one observable
+        exc = InconsistentError(why)
         exc.partial = (sol, results)
         raise exc
+    # an observable that cannot be computed is reported on its own; the others stand
+    sc.obs_errors = dict(errors)
     return sol, results
 
 

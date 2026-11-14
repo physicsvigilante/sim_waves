@@ -278,9 +278,15 @@ def _panel(sc, spec, sol, illus, missing, fixed):
 # ------------------------------------------------------------------ scene export
 def _numbers(sc, res, illus):
     out = {}
+    for k, e in getattr(sc, "obs_errors", {}).items():
+        out[k] = {"text": f"not available: {e}", "basis": None, "value": None, "unavailable": True}
     for k, v in res.items():
         if isinstance(v, sp.logic.boolalg.BooleanAtom):
             out[k] = {"text": str(bool(v)), "basis": sc.basis.get(k)}
+            continue
+        if isinstance(v, sp.Tuple):                 # a list result: shown as text, no single value
+            out[k] = {"text": show(v), "basis": sc.basis.get(k), "value": None,
+                      "uses_illustrative": bool(v.free_symbols & set(illus))}
             continue
         e = v.xreplace(illus)
         val = _finite(_num(e)) if not e.free_symbols and e.is_real is not False else None

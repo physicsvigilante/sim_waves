@@ -132,6 +132,18 @@ with tempfile.TemporaryDirectory() as td:
     blob = html.split('type="application/json">', 1)[1].split("</script>", 1)[0]
     check("S2 data block contains no raw '<'", "<" not in blob)
 
+# 10: list-valued and unavailable observables are exported, not crashes (diag1 teacher test)
+lst = export({"media": {"air": {"type": "gas", "v": "340 m/s"}},
+              "resonators": {"p": {"type": "pipe", "on": "air", "length": "85 cm", "ends": ["closed", "open"],
+                                   "end_correction": "0 m"}},
+              "observe": {"nodes": "nodes(p, harmonic=3)", "bad": "frequency(p, harmonic=2)"},
+              "view": [{"plot": "frequency(p, harmonic=1)*s", "vs": "s", "range": ["0 m", "1 m"]}],
+              "symbols": {"s": "positive"}})
+r10 = lst["results"]
+check("10 list observable exported as text", r10["nodes"]["value"] is None and "17/30" in r10["nodes"]["text"],
+      str(r10.get("nodes")))
+check("10 unavailable observable marked, others kept", r10["bad"].get("unavailable") is True, str(r10.get("bad")))
+
 bad = [r for r in results if not r[1]]
 for name, ok, detail in results:
     print(("PASS " if ok else "FAIL ") + name + (f"  [{detail}]" if detail and not ok else ""))

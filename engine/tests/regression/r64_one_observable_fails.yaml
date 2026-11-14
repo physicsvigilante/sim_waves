@@ -1,0 +1,7 @@
+# charter 7: an observable that cannot be computed is reported on its own; the others stand
+media: {air: {type: gas, v: 340 m/s}}
+resonators: {p: {type: pipe, on: air, length: 85 cm, ends: [closed, open], end_correction: 0 m}}
+observe:
+  f1: "frequency(p, harmonic=1)"
+  bad: "frequency(p, harmonic=2)"
+expect: {f1: 100}

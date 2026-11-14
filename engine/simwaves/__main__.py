@@ -68,7 +68,10 @@ def main(argv):
     for k, v in res.items():
         basis = getattr(sc, "basis", {}).get(k, "exact")
         print(f"{k} = {show(v)}" + ("" if basis == "exact" else f"  <{basis}>"))
-    return 0
+    errs = getattr(sc, "obs_errors", {})
+    for k, e in errs.items():
+        print(f"{k}: NOT AVAILABLE ({type(e).__name__}: {e})")
+    return 1 if errs else 0
 
 
 sys.exit(main(sys.argv[1:]))

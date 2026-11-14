@@ -68,7 +68,11 @@ def run_file(path):
     if "error" in expect:
         kind = ERRORS[expect["error"]]
         try:
-            evaluate(load(path))
+            sc_ = load(path)
+            evaluate(sc_)
+            for oname, oexc in getattr(sc_, "obs_errors", {}).items():
+                if isinstance(oexc, kind):        # an observable refused for the expected reason
+                    raise oexc
         except kind as exc:
             want = expect.get("message")
             if want and want not in str(exc):
@@ -96,7 +100,12 @@ def run_file(path):
         for _, _, b in ver:
             kinds[b] = kinds.get(b, 0) + 1
         lines.append("  re-checked facts: " + ", ".join(f"{v} {k}" for k, v in sorted(kinds.items())))
+    errs = getattr(sc, "obs_errors", {})
     for key, exp in expect.items():
+        if key in errs:
+            lines.append(f"  {key}: NOT AVAILABLE ({type(errs[key]).__name__}: {errs[key]})")
+            status = "FAIL"
+            continue
         if key not in res:
             lines.append(f"  {key}: no such observable")
             status = "FAIL"

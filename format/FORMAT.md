@@ -94,6 +94,8 @@ w: {harmonic: {on: rope, A: 1 cm, f | omega | period, lambda | k, v,
 p: {given: "3/(2 + (x - 4*t)**2)", units: {x: m, t: s, y: m}, on: rope}
 # 3. pulse on a string, launched from the coordinate origin
 p: {pulse: {on: rope, from: lower_end, toward: up}}
+# v0: a pulse has only a front position (no shape), so it cannot meet a junction; a pulse on a
+# string with a junction is refused. Use a harmonic wave to get reflection and transmission.
 ```
 
 - **Phase convention:** `y = A sin(omega*t - d*k*x + phase)`, where `d = +1` for +x and
@@ -371,6 +373,16 @@ solving; relative tolerance), `abs`, `sqrt`, `sin`, `cos`, `tan`, `exp`, `log`, 
 
 ## How results are reported
 
+- **Each observable stands on its own.**
+  - If one cannot be computed (an even harmonic in a closed pipe, a limit that does not
+    exist, an empty list given to `max`), it is reported as NOT AVAILABLE with the
+    reason. The other observables are still computed and shown, and the run exits with a
+    non-zero status.
+  - Errors in the facts (inconsistent, ambiguous, undetermined) stop the whole run, because
+    no result would then be meaningful.
+- **Value at a point:** `at(expr, d=120[m])` evaluates an observable with chosen values for
+  scene symbols, or for `x` and `t`, e.g. `at(relative_intensity(up, direct), d=120[m])`.
+  Unknowns cannot be set this way; their values come from the facts.
 - **Every result has a basis:**
   - `exact` (symbolic engine result);
   - `proved` (an `equivalent()` that holds symbolically);

@@ -1,0 +1,8 @@
+# diag1 Track B: a pulse on a junctioned string used to ignore the junction (silent wrong)
+media:
+  a: {type: string, mu: 0.01 kg/m, tension: 9 N}
+  b: {type: string, mu: 0.04 kg/m, tension: 9 N}
+junctions: {J: {at: 0 m, left: a, right: b}}
+waves: {p: {pulse: {on: a, from: left}}}
+observe: {f: "front(p, t=1[s])"}
+expect: {error: rejected, message: "junctions"}
