@@ -1,0 +1,16 @@
+id: 23/04/bmc_006
+assume:
+  - "Open-open test: consecutive resonances are harmonics n, n+1, n+2."
+unknowns: {L: positive, n: integer}
+media:
+  air: {type: gas, v: 340 m/s}
+resonators:
+  oo: {type: pipe, on: air, length: L, ends: [open, open], end_correction: 0 m}
+given:
+  - {fact: "frequency(oo, harmonic=n) == 425[Hz]", source: stated}
+  - {fact: "frequency(oo, harmonic=n + 1) == 595[Hz]", source: stated}
+  - {fact: "frequency(oo, harmonic=n + 2) == 765[Hz]", source: stated}
+  - {fact: "n >= 1", source: convention}
+observe:
+  L: "L"
+  n: "n"

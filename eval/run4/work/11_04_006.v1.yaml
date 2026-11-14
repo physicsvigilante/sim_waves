@@ -1,0 +1,23 @@
+id: 11/04/006
+assume:
+  - "Speakers are coherent point sources radiating spherically (stated: uniformly in all directions, same phase)."
+  - "Pressure amplitude at 1 m is taken proportional to sqrt(power) (same medium, same frequency); plain numbers sqrt(1.2e-3), sqrt(1.8e-3) in arbitrary units, used only through ratios."
+media: {air: {type: gas, v: 330 m/s}, open: {type: open3d}}
+emitters:
+  e1: {on: open, geometry: point, power: "1.2e-3 W"}
+  e2: {on: open, geometry: point, power: "1.8e-3 W"}
+sources:
+  S1: {on: air, f: 220 Hz, A: 0.034641016, phase: 0, spreading: spherical, A_at: 1 m}
+  S2: {on: air, f: 220 Hz, A: 0.042426407, phase: 0, spreading: spherical, A_at: 1 m}
+rays:
+  r1: {from: S1, length: 0.75 m}
+  r2: {from: S2, length: 3 m}
+given:
+  - {fact: "length(r1) == 0.75[m]", source: stated}
+observe:
+  dphi: "wrap(phase_difference(r1, r2))"
+  dpath: "path_difference(r2, r1)"
+  wl: "wavelength(r1)"
+  I1: "intensity(e1, r=0.75[m])"
+  I2: "intensity(e2, r=3[m])"
+  Itot: "intensity(e1, r=0.75[m])*relative_intensity(r1, r2)/relative_intensity(r1)"

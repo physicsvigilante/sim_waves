@@ -1,0 +1,9 @@
+answer: {a: "0.14 s", b: "reflected 1.5 cm, transmitted 2 cm"}
+final_scene: 11_02_011.v2.yaml
+engine_fit: partial
+hand_steps: ["t = L_PQ/v_PQ + L_QR/v_QR typed into observe (kinematics: lengths 4.8 m, 2.56 m divided by engine speeds 80 and 32 m/s)"]
+coverage: partial
+not_represented: "Pulse is modelled as a harmonic wave (no pulse with junction); the far end R and lengths do not enter the junction; junction at x=0 with PQ extent not limited by length 4.8 m."
+missing_in_source: "frequency/shape of the pulse (irrelevant to coefficients)"
+reasoning: "Engine: v_PQ=80, v_QR=32, amplitude(w_reflected)=1.5 cm, amplitude(w_transmitted)=2 cm, sum of travel times 0.14 s."
+friction: "String lengths are not tied to the junction extent; travel time over a length needs a hand division; pulses cannot meet junctions (only harmonic waves)."

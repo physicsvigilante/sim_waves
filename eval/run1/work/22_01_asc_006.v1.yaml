@@ -1,0 +1,13 @@
+id: 22/01/asc_006
+assume: ["a, b, c positive constants."]
+symbols: {a: positive, b: positive, c: positive}
+waves:
+  I:   {given: "a*cos(b*x)*sin(c*t)", units: {x: m, t: s, y: m}}
+  II:  {given: "a*sin(b*x + c*t)", units: {x: m, t: s, y: m}}
+  III: {given: "a*sin(b*x + c*t) + a*sin(b*x - c*t)", units: {x: m, t: s, y: m}}
+  IV:  {given: "a*sin(b*x - c*t)", units: {x: m, t: s, y: m}}
+observe:
+  vI: "velocity(I)"
+  vII: "velocity(II)"
+  vIII: "velocity(III)"
+  vIV: "velocity(IV)"

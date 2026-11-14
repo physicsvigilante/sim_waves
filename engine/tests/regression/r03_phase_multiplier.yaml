@@ -1,0 +1,6 @@
+# review a3: phase 2*phi -> phi = pi/4 and 5pi/4 both fit
+unknowns: {phi: phase}
+waves: {w: {harmonic: {A: 2 cm, omega: 3*pi rad/s, k: 1 1/m, dir: +x, phase: 2*phi}}}
+given: ["y(w, x=0, t=0) == 2[cm]"]
+observe: {phi: "phi"}
+expect: {error: ambiguous}

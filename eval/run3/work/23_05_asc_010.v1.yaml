@@ -1,0 +1,12 @@
+id: 23/05/asc_010
+assume:
+  - "Loading a fork with wax lowers its frequency (physical fact, but the amount is not given)."
+  - "fA is the frequency before waxing, fA2 after."
+unknowns: {fA: positive, fA2: positive}
+given:
+  - {fact: "beat_frequency(fA, 256[Hz]) == 3[Hz]", source: stated}
+  - {fact: "beat_frequency(fA2, 256[Hz]) == 3[Hz]", source: stated}
+  - {fact: "fA2 < fA", source: assumption, note: "wax lowers the frequency"}
+observe:
+  fA: "fA"
+  fA2: "fA2"

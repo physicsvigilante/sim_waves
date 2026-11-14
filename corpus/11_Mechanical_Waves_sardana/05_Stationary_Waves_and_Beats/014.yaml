@@ -1,0 +1,18 @@
+id: 11/05/014
+number: 14
+source: {problem: 11_Mechanical_Waves_sardana/05_Stationary_Waves_and_Beats/Problems/014.png, solution: 11_Mechanical_Waves_sardana/05_Stationary_Waves_and_Beats/Solutions/014.png}
+format: numerical
+statement: |
+  A 60 cm long flute can be considered to be a pipe open at both ends.
+  (a) What is the fundamental frequency when all the holes are covered?
+  (b) How far from the mouthpiece should a hole be uncovered for the fundamental frequency to be 330 Hz?
+  Take speed of sound in air as 340 m s^-1.
+figure: null
+options: null
+answer: "(a) 283.33 Hz; (b) 51.5 cm"
+answer_value: {fundamental: 283.33, hole_distance: 51.5}
+units: {fundamental: Hz, hole_distance: cm}
+verified: "(a) f = 340/(2*0.6) = 283.3 Hz. (b) effective length l = v/(2 f) = 340/660 = 0.515 m = 51.5 cm. Matches key."
+kinds: [inverse_condition]
+physics: [open_pipe, fundamental_frequency, flute]
+notes: "Idealised model, ignores end corrections. Two sub-questions."

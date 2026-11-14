@@ -1,0 +1,8 @@
+answer: [d]
+final_scene: 22_02_asc_008.v2.yaml
+engine_fit: full
+coverage: full
+not_represented: "exact heights of the points; H unused"
+missing_in_source: "figure has no scale; positions B, F, G chosen as fractions of lam (assumption); wave direction"
+reasoning: "equivalent(y_B, y_F) is True (separated by one wavelength, phase difference 0); F-G, C-E, B-G are False (phase differences pi/2, pi, pi/2). So B and F, option d."
+friction: "v1 used phase pi for a +x wave, which contradicted the 'starts going down' figure fact; fixed to phase 0 in v2. Same-height points had to be placed by hand (no way to say 'point on the falling segment at height h')."

@@ -1,0 +1,9 @@
+answer: [d]
+final_scene: 11_01_006.v3.yaml
+engine_fit: partial
+hand_steps: ["criterion that a wave function must be finite everywhere (the engine's is_travelling only tests dependence on x-vt / x+vt, and says True for all four)", "a and b diverge (a at x=-vt, b is undefined for x+vt<=0): v2 crashed on limit()=oo for a; not run cleanly"]
+coverage: partial
+not_represented: "finiteness/boundedness; domain of log"
+missing_in_source: "criterion for 'represents a wave' not stated; I used 'finite for all x,t' (c grows without bound, a and b blow up/undefined)"
+reasoning: "All four are functions of x -/+ vt (is_travelling True). Only d stays bounded (limit exp(-1e6) at large x; c reaches 1e60)."
+friction: "no observable for boundedness/finiteness; limit() to infinity gives an unhandled traceback when the result is oo (v2 crash in show())."

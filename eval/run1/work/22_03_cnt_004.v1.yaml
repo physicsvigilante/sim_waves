@@ -1,0 +1,15 @@
+id: 22/03/cnt_004
+assume:
+  - "Same medium (same mu and tension, so same speed); intensity compared via power(w) on a string."
+  - "Amplitude A1 = 1 unit, A2 = n unit unknown; w1 has f, w2 has 2f (ratio 1:2); the intensity ratio 1:36."
+symbols: {mu: positive, T: positive, f: positive, A1: positive}
+unknowns: {n: positive}
+media:
+  s: {type: string, mu: mu, tension: T}
+waves:
+  w1: {harmonic: {on: s, A: A1, f: f, dir: +x, phase: 0}}
+  w2: {harmonic: {on: s, A: n*A1, f: 2*f, dir: +x, phase: 0}}
+given:
+  - "power(w2) == 36*power(w1)"
+observe:
+  n: "n"

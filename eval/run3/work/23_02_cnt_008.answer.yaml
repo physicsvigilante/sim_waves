@@ -1,0 +1,8 @@
+answer: "9"
+final_scene: 23_02_cnt_008.v1.yaml
+engine_fit: full
+coverage: full
+not_represented: "nothing"
+missing_in_source: "none"
+reasoning: "speed ratio 2 gives mu2 = 4 mu1, reflected power fraction 1/9, so beta = 9."
+friction: "none"

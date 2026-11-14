@@ -1,0 +1,10 @@
+id: 24/01/asc_005
+assume:
+  - "Wave is plane, travelling +x (argument 8.18x - 2700t has opposite sign to +x convention? the printed form sin(kx - wt + pi/4) is a +x wave)."
+  - "Engine has no pressure-displacement relation; only the wave speed is taken from the engine."
+media:
+  air: {type: gas, v: 330 m/s}
+waves:
+  w: {harmonic: {on: air, A: 1 m, omega: 2700 rad/s, k: 8.18 rad/m, dir: +x, phase: pi/4}}
+observe:
+  v: "speed(w)"

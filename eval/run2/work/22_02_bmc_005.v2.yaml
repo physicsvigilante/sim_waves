@@ -1,0 +1,19 @@
+id: 22/02/bmc_005
+assume:
+  - "Figure positions measured from a: a=0 (crest), b=lam/4 (falling zero), c=lam/2 (trough), d=3*lam/4 (rising zero), e=lam (next crest); so ab = lam/4. Scale-free, lam symbol."
+  - "Snapshot instant taken as t=0; wave travels right (+x); source frequency n."
+symbols: {n: positive, lam: positive, A: positive}
+unknowns: {phi: phase}
+waves:
+  w: {harmonic: {A: A, f: n, lambda: lam, dir: +x, phase: phi}}
+given:
+  - {fact: "y(w, x=0, t=0) == A", source: figure, note: "a is under a crest"}
+  - {fact: "y(w, x=lam/4, t=0) == 0", source: figure, note: "b is the next zero crossing"}
+  - {fact: "slope(w, x=lam/4, t=0) < 0", source: figure, note: "curve falling at b"}
+  - {fact: "slope(w, x=3*lam/4, t=0) > 0", source: figure, note: "curve rising at d"}
+observe:
+  speed_over_n_ab: "speed(w)/(n*(lam/4))"
+  speed_over_2n_ab: "speed(w)/(2*n*(lam/4))"
+  dphi_a_after_vs_d: "wrap(phase(w, x=0, t=4/(3*n)) - phase(w, x=3*lam/4, t=0))"
+  dphi_b_e: "wrap(phase(w, x=lam/4, t=0) - phase(w, x=lam, t=0))"
+  dphi_b_e_unwrapped: "phase(w, x=lam/4, t=0) - phase(w, x=lam, t=0)"

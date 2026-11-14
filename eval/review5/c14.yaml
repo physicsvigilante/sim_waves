@@ -1,0 +1,1 @@
+observe: {a: "max_over(t, sqrt(-5 + 3*sin(t)))"}

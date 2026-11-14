@@ -1,0 +1,15 @@
+id: 23/05/cnt_005
+number: 14
+source: {problem: 23_Superposition_and_Standing_Waves/05_Vibration_in_Rods_and_Beats/Problems/cnt_005.png, solution: 23_Superposition_and_Standing_Waves/05_Vibration_in_Rods_and_Beats/Solutions/cnt_005.png}
+format: numerical
+statement: |
+  Two wires are fixed on a sonometer wire. Their tensions are in the ratio 8 : 1, the lengths in the ratio 36 : 35, the diameters in the ratio 4 : 1 and the densities in the ratio 1 : 2. Find the frequency of the beats produced (in Hz) if the note of the higher pitch has frequency of 360 Hz.
+figure: null
+answer: "10.0"
+answer_value: 10.0
+units: Hz
+verified: "n ~ (1/l) sqrt(T/(d^2 rho)): n1/n2 = (35/36) sqrt(8 * (1/16) * 2) = 35/36. Higher 360, lower 350, beats 10 Hz. Matches key."
+kinds: [ratio, derived_medium]
+physics: [beats, sonometer, string_frequency]
+notes: |
+  Same data as 23/03/asc_007. Solution text has a typo: 'l2/l1 = 36/35' (should be 35/36, which is what is substituted), and equation (i) is garbled (repeated T/(pi r^2 rho) factors, and 2 l1 in n2's denominator); numbers used are right.

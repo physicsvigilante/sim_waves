@@ -1,0 +1,15 @@
+id: 24/01/cnt_006
+number: 9
+source: {problem: 24_Sound_Waves_and_Doppler_Effect/01_Speed_and_Intensity_of_Sound_Waves/Problems/cnt_006.png, solution: 24_Sound_Waves_and_Doppler_Effect/01_Speed_and_Intensity_of_Sound_Waves/Solutions/cnt_006.png}
+format: numerical
+statement: |
+  If the intensity of sound reaching your ears is doubled, what is the change in sound level measured in decibel.
+figure: null
+options: null
+answer: "3.0"
+answer_value: 3.0
+units: dB
+verified: "delta beta = 10 log10(2) = 3.01 dB. Matches key."
+kinds: [ratio]
+physics: [sound_level, decibel, intensity]
+notes: "Consistent."

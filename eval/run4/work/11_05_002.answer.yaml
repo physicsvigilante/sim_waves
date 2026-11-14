@@ -1,0 +1,9 @@
+answer: {a: "144 cm", b: "17 Hz (17.36 Hz)"}
+final_scene: 11_05_002.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: nothing
+missing_in_source: none
+reasoning: "Spacing 18 cm and 16 cm gives n = 8, L = 1.44 m; with T = 10 N and mu = 4 g/m, f1 = 17.36 Hz."
+friction: none

@@ -1,0 +1,10 @@
+id: 22/01/cnt_006
+assume: ["Amplitude is not given and does not affect the distance; kept as a symbol a. Distance moved by the wave = speed * time."]
+symbols: {a: positive}
+waves:
+  p: {given: "a*sin(pi*(t/2 - x/4))", units: {x: m, t: s, y: m}}
+given:
+  - {fact: "wavelength(p) > 0[m]", source: stated, note: "placeholder"}
+observe:
+  v: "velocity(p)"
+  dist: "speed(p)*8[s]"

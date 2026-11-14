@@ -1,0 +1,18 @@
+id: 11/04/001
+number: 1
+source: {problem: 11_Mechanical_Waves_sardana/04_Interference/Problems/001.png, solution: 11_Mechanical_Waves_sardana/04_Interference/Solutions/001.png}
+format: numerical
+statement: |
+  Two harmonic waves are represented in SI units by,
+  y1(x, t) = 0.2 sin(x - 3t) and
+  y2(x, t) = 0.2 sin(x - 3t + phi)
+  Write the expression for the sum y = y1 + y2 for phi = pi/2 rad. If the phase difference phi between waves is unknown and amplitude of their sum is 0.32 m, calculate phi.
+figure: null
+options: null
+answer: "y = 0.28 sin(x - 3t + pi/4); phi = +-1.29 rad"
+answer_value: {A: 0.283, phase: 0.7854, phi: 1.29}
+units: "y in m; phase and phi in rad"
+verified: "A = 0.2*sqrt(2) = 0.283 m, phase pi/4. For A = 0.32: 0.32 = 0.2 sqrt(2 + 2 cos phi) gives cos phi = 0.28, phi = +-1.287 rad. Matches key."
+kinds: [given_wavefunction, inverse_condition]
+physics: [superposition, phase_difference, amplitude_superposition, phasor]
+notes: "Two parts. Solution image includes a phasor diagram (A1 = 0.2 horizontal, A2 = 0.2 vertical, resultant at angle pi/4). Key rounds 0.2*sqrt2 to 0.28."

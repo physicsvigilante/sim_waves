@@ -1,0 +1,18 @@
+id: 23/03/cnt_008
+assume:
+  - "Tension equals the hanging weight M*g. g is taken as 9.8 m/s^2; it cancels in the ratio so it cannot change M."
+  - "Five antinodes = harmonic 5, three antinodes = harmonic 3 (fixed bridges, same length, same wire)."
+symbols: {mu: positive, L: positive}
+unknowns: {M: positive, T1: positive, T2: positive}
+media:
+  w1: {type: string, mu: mu, tension: T1}
+  w2: {type: string, mu: mu, tension: T2}
+resonators:
+  r1: {type: string, on: w1, length: L, ends: [fixed, fixed]}
+  r2: {type: string, on: w2, length: L, ends: [fixed, fixed]}
+given:
+  - {fact: "T1 == 9[kg]*9.8[m]/1[s]**2", source: assumption, note: "weight of 9 kg with g=9.8; g cancels"}
+  - {fact: "T2 == M*9.8[m]/1[s]**2", source: assumption, note: "weight of M"}
+  - {fact: "frequency(r1, harmonic=5) == frequency(r2, harmonic=3)", source: stated, note: "same tuning fork"}
+observe:
+  M: "M"

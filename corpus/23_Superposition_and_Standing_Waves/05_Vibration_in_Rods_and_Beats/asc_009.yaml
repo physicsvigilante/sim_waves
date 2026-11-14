@@ -1,0 +1,19 @@
+id: 23/05/asc_009
+number: 6
+source: {problem: 23_Superposition_and_Standing_Waves/05_Vibration_in_Rods_and_Beats/Problems/asc_009.png, solution: 23_Superposition_and_Standing_Waves/05_Vibration_in_Rods_and_Beats/Solutions/asc_009.png}
+format: single_correct
+statement: |
+  Two tuning forks have frequencies 380 and 384 Hz respectively. When they are sounded together, they produce 4 beats. After hearing the maximum sound, how long will it take to hear the minimum sound
+figure: null
+options:
+  a: "1/2 sec"
+  b: "1/4 sec"
+  c: "1/8 sec"
+  d: "1/16 sec"
+answer: c
+answer_value: 0.125
+units: s
+verified: "Beat period 1/4 s; maximum to minimum is half a period = 1/8 s. Matches key."
+kinds: [ratio]
+physics: [beats, beat_period]
+notes: Consistent.

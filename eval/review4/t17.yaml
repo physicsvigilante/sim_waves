@@ -1,0 +1,14 @@
+symbols: {lam: positive}
+media: {air: {type: gas, v: 340 m/s}}
+sources: {S: {on: air, f: "340[m/s]/lam", A: 1, phase: 0, spreading: none, at: [0 m, 6 m]}}
+reflectors:
+  tilt: {point: [10 m, 0 m], normal: [1, 1], boundary: rigid}
+  wall: {point: [4 m, 7 m], normal: [3, 0], boundary: open}
+points: {P: [0 m, 0 m]}
+rays:
+  direct: {from: S, to: P}
+  bounce: {from: S, to: P, via: wall}
+  tb: {from: S, to: P, via: tilt}
+observe:
+  mx: "maxima(bounce, direct, vary=lam, lo=1[m], hi=100[m])"
+  Lt: "length(tb)"

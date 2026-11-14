@@ -1,0 +1,13 @@
+symbols: {lam: positive}
+media: {air: {type: gas, v: 340 m/s}}
+sources: {S: {on: air, f: "340[m/s]/lam", A: 1, phase: 0, spreading: none}}
+rays:
+  r1: {from: S, length: 1 m}
+  r2: {from: S, length: 3 m}
+observe:
+  m: "maxima(r2, r1, vary=lam, lo=0.5[m], hi=2[m])"
+  mi: "minima(r2, r1, vary=lam, lo=0.5[m], hi=4[m])"
+  big: "count(maxima(r2, r1, vary=lam, lo=0.0001[m], hi=2[m]))"
+  mixed: "maxima(r2, r1, vary=lam, lo=0.5[Hz], hi=2[kg])"
+  cm: "maxima(r2, r1, vary=lam, lo=50[cm], hi=200[cm])"
+  nolo: "maxima(r2, r1, vary=lam, lo=0.5, hi=2)"

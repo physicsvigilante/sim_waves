@@ -1,0 +1,18 @@
+id: 23/03/cnt_007
+assume:
+  - "Both ends are nodes (vibrator end treated as fixed, stated). 'Two nodes between the ends' means two nodes excluding the end nodes, so the third harmonic."
+  - "The two-nodes count is written as a fact on harmonic number n: n - 1 interior nodes == 2."
+  - "Mass per length is not given; it is kept symbolic and the tension is the unknown the 300 Hz fixes; the speed is then read off the medium."
+symbols: {mu: positive}
+unknowns: {n: integer, T: positive}
+media:
+  s: {type: string, mu: mu, tension: T}
+resonators:
+  r: {type: string, on: s, length: 1 m, ends: [fixed, fixed]}
+given:
+  - {fact: "n - 1 == 2", source: assumption, note: "interior nodes of harmonic n is n-1; 'two nodes between the ends'"}
+  - {fact: "frequency(r, harmonic=n) == 300[Hz]", source: stated}
+observe:
+  n: "n"
+  lam: "wavelength(r, harmonic=n)"
+  v: "speed(s, at=0[m])"

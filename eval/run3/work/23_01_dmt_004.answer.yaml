@@ -1,0 +1,8 @@
+answer: "a->s, b->r, c->q, d->r"
+final_scene: 23_01_dmt_004.v1.yaml
+engine_fit: partial
+coverage: partial
+not_represented: "incoherent speakers (random phase; the 2 I0 is a power sum done by me), the position of A on the line"
+missing_in_source: "exact geometry; amplitudes at A taken equal"
+reasoning: "Engine: coherent in phase with lambda/2 path -> amplitude 0 (r); phase pi plus lambda/2 path -> 2A (4 I0, q). Case d same as b (r); case a (s) not engine-checked."
+friction: "No incoherent sources; path difference again by evaluating the same wave at two distances; v1 first c_amp attempt in the file ignores the path (=0) and is a deliberate contrast, the right one is c_amp_with_path."

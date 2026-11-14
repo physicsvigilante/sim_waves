@@ -1,0 +1,10 @@
+unknowns: {f0: positive}
+media: {air: {type: gas, v: 340 m/s}}
+sources:
+  S1: {on: air, f: 170 Hz, A: 1, phase: 0, spreading: none}
+  S2: {on: air, f: f0, A: 1, phase: 0, spreading: none}
+rays:
+  r1: {from: S1, length: 1 m}
+  r2: {from: S2, length: 1 m}
+given: [{fact: "wavelength(S2) == 2[m]", source: stated}]
+observe: {d: "phase_difference(r1, r2)"}

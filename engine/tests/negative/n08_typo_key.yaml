@@ -1,0 +1,3 @@
+waves: {w: {harmonic: {A: 0.2 m, v: 360 m/s, lamda: 60 m, dir: +x, phase: 0}}}
+observe: {f: "frequency(w)"}
+expect: {error: rejected}

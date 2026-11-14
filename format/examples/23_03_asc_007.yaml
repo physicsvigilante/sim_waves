@@ -1,0 +1,16 @@
+id: 23/03/asc_007
+# Sonometer: two wires with given ratios; the lower fundamental is 360 Hz.
+assume: ["Ratios are wire 1 : wire 2 in the order given. Both wires vibrate in their fundamental."]
+symbols: {L0: positive, d0: positive, rho0: positive}
+unknowns: {T0: positive}
+media:
+  w1: {type: string, density: rho0, diameter: 4*d0, tension: 8*T0}
+  w2: {type: string, density: 2*rho0, diameter: d0, tension: T0}
+resonators:
+  r1: {type: string, on: w1, length: 36*L0, ends: [fixed, fixed]}
+  r2: {type: string, on: w2, length: 35*L0, ends: [fixed, fixed]}
+given:
+  - {fact: "min(frequency(r1, harmonic=1), frequency(r2, harmonic=1)) == 360[Hz]", source: stated}
+observe:
+  beats: "beat_frequency(frequency(r1, harmonic=1), frequency(r2, harmonic=1))"
+expect: {beats: {value: "10 Hz", tol: 3%}}   # engine: exactly 72/7 = 10.29 Hz; the book rounds

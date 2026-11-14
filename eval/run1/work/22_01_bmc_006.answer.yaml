@@ -1,0 +1,5 @@
+answer: [a, b]
+final_scene: 22_01_bmc_006.v1.yaml
+engine_fit: partial
+reasoning: y(w, x=X, t=t) and y(w, x=x, t=t0) both come from the same field(w), so it serves as particle displacement at any t (a) and as shape at fixed t (b). The non-sinusoidal Gaussian given wave has a velocity, so a travelling wave need not be sinusoidal (c false). d is not something the engine can express; answered from knowledge (false).
+friction: Statement about the meaning of an equation is linguistic; only the dependence of the field on x and t could be shown.

@@ -1,0 +1,8 @@
+answer: [a, c]
+final_scene: 22_02_bmc_005.v2.yaml
+engine_fit: full
+coverage: partial
+not_represented: "the printed figure positions are my reading of the figure description (a crest, b falling zero, c trough, d rising zero, e crest); instant of the snapshot taken as t = 0"
+missing_in_source: "when the shown snapshot was taken relative to the 4/(3n) s in option b"
+reasoning: "Engine solves phi = pi/2 from the figure facts; speed/(n*ab) = 4 (a true, d false); phase(a, t=4/(3n)) - phase(d, 0) wraps to pi/6, not 0 (b false); phase(b) - phase(e) = 3*pi/2 unwrapped, -pi/2 wrapped (c true as a 3*pi/2 separation phase)."
+friction: "Option c depends on whether the 3pi/2 is the unwrapped phase of the separation or the wrapped difference; engine gives both, the choice is mine."

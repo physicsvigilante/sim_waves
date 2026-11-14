@@ -1,0 +1,9 @@
+answer: {equation: "y = 0.06 sin(25*pi*x - 7500*pi*t) m  (equivalently 0.06 sin(7500*pi*t - 25*pi*x + pi))", wavelength: 0.08 m, f: 3750 Hz, k: 25*pi rad/m, omega: 7500*pi rad/s}
+final_scene: 11_01_001.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "nothing (the finite 0..0.2 m extent of the drawn snapshot is not represented; wave is infinite)"
+missing_in_source: none
+reasoning: "Facts 'span = 2.5 wavelengths', y(0,0)=0, slope>0 solve lam=0.08 m and phase pi; f=v/lam=3750 Hz."
+friction: "none; the fact 0.2 m == 5*lambda/2 is my reading of '3 crests and 2 troughs'."

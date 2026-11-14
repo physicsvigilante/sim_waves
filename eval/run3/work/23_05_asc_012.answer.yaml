@@ -1,0 +1,8 @@
+answer: b
+final_scene: 23_05_asc_012.v2.yaml
+engine_fit: partial
+coverage: full
+not_represented: "Maxima/minima of the superposition"
+missing_in_source: "none"
+reasoning: "Engine: 2 beats per s (200 and 202 Hz); amplitudes 4 and 3. Ratio ((4+3)/(4-3))^2 = 49 came from my own max/min formula, not engine."
+friction: "max_over on a sum of two frequencies is rejected; no way to get the envelope max and min of a beating sum. Had to write the ratio by hand (v1 rejected)."

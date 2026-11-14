@@ -1,0 +1,9 @@
+answer: "Amplitude 5A/6; phase -atan(3/4) = -0.6435 rad (-36.9 deg), i.e. resultant A*(5/6) sin(wt - kx - 0.6435)"
+final_scene: 11_04_003.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "nothing (omega=3, k=1 are arbitrary placeholders; amplitude and phase do not depend on them)"
+missing_in_source: "wave form (sin or cos) and frequency not stated; sine used"
+reasoning: "Engine sum amplitude = 5A/6 and phase at x=0,t=0 = -atan(3/4)."
+friction: "Had to invent a frequency and wavenumber to write the waves; the format has no phasor-only wave."

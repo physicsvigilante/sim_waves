@@ -1,0 +1,17 @@
+id: 24/01/dmt_004
+assume:
+  - "Ideal gas, gamma constant. Speed from route gamma, temperature, molar mass."
+  - "Case (ii) pressure change at fixed T: pressure and temperature both fix the density via the ideal gas law, so the route gamma+pressure+temperature+molar_mass is tried."
+symbols: {T0: positive, M0: positive, P0: positive, g: positive}
+media:
+  base: {type: gas, gamma: g, temperature: T0, molar_mass: M0}
+  c1: {type: gas, gamma: g, temperature: 4*T0, molar_mass: M0}
+  c3: {type: gas, gamma: g, temperature: 4*T0, molar_mass: M0}
+  c4: {type: gas, gamma: g, temperature: T0, molar_mass: 4*M0}
+  p0: {type: gas, gamma: g, pressure: P0, temperature: T0, molar_mass: M0}
+  p4: {type: gas, gamma: g, pressure: 4*P0, temperature: T0, molar_mass: M0}
+observe:
+  i:   "speed(c1)/speed(base)"
+  ii:  "speed(p4)/speed(p0)"
+  iii: "speed(c3)/speed(base)"
+  iv:  "speed(c4)/speed(base)"

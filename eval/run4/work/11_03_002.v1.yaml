@@ -1,0 +1,7 @@
+id: 11/03/002
+assume: ["Ideal diatomic hydrogen, gamma = 7/5 (assumption: room-temperature rigid rotor). Temperature symbolic, molar mass symbolic."]
+symbols: {T: positive, M: positive}
+media:
+  h2: {type: gas, gamma: 7/5, temperature: T, molar_mass: M}
+observe:
+  v: "speed(h2)"

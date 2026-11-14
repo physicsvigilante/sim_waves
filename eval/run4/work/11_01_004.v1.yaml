@@ -1,0 +1,9 @@
+id: 11/01/004
+symbols: {a: positive, w: positive, k: positive}
+waves:
+  p: {given: "a*sin(w*t - k*x)", units: {x: m, t: s, y: m}}
+observe:
+  v: "velocity(p)"
+  speed: "speed(p)"
+  wave_eq: "equivalent(diff(y(p, x=x, t=t), t, 2), velocity(p)**2*diff(y(p, x=x, t=t), x, 2))"
+  trav: "is_travelling(p)"

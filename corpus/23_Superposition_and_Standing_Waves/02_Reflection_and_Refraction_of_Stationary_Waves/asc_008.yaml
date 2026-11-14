@@ -1,0 +1,19 @@
+id: 23/02/asc_008
+number: 5
+source: {problem: 23_Superposition_and_Standing_Waves/02_Reflection_and_Refraction_of_Stationary_Waves/Problems/asc_008.png, solution: 23_Superposition_and_Standing_Waves/02_Reflection_and_Refraction_of_Stationary_Waves/Solutions/asc_008.png}
+format: single_correct
+statement: |
+  A standing wave pattern is formed on a string. One of the waves is given by equation y1 = a cos(wt - kx + pi/3), then the equation of the other wave such that at x = 0 a node is formed.
+figure: null
+options:
+  a: "y2 = a sin(wt + kx + pi/3)"
+  b: "y2 = a cos(wt + kx + pi/3)"
+  c: "y2 = a cos(wt + kx + 2pi/3)"
+  d: "y2 = a cos(wt + kx + 4pi/3)"
+answer: d
+answer_value: null
+units: null
+verified: "Node at x=0 needs y2(0,t) = -y1(0,t) = -a cos(wt + pi/3) = a cos(wt + 4pi/3). Matches (d)."
+kinds: [equation_form, inverse_condition]
+physics: [standing_waves, phase, boundary_condition]
+notes: Consistent. The solution gives two methods (phase difference pi at x=0, and sum-to-product).

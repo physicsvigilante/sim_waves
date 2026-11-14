@@ -1,0 +1,9 @@
+media: {air: {type: gas, v: 340 m/s}}
+sources:
+  S1: {on: air, f: 340 Hz, A: 3, phase: random, spreading: none}
+  S2: {on: air, f: 340 Hz, A: 4, phase: 0, spreading: none}
+rays:
+  r1: {from: S1, length: 1 m}
+  r2: {from: S2, length: 1 m}
+observe: {A: "resultant_amplitude(r1, r2)"}
+expect: {error: rejected, message: "not all coherent"}

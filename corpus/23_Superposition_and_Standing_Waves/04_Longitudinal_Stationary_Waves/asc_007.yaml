@@ -1,0 +1,19 @@
+id: 23/04/asc_007
+number: 4
+source: {problem: 23_Superposition_and_Standing_Waves/04_Longitudinal_Stationary_Waves/Problems/asc_007.png, solution: 23_Superposition_and_Standing_Waves/04_Longitudinal_Stationary_Waves/Solutions/asc_007.png}
+format: single_correct
+statement: |
+  The fundamental frequency of a closed pipe is 220 Hz. If 1/4 of the pipe is filled with water, the frequency of the first overtone of the pipe now is
+figure: null
+options:
+  a: "220 Hz"
+  b: "440 Hz"
+  c: "880 Hz"
+  d: "1760 Hz"
+answer: c
+answer_value: 880
+units: Hz
+verified: "Air column 3l/4: fundamental v/(3l) = (220*4l)/(3l) = 293.3 Hz; first overtone 3x = 880 Hz. Matches key."
+kinds: [ratio]
+physics: [closed_pipe, overtones, air_column]
+notes: Consistent.

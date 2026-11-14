@@ -1,0 +1,15 @@
+id: 22/02/bmc_005
+format: multiple_correct
+statement: 'The rope shown at an instant is carrying a wave travelling towards right, created by a
+
+  source vibrating at a frequency n. Consider the following statements
+
+  '
+figure: 'Snapshot of the rope. Marked x-positions: a under the first crest; b at the next zero crossing
+
+  (curve falling); c under the trough; d at the next zero crossing (curve rising); e under the next crest.'
+options:
+  a: The speed of the wave is 4n × ab
+  b: The medium at a will be in the same phase as d after 4/(3n) s
+  c: The phase difference between b and e is 3π/2
+  d: The speed of the wave is 2n × ab

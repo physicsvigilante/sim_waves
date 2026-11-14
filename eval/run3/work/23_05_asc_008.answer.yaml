@@ -1,0 +1,8 @@
+answer: c (103 Hz)
+final_scene: 23_05_asc_008.v1.yaml
+engine_fit: full
+coverage: full
+not_represented: "nothing"
+missing_in_source: "none"
+reasoning: "Engine: fC = 100 Hz from 5 beats between 1.03 fC and 0.98 fC; fA = 103."
+friction: "none"

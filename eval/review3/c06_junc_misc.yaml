@@ -1,0 +1,12 @@
+id: c06
+symbols: {A: positive, mu1: positive, mu2: positive}
+media:
+  a: {type: string, mu: mu1, tension: 9 N}
+  b: {type: string, mu: mu2, tension: 4 N}
+junctions:
+  J: {at: 0 m, left: a, right: b}
+waves:
+  w: {harmonic: {on: a, A: A, f: 10 Hz, dir: +x, phase: 0}}
+observe:
+  r: "amplitude(w_reflected)/A"
+  ph: "phase(w_reflected, x=0[m], t=0[s])"

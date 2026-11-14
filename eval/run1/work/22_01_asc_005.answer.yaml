@@ -1,0 +1,5 @@
+answer: [c]
+final_scene: 22_01_asc_005.v1.yaml
+engine_fit: full
+reasoning: vy(p, x=a/2, t=0) = sqrt(3)*b*c/(3*a) = b*c/(sqrt(3)*a) for the + branch (the - branch flips the sign only).
+friction: "The +- in the problem had to be handled by assume (took + branch)."

@@ -1,0 +1,9 @@
+# sources in two media, same f: tube paths in different gases
+media: {air: {type: gas, v: 340 m/s}, he: {type: gas, v: 1020 m/s}}
+sources:
+  S1: {on: air, f: 340 Hz, A: 1, phase: 0, spreading: none}
+  S2: {on: he, f: 340 Hz, A: 1, phase: 0, spreading: none}
+rays:
+  r1: {from: S1, length: 1.5 m}
+  r2: {from: S2, length: 3 m}
+observe: {d: "wrap(phase_difference(r1, r2))", A: "resultant_amplitude(r1,r2)"}

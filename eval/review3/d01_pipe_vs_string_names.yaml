@@ -1,0 +1,4 @@
+id: d01
+media: {air: {type: gas, v: 340 m/s}, wire: {type: string, mu: 0.01 kg/m, tension: 100 N}}
+resonators:
+  p: {type: pipe, on: air, length: 1 m, ends: [fixed, free], end_correction: 0 m}

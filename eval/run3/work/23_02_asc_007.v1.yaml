@@ -1,0 +1,17 @@
+id: 23/02/asc_007
+assume:
+  - "Spacing between successive nodes is half the wavelength of the standing wave's component waves; node spacing is taken as wavelength/2 of the travelling wave on the string."
+  - "Same string (same mu), same frequency f; second case has tension 2T. Standing wave of the second case built from the same kind of wave on the string with doubled tension."
+symbols: {mu: positive, T: positive, f: positive}
+media:
+  s1: {type: string, mu: mu, tension: T}
+  s2: {type: string, mu: mu, tension: 2*T}
+resonators:
+  r1: {type: string, on: s1, length: 1 m, ends: [fixed, fixed]}
+  r2: {type: string, on: s2, length: 1 m, ends: [fixed, fixed]}
+waves:
+  w1: {harmonic: {on: s1, A: 1 cm, f: f, dir: +x, phase: 0}}
+  w2: {harmonic: {on: s2, A: 1 cm, f: f, dir: +x, phase: 0}}
+observe:
+  lam_ratio: "wavelength(w2)/wavelength(w1)"
+  spacing_ratio_same_mode: "node_spacing(r2, harmonic=1)/node_spacing(r1, harmonic=1)"

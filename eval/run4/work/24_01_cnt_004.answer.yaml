@@ -1,0 +1,11 @@
+answer: "1414 m/s (about 1.41e3 m/s)"
+final_scene: 24_01_cnt_004.v1.yaml
+engine_fit: none
+hand_steps:
+  - "B = dP/(dV/V) = 1e5 Pa / (50e-6) = 2e9 Pa"
+  - "v = sqrt(B/rho) = sqrt(2e9/1e3) = 1414 m/s"
+coverage: unsupported
+not_represented: "liquid medium / bulk modulus (rejected, not an allowed gas key)"
+missing_in_source: "none"
+reasoning: "Engine cannot express a liquid; answered by hand."
+friction: "no bulk-modulus / liquid medium"

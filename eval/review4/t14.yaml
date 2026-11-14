@@ -1,0 +1,8 @@
+# 3 equal phasors at 0, 2pi/3, 4pi/3 -> 0 ; lam = 3 m
+media: {air: {type: gas, v: 340 m/s}}
+sources: {S: {on: air, f: "340[m/s]/3[m]", A: 1, phase: 0, spreading: none}}
+rays:
+  a: {from: S, length: 1 m}
+  b: {from: S, length: 2 m}
+  c: {from: S, length: 3 m}
+observe: {A: "resultant_amplitude(a,b,c)", A2: "resultant_amplitude(a,b)", I: "relative_intensity(a,b,c)", A1: "resultant_amplitude(a)"}

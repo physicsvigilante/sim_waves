@@ -1,0 +1,15 @@
+id: 24/01/cnt_004
+number: 7
+source: {problem: 24_Sound_Waves_and_Doppler_Effect/01_Speed_and_Intensity_of_Sound_Waves/Problems/cnt_004.png, solution: 24_Sound_Waves_and_Doppler_Effect/01_Speed_and_Intensity_of_Sound_Waves/Solutions/cnt_004.png}
+format: numerical
+statement: |
+  When pressure on 1 m^3 water is increased from 10^5 N/m^2 to 2 x 10^5 N/m^2, its volume shrinks by 50 cm^3. Density of water is 10^3 kg/m^3. Using this data calculate the speed of sound in water (in m/s).
+figure: null
+options: null
+answer: "1414"
+answer_value: 1414
+units: m/s
+verified: "B = dP/(dV/V) = 1e5/(50e-6/1) = 2e9 Pa; v = sqrt(B/rho) = sqrt(2e6) = 1414 m/s. Matches key."
+kinds: [derived_medium]
+physics: [bulk_modulus, speed_of_sound, liquid]
+notes: "Page carries the section heading 'Numerical type'; question numbered 7 here, out of order with 6 (which is the matrix-type dmt_004)."

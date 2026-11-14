@@ -1,0 +1,9 @@
+answer: {verified: true, speed: "w/k", direction: "+x"}
+final_scene: 11_01_004.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: nothing
+missing_in_source: none
+reasoning: "equivalent(y_tt, v^2 y_xx) is True with v = velocity(p) = w/k (positive: +x)."
+friction: none

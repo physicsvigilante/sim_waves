@@ -1,0 +1,8 @@
+answer: 16 m
+final_scene: 22_01_cnt_006.v2.yaml
+engine_fit: full
+coverage: full
+not_represented: "nothing"
+missing_in_source: "amplitude a (kept as a symbol, does not affect the answer)"
+reasoning: "velocity(p) = 2 m/s; speed*8 s = 16 m."
+friction: "The multiplication speed*8[s] is trivial arithmetic done in observe. v1 had a pointless placeholder fact; removed in v2."

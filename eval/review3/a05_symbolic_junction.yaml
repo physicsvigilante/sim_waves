@@ -1,0 +1,12 @@
+id: a05
+symbols: {L: positive, A: positive}
+media:
+  a: {type: string, mu: 0.01 kg/m, tension: 9 N}
+junctions:
+  wall: {at: L, left: a, right: fixed}
+waves:
+  w: {harmonic: {on: a, A: A, f: 10 Hz, dir: +x, phase: 0}}
+  st: {sum: [w, w_reflected]}
+observe:
+  node: "max_over(t, abs(y(st, x=L, t=t)))"
+  y0: "y(st, x=0[m], t=t)"

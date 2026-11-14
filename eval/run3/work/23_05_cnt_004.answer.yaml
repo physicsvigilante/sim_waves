@@ -1,0 +1,8 @@
+answer: 2.01 %
+final_scene: 23_05_cnt_004.v1.yaml
+engine_fit: full
+coverage: full
+not_represented: "nothing"
+missing_in_source: "Beat in direction of increase (assumed p > 0)"
+reasoning: "Engine solved p = 0.0201, percent = 2.01."
+friction: "Percentage not a unit; used 100*p."

@@ -1,0 +1,7 @@
+id: e05
+waves:
+  a: {harmonic: {A: 1 cm, f: 256 Hz, lambda: 1 m, dir: +x, phase: 0}}
+  s: {sum: [a, a]}
+  z: {sum: [a, later]}
+  later: {harmonic: {A: 1 cm, f: 256 Hz, lambda: 1 m, dir: +x, phase: 0}}
+observe: {amp: "amplitude(s)"}

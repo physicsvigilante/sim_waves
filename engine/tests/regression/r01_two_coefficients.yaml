@@ -1,0 +1,8 @@
+# review a1: k enters with coefficients 1/100 and 1/50 -> family k = 25pi/2 + 200 pi n
+unknowns: {k: positive}
+waves: {w: {harmonic: {A: 2 cm, omega: 3*pi rad/s, k: k, dir: +x, phase: 0}}}
+given:
+  - "y(w, x=1[cm], t=t) == 2[cm]*sin(3*pi*t - pi/8)"
+  - "y(w, x=2[cm], t=t) == 2[cm]*sin(3*pi*t - pi/4)"
+observe: {v: "speed(w)"}
+expect: {error: ambiguous}

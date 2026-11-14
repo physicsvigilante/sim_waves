@@ -1,0 +1,11 @@
+# review 4 #1 (second form): two free frequencies cannot be grouped
+symbols: {f1: positive, f2: positive}
+media: {air: {type: gas, v: 340 m/s}}
+sources:
+  S1: {on: air, f: f1, A: 1, phase: 0, spreading: none}
+  S2: {on: air, f: f2, A: 1, phase: 0, spreading: none}
+rays:
+  r1: {from: S1, length: 2 m}
+  r2: {from: S2, length: 2 m}
+observe: {I: "relative_intensity(r1, r2)"}
+expect: {error: undetermined}

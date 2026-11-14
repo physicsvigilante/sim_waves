@@ -1,0 +1,11 @@
+id: 22/02/bmc_004
+assume: ["Units of the wave are metres and seconds; amplitude 10^4 m taken literally."]
+waves:
+  w: {given: "10**4*sin(60*t + 2*x)", units: {x: m, t: s, y: m}}
+observe:
+  v: "velocity(w)"
+  speed: "speed(w)"
+  lam: "wavelength(w)"
+  f: "frequency(w)"
+  A: "amplitude(w)"
+  dir: "direction(w)"

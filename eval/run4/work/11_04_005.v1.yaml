@@ -1,0 +1,13 @@
+id: 11/04/005
+assume:
+  - "Amplitude units are metres (the problem gives none); x in m, t in s as stated."
+waves:
+  y1: {given: "10*cos(5*x + 25*t)", units: {x: m, t: s, y: m}}
+  y2: {given: "20*cos(5*x + 25*t + pi/3)", units: {x: m, t: s, y: m}}
+  tot: {sum: [y1, y2]}
+given: []
+observe:
+  A: "amplitude(tot)"
+  ph_sin: "phase(tot, x=0[m], t=0[s])"
+  dir: "velocity(tot)"
+  chk: "equivalent(y(tot, x=x, t=t), 10*sqrt(7)*cos(5*x + 25*t + atan(sqrt(3)/2))*1[m])"

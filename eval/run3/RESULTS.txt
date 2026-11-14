@@ -1,0 +1,39 @@
+id               att fit      ok   answer -> key
+23/01/asc_004      1 full     Y    ['d'] -> d
+23/01/asc_005      1 full     n    ['b'] -> a
+23/01/cnt_004      3 partial  Y    420 Hz -> 420
+23/01/cnt_006      1 partial  Y    32.4 cm -> 32.4
+23/01/cnt_007      1 full     n    1/9 -> 9.0
+23/01/dmt_004      1 partial  Y    a->s, b->r, c->q, d->r -> {'a': 's', 'b': 'r', 'c': 'q', 'd': 'r'}
+23/02/asc_004      1 full     Y    ['b'] -> b
+23/02/asc_006      1 full     Y    ['d'] -> d
+23/02/asc_007      1 full     Y    ['b'] -> b
+23/02/asc_008      1 full     Y    ['d'] -> d
+23/02/bmc_005      1 partial  Y    ['b', 'c'] -> ['b', 'c']
+23/02/cnt_004      1 full     Y    2 -> 2.0
+23/02/cnt_005      3 full     n    75 % -> 25
+23/02/cnt_008      1 full     Y    9 -> 9.0
+23/03/asc_004      3 partial  n    205 -> c
+23/03/asc_005      2 full     Y    ['d'] -> d
+23/03/asc_006      1 partial  Y    ['a'] -> a
+23/03/asc_008      1 full(bad yaml) Y    ['c'] -> c
+23/03/bmc_004      1 full     Y    ['c', 'd'] -> ['c', 'd']
+23/03/cnt_006      1 full     Y    5 cm -> 5.0
+23/03/cnt_007      2 full     Y    200 m/s -> 200
+23/03/cnt_008      2 full     Y    25 kg -> 25
+23/04/asc_005      2 full     Y    d -> d
+23/04/asc_006      2 partial  Y    c -> c
+23/04/asc_007      2 full     Y    c (880 Hz) -> c
+23/04/bmc_005      6 full     Y    ['b', 'd'] -> ['b', 'd']
+23/04/bmc_006      2 full     n    ['b', 'd'] -> ['b', 'c', 'd']
+23/05/asc_005      1 full     Y    b (94.9 cm) -> b
+23/05/asc_007      1 full     Y    c (516 Hz) -> c
+23/05/asc_008      1 full     Y    c (103 Hz) -> c
+23/05/asc_009      1 partial  Y    c (1/8 s) -> c
+23/05/asc_010      1 full     Y    c -> c
+23/05/asc_012      2 partial  Y    b -> b
+23/05/cnt_004      1 full     Y    2.01 % -> 2.0
+23/05/cnt_005      1 full     Y    10 Hz -> 10.0
+23/05/cnt_006      1 full     Y    0.01 kg/m -> 0.01
+
+correct 31/36; correct on first attempt 22/36

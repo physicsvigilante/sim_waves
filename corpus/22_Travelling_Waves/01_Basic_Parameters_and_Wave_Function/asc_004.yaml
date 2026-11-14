@@ -1,0 +1,14 @@
+id: 22/01/asc_004
+number: 1
+source: {problem: 22_Travelling_Waves/01_Basic_Parameters_and_Wave_Function/Problems/asc_004.png, solution: 22_Travelling_Waves/01_Basic_Parameters_and_Wave_Function/Solutions/asc_004.png}
+format: single_correct
+statement: |
+  A wave pulse is described by y(x,t) = a*exp(-(b*x - c*t)^2), where a, b and c are
+  positive constants. What is the speed of the wave?
+figure: null
+options: {a: "c/b", b: "b/c", c: "a/c", d: "c/a"}
+answer: [a]
+answer_value: "c/b"
+kinds: [given_wavefunction, symbolic]
+physics: [wave_speed, pulse]
+notes: Wave supplied as an explicit y(x,t); speed read from the argument form f(bx - ct).

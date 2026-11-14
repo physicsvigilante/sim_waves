@@ -1,0 +1,9 @@
+answer: {direction: "-x", velocity: 2 m/s, amplitude: 2 m}
+final_scene: 11_01_010.v2.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: nothing
+missing_in_source: none
+reasoning: "velocity(p) = -2; amplitude(p) rejected for a non-sinusoid (v1), so the peak was read as y(p, x=-2t, t=t) = 2 m (peak follows x = -2t)."
+friction: "amplitude() of a pulse is not available; had to evaluate y along the crest x=-2t, which I identified myself."

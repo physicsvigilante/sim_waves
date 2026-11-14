@@ -1,0 +1,7 @@
+id: 24/01/cnt_004
+assume:
+  - "Probe: is a liquid medium with a bulk modulus supported?"
+media:
+  water: {type: gas, bulk_modulus: 2e9 Pa, density: 1000 kg/m^3}
+observe:
+  v: "speed(water)"

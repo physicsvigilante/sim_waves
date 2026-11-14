@@ -1,0 +1,19 @@
+# parent: eval/diag1/baselines/pipe.yaml
+# change: added observes for 3rd-harmonic displacement/pressure nodes and resonant lengths for a 500 Hz fork (L as free symbol); baseline pipe otherwise kept
+# kind: new question
+id: diag1/pipe
+assume:
+  - "Pipe length 85 cm applies to the node questions; for the fork question the length is varied, so L is a free symbol (teacher's framing)."
+  - "500 Hz fork is the teacher's given; end correction neglected."
+symbols: {L: positive}
+media:
+  air: {type: gas, v: 340 m/s}
+resonators:
+  p: {type: pipe, on: air, length: 85 cm, ends: [closed, open], end_correction: 0 m}
+  q: {type: pipe, on: air, length: L, ends: [closed, open], end_correction: 0 m}
+observe:
+  disp_nodes: "nodes(p, harmonic=3)"
+  pres_nodes: "pressure_nodes(p, harmonic=3)"
+  disp_antinodes: "antinodes(p, harmonic=3)"
+  lengths_500: "resonances(q, f=500[Hz], vary=L, lo=0.2[m], hi=1.2[m])"
+  n_lengths: "count(resonances(q, f=500[Hz], vary=L, lo=0.2[m], hi=1.2[m]))"

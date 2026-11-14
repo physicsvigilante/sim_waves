@@ -1,0 +1,13 @@
+id: 22/02/asc_007
+assume:
+  - "Oscillation at a fixed point; phi is a symbol with 0 < phi < pi/2, checked at sample value pi/4 and by sign."
+  - "Curve identification from the figure text: only a curve starting below zero and rising can be right (C)."
+symbols: {y0: positive, omega: positive}
+waves:
+  w: {given: "y0*sin(omega*t - pi/4)", units: {x: m, t: s, y: m}}
+  w2: {given: "y0*sin(omega*t - pi/8)", units: {x: m, t: s, y: m}}
+observe:
+  y_at_0: "y(w, x=0, t=0)"
+  vy_at_0: "vy(w, x=0, t=0)"
+  y_at_0_phi_small: "y(w2, x=0, t=0)"
+  vy_at_0_phi_small: "vy(w2, x=0, t=0)"

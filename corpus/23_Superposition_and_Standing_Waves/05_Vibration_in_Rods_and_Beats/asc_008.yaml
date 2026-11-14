@@ -1,0 +1,19 @@
+id: 23/05/asc_008
+number: 5
+source: {problem: 23_Superposition_and_Standing_Waves/05_Vibration_in_Rods_and_Beats/Problems/asc_008.png, solution: 23_Superposition_and_Standing_Waves/05_Vibration_in_Rods_and_Beats/Solutions/asc_008.png}
+format: single_correct
+statement: |
+  The frequency of tuning forks A and B are respectively 3% more and 2% less than the frequency of tuning fork C. When A and B are simultaneously excited, 5 beats per second are produced. Then the frequency of the tuning fork 'A' (in Hz) is
+figure: null
+options:
+  a: "98"
+  b: "100"
+  c: "103"
+  d: "105"
+answer: c
+answer_value: 103
+units: Hz
+verified: "0.03 n + 0.02 n = 5 gives n = 100 Hz, nA = 103 Hz. Matches key."
+kinds: [inverse_condition, ratio]
+physics: [beats, tuning_fork, percentage_change]
+notes: Consistent.

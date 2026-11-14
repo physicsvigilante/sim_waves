@@ -1,0 +1,15 @@
+id: 11/03/003
+number: 3
+source: {problem: 11_Mechanical_Waves_sardana/03_Sound_Waves_and_Properties/Problems/003.png, solution: 11_Mechanical_Waves_sardana/03_Sound_Waves_and_Properties/Solutions/003.png}
+format: numerical
+statement: |
+  A dog while barking delivers about 1 mW of power. Assuming this power to be uniformly distributed over a hemispherical area, calculate the sound level at a distance of 5 m. Also calculate the sound level if instead of one dog, five dogs start barking at the same time each delivering 1 mW of power.
+figure: null
+options: null
+answer: "68 dB for one dog; 75 dB for five dogs"
+answer_value: {one_dog: 68, five_dogs: 75}
+units: dB
+verified: "I = 1e-3/(2 pi 25) = 6.37e-6 W/m^2; L = 10 log10(6.37e-6/1e-12) = 68.0 dB; five dogs: intensities add, L = 68.0 + 10 log10 5 = 75.0 dB. Matches key."
+kinds: [derived_medium, comparison]
+physics: [sound_intensity, decibel_level, hemispherical_spreading, intensity_addition]
+notes: "Reference intensity I0 = 1e-12 W/m^2 is not stated in the problem; assumed. Hemisphere area is 2 pi r^2. Five dogs are treated as incoherent (intensities add)."

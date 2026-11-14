@@ -1,0 +1,6 @@
+id: 11/01/002
+assume: ["Wave moves +x from the source at x=0 (end of a long string). Snapshot instant is t0 (any), so y(0,t0)=0 fixes the phase mod pi; the engine enumerates."]
+symbols: {t0: real}
+unknowns: {lam: positive, ph: phase}
+waves:
+  w: {harmonic: {on: null, A: 0.02 m, f: 500 Hz, lambda: lam, dir: +x, phase: ph}}

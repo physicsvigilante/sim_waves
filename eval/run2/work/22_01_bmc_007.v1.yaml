@@ -1,0 +1,12 @@
+id: 22/01/bmc_007
+assume:
+  - "Sine wave in a medium, +x travelling, phase 0; y, v, a are the displacement, transverse velocity and acceleration of one particle (x = 0)."
+symbols: {A: positive, k: positive, omega: positive}
+waves:
+  w: {harmonic: {A: A, k: k, omega: omega, dir: +x, phase: 0}}
+observe:
+  ay_over_y: "simplify(ay(w, x=0, t=t)/y(w, x=0, t=t))"
+  v_leads_y_quarter: "equivalent(vy(w, x=0, t=t), omega*y(w, x=0, t=t + period(w)/4))"
+  v_equals_y: "equivalent(vy(w, x=0, t=t), y(w, x=0, t=t))"
+  a_leads_v_quarter: "equivalent(ay(w, x=0, t=t), omega*vy(w, x=0, t=t + period(w)/4))"
+  a_equals_v: "equivalent(ay(w, x=0, t=t), vy(w, x=0, t=t))"

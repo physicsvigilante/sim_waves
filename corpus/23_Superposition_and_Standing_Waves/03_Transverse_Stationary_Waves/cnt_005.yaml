@@ -1,0 +1,14 @@
+id: 23/03/cnt_005
+number: 10
+source: {problem: 23_Superposition_and_Standing_Waves/03_Transverse_Stationary_Waves/Problems/cnt_005.png, solution: 23_Superposition_and_Standing_Waves/03_Transverse_Stationary_Waves/Solutions/cnt_005.png}
+format: numerical
+statement: |
+  The difference in frequencies corresponding to the tones emitted by stretched string vibrating in its third harmonic and sixth overtone is 1600 Hz. Find the fundamental frequency of the wire (in Hz).
+figure: null
+answer: "400"
+answer_value: 400
+units: Hz
+verified: "Sixth overtone = 7th harmonic: (7 - 3) f1 = 1600, f1 = 400 Hz. Matches key."
+kinds: [inverse_condition]
+physics: [string_frequency, harmonics, overtones]
+notes: Consistent (fixed-fixed string assumed, all harmonics present).

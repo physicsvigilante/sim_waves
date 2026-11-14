@@ -1,0 +1,6 @@
+media: {a: {type: string, mu: 0.05 kg/m, tension: 60 N}}
+unknowns: {f: positive}
+waves: {w: {harmonic: {on: a, A: 1 cm, f: f, dir: +x, phase: 0}}}
+given: ["power(w) == 100[m]"]
+observe: {f: "f"}
+expect: {error: rejected, message: "dimension mismatch"}

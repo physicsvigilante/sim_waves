@@ -1,0 +1,8 @@
+# review 3 #9: equal waves in antiphase cancel: amplitude 0
+media: {s: {type: string, mu: 0.01 kg/m, tension: 4 N}}
+waves:
+  a: {harmonic: {on: s, A: 1 cm, f: 10 Hz, dir: +x, phase: 0}}
+  b: {harmonic: {on: s, A: 1 cm, f: 10 Hz, dir: +x, phase: pi}}
+  tot: {sum: [a, b]}
+observe: {amp: "amplitude(tot)"}
+expect: {amp: 0}

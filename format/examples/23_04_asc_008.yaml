@@ -1,0 +1,14 @@
+id: 23/04/asc_008
+assume:
+  - "While the tube is partly in water, the air column of length L is closed at the water and open at the top."
+  - "'Before the tube comes out of water' excludes the open-open tube at the end."
+  - "End correction neglected (the problem gives none)."
+symbols: {L: positive}
+media:
+  air: {type: gas, v: 330 m/s}
+resonators:
+  col: {type: pipe, on: air, length: L, ends: [closed, open], end_correction: 0 m}
+observe:
+  lengths: "resonances(col, f=660[Hz], vary=L, lo=0[m], hi=1.5[m])"
+  n: "count(resonances(col, f=660[Hz], vary=L, lo=0[m], hi=1.5[m]))"
+expect: {n: 6}

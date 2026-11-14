@@ -1,0 +1,12 @@
+id: 11/03/003
+assume:
+  - "Engine point emitter spreads over a full sphere. A hemisphere radiating P gives the same intensity as a full sphere radiating 2P, so emitters carry doubled power (my modelling step)."
+  - "Sound level beta = 10 log10(I/I0), I0 = 1e-12 W/m^2 (convention, not stated)."
+media:
+  air: {type: open3d}
+emitters:
+  one:  {on: air, geometry: point, power: 2e-3 W}
+  five: {on: air, geometry: point, power: 1e-2 W}
+observe:
+  L1: "10*log(intensity(one, r=5[m])/1e-12[W/m^2])/log(10)"
+  L5: "10*log(intensity(five, r=5[m])/1e-12[W/m^2])/log(10)"

@@ -1,0 +1,4 @@
+media: {a: {type: string, mu: 0.05 kg/m, tension: 60 N}}
+waves: {w: {harmonic: {on: a, A: 1 cm, f: 10 Hz, dir: -x, from: left, phase: 0}}}
+observe: {v: "velocity(w)"}
+expect: {error: rejected, message: "either dir or from"}

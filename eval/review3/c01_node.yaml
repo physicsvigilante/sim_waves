@@ -1,0 +1,7 @@
+id: c01
+waves:
+  y1: {harmonic: {A: 3 cm, f: 10 Hz, lambda: 4 m, dir: -x, phase: 0}}
+  y3: {harmonic: {A: 3 cm, f: 10 Hz, lambda: 4 m, dir: +x, phase: 0}}
+  st: {sum: [y1, y3]}
+observe:
+  nodeamp: "max_over(t, abs(y(st, x=1[m], t=t)))"

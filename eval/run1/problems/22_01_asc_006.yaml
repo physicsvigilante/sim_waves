@@ -1,0 +1,18 @@
+id: 22/01/asc_006
+format: single_correct
+statement: 'Which one of the following functions represents a travelling wave? Here a, b, c are constants.
+
+  I.   y = a cos(bx) sin(ct)
+
+  II.  y = a sin(bx + ct)
+
+  III. y = a sin(bx + ct) + a sin(bx - ct)
+
+  IV.  y = a sin(bx - ct)
+
+  '
+options:
+  a: Both I and IV
+  b: Both I and III
+  c: Both II and IV
+  d: Both II and III

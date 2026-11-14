@@ -1,0 +1,8 @@
+id: a02
+symbols: {Tn: positive}
+media: {wire: {type: string, mu: 0.01 kg/m, tension: Tn}}
+resonators:
+  r: {type: string, on: wire, length: 1 m, ends: [fixed, fixed]}
+observe:
+  Ts: "resonances(r, f=100[Hz], vary=Tn, lo=10[N], hi=50[N])"
+  n: "count(resonances(r, f=100[Hz], vary=Tn, lo=10[N], hi=50[N]))"

@@ -1,0 +1,7 @@
+id: 11/01/007
+format: numerical
+statement: 'A wave pulse moving to the right along the x-axis is represented by the wave function y(x,t)
+  = 2/((x - 3t)^2 + 1), where x and y are measured in cm and t is measured in seconds. Plot the wave function
+  at t = 0, t = 1 s and t = 2 s.
+
+  '

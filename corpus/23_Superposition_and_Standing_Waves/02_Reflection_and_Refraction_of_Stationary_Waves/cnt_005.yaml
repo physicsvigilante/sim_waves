@@ -1,0 +1,15 @@
+id: 23/02/cnt_005
+number: 12
+source: {problem: 23_Superposition_and_Standing_Waves/02_Reflection_and_Refraction_of_Stationary_Waves/Problems/cnt_005.png, solution: 23_Superposition_and_Standing_Waves/02_Reflection_and_Refraction_of_Stationary_Waves/Solutions/cnt_005.png}
+format: numerical
+statement: |
+  A travelling wave gets reflected at a boundary such that the amplitude of the reflected wave is half that of the incident wave. Find the percentage of energy transmitted.
+figure: null
+answer: "25"
+answer_value: 25
+units: percent
+verified: "I_r/I_i = (1/2)^2 = 1/4, so 25% reflected and 75% transmitted. The correct answer to the question asked is 75, not 25."
+kinds: [ratio]
+physics: [reflection, transmission, energy, intensity]
+notes: |
+  BOOK KEY MISMATCH. Header key reads (25) but the solution's own conclusion is '25% reflected back and 75% transmitted'. Question asks for energy transmitted, so 75 is the consistent value; 25 is the reflected fraction.

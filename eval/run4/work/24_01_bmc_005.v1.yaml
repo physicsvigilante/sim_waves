@@ -1,0 +1,18 @@
+id: 24/01/bmc_005
+assume:
+  - "Pressure excess = -B * slope (hand relation), so pressure is max where slope is most negative, atmospheric where slope is 0."
+  - "Figure has no numbers: wavelength kept as symbol lam. Origin crest-rising reading: y(0,0)=0 rising; A at lam/2, B at 3 lam/4 (trough), C at lam."
+symbols: {lam: positive}
+unknowns: {phi: phase}
+media:
+  air: {type: gas, v: 340 m/s}
+waves:
+  w: {harmonic: {on: air, A: 1 mm, lambda: lam, dir: +x, phase: phi}}
+given:
+  - {fact: "y(w, x=0[m], t=0[s]) == 0[m]", source: figure}
+  - {fact: "slope(w, x=0[m], t=0[s]) > 0", source: figure, note: "curve rises from origin"}
+observe:
+  sA: "slope(w, x=lam/2, t=0[s])"
+  sB: "slope(w, x=3*lam/4, t=0[s])"
+  sC: "slope(w, x=lam, t=0[s])"
+  yB: "y(w, x=3*lam/4, t=0[s])"

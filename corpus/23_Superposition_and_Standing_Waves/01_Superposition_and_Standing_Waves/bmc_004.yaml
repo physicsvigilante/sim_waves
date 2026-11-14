@@ -1,0 +1,22 @@
+id: 23/01/bmc_004
+number: 3
+source: {problem: 23_Superposition_and_Standing_Waves/01_Superposition_and_Standing_Waves/Problems/bmc_004.png, solution: null}
+format: multiple_correct
+statement: |
+  Two wave functions in a medium along x-direction are given by
+  y1 = 1 / (2 + (2x - 3t)^2) m and y2 = - 1 / (2 + (2x + 3t - 6)^2) m
+  where x is in metres and t is in seconds
+figure: null
+options:
+  a: "at x = 3/2 m the resultant displacement will be zero at all times."
+  b: "at t = 1 s which resultant displacement will be zero everywhere."
+  c: "Both waves travel along the same direction."
+  d: "Both waves travel in the opposite directions."
+answer: unknown
+answer_value: null
+units: null
+verified: "Own computation (no book key available): y1 + y2 = 0 requires (2x-3t)^2 = (2x+3t-6)^2. Taking + sign gives t = 1 s for all x; taking - sign gives x = 3/2 m for all t. y1 is a function of (x - 1.5t) so moves toward +x; y2 is a function of (x + 1.5t - 3) so moves toward -x. So a, b, d are true, c false."
+kinds: [given_wavefunction, classification]
+physics: [superposition, wave_direction, pulse]
+notes: |
+  Solution image missing from the Solutions folder, so the book key is unknown. Own derivation gives (a, b, d).

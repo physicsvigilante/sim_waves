@@ -1,0 +1,9 @@
+answer: "Pulse (semicircle profile, |x - v t| <= a) moves in +x with velocity v; shape unchanged: y = sqrt(a^2 - (x - v t)^2)"
+final_scene: 11_01_003.v1.yaml
+engine_fit: partial
+hand_steps: ["restricting the profile to |x - vt| <= a and zero elsewhere (piecewise, not expressible)"]
+coverage: partial
+not_represented: "piecewise definition (zero outside |x|<=a); statement as printed has |x|>=a and |x|<=0 which is garbled"
+missing_in_source: "printed ranges are inconsistent; I read the intended ones"
+reasoning: "velocity(p) = v from the engine, so the profile shifts rigidly at v."
+friction: "no piecewise-defined pulses."

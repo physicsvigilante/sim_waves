@@ -1,0 +1,8 @@
+answer: [c]
+final_scene: 22_02_asc_007.v2.yaml
+engine_fit: partial
+coverage: partial
+not_represented: "the figure's four curves were not matched to engine output beyond their described shape; labels in the figure description are cluttered so the letter C comes from the text, not from the engine"
+missing_in_source: "unreliable figure labels; the specific value of phi within 0 to 90 degrees is not given"
+reasoning: "Engine at two sample phi (30, 60 deg): y(0) = -y0*sin(phi) < 0 and vy(0) > 0, so the curve starts below zero and rises; this matches the thin curve labelled C (starts well below zero, rises steeply)."
+friction: "The bound 0 < phi < 90 deg as a symbolic inequality was refused (v1: cannot be decided), so two sample values were used. A pure oscillation (no x) must be modelled as a wave at x = 0."

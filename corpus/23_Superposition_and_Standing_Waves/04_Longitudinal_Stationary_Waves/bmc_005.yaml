@@ -1,0 +1,21 @@
+id: 23/04/bmc_005
+number: 7
+source: {problem: 23_Superposition_and_Standing_Waves/04_Longitudinal_Stationary_Waves/Problems/bmc_005.png, solution: 23_Superposition_and_Standing_Waves/04_Longitudinal_Stationary_Waves/Solutions/bmc_005.png}
+format: multiple_correct
+statement: |
+  Figure shows a stretched string of length L and pipes of length L, 2L, L/2 and L/2 in options (a), (b), (c) and (d), respectively. The tension in the string is adjusted until the speed of waves on the string equals the speed of sound waves in air. The fundamental mode of oscillation is then set up on the string. In which pipe(s) will the sound produce by the string causes resonance?
+figure: |
+  Top: a horizontal string drawn between two hatched vertical walls, labelled L in the middle. Below, four pipe sketches in a 2x2 grid. (a) a rectangle-like pipe with a closed vertical end on the left and open on the right, labelled L below it (no arrows). (b) two horizontal lines with both ends open, dimension arrow labelled 2L. (c) two horizontal lines both ends open, dimension arrow labelled L/2. (d) pipe closed at left, open at right, dimension arrow labelled L/2.
+options:
+  a: "closed-open pipe of length L"
+  b: "open-open pipe of length 2L"
+  c: "open-open pipe of length L/2"
+  d: "closed-open pipe of length L/2"
+answer: [b, d]
+answer_value: null
+units: null
+verified: "String fundamental v/2L. (a) closed L: v/4L, 3v/4L, ... no. (b) open 2L: n*v/4L, n=2 gives v/2L yes. (c) open L/2: n*v/L, no. (d) closed L/2: v/2L, 3v/2L yes. Matches key."
+kinds: [graph_read, conceptual]
+physics: [resonance, harmonics, open_pipe, closed_pipe, string_frequency]
+notes: |
+  Misprints in the solution: pipes (c) and (d) lengths are written L/3 in the denominators of the fundamental-frequency expressions (2(L/3), 4(L/3)); the quoted values v/L and v/2L correspond to L/2. Also the first bracket for case (b), v/(2(2L)), is followed by '(= v/2L)' whereas v/(2*2L) = v/4L (the harmonics list for (b) correctly begins with v/4L). The key (b, d) is unaffected.

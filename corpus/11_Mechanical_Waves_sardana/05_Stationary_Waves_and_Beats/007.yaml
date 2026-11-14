@@ -1,0 +1,15 @@
+id: 11/05/007
+number: 7
+source: {problem: 11_Mechanical_Waves_sardana/05_Stationary_Waves_and_Beats/Problems/007.png, solution: 11_Mechanical_Waves_sardana/05_Stationary_Waves_and_Beats/Solutions/007.png}
+format: numerical
+statement: |
+  In a stationary wave pattern that forms as a result of reflection of waves from an obstacle the ratio of the amplitude at an antinode and a node is beta = 1.5. What percentage of the energy passes across the obstacle?
+figure: null
+options: null
+answer: "96% of the energy passes across the obstacle (4% reflected)"
+answer_value: 96
+units: percent
+verified: "A_max/A_min = (Ai+Ar)/(Ai-Ar) = 1.5 gives Ar/Ai = 1/5; reflected energy fraction = 1/25 = 4%; transmitted 96%. Matches key."
+kinds: [ratio, inverse_condition]
+physics: [standing_waves, reflection, energy_transmission, amplitude_ratio]
+notes: "Consistent. Assumes energy proportional to amplitude squared with same medium/impedance-normalised intensities, as in the key."

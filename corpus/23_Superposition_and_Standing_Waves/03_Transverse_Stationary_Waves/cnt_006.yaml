@@ -1,0 +1,14 @@
+id: 23/03/cnt_006
+number: 11
+source: {problem: 23_Superposition_and_Standing_Waves/03_Transverse_Stationary_Waves/Problems/cnt_006.png, solution: 23_Superposition_and_Standing_Waves/03_Transverse_Stationary_Waves/Solutions/cnt_006.png}
+format: numerical
+statement: |
+  A 20 cm long string, having a mass of 1 g is fixed at both the ends. The tension in the string is 0.5 N. The string is set into vibrations using an external vibrator of frequency 100 Hz. Find the separation (in cm) between the successive nodes in the string.
+figure: null
+answer: "5.0"
+answer_value: 5.0
+units: cm
+verified: "mu = 1e-3/0.2 = 5e-3 kg/m, v = sqrt(0.5/5e-3) = 10 m/s, lambda = v/f = 0.1 m, node spacing lambda/2 = 5 cm (n = 4 loops in 20 cm). Matches key."
+kinds: [derived_medium, inverse_condition]
+physics: [standing_waves, string_frequency, linear_density]
+notes: Consistent. Solution writes the factor sqrt(0.5/10^-3 x 0.2) i.e. sqrt(F L/m).

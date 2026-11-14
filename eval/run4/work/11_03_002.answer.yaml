@@ -1,0 +1,9 @@
+answer: "v_sound/v_rms = sqrt(gamma/3) = 0.683 (gamma = 7/5)"
+final_scene: 11_03_002.v1.yaml
+engine_fit: partial
+hand_steps: ["v_rms = sqrt(3RT/M) (not an engine observable)", "ratio sqrt(gamma/3)"]
+coverage: partial
+not_represented: "rms speed of molecules"
+missing_in_source: "gamma of hydrogen (diatomic 7/5 assumed)"
+reasoning: "Engine gives v = sqrt(gamma R T/M) numerically sqrt(7/5 R T/M); dividing by sqrt(3RT/M) by hand gives sqrt(7/15)=0.683."
+friction: "No rms/kinetic speed observable."

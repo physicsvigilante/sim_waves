@@ -1,0 +1,12 @@
+id: 11/01/007
+waves:
+  p: {given: "2/((x - 3*t)**2 + 1)", units: {x: cm, t: s, y: cm}}
+observe:
+  v: "velocity(p)"
+  y0: "y(p, x=x, t=0[s])"
+  y1: "y(p, x=x, t=1[s])"
+  y2: "y(p, x=x, t=2[s])"
+view:
+  - {snapshot: p, t: 0 s, x: [-5 cm, 12 cm]}
+  - {snapshot: p, t: 1 s, x: [-5 cm, 12 cm]}
+  - {snapshot: p, t: 2 s, x: [-5 cm, 12 cm]}

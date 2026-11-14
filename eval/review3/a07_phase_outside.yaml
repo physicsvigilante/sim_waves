@@ -1,0 +1,16 @@
+id: a07
+symbols: {A: positive}
+media:
+  a: {type: string, mu: 0.01 kg/m, tension: 9 N}
+  b: {type: string, mu: 0.04 kg/m, tension: 9 N}
+junctions:
+  J: {at: 0 m, left: a, right: b}
+waves:
+  w: {harmonic: {on: a, A: A, f: 10 Hz, dir: +x, phase: 0}}
+observe:
+  ph: "phase(w, x=1[m], t=0[s])"
+  lam: "wavelength(w, at=1[m])"
+  sl: "y(w, x=x, t=0[s])"
+  dphi: "wrap(phase(w_reflected, x=0[m], t=0[s]) - phase(w, x=0[m], t=0[s]))"
+  dphit: "wrap(phase(w_transmitted, x=0[m], t=0[s]) - phase(w, x=0[m], t=0[s]))"
+  pcons: "power(w) - power(w_reflected) - power(w_transmitted)"

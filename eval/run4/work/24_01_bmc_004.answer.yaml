@@ -1,0 +1,11 @@
+answer: [a, c, d]
+final_scene: 24_01_bmc_004.v1.yaml
+engine_fit: partial
+hand_steps:
+  - "pressure excess = -B dy/dx (hand relation)"
+  - "(a) by definition compression is the high-pressure point; (b) is its negation"
+coverage: partial
+not_represented: "pressure itself, bulk modulus"
+missing_in_source: "none"
+reasoning: "Engine: slope amplitude is a*k so pressure amplitude is B*a*k (c); -slope = a k sin(wt-kx+pi/2) proved, so pressure leads displacement by pi/2 (d). (a) true by definition, (b) false."
+friction: "no pressure observable; had to go through slope"

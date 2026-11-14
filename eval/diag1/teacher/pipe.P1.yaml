@@ -1,0 +1,14 @@
+# parent: eval/diag1/baselines/pipe.yaml
+# change: speed of sound 340 m/s -> 350 m/s (warm day); requested by the teacher, tagged as assumption in assume
+# kind: property change
+id: diag1/pipe
+assume:
+  - "Warm-day sound speed 350 m/s is the teacher's choice (assumption), not a stated value."
+  - "End correction neglected (as in baseline)."
+media:
+  air: {type: gas, v: 350 m/s}
+resonators:
+  p: {type: pipe, on: air, length: 85 cm, ends: [closed, open], end_correction: 0 m}
+observe:
+  f1: "frequency(p, harmonic=1)"
+  f3: "frequency(p, harmonic=3)"

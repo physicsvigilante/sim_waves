@@ -1,0 +1,20 @@
+id: 23/03/asc_007
+number: 4
+source: {problem: 23_Superposition_and_Standing_Waves/03_Transverse_Stationary_Waves/Problems/asc_007.png, solution: 23_Superposition_and_Standing_Waves/03_Transverse_Stationary_Waves/Solutions/asc_007.png}
+format: single_correct
+statement: |
+  Two wires are fixed in a sonometer. Their tensions are in the ratio 8 : 1. The lengths are in the ratio 36 : 35. The diameters are in the ratio 4 : 1. Densities of the materials are in the ratio 1 : 2. If the lower frequency in the setting is 360 Hz. The beat frequency when the two wires are sounded together is
+figure: null
+options:
+  a: "5"
+  b: "8"
+  c: "6"
+  d: "10"
+answer: d
+answer_value: 10
+units: Hz
+verified: "n ~ (1/l) sqrt(T/(d^2 rho)). n1/n2 = (35/36) sqrt(8 * (1/16) * 2) = 35/36. Lower n1 = 360, n2 = 370, beats = 10 Hz. Matches key."
+kinds: [ratio, derived_medium]
+physics: [beats, string_frequency, sonometer]
+notes: |
+  Consistent. Solution writes n1/n2 = (l2/l1) sqrt((T1/T2)(d2/d1)^2 (rho2/rho1)) with ratio inputs 36:35, 8:1, 4:1, 1:2 (wire 1 first-named).

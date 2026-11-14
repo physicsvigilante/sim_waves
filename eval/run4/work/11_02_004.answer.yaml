@@ -1,0 +1,9 @@
+answer: "instantaneous PE per unit volume = (1/2) rho omega^2 A^2 cos^2(kx - omega t); its time-average is (1/4) rho omega^2 A^2"
+final_scene: 11_02_004.v2.yaml
+engine_fit: partial
+hand_steps: ["PE density = (1/2) rho v^2 (dy/dx)^2 = (1/2) rho omega^2 A^2 cos^2(kx - wt) using engine slope and speed", "time average of cos^2 = 1/2"]
+coverage: full
+not_represented: nothing
+missing_in_source: "'per unit volume' needs a density rho and the book may mean instantaneous vs average; unclear"
+reasoning: "Engine gave slope = -A k cos(kx-wt), v = w/k, mu = S rho; combined by hand."
+friction: "No energy-density observable (only power/intensity). tension(s) of a 'free' tension medium without wave is undetermined."

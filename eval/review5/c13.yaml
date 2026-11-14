@@ -1,0 +1,1 @@
+observe: {a: "min_over(t, sqrt(sin(t)))"}

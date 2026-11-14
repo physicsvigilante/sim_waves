@@ -1,0 +1,19 @@
+id: 24/01/asc_004
+number: 1
+source: {problem: 24_Sound_Waves_and_Doppler_Effect/01_Speed_and_Intensity_of_Sound_Waves/Problems/asc_004.png, solution: 24_Sound_Waves_and_Doppler_Effect/01_Speed_and_Intensity_of_Sound_Waves/Solutions/asc_004.png}
+format: single_correct
+statement: |
+  The intensity of sound from a radio at a distance of 2 metres from its speaker is 1 x 10^-2 uW/m^2. The intensity at a distance of 10 meters would be
+figure: null
+options:
+  a: "0.2 x 10^-2 uW/m^2"
+  b: "1 x 10^-2 uW/m^2"
+  c: "4 x 10^-4 uW/m^2"
+  d: "5 x 10^-2 uW/m^2"
+answer: c
+answer_value: 4.0e-4
+units: uW/m^2
+verified: "Isotropic source, I proportional to 1/r^2: I2 = 1e-2 * (2/10)^2 = 4e-4 uW/m^2. Matches key."
+kinds: [ratio]
+physics: [sound_intensity, inverse_square_law]
+notes: "Consistent. Page carries the section heading 'Single correct'."

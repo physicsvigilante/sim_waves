@@ -1,0 +1,10 @@
+id: 11/01/012
+waves:
+  y1: {given: "5/((3*x - 4*t)**2 + 2)", units: {x: m, t: s, y: m}}
+  y2: {given: "-5/((3*x + 4*t - 6)**2 + 2)", units: {x: m, t: s, y: m}}
+  total: {sum: [y1, y2]}
+observe:
+  v1: "velocity(y1)"
+  v2: "velocity(y2)"
+  zero_at_x1_always: "equivalent(y(total, x=1[m], t=t), 0[m])"
+  zero_all_x_t_3_4: "equivalent(y(total, x=x, t=(3/4)[s]), 0[m])"

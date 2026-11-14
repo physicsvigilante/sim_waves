@@ -1,0 +1,15 @@
+id: 11/04/011
+number: 11
+source: {problem: 11_Mechanical_Waves_sardana/04_Interference/Problems/011.png, solution: 11_Mechanical_Waves_sardana/04_Interference/Solutions/011.png}
+format: numerical
+statement: |
+  Sources P and Q are two equally intense coherent sources emitting radiation of wavelength 20 m as shown in Figure. The separation between P and Q is 5 m and the phase of P is ahead of that of Q by 90 degrees. A, B and C are three distinct points of observation, each equidistant from the midpoint of PQ. Calculate the ratio of intensities of radiation arriving at A, B and C.
+figure: "Points on a horizontal line from left to right: C, P, Q, A. P and Q are close together at the centre (separation 5 m); A is to the right of Q and C is to the left of P, each equidistant from the midpoint of PQ. B is directly above the midpoint of PQ (dashed vertical line from the midpoint to B), equidistant from the midpoint like A and C. No numerical distances are labelled in the figure besides PQ = 5 m in the text."
+options: null
+answer: "I_A : I_B : I_C = 4I : 2I : 0 = 2 : 1 : 0"
+answer_value: {A: 2, B: 1, C: 0}
+units: "ratio"
+verified: "lambda = 20 m, PQ = 5 m = lambda/4, path phase 2 pi*5/20 = pi/2. Points are far from the sources, so B has zero path difference. At B delta phi = pi/2, I_B = 2I; at A the extra P path lags the 90 deg lead by 90 deg, delta phi = 0, I_A = 4I; at C delta phi = pi, I_C = 0. Ratio 2:1:0. Matches key."
+kinds: [comparison, ratio, graph_read]
+physics: [interference, coherent_sources, phase_difference, path_difference]
+notes: "Assumes the observation points are far enough that the PQ path differences are +-5 m and 0 (B on the perpendicular bisector). Key's sign convention for 'P ahead of Q' is self-consistent."

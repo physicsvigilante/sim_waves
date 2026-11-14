@@ -1,0 +1,15 @@
+id: 23/02/cnt_004
+number: 11
+source: {problem: 23_Superposition_and_Standing_Waves/02_Reflection_and_Refraction_of_Stationary_Waves/Problems/cnt_004.png, solution: 23_Superposition_and_Standing_Waves/02_Reflection_and_Refraction_of_Stationary_Waves/Solutions/cnt_004.png}
+format: numerical
+statement: |
+  A composite string has two sections AB and BC. The linear mass densities of the two strings are m and 4m. A sinusoidal pulse of amplitude a begins to travel from A towards C. At the joint B the wave suffers reflection and transmission. Find the ratio of wavelengths of the reflected and the transmitted pulses.
+figure: |
+  Horizontal string with points A (left end), B (middle) and C (right end) labelled. Section AB is drawn with a thin line, section BC with a thick (bold) line. Near the left, on AB, a one-cycle sinusoidal pulse (crest first, then trough) with an arrow above it pointing right (towards B). No numbers on the figure.
+answer: "2.0"
+answer_value: 2.0
+units: null
+verified: "Same tension: v ~ 1/sqrt(mu), so v1 = 2 v2. Reflected wavelength = incident wavelength = lambda1; transmitted = lambda2 = lambda1/2. Ratio = 2. Matches key."
+kinds: [ratio, nonuniform_medium, derived_medium]
+physics: [reflection, transmission, wavelength, wave_speed, string_junction]
+notes: Consistent. Heavier section BC is thick in figure, consistent with 4m.

@@ -1,0 +1,19 @@
+id: 23/05/asc_006
+number: 3
+source: {problem: 23_Superposition_and_Standing_Waves/05_Vibration_in_Rods_and_Beats/Problems/asc_006.png, solution: 23_Superposition_and_Standing_Waves/05_Vibration_in_Rods_and_Beats/Solutions/asc_006.png}
+format: single_correct
+statement: |
+  Beats are produced by two waves given by y1 = a sin 2000 pi t and y2 = a sin 2008 pi t. The number of beats heard per second is
+figure: null
+options:
+  a: "Zero"
+  b: "One"
+  c: "Four"
+  d: "Eight"
+answer: c
+answer_value: 4
+units: Hz
+verified: "f1 = 1000, f2 = 1004, beats = 4. Matches key."
+kinds: [given_wavefunction]
+physics: [beats, frequency]
+notes: Consistent.

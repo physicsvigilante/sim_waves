@@ -1,0 +1,4 @@
+symbols: {m0: positive, L0: positive, mu0: positive}
+media: {b: {type: string, mu: mu0, mass: m0, length: L0, tension: 60 N}}
+observe: {v: "speed(b)"}
+expect: {error: rejected, message: "over-specifies"}

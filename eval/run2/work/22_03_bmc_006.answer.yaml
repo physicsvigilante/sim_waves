@@ -1,0 +1,8 @@
+answer: [a, c, d]
+final_scene: 22_03_bmc_006.v1.yaml
+engine_fit: full
+coverage: full
+not_represented: "nothing (lossless spreading)"
+missing_in_source: "none"
+reasoning: "Intensity ratio at 2r vs r: plane 1, point 1/4, line 1/2. So a, c, d are true and b (inverse distance for spherical) is false."
+friction: "none"

@@ -1,0 +1,15 @@
+id: 11/05/006
+assume:
+  - "Wire fixed at both rigid supports; 420 Hz is harmonic n and 490 Hz the next higher harmonic n+1 (stated: next higher resonance)."
+unknowns: {L: positive, n: integer}
+media:
+  wire: {type: string, mu: 0.05 g/cm, tension: 450 N}
+resonators:
+  r: {type: string, on: wire, length: L, ends: [fixed, fixed]}
+given:
+  - {fact: "frequency(r, harmonic=n) == 420[Hz]", source: stated}
+  - {fact: "frequency(r, harmonic=n + 1) == 490[Hz]", source: stated}
+observe:
+  L: "L"
+  n: "n"
+  v: "speed(r)"

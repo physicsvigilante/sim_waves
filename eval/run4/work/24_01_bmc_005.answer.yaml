@@ -1,0 +1,10 @@
+answer: [a, c, d]
+final_scene: 24_01_bmc_005.v1.yaml
+engine_fit: partial
+hand_steps:
+  - "pressure excess = -B * slope: max where slope most negative, minimum where slope most positive, atmospheric where slope zero"
+coverage: partial
+not_represented: "pressure; figure has no scale so lambda kept as symbol"
+missing_in_source: "none"
+reasoning: "Engine: slope at A negative, at B zero (trough), at C positive. So pressure max at A, atmospheric at B, min at C."
+friction: "no pressure observable; relation slope -> pressure by hand. Direction +x taken from statement and phi solved as pi (figure facts)"

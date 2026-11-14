@@ -1,0 +1,19 @@
+id: 23/02/asc_004
+assume:
+  - "A concrete string (mu 0.01 kg/m, T 4 N, f 50 Hz) is fixed by assumption: the question is about phase relations in any standing wave, and the loop structure is scale-free."
+  - "Wall at x = 0, string on x < 0. Nodes at x = -0.2 m multiples (lambda = 0.4 m); antinodes at -0.1, -0.3 m."
+  - "Same phase means the ratio y(x1,t)/y(x2,t) is a positive constant."
+media:
+  s: {type: string, mu: 0.01 kg/m, tension: 4 N}
+junctions:
+  wall: {at: 0 m, left: s, right: fixed}
+waves:
+  w: {harmonic: {on: s, A: 1 cm, f: 50 Hz, dir: +x, phase: 0}}
+  st: {sum: [w, w_reflected]}
+observe:
+  lam: "wavelength(w)"
+  same_loop_ratio:   "simplify(y(st, x=(-1/20)[m], t=t)/y(st, x=(-3/20)[m], t=t))"
+  across_node_ratio: "simplify(y(st, x=(-1/20)[m], t=t)/y(st, x=(-1/4)[m], t=t))"
+  between_antinodes_ratio: "simplify(y(st, x=(-3/20)[m], t=t)/y(st, x=(-1/4)[m], t=t))"
+  across_node2_ratio: "simplify(y(st, x=(-3/20)[m], t=t)/y(st, x=(-7/20)[m], t=t))"
+  all_same_phase: "equivalent(y(st, x=(-1/20)[m], t=t), y(st, x=(-1/4)[m], t=t))"

@@ -1,0 +1,10 @@
+answer: {a: "283.3 Hz", b: "0.515 m (51.5 cm) from the mouthpiece"}
+final_scene: 11_05_014.v2.yaml
+engine_fit: partial
+hand_steps:
+  - "Modelling a hole as shortening the pipe to an open-open pipe of length equal to the hole distance (assumption)"
+coverage: partial
+not_represented: "the open-hole boundary condition is approximated as a full open end (no hole end correction); the remaining flute length beyond the hole is ignored"
+missing_in_source: "none"
+reasoning: "Engine: fundamental of 60 cm open-open pipe = 283.3 Hz; length of open-open pipe with f=330 Hz = 17/33 m."
+friction: "no way to express a hole in a pipe; modelled as a separate shorter pipe. v1 failed because I named the unknown x (reserved)"

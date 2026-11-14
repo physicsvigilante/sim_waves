@@ -1,0 +1,8 @@
+answer: [a, b, c, d]
+final_scene: 22_02_bmc_004.v1.yaml
+engine_fit: full
+coverage: full
+not_represented: "nothing"
+missing_in_source: "none (10^4 read as 10000)"
+reasoning: "Engine: velocity = -30 m/s (speed 30, -x), wavelength = pi m, frequency = 30/pi Hz, amplitude 10000 m; all four statements hold."
+friction: "none"

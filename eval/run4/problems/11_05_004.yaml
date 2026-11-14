@@ -1,0 +1,15 @@
+id: 11/05/004
+format: numerical
+statement: 'Consider a steel wire of length 1 m, mass 0.1 kg and cross-sectional area 10^-6 m^2 in which
+  longitudinal vibrations are setup.
+
+  (a) What is the fundamental frequency?
+
+  (b) The same wire is rigidly fixed at both ends and the temperature is lowered by 20 degC. If now transverse
+  waves are set up by plucking it at the mid-point, calculate the fundamental frequency and compare this
+  with the frequency in the first case.
+
+  Given: Coefficient of linear expansion of steel is 1.21x10^-5 (degC)^-1 and Young''s modulus of steel
+  is 2x10^11 N m^-2.
+
+  '

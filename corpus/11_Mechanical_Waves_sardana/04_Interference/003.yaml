@@ -1,0 +1,15 @@
+id: 11/04/003
+number: 3
+source: {problem: 11_Mechanical_Waves_sardana/04_Interference/Problems/003.png, solution: 11_Mechanical_Waves_sardana/04_Interference/Solutions/003.png}
+format: numerical
+statement: |
+  Three component sinusoidal waves progressing in the same direction along the same path have the same period but their amplitudes are A, A/2 and A/3. The phases of the variation at any position x on their path at time t = 0 and 0, -pi/2 and -pi respectively. Find the amplitude and phase of the resultant wave.
+figure: null
+options: null
+answer: "Amplitude = 5A/6; phase = -tan^-1(3/4)"
+answer_value: {amplitude_over_A: 0.8333, phase_rad: -0.6435}
+units: "phase in rad (about -36.9 degrees)"
+verified: "Components (A,0), (0,-A/2), (-A/3,0) sum to (2A/3, -A/2); amplitude = A sqrt(4/9 + 1/4) = 5A/6; phase = atan(-(A/2)/(2A/3)) = -atan(3/4). Matches key."
+kinds: [build_wavefunction, symbolic]
+physics: [superposition, phasor, phase_difference, amplitude_superposition]
+notes: "Problem image has no figure. The solution has a phasor diagram only: A along +x (phase 0), A/2 pointing down (phase -pi/2), A/3 pointing left (phase -pi); these combine into 2A/3 along +x and A/2 down. Problem wording 'the phases ... at time t = 0 and 0, -pi/2 and -pi respectively' is garbled; read as phases 0, -pi/2, -pi for the three waves."

@@ -1,0 +1,20 @@
+id: 11/04/010
+assume:
+  - "Wall is the line x = 0 (rigid, normal pointing to the left); S at (-d, 0), D at (-d, 3 m); d = distance of the SD line from the wall (symbol). Originally d = 2 m."
+  - "SD = y = 3 m is taken from the engine result of part (a) (v1)."
+  - "Wall moved away (d larger than 2 m). 'Out of phase by 180 degrees' read as direct and reflected waves in antiphase at D."
+  - "Equal amplitudes (spreading none); rigid wall."
+symbols: {d: positive}
+media: {air: {type: gas, v: 360 m/s}}
+sources:
+  S: {on: air, f: 180 Hz, A: 1, phase: 0, spreading: none, at: [-d, 0 m]}
+reflectors:
+  wall: {point: [0 m, 0 m], normal: [-1, 0], boundary: rigid}
+points:
+  D: [-d, 3 m]
+rays:
+  direct: {from: S, to: D}
+  bounce: {from: S, to: D, via: wall}
+given: []
+observe:
+  dmin: "minima(bounce, direct, vary=d, lo=2.001[m], hi=6[m])"

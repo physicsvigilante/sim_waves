@@ -1,0 +1,7 @@
+id: 22/01/asc_004
+symbols: {a: positive, b: positive, c: positive}
+waves:
+  p: {given: "a*exp(-(b*x - c*t)**2)", units: {x: m, t: s, y: m}}
+observe:
+  v: "speed(p)"
+expect: {v: "c/b"}

@@ -1,0 +1,6 @@
+id: 11/01/010
+waves:
+  p: {given: "10/(5 + (x + 2*t)**2)", units: {x: m, t: s, y: m}}
+observe:
+  v: "velocity(p)"
+  peak_following: "y(p, x=-2*t, t=t)"

@@ -1,0 +1,11 @@
+answer: "0.278 (x10^-3 %), i.e. a decrease of 2.78e-4 %"
+final_scene: 24_01_cnt_007.v1.yaml
+engine_fit: partial
+hand_steps:
+  - "B = rho v^2 = 9000*2000^2 = 3.6e10 Pa"
+  - "dV/V = dP/B = 1e5/3.6e10 = 2.78e-6 = 2.78e-4 % = 0.278 x 10^-3 %"
+coverage: partial
+not_represented: "liquid medium, bulk modulus"
+missing_in_source: "none"
+reasoning: "Engine gave v = 250*8 = 2000 m/s; rest by hand."
+friction: "no liquid medium or bulk modulus; wave defined with no medium"

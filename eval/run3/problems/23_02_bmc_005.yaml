@@ -1,0 +1,11 @@
+id: 23/02/bmc_005
+format: multiple_correct
+statement: 'A sinusoidal wave y_i = a sin(wt - kx) is reflected from a rigid support and the reflected
+  wave superposes with the incident wave, y_i. Assume the rigid support to be at x = 0,
+
+  '
+options:
+  a: Stationary waves are obtained with antinode at the rigid support
+  b: Stationary waves are obtained with node at the rigid support
+  c: Stationary waves are obtained with intensity varying periodically with distance
+  d: Stationary waves are obtained with intensity varying periodically with time

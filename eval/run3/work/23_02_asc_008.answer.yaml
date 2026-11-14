@@ -1,0 +1,8 @@
+answer: [d]
+final_scene: 23_02_asc_008.v1.yaml
+engine_fit: full
+coverage: partial
+not_represented: "real w, k, a (fixed to 10 rad/s, 5 rad/m, 1 mm by assumption)"
+missing_in_source: "w and k values"
+reasoning: "Only option d (cos(wt + kx + 4pi/3)) cancels y1 at x = 0 for all t."
+friction: "Symbolic w, k in a given wave need units on x, t; I had to fix numbers."

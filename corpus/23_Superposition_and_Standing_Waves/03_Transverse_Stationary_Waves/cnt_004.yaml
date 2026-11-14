@@ -1,0 +1,15 @@
+id: 23/03/cnt_004
+number: 9
+source: {problem: 23_Superposition_and_Standing_Waves/03_Transverse_Stationary_Waves/Problems/cnt_004.png, solution: 23_Superposition_and_Standing_Waves/03_Transverse_Stationary_Waves/Solutions/cnt_004.png}
+format: numerical
+statement: |
+  A stretched wire of length 1 m vibrates in its 4th overtone. What is the wavelength of the waves producing stationary waves (in cm)?
+figure: null
+answer: "20.0"
+answer_value: 20.0
+units: cm
+verified: "DISPUTED. 4th overtone = 5th harmonic = 5 loops on a fixed-fixed wire: lambda = 2L/5 = 40 cm. Segment (loop) length = lambda/2 = 20 cm."
+kinds: [inverse_condition]
+physics: [standing_waves, overtones, wavelength]
+notes: |
+  BOOK ERROR. Solution computes the length of each segment (20 cm) and reports it as the wavelength. Wavelength is twice that, 40 cm. Key 20.0 answers a different quantity (loop length). Alternatively the key is consistent only if the question were asking for the distance between nodes.

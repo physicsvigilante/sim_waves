@@ -1,0 +1,4 @@
+media: {air: {type: gas, v: 340 m/s}}
+symbols: {L: positive}
+resonators: {pl: {type: pipe, on: air, length: L, ends: [closed, open], end_correction: 0 m}}
+observe: {c: "harmonics(pl, upto=9, node_at=2*L/3)"}

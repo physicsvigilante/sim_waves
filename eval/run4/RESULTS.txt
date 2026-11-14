@@ -1,0 +1,80 @@
+id               att fit      ok   answer -> key
+11/01/001          1 full     ?    {'equation': 'y = 0.06 sin(25*pi*x - 7500*pi*t) m  (equivalently 0.06 sin(7500*pi*t - 25*pi*x + pi))', 'wavelength': '0.08 m', 'f': '3750 Hz', 'k': '25*pi rad/m', 'omega': '7500*pi rad/s'} -> y(x,t) = (0.06 m) sin(23562 t - 78.5 x)
+11/01/002          4 partial  n    {'v': '75 m/s if lambda > 0.1 m is assumed (lambda = 0.15 m); the stated data alone do not fix it'} -> v = 150 m/s (k = 20 pi/3 rad/m, omega = 1000 pi rad/s)
+11/01/003          1 partial  ?    Pulse (semicircle profile, |x - v t| <= a) moves in +x with velocity v; shape unchanged: y = sqrt(a^2 - (x - v t)^2) -> y(x,t) = sqrt(a^2 - (x - vt)^2) when |x - vt| <= a; 0 otherwise. Semicircular pulse of radius a moving in +x with speed v, centre at x = vt.
+11/01/004          1 full     n    {'verified': True, 'speed': 'w/k', 'direction': '+x'} -> Satisfies the wave equation with v = w/k; travelling along +x direction.
+11/01/005          1 full     Y    {'distance': '0.12 m'} -> 0.12 m
+11/01/006          3 partial  Y    ['d'] -> d
+11/01/007          1 full     n    {'description': 'Pulse of peak 2 cm, same shape, centred at x=0, 3 cm, 6 cm at t=0, 1, 2 s; speed 3 cm/s to the right', 'plotted': 'y0, y1, y2 expressions below; snapshots in view'} -> Speed 3 cm/s, amplitude 2 cm. y(x,0) = 2/(x^2+1), y(x,1) = 2/((x-3)^2+1), y(x,2) = 2/((x-6)^2+1). Three identical bell-shaped pulses of peak 2 cm centred at x = 0, 3, 6 cm.
+11/01/008          1 partial  n    {'equation': 'y = 0.02 cos(100 x - 10 t) m with x along the paper (time-trace; omega = 10 rad/s)', 'distance_between_maxima': 'pi/50 m = 0.0628 m'} -> y = 0.02 cos(10 t - 100 x) metre; distance between two successive maxima = 2pi/100 = 0.0628 m
+11/01/009          1 full     n    {'A': '2 cm', 'f': '100 Hz', 'wavelength': '30 cm', 'v': '30 m/s'} -> A = 2 cm, f = 100 Hz, lambda = 30 cm, v = 3000 cm/s = 30 m/s
+11/01/010          2 full     Y    {'direction': '-x', 'velocity': '2 m/s', 'amplitude': '2 m'} -> Along -x direction, v = 2 m/s, amplitude = 2 units (a/b = 10/5)
+11/01/011          1 full     Y    {'v': '4 m/s', 'direction': '+x'} -> v = 4 m/s along +x axis
+11/01/012          1 full     ?    {'y1': '+x at 4/3 m/s', 'y2': '-x at 4/3 m/s', 'cancel': 'at t = 0.75 s everywhere (x anywhere), and at x = 1 m at all times'} -> y1 travels along +x, y2 along -x. They cancel at t = 0.75 s and x = 1 m.
+11/02/001          2 none     ?    {'t': '2*sqrt(2*l0/g)'} -> t = sqrt(8 l0 / g)
+11/02/002          2 partial  ?    {'t': '(1/(15*alpha))*((mu0 + alpha*l)^(3/2) - mu0^(3/2)) s'} -> t = (1/(15 alpha)) [ (mu0 + alpha l)^(3/2) - mu0^(3/2) ]
+11/02/003          1 full     ?    {'v_AB': '79.2 m/s', 'v_CD': '62.6 m/s'} -> v_AB = 80 m/s; v_CD = sqrt(4000) = 63.24 m/s
+11/02/004          2 partial  ?    instantaneous PE per unit volume = (1/2) rho omega^2 A^2 cos^2(kx - omega t); its time-average is (1/4) rho omega^2 A^2 -> No answer given: solution image says only 'Already Done in Theory.'
+11/02/005          2 full     Y    {'wavelength_top': '0.104 m (= 0.06*sqrt(3) = 3*sqrt3/50 m)'} -> lambda_2 = sqrt(3) * 0.06 = 0.06*sqrt(3) m (about 0.104 m)
+11/02/006          3 partial  Y    {'extension': '2e-5 m'} -> 0.02 mm
+11/02/007          2 partial  Y    {'t': '0.47 s (= 12 m / 25.56 m/s)'} -> t = 0.47 s
+11/02/008          1 full     n    P2 = P1/8 -> P2 = P1/8
+11/02/009          1 full     Y    32 m/s -> 32 m/s
+11/02/010          2 full     n    rho1/rho2 = 1/4 -> rho1/rho2 = 1/4 = 0.25
+11/02/011          2 partial  ?    {'a': '0.14 s', 'b': 'reflected 1.5 cm, transmitted 2 cm'} -> (a) t = 0.14 s; (b) A_r = -1.5 cm (magnitude 1.5 cm, phase reversed), A_t = 2 cm
+11/02/012          2 partial  ?    String 2 is denser (larger mu, lower wave speed, larger impedance); string 1 is the 'rarer' one -> String 2 is denser (mu2 > mu1 so v2 < v1); string 1 is rarer.
+11/02/013          2 partial  Y    0.05 s -> t = 0.05 s
+11/03/001          3 partial  n    {'a': '4.98 Pa', 'b': '3.01e-6 m'} -> (a) (deltaP)_m = 4.98 N m^-2; (b) A = 3 x 10^-6 m
+11/03/002          1 partial  n    v_sound/v_rms = sqrt(gamma/3) = 0.683 (gamma = 7/5) -> sqrt(7/15)
+11/03/003          3 partial  Y    {'one_dog': '68.0 dB', 'five_dogs': '75.0 dB'} -> 68 dB for one dog; 75 dB for five dogs
+11/03/004          1 partial  Y    {'v': '1414 m/s', 'wavelength': '5.84 m'} -> v = 1414 m/s; wavelength = 5.84 m
+11/03/005          1 full     n    -2.87 % (wavelength decreases by about 2.9 %) -> 3%
+11/03/006          3 partial  n    {'power': '2e-6 W', 'energy_per_day': '0.173 J (86400 s)'} -> P = 2 microwatt; E = 0.173 J in one day
+11/03/007          1 full     Y    23.3 K (about -250 C) -> T_H2 = 23.31 K, approximately -249.7 C
+11/03/008          1 partial  Y    5270 m/s -> 5.27 x 10^3 m/s
+11/03/009          1 none     Y    0.938 Pa -> 0.94 N m^-2
+11/03/010          2 partial  n    {'a': '2e-4 Pa', 'b': 's = 2e-9 sin(500 t - 2.5 x) m; equivalently dP = 2e-4 cos(500 t - 2.5 x) Pa'} -> (a) (deltaP)_max = 2 x 10^-4 N m^-2; (b) y = 2 x 10^-9 sin(500 t - (5/2) x)
+11/03/011          1 partial  Y    590 m/s -> 591 m/s
+11/03/012          1 none     Y    4.4e-12 W/m^2 -> 4.4 x 10^-12 W m^-2
+11/03/013          1 none     n    {'pressure_amplitude': '2.94e-5 Pa', 'max_displacement': '1.08e-11 m'} -> (deltaP)_m = 2.94 x 10^-5 N m^-2; A = 1.1 x 10^-11 m
+11/04/001          1 partial  n    {'a': 'y = 0.283 sin(x - 3t + pi/4) m (amplitude sqrt(2)/5 = 0.283 m)', 'b': 'phi = 1.287 rad (73.7 deg), taking 0 < phi <= pi'} -> y = 0.28 sin(x - 3t + pi/4); phi = +-1.29 rad
+11/04/002          1 partial  n    Imin/Imax = 1/16 -> 1/16
+11/04/003          1 full     n    Amplitude 5A/6; phase -atan(3/4) = -0.6435 rad (-36.9 deg), i.e. resultant A*(5/6) sin(wt - kx - 0.6435) -> Amplitude = 5A/6; phase = -tan^-1(3/4)
+11/04/004          2 partial  Y    1440 Hz (minimum of the family 1440, 4320, 7200, ...) -> 1440 Hz
+11/04/005          1 partial  n    Amplitude 10*sqrt(7) = 26.5 (m); phase +atan(sqrt(3)/2) = 0.714 rad (40.9 deg): y = 26.5 cos(5x + 25t + 0.714) -> Amplitude = 26.46 m; phase of resultant = (5x + 25t + 0.714) rad
+11/04/006          1 partial  n    Phases at P differ by pi (antiphase; path difference 2.25 m = 1.5 lambda); I = 8.2e-5 W/m^2 -> Waves arrive out of phase (phase terms pi and 4pi); resultant (as printed) P1 - P2 = 0.6 x 10^-3 watt
+11/04/007          1 partial  Y    f = n * 188.3 Hz, n = 1, 2, ..., 106 (106 audible frequencies, from 188 Hz up to about 19962 Hz) -> f = n (188 Hz) = 188, 376, 564, ... Hz
+11/04/008          1 partial  ?    {'a': 'f = n * 1003 Hz (about 1000 n Hz), n = 1, 2, ...', 'b': 'f = (n + 1/2) * 1003 Hz, i.e. 501 Hz, 1504 Hz, 2506 Hz, ...'} -> (a) 1000 Hz, 2000 Hz, 3000 Hz, ...; (b) 500 Hz, 1500 Hz, 2500 Hz, ...
+11/04/009          2 partial  n    r = 0.175 m (17.5 cm) -> r = 17.54 cm
+11/04/010          3 partial  n    {'a': 'SD = 3 m', 'b': '0.60 m (wall moves from 2 m to about 2.60 m)'} -> (a) y = 3 m; (b) z = 0.6 m
+11/04/011          3 full     n    I_A : I_B : I_C = 4 : 2 : 0 (= 2 : 1 : 0) -> I_A : I_B : I_C = 4I : 2I : 0 = 2 : 1 : 0
+11/04/012          2 partial  ?    At A the path difference is 8 m, close to lambda/2 = 7.98 m (lambda = 15.95 m), so the waves are nearly in antiphase (phase difference 0.997 pi). Minima lie on the hyperbola with foci at the speakers: x^2/(lambda/4)^2 - y^2/(25 - (lambda/4)^2) = 1, i.e. x^2/15.9 - y^2/9.1 = 1 (m^2), with lambda/4 = 3.99 m -> Minimum at A because path difference 8 m = lambda/2 (lambda about 16 m). Minima path: sqrt((x+5)^2 + y^2) - sqrt((x-5)^2 + y^2) = 16n - 8, n = 1, 2, 3, ...
+11/05/001          2 partial  n    f = 15/pi = 4.77 Hz; component amplitude 0.2 cm; speed 60 cm/s; particle velocity at x = 2.4 cm, t = 0.8 s is 10.1 cm/s (0.1013 m/s) -> f = 15/pi Hz; amplitude = 0.2 cm; wave speed = 60 cm/s; particle velocity = 10.12 cm/s at x = 2.4 cm, t = 0.8 s
+11/05/002          1 full     n    {'a': '144 cm', 'b': '17 Hz (17.36 Hz)'} -> (a) 144 cm; (b) 17.36 Hz, approx 17 Hz
+11/05/003          3 partial  n    {'a': '2.56 mm (about 2.5 mm)', 'b': 'wavelength 4.0 cm (4.002 cm), speed 200 cm/s each (travelling in opposite directions)', 'c': '0.765 m/s (76.5 cm/s)', 'd': 'nodes at 0, 2, 4, 6, 8, 10 cm; antinodes at 1, 3, 5, 7, 9 cm; 5 loops'} -> (a) 2.56 mm; (b) lambda = 4 cm, v = 200 cm/s = 2 m/s; (c) 78.5 cm/s; (d) nodes at x = 0, 2, 4, ... cm; antinodes at x = 1, 3, 5, ... cm; 5 loops
+11/05/004          2 partial  n    {'a': 'about 707 Hz (assuming fixed ends)', 'b': '11 Hz; about 64 times smaller than 707 Hz'} -> (a) f = 500 sqrt(2) Hz (approx 707 Hz); (b) T = 48.4 N, f = 11 Hz
+11/05/005          1 full     n    Bridges at 72 cm and 96 cm from the left end (segments 72, 24, 18 cm), segment order as read left to right -> Segment lengths L1 : L2 : L3 = 12 : 4 : 3, i.e. L1 = 72 cm, L2 = 24 cm, L3 = 18 cm
+11/05/006          1 full     n    L = 15/7 m = 2.14 m -> 2.142 m
+11/05/007          3 partial  Y    96 % of the energy passes across the obstacle -> 96% of the energy passes across the obstacle (4% reflected)
+11/05/008          1 none     n    {'a': '0.364 m', 'b': '9.84e3 Hz', 'c': 'y = 4e-6 sin(17.3*0.5) cos(6.18e4 t) m, i.e. 4e-6*sin(8.64 rad)*cos(2 pi 9.84e3 t); k=2pi/lambda=17.3 rad/m'} -> (a) lambda = 0.36 m; (b) f = 9939 Hz (v = 3578 m/s); (c) y = 2.57x10^-6 sin(62400 t + phi) m
+11/05/009          1 partial  ?    {'a': '(1/2) mu A^2 w^2 lambda sin^2(wt)', 'b': '(1/2) mu A^2 w^2 lambda', 'c': '(1/4) mu A^2 w^2 lambda'} -> (a) K = pi k A^2 T sin^2(wt); (b) K_max = pi k A^2 T; (c) <K> = pi k A^2 T / 2
+11/05/010          1 full     Y    353.6 m/s -> 353.6 m/s
+11/05/011          1 full     n    open pipe 0.55 m; closed pipe 0.4125 m -> Open pipe 55 cm (0.55 m); closed pipe 41.25 cm (0.4125 m)
+11/05/012          1 full     Y    {'frequency': '82.5 Hz', 'tension': '81.7 N (81.675 N)'} -> f = 82.5 Hz; T = 81.675 N
+11/05/013          1 partial  n    closed pipe 0.75 m; open pipe either 150/151 m = 0.993 m or 150/149 m = 1.007 m; the problem as printed does not say which side -> Closed pipe 0.75 m; open pipe 0.99 m or 1.0067 m
+11/05/014          2 partial  n    {'a': '283.3 Hz', 'b': '0.515 m (51.5 cm) from the mouthpiece'} -> (a) 283.33 Hz; (b) 51.5 cm
+11/05/015          2 full     Y    367 Hz -> 367 Hz
+11/05/016          1 full     Y    27.04 N -> 27.04 N
+11/05/017          1 partial  ?    y = A cos(5*pi*x/4) sin(1296 t) (x in m from one open end, t in s), f = 206 Hz -> y = A cos(3.93 x) sin(1297 t)
+24/01/asc_004      1 full     Y    c -> c
+24/01/asc_005      2 partial  Y    b -> b
+24/01/asc_006      1 partial  Y    d -> d
+24/01/bmc_004      1 partial  Y    ['a', 'c', 'd'] -> ['a', 'c', 'd']
+24/01/bmc_005      1 partial  Y    ['a', 'c', 'd'] -> ['a', 'c', 'd']
+24/01/cnt_004      1 none     Y    1414 m/s (about 1.41e3 m/s) -> 1414
+24/01/cnt_005      1 partial  Y    482 m/s -> 482
+24/01/cnt_006      1 none     Y    3 dB (3.01 dB increase) -> 3.0
+24/01/cnt_007      1 partial  n    0.278 (x10^-3 %), i.e. a decrease of 2.78e-4 % -> 2.8
+24/01/dmt_004      2 partial  n    {'i': 'speed x2', 'ii': 'unchanged', 'iii': 'speed x2', 'iv': 'speed x1/2'} -> {'i': 'q', 'ii': 'r', 'iii': 'q', 'iv': 's'}
+
+correct 31/77; correct on first attempt 20/77

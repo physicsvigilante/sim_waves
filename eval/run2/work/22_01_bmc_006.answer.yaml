@@ -1,0 +1,8 @@
+answer: [a, b, c]
+final_scene: 22_01_bmc_006.v1.yaml
+engine_fit: partial
+coverage: partial
+not_represented: "the wave is assumed sinusoidal from the start (harmonic wave), so option c is true by construction, not tested; option 'at one end' is not an engine notion"
+missing_in_source: "the equation itself is not printed; the problem is purely about the meaning of a generic SHM wave equation"
+reasoning: "Engine field(w) = -A sin(k*x - omega*t); y(x=x, t=0) gives the shape at an instant (b) and y(x=0, t=t) gives one particle's motion over all t (a). d (a single end at a single instant) is not what the equation gives. c is by definition of a simple harmonic wave."
+friction: "Interpretation questions about what an equation 'is' cannot be asked as observables; the engine only shows the shape and motion functions."

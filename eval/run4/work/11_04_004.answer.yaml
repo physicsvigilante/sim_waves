@@ -1,0 +1,11 @@
+answer: "1440 Hz (minimum of the family 1440, 4320, 7200, ...)"
+final_scene: 11_04_004.v2.yaml
+engine_fit: partial
+hand_steps:
+  - "Writing the rays' lengths as 1 m, 1.115 m, 1.23 m, 1.345 m (path differences 11.5, 23, 34.5 cm)."
+  - "Choosing the bound f < 2000 Hz after seeing the engine's family spacing of 2880 Hz, to isolate the minimum."
+coverage: full
+not_represented: nothing
+missing_in_source: "common path length ABP not given (irrelevant)"
+reasoning: "Antiphase at 11.5 cm, in phase at 23 cm, antiphase at 34.5 cm: engine v1 reported family 1440, 4320, ...; with f < 2000 Hz solved f = 1440."
+friction: "'Minimum frequency' needs restricting an infinite family by hand."

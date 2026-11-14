@@ -1,0 +1,9 @@
+id: 11/05/008
+assume:
+  - "Probe: rod medium type is documented as not yet supported."
+media:
+  rod: {type: rod, Y: 6.4e10 Pa, density: 5e3 kg/m^3}
+resonators:
+  r: {type: string, on: rod, length: 1 m, ends: [fixed, free]}
+observe:
+  v: "speed(r)"

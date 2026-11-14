@@ -1,0 +1,6 @@
+id: 11/02/009
+assume: ["Wire treated as uniform string, mass spread uniformly; 8 N is the tension."]
+media:
+  wire: {type: string, mass: 5 g, length: 64 cm, tension: 8 N}
+observe:
+  v: "speed(wire)"

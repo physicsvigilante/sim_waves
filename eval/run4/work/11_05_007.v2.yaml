@@ -1,0 +1,20 @@
+id: 11/05/007
+assume:
+  - "Antinode/node amplitude relation is written by hand (A_i+A_r over A_i-A_r) because v1 using max_over over x was rejected (undecidable sqrt sign for symbols)."
+  - "Obstacle modelled as the junction (x = 0) with a second string of different mass density, T common; waves are on s1 (x<0) travelling toward the junction. 'Energy passes across the obstacle' = power of the transmitted wave over the incident power."
+  - "mu1 and T arbitrary symbols (they cancel); mu2 unknown solved from the node/antinode ratio. The sign of the reflection is not given (beta = 1.5 holds for either), so two media may fit: engine will report the ambiguity."
+symbols: {mu1: positive, T: positive, A: positive, f: positive}
+unknowns: {mu2: positive}
+media:
+  s1: {type: string, mu: mu1, tension: T}
+  s2: {type: string, mu: mu2, tension: T}
+junctions:
+  J: {at: 0 m, left: s1, right: s2}
+waves:
+  w: {harmonic: {on: s1, A: A, f: f, dir: +x, phase: 0}}
+  tot: {sum: [w, w_reflected]}
+given:
+  - {fact: "(amplitude(w) + amplitude(w_reflected))/(amplitude(w) - amplitude(w_reflected)) == 3/2", source: stated, note: "antinode amplitude = A_i + A_r, node amplitude = A_i - A_r (hand-written standing-wave relation)"}
+observe:
+  mu2: "mu2/mu1"
+  ratio: "power(w_transmitted)/power(w)"

@@ -1,0 +1,13 @@
+id: 23/05/asc_012
+assume:
+  - "Engine cannot give the max/min of a sum of two different frequencies (v1 attempt rejected). Maximum resultant amplitude is taken as a1+a2 and minimum as |a1-a2| (my own framing); intensity is proportional to amplitude squared. The ratio expression below is therefore NOT an engine physics result."
+waves:
+  y1: {given: "4*sin(400*pi*t)", units: {x: m, t: s, y: m}}
+  y2: {given: "3*sin(404*pi*t)", units: {x: m, t: s, y: m}}
+observe:
+  beats: "beat_frequency(y1, y2)"
+  f1: "frequency(y1)"
+  f2: "frequency(y2)"
+  a1: "amplitude(y1)"
+  a2: "amplitude(y2)"
+  ratio: "((amplitude(y1) + amplitude(y2))/(amplitude(y1) - amplitude(y2)))**2"

@@ -1,0 +1,11 @@
+id: 11/01/006
+assume: ["A function represents a (physical) wave if it is a function of x -/+ vt AND stays finite for all x, t. is_travelling checks only the first; finiteness is probed with limits."]
+symbols: {v: positive}
+waves:
+  a: {given: "1/(x + v*t)", units: {x: m, t: s, y: m}}
+  c: {given: "(x - v*t)**2", units: {x: m, t: s, y: m}}
+  d: {given: "exp(-(x - v*t)**2)", units: {x: m, t: s, y: m}}
+observe:
+  a_blows_up_at_x_eq_minus_vt: "limit(y(a, x=x, t=0[s]), x, 0)"
+  c_at_large_x: "limit(y(c, x=x, t=0[s]), x, 1e30)"
+  d_at_large_x: "limit(y(d, x=x, t=0[s]), x, 1e30)"

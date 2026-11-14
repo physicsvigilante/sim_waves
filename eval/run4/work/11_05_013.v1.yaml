@@ -1,0 +1,18 @@
+id: 11/05/013
+assume:
+  - "End corrections neglected."
+  - "Beat frequency 2.2 Hz is |f_open2 - f_closed3|; the engine solves both branches via abs, ambiguity reported if any."
+unknowns: {Lo: positive, Lc: positive}
+media:
+  air: {type: gas, v: 330 m/s}
+resonators:
+  po: {type: pipe, on: air, length: Lo, ends: [open, open], end_correction: 0 m}
+  pc: {type: pipe, on: air, length: Lc, ends: [closed, open], end_correction: 0 m}
+given:
+  - {fact: "frequency(pc, harmonic=1) == 110[Hz]", source: stated}
+  - {fact: "beat_frequency(frequency(po, harmonic=harmonic(po, overtone=1)), frequency(pc, harmonic=harmonic(pc, overtone=1))) == 2.2[Hz]", source: stated}
+observe:
+  Lo: "Lo"
+  Lc: "Lc"
+  fo: "frequency(po, harmonic=2)"
+  fc: "frequency(pc, harmonic=3)"

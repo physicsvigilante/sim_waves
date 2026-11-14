@@ -1,0 +1,11 @@
+id: 23/02/asc_008
+format: single_correct
+statement: 'A standing wave pattern is formed on a string. One of the waves is given by equation y1 =
+  a cos(wt - kx + pi/3), then the equation of the other wave such that at x = 0 a node is formed.
+
+  '
+options:
+  a: y2 = a sin(wt + kx + pi/3)
+  b: y2 = a cos(wt + kx + pi/3)
+  c: y2 = a cos(wt + kx + 2pi/3)
+  d: y2 = a cos(wt + kx + 4pi/3)

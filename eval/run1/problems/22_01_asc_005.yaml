@@ -1,0 +1,13 @@
+id: 22/01/asc_005
+format: single_correct
+statement: 'The equation of a travelling wave is y = ±(b/a)*sqrt(a^2 - (x - c*t)^2) for -a < x - ct <
+  a,
+
+  and y = 0 otherwise. The initial particle velocity at x = a/2 will be
+
+  '
+options:
+  a: sqrt(3/2)*b*c/a
+  b: b*c/(sqrt(2)*a)
+  c: b*c/(sqrt(3)*a)
+  d: sqrt(2/3)*b*c/a

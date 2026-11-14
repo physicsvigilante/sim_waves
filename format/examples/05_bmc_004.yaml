@@ -1,0 +1,14 @@
+id: 22/01/bmc_004
+symbols: {a: positive, vp: positive, v: positive}     # vp is the problem's v'
+unknowns: {A: positive, omega: positive, phi: phase}  # phase = real mod 2*pi
+waves:
+  w: {harmonic: {A: A, omega: omega, v: v, dir: +x, phase: phi}}
+given:
+  - "y(w, x=0, t=period(w)/4) == a"
+  - "vy(w, x=0, t=period(w)/4) == 0"                  # 'momentarily at rest'
+  - "vy(w, x=wavelength(w)/4, t=period(w)/4) == vp"
+observe:
+  A: "amplitude(w)"
+  y: "field(w)"
+  matches_c: "equivalent(field(w), a*sin((vp/a)*(t - x/v)))"
+expect: {A: "a", matches_c: true}

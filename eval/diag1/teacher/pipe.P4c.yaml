@@ -1,0 +1,15 @@
+# parent: eval/diag1/teacher/pipe.P4b.yaml
+# change: removed observe disp_nodes (a list-valued observable crashed the viewer); the plot panel is unchanged
+# kind: view
+id: diag1/pipe
+assume:
+  - "Plot range is the pipe itself, 0 to 85 cm; x = 0 is the closed end (format convention)."
+symbols: {pos: positive}
+media:
+  air: {type: gas, v: 340 m/s}
+resonators:
+  p: {type: pipe, on: air, length: 85 cm, ends: [closed, open], end_correction: 0 m}
+observe:
+  f3: "frequency(p, harmonic=3)"
+view:
+  - {plot: "mode_shape(p, harmonic=3, x=pos)", vs: pos, range: [0 m, 85 cm]}

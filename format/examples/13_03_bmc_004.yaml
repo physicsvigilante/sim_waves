@@ -1,0 +1,14 @@
+id: 22/03/bmc_004
+symbols: {P: positive, Pl: positive, I0: positive, r: positive}   # power, power per length, intensity
+media:
+  air: {type: open3d}
+emitters:
+  pt:   {on: air, geometry: point, power: P}
+  line: {on: air, geometry: line, power_per_length: Pl}
+  pl:   {on: air, geometry: plane, intensity: I0}
+observe:
+  I_point: "intensity(pt, r=r)"
+  I_line:  "intensity(line, r=r)"
+  I_plane: "intensity(pl, r=r)"
+  P_shell: "flux(pt, sphere(r))"
+expect: {I_point: "P/(4*pi*r**2)", I_line: "Pl/(2*pi*r)", I_plane: "I0", P_shell: "P"}

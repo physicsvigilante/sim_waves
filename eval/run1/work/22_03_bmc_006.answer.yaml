@@ -1,0 +1,5 @@
+answer: [a, c, d]
+final_scene: 22_03_bmc_006.v1.yaml
+engine_fit: full
+reasoning: Plane intensity is I0 (constant), point source P/(4 pi r^2) (inverse square, so b false and c true), line source P/(2 pi r) (inverse distance, d true).
+friction: none

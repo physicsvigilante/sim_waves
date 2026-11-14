@@ -1,0 +1,21 @@
+id: 24/01/asc_005
+number: 2
+source: {problem: 24_Sound_Waves_and_Doppler_Effect/01_Speed_and_Intensity_of_Sound_Waves/Problems/asc_005.png, solution: 24_Sound_Waves_and_Doppler_Effect/01_Speed_and_Intensity_of_Sound_Waves/Solutions/asc_005.png}
+format: single_correct
+statement: |
+  The pressure variation in a sound wave in air is given by
+  delta p = 12 sin(8.18 x - 2700 t + pi/4) N m^-2.
+  If density of air is 1.29 kg m^-3, the displacement amplitude is
+figure: null
+options:
+  a: "0.089 x 10^-5 m"
+  b: "1.044 x 10^-5 m"
+  c: "2.011 x 10^-5 m"
+  d: "2.732 x 10^-5 m"
+answer: b
+answer_value: 1.044e-5
+units: m
+verified: "k = 8.18, w = 2700, v = w/k = 330 m/s, B = rho v^2 = 1.29*330^2 = 1.405e5 Pa; (dp)max = B A k so A = 12/(1.405e5*8.18) = 1.044e-5 m. Matches key."
+kinds: [given_wavefunction, derived_medium]
+physics: [sound_pressure_amplitude, bulk_modulus, displacement_amplitude]
+notes: "Consistent."

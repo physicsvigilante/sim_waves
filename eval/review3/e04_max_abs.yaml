@@ -1,0 +1,7 @@
+id: e04
+waves:
+  a: {harmonic: {A: 1 cm, f: 256 Hz, lambda: 1 m, dir: +x, phase: 0}}
+  b: {harmonic: {A: 1 cm, f: 260 Hz, lambda: 1 m, dir: +x, phase: 0}}
+  s: {sum: [a, b]}
+observe:
+  fo: "frequency_of(t, y(a, x=0[m], t=t)*y(b, x=0[m], t=t))"

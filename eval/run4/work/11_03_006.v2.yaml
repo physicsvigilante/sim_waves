@@ -1,0 +1,13 @@
+id: 11/03/006
+assume:
+  - "Sound level beta = 10 log10(I/I0), I0 = 1e-12 W/m^2 (convention). Plane wave front of uniform intensity across window; normal incidence."
+  - "Power = I * area and energy = power * time are not engine observables (hand steps)."
+unknowns: {I: positive}
+media:
+  air: {type: open3d}
+emitters:
+  st: {on: air, geometry: plane, intensity: I}
+given:
+  - {fact: "log(I/1e-12[W/m^2]) == 60/10*log(10)", source: stated}
+observe:
+  I: "intensity(st, r=1[m])"

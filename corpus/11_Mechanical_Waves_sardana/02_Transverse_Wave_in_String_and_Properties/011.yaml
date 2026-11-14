@@ -1,0 +1,17 @@
+id: 11/02/011
+number: 11
+source: {problem: 11_Mechanical_Waves_sardana/02_Transverse_Wave_in_String_and_Properties/Problems/011.png, solution: 11_Mechanical_Waves_sardana/02_Transverse_Wave_in_String_and_Properties/Solutions/011.png}
+format: numerical
+statement: |
+  A long wire PQR is made by joining two wires PQ and QR of equal radii. PQ has a length 4.8 m and mass 0.06 kg. QR has a length 2.56 m and mass 0.2 kg. The wire PQR is under a tension of 80 N. A sinusoidal wave pulse of amplitude 3.5 cm is sent along the wire PQ from the end P. No power is dissipated during the transmission of the wave pulse. Calculate
+  (a) The time taken by the wave pulse to reach the other end R and
+  (b) The amplitude of the reflected and transmitted wave pulse after the incident wave pulse crosses the joint Q.
+figure: null
+options: null
+answer: "(a) t = 0.14 s; (b) A_r = -1.5 cm (magnitude 1.5 cm, phase reversed), A_t = 2 cm"
+answer_value: [0.14, -1.5, 2.0]
+units: "s; cm"
+verified: "Matches key. mu1 = 0.06/4.8 = 1/80 kg/m, v1 = sqrt(80*80) = 80 m/s; mu2 = 0.2/2.56 = 1/12.8 kg/m, v2 = sqrt(80*12.8) = 32 m/s. t = 4.8/80 + 2.56/32 = 0.06 + 0.08 = 0.14 s. A_r = (v2 - v1)/(v2 + v1) * 3.5 = -48/112*3.5 = -1.5 cm; A_t = 2 v2/(v1+v2) * 3.5 = 64/112*3.5 = 2.0 cm."
+kinds: [nonuniform_medium, derived_medium]
+physics: [wave_speed, reflection, transmission, amplitude_coefficients, tension]
+notes: "Solution figure: wire P---Q---R with l1 = 4.8 m, m1 = 0.06 kg for PQ and l2 = 2.56 m, m = 0.2 kg for QR. Multi-part (a), (b). Amplitude reflection/transmission coefficients are in terms of speeds (for displacement waves)."

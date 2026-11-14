@@ -1,0 +1,2 @@
+symbols: {A: positive, B: positive, w: positive, d: positive}
+observe: {a: "envelope(t, A*sin(w*t) + B*sin((w+d)*t))", b: "max_over(t, envelope(t, A*sin(w*t) + B*sin((w+d)*t)))", c: "min_over(t, envelope(t, A*sin(w*t) + B*sin((w+d)*t)))"}

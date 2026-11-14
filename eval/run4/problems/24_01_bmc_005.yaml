@@ -1,0 +1,16 @@
+id: 24/01/bmc_005
+format: multiple_correct
+statement: 'In the figure is shown, an instantaneous displacement versus position graph of a sound wave
+  travelling in air along +x-direction. Choose the correct options.
+
+  '
+figure: Graph with axes Y (vertical) and X (horizontal). A sinusoidal displacement curve starts at the
+  origin on the Y axis, rises to a crest, comes down and crosses the X axis at point A (going downward),
+  reaches a trough directly below point B (B is on the X axis, joined to the trough by a vertical dashed
+  line), then rises and meets the X axis again at point C (going upward). A, B and C are marked by dots
+  on the X axis, A first, then B (trough position), then C. No numerical values are given.
+options:
+  a: At A, pressure is maximum
+  b: At B, pressure is minimum
+  c: At C, pressure is minimum
+  d: At B, pressure is atmospheric

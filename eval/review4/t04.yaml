@@ -1,0 +1,8 @@
+media: {air: {type: gas, v: 340 m/s}}
+sources:
+  S1: {on: air, f: 170 Hz, A: 1, phase: 0, spreading: none}
+rays:
+  r1: {from: S1, length: 1 m}
+  r2: {from: S1, length: 2 m}
+  r3: {from: S1, length: 4.5 m}
+observe: {a: "phase_difference(r1, r2)", b: "wrap(phase_difference(r1, r2))", c: "wrap(phase_difference(r2, r1))", d: "wrap(phase_difference(r1, r3))", e: "phase_difference(r1,r3)"}

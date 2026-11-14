@@ -1,0 +1,17 @@
+id: 22/02/asc_004
+number: 1
+source: {problem: 22_Travelling_Waves/02_Travelling_Waves_1/Problems/asc_004.png, solution: 22_Travelling_Waves/02_Travelling_Waves_1/Solutions/asc_004.png}
+format: single_correct
+statement: |
+  A wave travelling in positive x-direction with A = 0.2 m has a velocity of 360 m/s. If
+  λ = 60 m, then the correct expression for the wave is
+figure: null
+options:
+  a: "y = 0.2 sin[2π(6t + x/60)]"
+  b: "y = 0.2 sin[π(6t + x/60)]"
+  c: "y = 0.2 sin[2π(6t - x/60)]"
+  d: "y = 0.2 sin[π(6t - x/60)]"
+answer: [c]
+kinds: [build_wavefunction, equation_form]
+physics: [sinusoidal_wave, wave_speed]
+notes: Forward build from (A, v, λ, direction); options are candidate wavefunctions to compare.

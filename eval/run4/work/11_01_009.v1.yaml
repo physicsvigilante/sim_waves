@@ -1,0 +1,8 @@
+id: 11/01/009
+waves:
+  w: {given: "2*sin(2*pi*(x/30 - t/0.01))", units: {x: cm, t: s, y: cm}}
+observe:
+  A: "amplitude(w)"
+  f: "frequency(w)"
+  lam: "wavelength(w)"
+  v: "velocity(w)"

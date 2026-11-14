@@ -1,0 +1,15 @@
+id: 11/05/006
+number: 6
+source: {problem: 11_Mechanical_Waves_sardana/05_Stationary_Waves_and_Beats/Problems/006.png, solution: 11_Mechanical_Waves_sardana/05_Stationary_Waves_and_Beats/Solutions/006.png}
+format: numerical
+statement: |
+  A wire having a linear density of 0.05 g cm^-1 is stretched between two rigid supports with a tension of 450 N. It is observed that the wire resonates at a frequency of 420 Hz. The next higher frequency at which the same wire resonates is 490 Hz. Find the length of the wire.
+figure: null
+options: null
+answer: "2.142 m"
+answer_value: 2.142
+units: m
+verified: "mu = 0.05 g/cm = 0.005 kg/m; v = sqrt(450/0.005) = 300 m/s; harmonic spacing 70 Hz = v/(2 l), l = 300/140 = 2.143 m (n = 6). Matches key."
+kinds: [inverse_condition, derived_medium]
+physics: [string_modes, resonance, harmonics, wave_speed]
+notes: "Consistent."

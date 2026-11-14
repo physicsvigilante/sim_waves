@@ -1,0 +1,9 @@
+answer: "I_A : I_B : I_C = 4 : 2 : 0 (= 2 : 1 : 0)"
+final_scene: 11_04_011.v3.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "spreading (distance R unknown); result checked at R = 50 m and 7 m"
+missing_in_source: "distance from the midpoint to A, B, C"
+reasoning: "relative_intensity at A = 4, B = 2, C = 0 at both R values."
+friction: "A symbolic R was rejected (v2: R > 2.5 undecidable for a free symbol; v1 gave abs() expressions) so numeric R values were used."

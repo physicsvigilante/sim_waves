@@ -1,0 +1,12 @@
+# Source book material stays local (copied from a textbook)
+/11_*/
+/22_*/
+/23_*/
+/24_*/
+*.pdf
+*.png
+# Local export scratch
+/.export/
+# Python
+__pycache__/
+*.pyc

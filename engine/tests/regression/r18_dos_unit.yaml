@@ -1,0 +1,3 @@
+waves: {w: {harmonic: {A: "1[km**99999999]", v: 1 m/s, f: 1 Hz, dir: +x, phase: 0}}}
+observe: {a: "amplitude(w)"}
+expect: {error: rejected, message: "too large"}

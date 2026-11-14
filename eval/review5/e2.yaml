@@ -1,0 +1,7 @@
+media: {wire: {type: string, mu: 0.01 kg/m, tension: 100 N}, air: {type: gas, v: 340 m/s}}
+resonators:
+  s: {type: string, on: wire, length: 1 m, ends: [fixed, fixed]}
+  p: {type: pipe, on: air, length: 30 cm, ends: [closed, open], end_correction: 0.6 cm}
+  po: {type: pipe, on: air, length: 30 cm, ends: [open, closed], end_correction: 0.6 cm}
+  pf: {type: pipe, on: air, length: 0.30000000000000004 m, ends: [open, open], end_correction: 0 m}
+observe: {a: "nodes(p, harmonic=3)", b: "antinodes(p, harmonic=3)", c: "nodes(po, harmonic=5)", d: "antinodes(po, harmonic=5)", e: "antinodes(pf, harmonic=3)", f: "count(nodes(s, harmonic=150))", g: "count(harmonics(s, upto=1000, node_at=0.37[m]))", h: "harmonics(pf, upto=6, antinode_at=0.3[m])", i: "harmonics(pf, upto=6, antinode_at=0.30000000000000004[m])"}

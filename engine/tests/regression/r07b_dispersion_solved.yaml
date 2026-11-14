@@ -1,0 +1,7 @@
+# companion: without the contradicting fact, lambda is derived from the rope
+media: {rope: {type: string, mu: 50 g/m, tension: 60 N}}
+unknowns: {lam: positive}
+waves: {w: {harmonic: {on: rope, A: 1 cm, f: 10 Hz, lambda: lam, dir: +x, phase: 0}}}
+given: ["lam > 0"]
+observe: {lam: "wavelength(w)"}
+expect: {lam: "2*sqrt(3) m"}

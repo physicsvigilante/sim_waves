@@ -1,0 +1,15 @@
+id: 11/03/011
+number: 11
+source: {problem: 11_Mechanical_Waves_sardana/03_Sound_Waves_and_Properties/Problems/011.png, solution: 11_Mechanical_Waves_sardana/03_Sound_Waves_and_Properties/Solutions/011.png}
+format: numerical
+statement: |
+  A gas is a mixture of two parts by volume of hydrogen and one part by volume of nitrogen. If the velocity of sound in hydrogen at 0 C is 1300 ms^-1, find the velocity of sound in the gaseous mixture at 27 C.
+figure: null
+options: null
+answer: "591 m/s"
+answer_value: 591
+units: m/s
+verified: "DISPUTED (minor numerical). rho_mix = (2 rho_H2 + 14 rho_H2)/3 = 16 rho_H2/3; v_mix(0 C) = 1300*sqrt(3/16) = 1300*sqrt3/4 = 562.9 m/s; at 27 C multiply by sqrt(300/273) = 1.0483 giving 590.1 m/s, not 591. Method matches the book; the printed final value is about 0.15% high (arithmetic slip)."
+kinds: [derived_medium, comparison]
+physics: [speed_of_sound, gas_mixture, density_mixture, temperature_dependence]
+notes: "Assumes same gamma (7/5) for H2 and N2 and rho_N2 = 14 rho_H2 (molar mass 28 vs 2), neither stated in the problem. Solution gives intermediate 325*sqrt3 m/s = 562.9 m/s."

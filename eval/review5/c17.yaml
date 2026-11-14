@@ -1,0 +1,1 @@
+observe: {a: "max_over(t, abs(-5 + 3*sin(t)))", b: "min_over(t, abs(-5 + 3*sin(t)))", c: "min_over(t, abs(1 + 3*sin(t)))", d: "max_over(t, -2*abs(1+3*sin(t)))", e: "min_over(t, -5 + 3*sin(t))", f: "max_over(t, -5 - 3*sin(t))"}

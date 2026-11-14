@@ -1,0 +1,16 @@
+id: 22/03/cnt_005
+media:
+  rope:
+    type: string
+    mass: 0.1 kg
+    length: 2 m
+    tension: 60 N
+    ends: {left: driven, right: absorbing}      # 'extracted without reflection'
+unknowns: {f: positive}
+waves:
+  w: {harmonic: {on: rope, A: 1 cm, f: f, from: left, phase: 0}}
+given:
+  - "power(w) == 100[W]"
+observe:
+  f: "frequency(w)"
+expect: {f: {value: "171 Hz", tol: 0.5%}}

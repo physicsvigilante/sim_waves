@@ -1,0 +1,19 @@
+id: 23/03/asc_005
+number: 2
+source: {problem: 23_Superposition_and_Standing_Waves/03_Transverse_Stationary_Waves/Problems/asc_005.png, solution: 23_Superposition_and_Standing_Waves/03_Transverse_Stationary_Waves/Solutions/asc_005.png}
+format: single_correct
+statement: |
+  In order to double the frequency of the fundamental note emitted by a stretched string, the length is reduced to 3/4th of the original length and the tension is changed. The factor by which the tension is to be changed is
+figure: null
+options:
+  a: "3/8"
+  b: "2/3"
+  c: "8/9"
+  d: "9/4"
+answer: d
+answer_value: 2.25
+units: null
+verified: "f ~ sqrt(T)/l: T2/T1 = (2)^2 (3/4)^2 = 9/4. Matches key."
+kinds: [ratio]
+physics: [string_frequency, tension, length]
+notes: Consistent.

@@ -1,0 +1,11 @@
+# review 4 #2: used to hang (trig expansion of cos(240*pi/lam))
+symbols: {lam: positive}
+media: {air: {type: gas, v: 340 m/s}}
+sources: {S: {on: air, at: [0 m, 0 m], f: "340[m/s]/lam", A: 1, phase: 0, spreading: none}}
+reflectors: {ceiling: {point: [0 m, 25 m], normal: [0, -1], boundary: rigid}}
+points: {P: [120 m, 0 m]}
+rays:
+  direct: {from: S, to: P}
+  up: {from: S, to: P, via: ceiling}
+observe: {I: "relative_intensity(up, direct)"}
+expect: {I: "2 + 2*cos(20*pi/lam)"}

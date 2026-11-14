@@ -1,0 +1,8 @@
+id: 24/01/cnt_005
+assume:
+  - "Molar masses N2 = 28 g/mol and H2 = 2 g/mol are textbook values, not stated in the problem."
+  - "Mixture molar mass is the mole-weighted mean (computed in the field expression)."
+media:
+  mix: {type: gas, gamma: 7/5, temperature: 300 K, molar_mass: "(5*28[g/mol] + 5*2[g/mol])/(5 + 5)", gas_constant: 8.3 J/(mol*K)}
+observe:
+  v: "speed(mix)"

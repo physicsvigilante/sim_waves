@@ -1,0 +1,15 @@
+id: 23/01/cnt_006
+format: numerical
+statement: 'A source produces sound at A which travels along two different paths ACB and ADB to reach
+  the listener''s ear at B. The sound is produced at a single frequency f = 540 Hz and travels in the
+  air inside the tubes at a speed of 350 m/s. Calculate the distance (in cm) by which the sliding tube
+  (C) has to be drawn out to pass from one minimum to the next minimum.
+
+  '
+figure: 'Interferometer of two tube paths between A (left) and B (right). A loudspeaker labelled "Source"
+  is at the left, feeding the tube at A. At B, on the right, an ear labelled "ear" is at the tube end.
+  The upper path is a U-shaped sliding tube labelled C with telescoping (overlapping) vertical sections
+  at both sides; the lower path is a fixed U tube labelled D at the bottom. No numerical dimensions are
+  marked.
+
+  '

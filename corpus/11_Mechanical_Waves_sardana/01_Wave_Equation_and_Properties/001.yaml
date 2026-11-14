@@ -1,0 +1,17 @@
+id: 11/01/001
+number: 1
+source: {problem: 11_Mechanical_Waves_sardana/01_Wave_Equation_and_Properties/Problems/001.png, solution: 11_Mechanical_Waves_sardana/01_Wave_Equation_and_Properties/Solutions/001.png}
+format: numerical
+statement: |
+  For the wave shown in figure, write the wave equation if its position is shown at t = 0. Given, speed of wave is v = 300 m/s.
+figure: |
+  Snapshot y(m) vs x(m) at t = 0, with arrow labelled v pointing in +x direction. Peak height marked 0.06 on the y axis. Curve starts at the origin (y = 0, x = 0) rising with positive slope, and consists of 3 crests and 2 troughs, ending back at y = 0 at x = 0.2 m (marked on the x axis). Total span is therefore 2.5 wavelengths.
+options: null
+answer: "y(x,t) = (0.06 m) sin(23562 t - 78.5 x)"
+answer_value: "0.06 sin(23562 t - 78.5 x)"
+units: m
+verified: "DISPUTED. Numbers match: 2.5 lambda = 0.2 m so lambda = 0.08 m; k = 2pi/0.08 = 78.5 rad/m; f = 300/0.08 = 3750 Hz; omega = 23562 rad/s. But the figure at t=0 is y = +A sin(kx) (starts at 0 with positive slope), and for +x travel y = A sin(kx - wt). The key's A sin(wt - kx) equals -A sin(kx) at t=0, which has negative slope at x=0, contradicting the figure and the solution's own statement dy/dx positive. Correct: y = 0.06 sin(78.5 x - 23562 t) m."
+kinds: [graph_read, build_wavefunction]
+physics: [wave_equation, wavelength, frequency, angular_frequency, wave_number, phase]
+notes: |
+  Solution states "At t=0, x=0, dy/dx = positive and the curve is a sine curve" and then picks y = A sin(wt - kx), which is inconsistent with the stated positive slope. Book key marked DISPUTED (see verified). Numeric values 0.06, 0.08, 3750, 78.5, 23562 are fine.

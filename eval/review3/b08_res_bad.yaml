@@ -1,0 +1,7 @@
+id: b08
+media: {air: {type: gas, v: 340 m/s}}
+resonators:
+  p: {type: pipe, on: air, length: -1 m, ends: [open, open], end_correction: 0 m}
+  q: {type: pipe, on: air, length: 10 cm, ends: [open, open], end_correction: -6 cm}
+  z: {type: pipe, on: air, length: 0 m, ends: [closed, closed], end_correction: 0 m}
+observe: {f: "frequency(p, harmonic=1)", g: "frequency(q, harmonic=1)", h: "frequency(z, harmonic=1)"}

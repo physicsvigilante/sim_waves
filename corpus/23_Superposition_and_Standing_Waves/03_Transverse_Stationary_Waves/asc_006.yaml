@@ -1,0 +1,19 @@
+id: 23/03/asc_006
+number: 3
+source: {problem: 23_Superposition_and_Standing_Waves/03_Transverse_Stationary_Waves/Problems/asc_006.png, solution: 23_Superposition_and_Standing_Waves/03_Transverse_Stationary_Waves/Solutions/asc_006.png}
+format: single_correct
+statement: |
+  A second harmonic has to be generated in a string of length l stretched between two rigid supports. The points where the string has to be plucked and touched are
+figure: null
+options:
+  a: "Plucked at l/4 and touch at l/2"
+  b: "Plucked at l/4 and touch at 3l/4"
+  c: "Plucked at l/2 and touched at l/4"
+  d: "Plucked at l/2 and touched at 3l/4"
+answer: a
+answer_value: null
+units: null
+kinds: [conceptual]
+physics: [standing_waves, harmonics, nodes, antinodes]
+notes: |
+  The problem image has no figure; the solution draws a string of length l between two supports with two loops (solid and dashed shapes), the total length l marked, and l/4 marked from the left support to the antinode of the first loop. Second harmonic has a node at l/2 and antinodes at l/4 and 3l/4; pluck at an antinode, touch (damp) the centre node. Consistent.

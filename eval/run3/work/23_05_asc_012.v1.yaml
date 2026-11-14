@@ -1,0 +1,11 @@
+id: 23/05/asc_012
+assume:
+  - "Amplitude-ratio (maxima/minima) intensity is taken at one point x = 0; intensity is proportional to the square of the resultant amplitude."
+waves:
+  y1: {given: "4*sin(400*pi*t)", units: {x: m, t: s, y: m}}
+  y2: {given: "3*sin(404*pi*t)", units: {x: m, t: s, y: m}}
+observe:
+  beats: "beat_frequency(y1, y2)"
+  a1: "amplitude(y1)"
+  a2: "amplitude(y2)"
+  peak: "max_over(t, abs(y(y1, x=0[m], t=t) + y(y2, x=0[m], t=t)))"

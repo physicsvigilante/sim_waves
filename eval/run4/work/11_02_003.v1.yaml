@@ -1,0 +1,11 @@
+id: 11/02/003
+assume:
+  - "g = 9.8 m/s^2 (not stated)."
+  - "Wire masses neglected in the tension (wire lengths not given; tension taken as load weight)."
+  - "Tension in AB supports both blocks; in CD only the lower block."
+media:
+  AB: {type: string, mu: 10 g/m, tension: "2*3.2[kg]*9.8[m/s^2]"}
+  CD: {type: string, mu: 8 g/m, tension: "3.2[kg]*9.8[m/s^2]"}
+observe:
+  vAB: "speed(AB)"
+  vCD: "speed(CD)"

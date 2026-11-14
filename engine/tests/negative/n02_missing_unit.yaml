@@ -1,0 +1,3 @@
+media: {s: {type: string, mu: 0.05 kg/m, tension: 60}}
+observe: {v: "speed(s)"}
+expect: {error: rejected}

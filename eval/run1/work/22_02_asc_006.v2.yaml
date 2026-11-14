@@ -1,0 +1,14 @@
+id: 22/02/asc_006
+assume:
+  - "Path difference dx = the shift in x of w1 that makes its phase equal to w2's phase at X (smallest, 2*pi*n branch ignored)."
+  - "Take 0 < phi + pi/2 < 2*pi so the solution is unique."
+symbols: {a1: positive, a2: positive, omega: positive, lam: positive, phi: real, X: real, T0: real}
+unknowns: {dx: real}
+waves:
+  w1: {given: "a1*sin(omega*t - 2*pi*x/lam)", units: {x: m, t: s, y: m}}
+  w2: {given: "a2*cos(omega*t - 2*pi*x/lam + phi)", units: {x: m, t: s, y: m}}
+given:
+  - "phase(w1, x=X + dx, t=T0) == phase(w2, x=X, t=T0) - 2*pi"
+observe:
+  dphase: "phase(w2, x=X, t=T0) - phase(w1, x=X, t=T0)"
+  dx: "dx"

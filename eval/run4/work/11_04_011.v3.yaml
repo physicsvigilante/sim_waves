@@ -1,0 +1,38 @@
+id: 11/04/011
+assume:
+  - "Distance R from the midpoint of PQ to A, B, C is not given. Two arbitrary values (R = 50 m and R = 7 m, both outside the segment PQ) are used as a check that the ratio does not depend on R. Spreading none (only phases matter)."
+  - "'P is ahead of Q by 90 deg' read as source phase of P = +pi/2 and of Q = 0, in the engine's convention y = A sin(wt - ks + phase)."
+  - "Speed 340 m/s chosen only to fix f = v/lambda = 17 Hz for the stated lambda = 20 m."
+media: {air: {type: gas, v: 340 m/s}}
+sources:
+  P: {on: air, f: 17 Hz, A: 1, phase: pi/2, spreading: none, at: [-2.5 m, 0 m]}
+  Q: {on: air, f: 17 Hz, A: 1, phase: 0, spreading: none, at: [2.5 m, 0 m]}
+points:
+  A: [50 m, 0 m]
+  B: [0 m, 50 m]
+  C: [-50 m, 0 m]
+  A2: [7 m, 0 m]
+  B2: [0 m, 7 m]
+  C2: [-7 m, 0 m]
+rays:
+  pA: {from: P, to: A}
+  qA: {from: Q, to: A}
+  pB: {from: P, to: B}
+  qB: {from: Q, to: B}
+  pC: {from: P, to: C}
+  qC: {from: Q, to: C}
+  pA2: {from: P, to: A2}
+  qA2: {from: Q, to: A2}
+  pB2: {from: P, to: B2}
+  qB2: {from: Q, to: B2}
+  pC2: {from: P, to: C2}
+  qC2: {from: Q, to: C2}
+given: []
+observe:
+  wl: "wavelength(pA)"
+  IA: "relative_intensity(pA, qA)"
+  IB: "relative_intensity(pB, qB)"
+  IC: "relative_intensity(pC, qC)"
+  IA2: "relative_intensity(pA2, qA2)"
+  IB2: "relative_intensity(pB2, qB2)"
+  IC2: "relative_intensity(pC2, qC2)"

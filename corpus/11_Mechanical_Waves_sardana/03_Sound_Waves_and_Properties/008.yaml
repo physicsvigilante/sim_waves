@@ -1,0 +1,15 @@
+id: 11/03/008
+number: 8
+source: {problem: 11_Mechanical_Waves_sardana/03_Sound_Waves_and_Properties/Problems/008.png, solution: 11_Mechanical_Waves_sardana/03_Sound_Waves_and_Properties/Solutions/008.png}
+format: numerical
+statement: |
+  For aluminium, the bulk modulus of elasticity is 7.5 x 10^10 Nm^-2 and density is 2.70 x 10^3 kgm^-3. Calculate the velocity of longitudinal waves in aluminium.
+figure: null
+options: null
+answer: "5.27 x 10^3 m/s"
+answer_value: 5270
+units: m/s
+verified: "v = sqrt(7.5e10/2.70e3) = sqrt(2.778e7) = 5270 m/s. Matches key."
+kinds: [derived_medium]
+physics: [speed_of_sound, bulk_modulus, density]
+notes: "Uses v = sqrt(B/rho) with bulk modulus as in the problem (strictly, longitudinal waves in a bar use Young's modulus), as intended by the book."

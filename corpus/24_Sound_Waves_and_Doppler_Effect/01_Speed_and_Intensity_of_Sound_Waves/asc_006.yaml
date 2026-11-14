@@ -1,0 +1,19 @@
+id: 24/01/asc_006
+number: 3
+source: {problem: 24_Sound_Waves_and_Doppler_Effect/01_Speed_and_Intensity_of_Sound_Waves/Problems/asc_006.png, solution: 24_Sound_Waves_and_Doppler_Effect/01_Speed_and_Intensity_of_Sound_Waves/Solutions/asc_006.png}
+format: single_correct
+statement: |
+  Calculate the bulk modulus (B) of air from the following data for a sound wave of wavelength 35 cm travelling in air. The pressure at a point varies between (10^5 +/- 14) Pa and the particles of the air vibrate in SHM with amplitude 5.5 x 10^-6 m.
+figure: null
+options:
+  a: "2.12 x 10^5 Pa"
+  b: "1.22 x 10^5 Pa"
+  c: "1.32 x 10^5 Pa"
+  d: "1.42 x 10^5 Pa"
+answer: d
+answer_value: 1.42e5
+units: Pa
+verified: "k = 2 pi/0.35 = 17.95 /m; B = (dp)max/(A k) = 14/(5.5e-6*17.95) = 1.418e5 Pa. Matches key (key uses k = 17.94)."
+kinds: [derived_medium]
+physics: [bulk_modulus, sound_pressure_amplitude, displacement_amplitude]
+notes: "Consistent."

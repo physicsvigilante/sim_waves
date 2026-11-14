@@ -1,0 +1,19 @@
+id: 23/02/cnt_008
+assume:
+  - "Same tension in both wires (they are soldered end to end and stretched). Wave speed in wire 1 is twice that in wire 2."
+  - "Wave is incident from wire 1 towards the junction."
+symbols: {mu1: positive, T: positive, A: positive, omega: positive}
+unknowns: {mu2: positive}
+media:
+  s1: {type: string, mu: mu1, tension: T}
+  s2: {type: string, mu: mu2, tension: T}
+junctions:
+  J: {at: 0 m, left: s1, right: s2}
+waves:
+  w: {harmonic: {on: s1, A: A, omega: omega, dir: +x, phase: 0}}
+given:
+  - {fact: "speed(s1, at=-1[m]) == 2*speed(s2, at=1[m])", source: stated}
+observe:
+  mu_ratio: "mu2/mu1"
+  frac_reflected: "power(w_reflected)/power(w)"
+  beta: "power(w)/power(w_reflected)"

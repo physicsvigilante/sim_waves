@@ -1,0 +1,14 @@
+# energy conservation at a junction is checked as a fact; transmitted + reflected amplitudes obey 1 + r = t
+symbols: {A: positive}
+media:
+  a: {type: string, mu: 0.01 kg/m, tension: 9 N}
+  b: {type: string, mu: 0.04 kg/m, tension: 9 N}
+junctions:
+  J: {at: 2 m, left: a, right: b}
+waves:
+  w: {harmonic: {on: a, A: A, f: 10 Hz, dir: +x, phase: 0}}
+observe:
+  continuity: "equivalent(y(w, x=2[m], t=t) + y(w_reflected, x=2[m], t=t), y(w_transmitted, x=2[m], t=t))"
+  r: "amplitude(w_reflected)/A"
+  tr: "amplitude(w_transmitted)/A"
+expect: {continuity: true, r: "1/3", tr: "2/3"}

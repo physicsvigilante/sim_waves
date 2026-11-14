@@ -1,0 +1,14 @@
+id: 22/02/cnt_006
+assume:
+  - "y2 lags y1, so the wave travels +x."
+  - "Book takes the smallest phase gap, i.e. the points are less than half a wavelength apart."
+unknowns: {k: positive}
+waves:
+  w: {harmonic: {A: 2 cm, omega: 3*pi rad/s, k: k, dir: +x, phase: 0}}
+given:
+  - "y(w, x=0, t=t) == 2[cm]*sin(3*pi*t)"              # identity in t
+  - "y(w, x=1[cm], t=t) == 2[cm]*sin(3*pi*t - pi/8)"   # identity in t
+  - "wavelength(w) > 2[cm]"                             # encodes assumption 2
+observe:
+  v: "speed(w)"
+expect: {v: {value: "0.24 m/s", book: "24", status: disputed, why: "book answers 24 cm/s to an m/s question"}}

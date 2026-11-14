@@ -1,0 +1,17 @@
+id: 11/03/010
+number: 10
+source: {problem: 11_Mechanical_Waves_sardana/03_Sound_Waves_and_Properties/Problems/010.png, solution: 11_Mechanical_Waves_sardana/03_Sound_Waves_and_Properties/Solutions/010.png}
+format: numerical
+statement: |
+  A plane longitudinal wave having angular frequency omega = 500 sec^-1 is travelling in positive x-direction in a medium of density rho = 1 kgm^-3 and bulk modulus 4 x 10^4 Nm^-2. The loudness at a point in the medium is observed to be 20 dB. Assuming at x = 0 initial phase of the medium particles to be zero, find the
+  (a) maximum pressure change in the medium
+  (b) equation of the wave.
+figure: null
+options: null
+answer: "(a) (deltaP)_max = 2 x 10^-4 N m^-2; (b) y = 2 x 10^-9 sin(500 t - (5/2) x)"
+answer_value: {deltaP_max: 2.0e-4, displacement_amplitude: 2.0e-9, omega: 500, k: 2.5}
+units: "deltaP in N m^-2; y in m (x in m, t in s)"
+verified: "v = sqrt(4e4/1) = 200 m/s; 20 dB gives I = 1e-10 W/m^2; deltaP_max = sqrt(2 I rho v) = sqrt(4e-8) = 2e-4 Pa; A = deltaP_max/(rho v omega) = 2e-4/(1*200*500) = 2e-9 m; k = omega/v = 2.5 m^-1. Matches key."
+kinds: [derived_medium, build_wavefunction]
+physics: [sound_intensity, decibel_level, pressure_amplitude, displacement_amplitude, wave_equation]
+notes: "Two parts. I0 = 1e-12 W/m^2 is assumed. The wave equation is the displacement wave with zero initial phase at x = 0 (the corresponding pressure wave is 90 degrees out of phase with it). Units of y not stated by the book (m)."

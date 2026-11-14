@@ -1,0 +1,14 @@
+id: 11/04/012
+format: numerical
+statement: 'Two identical speakers 10 m apart are driven by the same oscillator with a frequency of f
+  = 21.5 Hz Figure. Explain why a receiver at point A records a minimum in sound intensity from the two
+  speakers. If the receiver is moved in the plane of the speakers, what path should it take so that the
+  intensity remains at a minimum? That is, determine the relationship between x and y (the coordinates
+  of the receiver) that causes the receiver to record a minimum in sound intensity. Take the speed of
+  sound to be 343 ms^-1.
+
+  '
+figure: x-y axes with the origin midway between the speakers. S1 on the left (x = -5 m), S2 on the right
+  (x = +5 m), 10 m apart, both on the x axis (drawn as circled dots). Point A on the x axis 9 m from S1
+  (so x = 4 m, 1 m from S2). A curve starts at A and bends upward to a point P at (x, y) in the upper
+  right region.

@@ -1,0 +1,3 @@
+media: {a: {type: string, density: 9000 kg/m^3, area: 1 mm^2, diameter: 5 mm, tension: 60 N}}
+observe: {v: "speed(a)"}
+expect: {error: rejected, message: "area vs diameter"}

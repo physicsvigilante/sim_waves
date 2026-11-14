@@ -1,0 +1,11 @@
+id: c07
+unknowns: {d: direction}
+symbols: {A: positive}
+media:
+  a: {type: string, mu: 0.01 kg/m, tension: 9 N}
+junctions:
+  J: {at: 0 m, left: a, right: fixed}
+waves:
+  w: {harmonic: {on: a, A: A, f: 10 Hz, dir: d, phase: 0}}
+given: ["velocity(w) == 30[m/s]"]
+observe: {v: "velocity(w)"}

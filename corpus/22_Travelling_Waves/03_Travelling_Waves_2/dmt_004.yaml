@@ -1,0 +1,25 @@
+id: 22/03/dmt_004
+number: 9
+source: {problem: 22_Travelling_Waves/03_Travelling_Waves_2/Problems/dmt_004.png, solution: 22_Travelling_Waves/03_Travelling_Waves_2/Solutions/dmt_004.png}
+format: matrix_match
+statement: |
+  Two identical strings have same tension. Transverse waves are set up in them, and their shapes
+  at t = 0 are as shown. Wave is travelling in positive x direction on string 1, and in negative
+  x direction on string 2. Match the quantities in Column I with their values in Column II.
+figure: |
+  String 1: amplitude 10 (axis label "y(min)", read as mm), λ = 20 cm, starts at origin rising.
+  Point A at x = 20 cm (zero crossing, rising in space).
+  String 2: amplitude 5, λ = 40 cm, starts at origin rising. Point A at x = 20 cm (zero crossing,
+  falling in space).
+options:
+  a: "Ratio of intensity of wave in string 1 to that in string 2"
+  b: "Phase difference between point marked A in string 1 and 2 is xπ. Value of x can be"
+  c: "Ratio of frequencies of the wave on string 1 to that in string 2"
+  d: "Ratio of speeds of point A in string 1 to that of the string 2"
+  column_ii: {p: 16, q: 0, r: 2, s: 4}
+answer: {a: [p], b: [p, q, r, s], c: [r], d: [s]}
+kinds: [graph_read, comparison]
+physics: [intensity, phase_difference, frequency, particle_velocity]
+notes: |
+  Two setups compared. (b) accepts any even multiple of π, so all of 16, 0, 2, 4 match.
+  Same medium and tension -> same v; f ∝ 1/λ.

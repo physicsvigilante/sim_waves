@@ -1,0 +1,11 @@
+# same but stated as phase difference: lam = 4 m, in phase after wrap -> ambiguous family expected (d from n lam)
+unknowns: {d: positive}
+media: {air: {type: gas, v: 340 m/s}}
+sources: {S: {on: air, at: [0 m, 6 m], f: 85 Hz, A: 1, phase: 0, spreading: none}}
+reflectors: {wall: {point: [d, 0 m], normal: [-1, 0], boundary: rigid}}
+points: {P: [0 m, 0 m]}
+rays:
+  direct: {from: S, to: P}
+  bounce: {from: S, to: P, via: wall}
+given: [{fact: "resultant_amplitude(bounce, direct) == 2", source: stated}]
+observe: {d: d}

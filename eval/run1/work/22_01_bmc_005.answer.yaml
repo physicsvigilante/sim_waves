@@ -1,0 +1,5 @@
+answer: [a, b]
+final_scene: 22_01_bmc_005.v1.yaml
+engine_fit: partial
+reasoning: speed(wa)=speed(wb)=speed(s1)=sqrt(T/mu1) independent of f and A (b true, c false); vy differs with x at fixed t (a true). Max particle velocity 2*pi*A*f is medium independent but vy at a given point depends on the medium through the phase (k), so d is not clearly supported; left out.
+friction: "Option d is ambiguous (amplitude of vy is medium independent, instantaneous vy is not); no way to encode 'depends on' as a boolean. Options themselves cannot be checked by the engine."

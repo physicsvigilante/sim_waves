@@ -1,0 +1,16 @@
+id: 23/03/cnt_008
+assume:
+  - "Hanging mass gives tension M*g for both loadings; g cancels in the ratio so it is left symbolic."
+  - "Five antinodes = harmonic 5, three antinodes = harmonic 3 (fixed bridges, same length)."
+symbols: {mu: positive, L: positive, g: positive, f: positive}
+unknowns: {M: positive}
+media:
+  w1: {type: string, mu: mu, tension: 9 kg*g}
+  w2: {type: string, mu: mu, tension: M*g}
+resonators:
+  r1: {type: string, on: w1, length: L, ends: [fixed, fixed]}
+  r2: {type: string, on: w2, length: L, ends: [fixed, fixed]}
+given:
+  - {fact: "frequency(r1, harmonic=5) == frequency(r2, harmonic=3)", source: stated, note: "same tuning fork"}
+observe:
+  M: "M"

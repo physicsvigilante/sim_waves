@@ -1,0 +1,8 @@
+# review a4: the only fitting point in (2, 2.03) m is xP = 2.01 m
+unknowns: {xP: real}
+waves: {w: {harmonic: {A: 4 mm, lambda: 4 cm, v: 1 m/s, dir: +x, phase: 0}}}
+given:
+  - "y(w, x=xP, t=0) == -4[mm]"
+  - "2[m] < xP < 2.03[m]"
+observe: {xP: "xP"}
+expect: {xP: "2.01"}

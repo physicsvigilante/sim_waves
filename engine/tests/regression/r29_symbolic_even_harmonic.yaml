@@ -1,0 +1,7 @@
+# review 3 #1: a solved harmonic number must obey the odd-only rule of a closed-open pipe
+unknowns: {n: integer}
+media: {air: {type: gas, v: 340 m/s}}
+resonators: {p: {type: pipe, on: air, length: 0.5 m, ends: [closed, open], end_correction: 0 m}}
+given: ["frequency(p, harmonic=n) == 340[Hz]"]
+observe: {n_: "n"}
+expect: {error: inconsistent}

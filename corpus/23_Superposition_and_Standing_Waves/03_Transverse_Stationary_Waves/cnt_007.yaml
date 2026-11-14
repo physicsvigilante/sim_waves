@@ -1,0 +1,15 @@
+id: 23/03/cnt_007
+number: 12
+source: {problem: 23_Superposition_and_Standing_Waves/03_Transverse_Stationary_Waves/Problems/cnt_007.png, solution: 23_Superposition_and_Standing_Waves/03_Transverse_Stationary_Waves/Solutions/cnt_007.png}
+format: numerical
+statement: |
+  A string 1 m long is fixed at one end and is attached to a 300 Hz vibrator at its other end. The end connected to the vibrator is moving with very small amplitude and can be considered to be fixed. The string vibrates forming two nodes between the ends. Find the speed of transverse waves in the string (in m/s).
+figure: null
+answer: "200"
+answer_value: 200
+units: m/s
+verified: "Two interior nodes plus fixed ends gives 3 loops: 3 lambda/2 = 1 m, lambda = 2/3 m, v = 300 * 2/3 = 200 m/s. Matches key."
+kinds: [inverse_condition]
+physics: [standing_waves, wave_speed, nodes]
+notes: |
+  Consistent. Problem image has no figure; the solution draws a string between two fixed supports with three loops, lambda/2 marked for one loop and L = 1 m marked for the full length.

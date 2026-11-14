@@ -1,0 +1,8 @@
+answer: 25 kg
+final_scene: 23_03_cnt_008.v2.yaml
+engine_fit: full
+coverage: full
+not_represented: "Hanging mass is not modelled as a load; tension written as M*g via facts"
+missing_in_source: "none"
+reasoning: "Engine solved M = 25 from harmonic 5 at weight of 9 kg equal to harmonic 3 at weight of M."
+friction: "Tension from a hanging mass in the sonometer: media tension cannot take 'kg*g' (wrong dimension); needed unknown tensions T1,T2 and facts with g = 9.8 (assumption; cancels)."

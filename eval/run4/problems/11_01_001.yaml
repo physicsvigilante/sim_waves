@@ -1,0 +1,12 @@
+id: 11/01/001
+format: numerical
+statement: 'For the wave shown in figure, write the wave equation if its position is shown at t = 0. Given,
+  speed of wave is v = 300 m/s.
+
+  '
+figure: 'Snapshot y(m) vs x(m) at t = 0, with arrow labelled v pointing in +x direction. Peak height marked
+  0.06 on the y axis. Curve starts at the origin (y = 0, x = 0) rising with positive slope, and consists
+  of 3 crests and 2 troughs, ending back at y = 0 at x = 0.2 m (marked on the x axis). Total span is therefore
+  2.5 wavelengths.
+
+  '

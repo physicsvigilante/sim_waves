@@ -1,0 +1,14 @@
+id: 23/02/cnt_007
+number: 14
+source: {problem: 23_Superposition_and_Standing_Waves/02_Reflection_and_Refraction_of_Stationary_Waves/Problems/cnt_007.png, solution: 23_Superposition_and_Standing_Waves/02_Reflection_and_Refraction_of_Stationary_Waves/Solutions/cnt_007.png}
+format: numerical
+statement: |
+  Two wires of different linear mass densities are soldered together end to end then stretched under a tension T. The wave speed in the first wire is thrice that in the second. If a harmonic wave travelling in the first wire is incident on the junction of the wires and if the amplitude of incident wave is 2.0 cm, find the amplitude of transmitted wave (in cm).
+figure: null
+answer: "1.0"
+answer_value: 1.0
+units: cm
+verified: "A_t = 2 v2/(v1+v2) A_i = 2v/(4v) * 2 cm = 1.0 cm. Matches key."
+kinds: [ratio, nonuniform_medium]
+physics: [transmission, amplitude_coefficient, wave_speed]
+notes: Consistent.

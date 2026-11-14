@@ -1,0 +1,10 @@
+id: b10
+symbols: {fs: positive, Tk: positive}
+media: {air: {type: gas, v: 340 m/s}, hot: {type: gas, gamma: 7/5, temperature: Tk, molar_mass: 29 g/mol}}
+resonators:
+  p: {type: pipe, on: air, length: 1 m, ends: [closed, open], end_correction: 0 m}
+  h: {type: pipe, on: hot, length: 1 m, ends: [closed, open], end_correction: 0 m}
+observe:
+  fl: "resonances(p, f=fs, vary=fs, lo=20[Hz], hi=1000[Hz])"
+  n: "count(resonances(p, f=fs, vary=fs, lo=20[Hz], hi=20000[Hz]))"
+  Ts: "resonances(h, f=255[Hz], vary=Tk, lo=10[K], hi=200[K])"

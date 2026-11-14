@@ -1,0 +1,14 @@
+id: 22/02/cnt_007
+number: 15
+source: {problem: 22_Travelling_Waves/02_Travelling_Waves_1/Problems/cnt_007.png, solution: 22_Travelling_Waves/02_Travelling_Waves_1/Solutions/cnt_007.png}
+format: numerical
+statement: |
+  A copper wire is held at the two ends by rigid supports. At 30 °C the wire is just taut with
+  negligible tension. Find the speed of transverse waves in this wire at 10 °C (in m/s).
+  (Take Y_cu = 1.3e11 Pa, α_cu = 1.7e-5 /°C, ρ_cu = 9000 kg/m³)
+figure: null
+answer_value: 70.0
+units: m/s
+kinds: [derived_medium]
+physics: [wave_speed, thermal_stress]
+notes: Tension from thermal contraction T/A = Y α Δθ; v = sqrt(Y α Δθ / ρ). Medium-property derivation.

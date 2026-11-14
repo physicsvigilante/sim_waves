@@ -1,0 +1,13 @@
+id: 22/02/cnt_005
+assume:
+  - "Amplitude a/x varies with x; max particle speed taken at fixed x, as the problem says velocity of medium particle equals wave velocity; the 1/x factor must cancel, so problem requires the condition to hold with a/x*omega = b, i.e. compare |vy| max over t at x with wave speed."
+  - "Wave velocity from the argument (t - x/b): +x with speed b."
+symbols: {a: positive, b: positive, x0: positive}
+unknowns: {r: positive}
+waves:
+  p: {given: "(a/x)*sin((2*pi/3)*(t - x/b))", units: {x: m, t: s, y: m}}
+given:
+  - "max_over(t, abs(vy(p, x=x0, t=t))) == speed(p)*x0/x0"
+observe:
+  vwave: "velocity(p)"
+  vmax: "max_over(t, abs(vy(p, x=x0, t=t)))"

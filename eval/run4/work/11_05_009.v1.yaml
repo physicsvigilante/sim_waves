@@ -1,0 +1,17 @@
+id: 11/05/009
+assume:
+  - "Incident wave y = A sin(kx - wt) travels toward the right support; reflected from a rigid (fixed) end, giving a standing wave of antinode amplitude 2A."
+  - "Engine has no energy-of-standing-wave observable; the engine only gives the travelling-wave power and the point velocity amplitude."
+symbols: {A: positive, f: positive, mu: positive, T: positive}
+media:
+  s: {type: string, mu: mu, tension: T}
+junctions:
+  wall: {at: 0 m, left: s, right: fixed}
+waves:
+  w: {harmonic: {on: s, A: A, f: f, dir: +x, phase: 0}}
+  tot: {sum: [w, w_reflected]}
+observe:
+  P_incident: "power(w)"
+  vmax_antinode: "max_over(t, abs(vy(tot, x=-wavelength(w)/4, t=t)))"
+  vmax_node: "max_over(t, abs(vy(tot, x=-wavelength(w)/2, t=t)))"
+  v_wave: "speed(w)"

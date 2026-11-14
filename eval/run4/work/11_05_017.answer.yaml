@@ -1,0 +1,10 @@
+answer: "y = A cos(5*pi*x/4) sin(1296 t) (x in m from one open end, t in s), f = 206 Hz"
+final_scene: 11_05_017.v1.yaml
+engine_fit: partial
+hand_steps:
+  - "Assemble y = A cos(k x) sin(omega t) with x from one open end (displacement antinode at the open ends, mode_shape=1 at x=0, 0 at 40 cm), k = 5*pi/4 rad/m, omega = 1295.9 rad/s (825*pi/2)"
+coverage: full
+not_represented: "end correction; time phase of the oscillation (not stated)"
+missing_in_source: "time origin / phase and the choice of x origin"
+reasoning: "Engine gave f=206.25 Hz, lambda=1.6 m, k=5*pi/4, omega=825*pi/2, displacement antinode at the ends and node at mid."
+friction: "no observable produces the standing-wave equation itself; resonators do not give y(x,t)"

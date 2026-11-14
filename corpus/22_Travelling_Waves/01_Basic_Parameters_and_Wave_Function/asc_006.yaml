@@ -1,0 +1,19 @@
+id: 22/01/asc_006
+number: 3
+source: {problem: 22_Travelling_Waves/01_Basic_Parameters_and_Wave_Function/Problems/asc_006.png, solution: 22_Travelling_Waves/01_Basic_Parameters_and_Wave_Function/Solutions/asc_006.png}
+format: single_correct
+statement: |
+  Which one of the following functions represents a travelling wave? Here a, b, c are constants.
+  I.   y = a cos(bx) sin(ct)
+  II.  y = a sin(bx + ct)
+  III. y = a sin(bx + ct) + a sin(bx - ct)
+  IV.  y = a sin(bx - ct)
+figure: null
+options: {a: "Both I and IV", b: "Both I and III", c: "Both II and IV", d: "Both II and III"}
+answer: [c]
+answer_value: "II and IV"
+kinds: [given_wavefunction, classification, symbolic]
+physics: [travelling_vs_standing]
+notes: |
+  Book's justification (wave equation) is loose: I and III also satisfy the wave equation but
+  are standing waves. The real criterion is "is a function of (bx ± ct) only".

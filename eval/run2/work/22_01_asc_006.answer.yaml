@@ -1,0 +1,8 @@
+answer: [c]
+final_scene: 22_01_asc_006.v1.yaml
+engine_fit: full
+coverage: full
+not_represented: "nothing"
+missing_in_source: "units of a, b, c (assumed length, 1/m, 1/s)"
+reasoning: "is_travelling gives I False, II True, III False, IV True, so both II and IV, option c."
+friction: "none"

@@ -1,0 +1,8 @@
+answer: c (1/8 s)
+final_scene: 23_05_asc_009.v1.yaml
+engine_fit: partial
+coverage: full
+not_represented: "Envelope maxima/minima"
+missing_in_source: "none"
+reasoning: "Engine: 4 beats/s. Time from max to min = half beat period, which I wrote as 1/(2*beat_frequency) = 1/8 s (my own relation)."
+friction: "No observable for time between loudness maximum and minimum; used half beat period by hand."

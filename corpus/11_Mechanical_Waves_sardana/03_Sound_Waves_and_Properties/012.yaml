@@ -1,0 +1,15 @@
+id: 11/03/012
+number: 12
+source: {problem: 11_Mechanical_Waves_sardana/03_Sound_Waves_and_Properties/Problems/012.png, solution: 11_Mechanical_Waves_sardana/03_Sound_Waves_and_Properties/Solutions/012.png}
+format: numerical
+statement: |
+  For a person with normal hearing, the faintest sound that can be heard at a frequency of 400 Hz has a pressure amplitude of about 6 x 10^-5 Pa. Calculate the corresponding intensity in Wm^-2. Take speed of sound in air as 344 ms^-1 and density of air 1.2 kgm^-3.
+figure: null
+options: null
+answer: "4.4 x 10^-12 W m^-2"
+answer_value: 4.4e-12
+units: "W m^-2"
+verified: "I = (6e-5)^2/(2*1.2*344) = 3.6e-9/825.6 = 4.36e-12 W/m^2. Matches key."
+kinds: [derived_medium]
+physics: [sound_intensity, pressure_amplitude]
+notes: "Frequency (400 Hz) is not used in the calculation."

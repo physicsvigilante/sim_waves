@@ -1,0 +1,26 @@
+id: 22/02/bmc_006
+symbols: {M: positive, mu: positive, L: positive, g: positive, f0: positive, s: positive}
+media:
+  rope:
+    type: string
+    mu: mu
+    length: L
+    coordinate: {origin: lower_end, direction: up}
+    tension: {hanging: {load: M, g: g}}        # engine derives T(s) = M*g + mu*g*s
+waves:
+  w: {harmonic: {on: rope, f: f0, from: lower_end, toward: up}}
+  p: {pulse: {on: rope, from: lower_end, toward: up}}
+observe:
+  dv_ds:   "diff(speed(rope, at=s), s)"
+  dlam_ds: "diff(wavelength(w, at=s), s)"
+  df_ds:   "diff(frequency(w, at=s), s)"
+  accel:   "diff(front(p, t=t), t, 2)"          # front = pulse position vs time
+expect: {dv_ds: "> 0", dlam_ds: "> 0", df_ds: "0", accel: "g/2"}
+# ---- added for the view experiment (phase 2) ----
+illustrate: {M: 1 kg, mu: 0.1 kg/m, g: 9.8 m/s^2, L: 2 m, f0: 5 Hz}   # source gives no numbers
+view:
+  - {plot: "speed(rope, at=s)", vs: s, range: [0 m, L]}
+  - {plot: "wavelength(w, at=s)", vs: s, range: [0 m, L]}
+  - {plot: "front(p, t=t)", vs: t, range: [0 s, 0.5 s]}
+explore:
+  vary: {M: [0.25 kg, 1 kg, 4 kg]}

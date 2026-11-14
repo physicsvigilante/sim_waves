@@ -1,0 +1,12 @@
+id: 22/02/asc_006
+assume:
+  - "Path difference means the separation in x that produces the same phase difference between two waves of the same wavelength; computed as (phase difference)/k."
+symbols: {a1: positive, a2: positive, omega: positive, lam: positive, phi: real}
+waves:
+  w1: {given: "a1*sin(omega*t - 2*pi*x/lam)", units: {x: m, t: s, y: m}}
+  w2: {given: "a2*cos(omega*t - 2*pi*x/lam + phi)", units: {x: m, t: s, y: m}}
+observe:
+  dphi: "phase(w2, x=0, t=0) - phase(w1, x=0, t=0)"
+  dphi_const: "diff(phase(w2, x=x, t=t) - phase(w1, x=x, t=t), x)"
+  path_diff: "(phase(w2, x=0, t=0) - phase(w1, x=0, t=0))/k(w1)"
+  match_b: "equivalent((phase(w2, x=0, t=0) - phase(w1, x=0, t=0))/k(w1), (lam/(2*pi))*(phi + pi/2))"

@@ -1,0 +1,9 @@
+# direct ray through a wall (opposite sides) and mixed dims
+media: {air: {type: gas, v: 340 m/s}}
+sources: {S: {on: air, f: 170 Hz, A: 1, phase: 0, spreading: none, at: [0 m, 0 m]}}
+reflectors:
+  wall: {point: [1 m, 0 m], normal: [1, 0], boundary: rigid}
+points: {P: [2 m, 0 m]}
+rays:
+  direct: {from: S, to: P}
+observe: {L: "length(direct)", bad: "length(direct) + frequency(S)", pd: "phase_difference(direct, direct) + 1[m]", ri: "relative_intensity(direct) + 1[m]"}

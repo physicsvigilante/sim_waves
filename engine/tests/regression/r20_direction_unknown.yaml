@@ -1,0 +1,9 @@
+# direction from a snapshot + motion: zero at the origin, rising in space, particle moving down => +x
+unknowns: {d: direction, phi: phase}
+waves: {w: {harmonic: {A: 1 cm, lambda: 4 cm, v: 2 m/s, dir: d, phase: phi}}}
+given:
+  - "y(w, x=0, t=0) == 0"
+  - "slope(w, x=0, t=0) > 0"
+  - "vy(w, x=0, t=0) < 0"
+observe: {v: "velocity(w)"}
+expect: {v: "2 m/s"}

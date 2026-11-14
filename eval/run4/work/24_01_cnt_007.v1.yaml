@@ -1,0 +1,7 @@
+id: 24/01/cnt_007
+assume:
+  - "No medium type for liquids exists; the wave is defined without a medium, and only its speed is taken from the engine."
+waves:
+  w: {harmonic: {A: 1 mm, f: 250 Hz, lambda: 8 m, dir: +x, phase: 0}}
+observe:
+  v: "speed(w)"

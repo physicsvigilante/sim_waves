@@ -1,0 +1,9 @@
+answer: "23.3 K (about -250 C)"
+final_scene: 11_03_007.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: nothing
+missing_in_source: "gamma for both gases (assumed 7/5), Kelvin value of 100 C (degC unit handles it)"
+reasoning: "Engine solved Th = 7463/320 = 23.32 K with speed(h2) = speed(o2 at 100 degC)."
+friction: none

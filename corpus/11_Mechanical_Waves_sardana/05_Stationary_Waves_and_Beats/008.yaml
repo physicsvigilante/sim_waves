@@ -1,0 +1,20 @@
+id: 11/05/008
+number: 8
+source: {problem: 11_Mechanical_Waves_sardana/05_Stationary_Waves_and_Beats/Problems/008.png, solution: 11_Mechanical_Waves_sardana/05_Stationary_Waves_and_Beats/Solutions/008.png}
+format: numerical
+statement: |
+  A metallic rod of length 1 m is rigidly clamped at one of its end. The other end of the rod is free. Longitudinal stationary waves are set up in the rod in such a way that there are total six antinodes observed along the rod. If antinode amplitude is 4x10^-6 m, Young's modulus is 6.4x10^10 N m^-2 and density of the rod is 5x10^3 kg m^-3, calculate the
+  (a) wavelength of the constituent waves.
+  (b) frequency of the constituent waves.
+  (c) equation of the motion at the mid-point of the rod.
+figure: null
+options: null
+answer: "(a) lambda = 0.36 m; (b) f = 9939 Hz (v = 3578 m/s); (c) y = 2.57x10^-6 sin(62400 t + phi) m"
+answer_value: {wavelength: 0.36, frequency: 9939, midpoint_amplitude: 2.57e-6, omega: 62400}
+units: {wavelength: m, frequency: Hz, midpoint_amplitude: m, omega: rad/s}
+verified: |
+  DISPUTED (rounding error in key). l = 5(lambda/2) + lambda/4 = 11 lambda/4, so lambda = 4/11 = 0.3636 m (key rounds to 0.36 and then keeps using 0.36). v = sqrt(6.4e10/5e3) = 3577.7 m/s. Exact f = v/lambda = 3577.7 * 11/4 = 9838.7 Hz, not 9939 Hz (9939 comes from 3578/0.36). Exact omega = 2 pi f = 6.18e4 rad/s (key 6.24e4). Mid-point amplitude exact = 4e-6 sin(2 pi (0.5)/lambda) = 4e-6 sin(11 pi/4) = 2.83e-6 m (key 2.57e-6 from sin(2 pi*0.5/0.36)). Exact answers: lambda = 0.364 m, f = 9.84e3 Hz, y = 2.83e-6 sin(6.18e4 t + phi) m.
+kinds: [derived_medium, build_wavefunction, inverse_condition]
+physics: [longitudinal_standing_wave, rod_clamped_free, young_modulus, antinodes]
+notes: |
+  Solution figure: rod from clamped wall (x = 0) with antinodes numbered 1 to 6, antinode 6 at the free end, total length l. Key uses A(x) = A sin(kx) with x measured from the clamped end (a node). Phase phi is left unspecified. Three sub-questions.

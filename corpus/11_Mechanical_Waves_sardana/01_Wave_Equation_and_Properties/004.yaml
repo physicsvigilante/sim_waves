@@ -1,0 +1,15 @@
+id: 11/01/004
+number: 4
+source: {problem: 11_Mechanical_Waves_sardana/01_Wave_Equation_and_Properties/Problems/004.png, solution: 11_Mechanical_Waves_sardana/01_Wave_Equation_and_Properties/Solutions/004.png}
+format: numerical
+statement: |
+  Verify that the equation, y = a sin(wt - kx) satisfies the wave equation d2y/dt2 = v^2 d2y/dx2. Find speed of wave and the direction in which it is travelling.
+figure: null
+options: null
+answer: "Satisfies the wave equation with v = w/k; travelling along +x direction."
+answer_value: "w/k"
+units: "m/s"
+verified: "Matches key. y_tt = -w^2 a sin(wt-kx); y_xx = -k^2 a sin(wt-kx); so y_tt = (w/k)^2 y_xx. Phase wt - kx constant gives dx/dt = +w/k, so +x."
+kinds: [given_wavefunction, symbolic]
+physics: [wave_equation, wave_speed, direction_of_propagation]
+notes: Consistent.

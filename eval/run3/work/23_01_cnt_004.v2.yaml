@@ -1,0 +1,18 @@
+id: 23/01/cnt_004
+assume:
+  - "Cardboard is a perfect reflector with equal amplitude to the direct sound at D; direct and reflected waves are two copies of one travelling wave in air."
+  - "Moving the board by s lengthens the reflected path by 2s (out and back). The engine has no reflector/path observable, so the reflected wave is represented by the same wave evaluated 2s farther along the path."
+  - "Initial position is a maximum (path difference at that position is a whole number of wavelengths); this offset is irrelevant and taken as 0, i.e. reflected wave in phase with direct at s = 0."
+  - "Adjacent max-to-min: no other extremum occurs for 0 < s < 20 cm; imposed as a given on the mid shift s = 10 cm, amplitude strictly between 0 and the maximum."
+symbols: {A: positive}
+unknowns: {f: positive}
+media:
+  air: {type: gas, v: 336 m/s}
+waves:
+  w: {harmonic: {on: air, A: A, f: f, dir: +x, phase: 0}}
+given:
+  - {fact: "max_over(t, abs(y(w, x=0[m], t=t) + y(w, x=40[cm], t=t))) == 0[m]", source: stated, note: "minimum after the board moves 20 cm (path change 40 cm)"}
+  - {fact: "max_over(t, abs(y(w, x=0[m], t=t) + y(w, x=20[cm], t=t))) > 0[m]", source: assumption, note: "halfway shift s=10 cm not a minimum"}
+  - {fact: "max_over(t, abs(y(w, x=0[m], t=t) + y(w, x=20[cm], t=t))) < 2*A", source: assumption, note: "halfway shift not a maximum"}
+observe:
+  f_sol: "f"

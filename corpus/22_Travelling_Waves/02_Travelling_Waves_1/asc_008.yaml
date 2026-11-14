@@ -1,0 +1,15 @@
+id: 22/02/asc_008
+number: 5
+source: {problem: 22_Travelling_Waves/02_Travelling_Waves_1/Problems/asc_008.png, solution: 22_Travelling_Waves/02_Travelling_Waves_1/Solutions/asc_008.png}
+format: single_correct
+statement: The diagram below shows the propagation of a wave. Which points are in same phase?
+figure: |
+  Snapshot of a sinusoid starting at A (x=0, y=0, going down). B on the descending part of
+  the first trough, C at the first trough, D next zero crossing (rising), E crest, F on the
+  descending part of the second trough, G on rising part of second trough, H rising toward
+  second crest. B and F are one wavelength apart.
+options: {a: "F, G", b: "C and E", c: "B and G", d: "B and F"}
+answer: [d]
+kinds: [graph_read]
+physics: [phase, wavelength]
+notes: Same phase = same displacement AND same slope (one λ apart). Labelled points on a snapshot.

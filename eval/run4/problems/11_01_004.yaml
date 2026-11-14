@@ -1,0 +1,6 @@
+id: 11/01/004
+format: numerical
+statement: 'Verify that the equation, y = a sin(wt - kx) satisfies the wave equation d2y/dt2 = v^2 d2y/dx2.
+  Find speed of wave and the direction in which it is travelling.
+
+  '

@@ -1,0 +1,15 @@
+id: 11/04/005
+number: 5
+source: {problem: 11_Mechanical_Waves_sardana/04_Interference/Problems/005.png, solution: 11_Mechanical_Waves_sardana/04_Interference/Solutions/005.png}
+format: numerical
+statement: |
+  A wave is represented by y1 = 10 cos(5x + 25t) where x is measured in meters and t in seconds. A second wave for which y2 = 20 cos(5x + 25t + pi/3) interferes with the first wave. Calculate the amplitude and phase of the resultant wave.
+figure: null
+options: null
+answer: "Amplitude = 26.46 m; phase of resultant = (5x + 25t + 0.714) rad"
+answer_value: {A: 26.46, phi: 0.714}
+units: "A in m (units of y assumed); phi in rad"
+verified: "A = sqrt(10^2 + 20^2 + 2*10*20*cos 60) = sqrt(700) = 26.46; tan phi = 20 sin60/(10 + 20 cos60) = 0.866, phi = 40.9 deg = 0.714 rad. Matches key."
+kinds: [given_wavefunction]
+physics: [superposition, phasor, phase_difference, amplitude_superposition]
+notes: "Solution image has a phasor parallelogram (10 along reference, 20 at theta = pi/3 = 60 deg, resultant at phi). Units of y not given in the problem; key states amplitude in m."

@@ -1,0 +1,10 @@
+id: 22/01/asc_007
+symbols: {y0: positive, f: positive}
+unknowns: {lam: positive}
+waves:
+  w: {given: "y0*sin(2*pi*(f*t - x/lam))", units: {x: m, t: s, y: m}}
+given:
+  - "max_over(t, abs(vy(w, x=0, t=t))) == 4*speed(w)"
+observe:
+  lam: "lam"
+expect: {lam: "pi*y0/2"}

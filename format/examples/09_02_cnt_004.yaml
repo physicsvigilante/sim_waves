@@ -1,0 +1,8 @@
+id: 22/02/cnt_004
+symbols: {a: positive, X: real, T0: real}
+waves:
+  w: {given: "a*sin(4*t - 0.02*x)", units: {x: cm, t: s, y: m}}
+observe:
+  dphi_x: "phase(w, x=X, t=T0) - phase(w, x=X + 10[cm], t=T0)"
+  dphi_t: "phase(w, x=X, t=T0 + 1[s]) - phase(w, x=X, t=T0)"
+expect: {dphi_x: "0.2 rad", dphi_t: "4 rad"}

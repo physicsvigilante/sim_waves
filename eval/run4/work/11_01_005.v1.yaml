@@ -1,0 +1,11 @@
+id: 11/01/005
+assume: ["Smallest separation: phase difference 60 deg = pi/3 exactly (not plus 2n pi)."]
+unknowns: {dx: positive}
+waves:
+  w: {harmonic: {A: 1 m, f: 500 Hz, v: 360 m/s, dir: +x, phase: 0}}
+given:
+  - {fact: "phase(w, x=0[m], t=0[s]) - phase(w, x=dx, t=0[s]) == 60[deg]", source: stated}
+  - {fact: "dx < wavelength(w)", source: assumption, note: "smallest separation"}
+observe:
+  dx: "dx"
+  lam: "wavelength(w)"

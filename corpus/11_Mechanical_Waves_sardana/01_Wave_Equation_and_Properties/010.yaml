@@ -1,0 +1,15 @@
+id: 11/01/010
+number: 10
+source: {problem: 11_Mechanical_Waves_sardana/01_Wave_Equation_and_Properties/Problems/010.png, solution: 11_Mechanical_Waves_sardana/01_Wave_Equation_and_Properties/Solutions/010.png}
+format: numerical
+statement: |
+  A travelling wave pulse is given by, y = 10/(5 + (x + 2t)^2), where x and y are in metre and t in second. In which direction and with what velocity is the pulse propagating? What is the amplitude of pulse?
+figure: null
+options: null
+answer: "Along -x direction, v = 2 m/s, amplitude = 2 units (a/b = 10/5)"
+answer_value: 2
+units: m/s
+verified: "Matches key. Function of (x + 2t) so moves toward -x at 2 m/s; maximum of y at x+2t = 0 is 10/5 = 2 m."
+kinds: [given_wavefunction]
+physics: [pulse, wave_speed, direction_of_propagation, amplitude]
+notes: Multi-part answer; answer_value is the speed.

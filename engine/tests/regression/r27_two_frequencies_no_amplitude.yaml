@@ -1,0 +1,7 @@
+symbols: {a: positive}
+waves:
+  y1: {given: "a*sin(2000*pi*t)", units: {x: m, t: s, y: m}}
+  y2: {given: "a*sin(2008*pi*t)", units: {x: m, t: s, y: m}}
+  both: {sum: [y1, y2]}
+observe: {amp: "amplitude(both)"}
+expect: {error: rejected, message: "different sinusoids"}

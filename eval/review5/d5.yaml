@@ -1,0 +1,1 @@
+observe: {a: "envelope(x, 3*sin(2*x - 100*t) + 4*sin(2.1*x - 104*t))", b: "envelope(t, 3*sin(2*x - 100*t) + 4*sin(2.1*x - 104*t))", c: "envelope(t, 3*sin(2*x - 100*t) + 3*sin(2*x + 100*t))"}

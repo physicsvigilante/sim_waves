@@ -1,0 +1,15 @@
+id: 22/01/cnt_005
+number: 11
+source: {problem: 22_Travelling_Waves/01_Basic_Parameters_and_Wave_Function/Problems/cnt_005.png, solution: 22_Travelling_Waves/01_Basic_Parameters_and_Wave_Function/Solutions/cnt_005.png}
+format: numerical
+statement: |
+  A travelling wave is given by y = 0.8 / (3x^2 + 24xt + 48t^2 + 4), where x and y are in metre
+  and t is in second. Find the velocity in m/s.
+figure: null
+answer_value: 4.0
+units: m/s
+kinds: [given_wavefunction]
+physics: [wave_speed, pulse]
+notes: |
+  Denominator = 3(x + 4t)^2 + 4, so the pulse moves in -x at 4 m/s. Book gives magnitude 4.0.
+  Engine must recognise f(x + 4t) form after completing the square.

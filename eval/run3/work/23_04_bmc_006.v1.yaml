@@ -1,0 +1,18 @@
+id: 23/04/bmc_006
+assume:
+  - "Test both a closed-open and an open-open pipe of unknown length L against the three successive resonances 425, 595, 765 Hz (consecutive modes of the same pipe, no end correction)."
+symbols: {}
+unknowns: {L: positive, n: integer}
+media:
+  air: {type: gas, v: 340 m/s}
+resonators:
+  co: {type: pipe, on: air, length: L, ends: [closed, open], end_correction: 0 m}
+given:
+  - {fact: "frequency(co, harmonic=2*n - 1) == 425[Hz]", source: stated, note: "first observed resonance, odd harmonic 2n-1"}
+  - {fact: "frequency(co, harmonic=2*n + 1) == 595[Hz]", source: stated, note: "next odd harmonic"}
+  - {fact: "frequency(co, harmonic=2*n + 3) == 765[Hz]", source: stated}
+  - {fact: "n >= 1", source: convention}
+observe:
+  L: "L"
+  n: "n"
+  f1: "frequency(co, harmonic=1)"

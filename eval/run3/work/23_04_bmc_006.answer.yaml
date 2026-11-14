@@ -1,0 +1,8 @@
+answer: [b, d]
+final_scene: 23_04_bmc_006.v1.yaml
+engine_fit: full
+coverage: partial
+not_represented: "none"
+missing_in_source: "Option (c) says fundamental frequency is 85 cm: dimension misprint (should be 85 Hz or a length)"
+reasoning: "Option c has a unit misprint"
+friction: "Closed-open fits: odd harmonics n = 5,7,9 (2n-1 with n=3), L = 1 m, fundamental 85 Hz. An open-open pipe (probe v1oo) is inconsistent. (a) false, (b) true, (d) true. (c) as printed has wrong dimension; with 85 Hz it would be true; I did not include it."

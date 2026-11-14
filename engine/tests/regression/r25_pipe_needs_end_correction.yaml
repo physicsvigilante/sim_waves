@@ -1,0 +1,4 @@
+media: {air: {type: gas, v: 340 m/s}}
+resonators: {p: {type: pipe, on: air, length: 1 m, ends: [closed, open]}}
+observe: {f1: "frequency(p, harmonic=1)"}
+expect: {error: rejected, message: "end_correction"}

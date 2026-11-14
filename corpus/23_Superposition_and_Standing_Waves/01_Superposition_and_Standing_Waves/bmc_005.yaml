@@ -1,0 +1,22 @@
+id: 23/01/bmc_005
+number: 4
+source: {problem: 23_Superposition_and_Standing_Waves/01_Superposition_and_Standing_Waves/Problems/bmc_005.png, solution: 23_Superposition_and_Standing_Waves/01_Superposition_and_Standing_Waves/Solutions/bmc_005.png}
+format: multiple_correct
+statement: |
+  Two coherent waves represented by
+  y1 = A sin( 2*pi*x1/lambda - omega*t + pi/4 ) and
+  y2 = A sin( 2*pi*x2/lambda - omega*t + pi/6 ) overlap.
+  The two waves will produce
+figure: null
+options:
+  a: "constructive interference at (x1 - x2) = 2 lambda"
+  b: "constructive interference at (x1 - x2) = (23/24) lambda"
+  c: "destructive interference at (x1 - x2) = 1.5 lambda"
+  d: "destructive interference at (x1 - x2) = (11/24) lambda"
+answer: [b, d]
+answer_value: null
+units: null
+verified: "Phase difference = 2*pi*(x1-x2)/lambda + pi/12. Constructive: (x1-x2) = (n - 1/24) lambda (so 23/24 ok, 2 not). Destructive: (x1-x2) = (n + 1/2 - 1/24) lambda = 11/24, 35/24, ... (1.5 = 36/24 not). Matches key."
+kinds: [given_wavefunction, inverse_condition]
+physics: [interference, phase_difference, path_difference]
+notes: Consistent. Solution only works the constructive case and says destructive is similar.

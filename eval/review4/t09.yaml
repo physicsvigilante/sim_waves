@@ -1,0 +1,14 @@
+# two speakers 3 m apart, listener at 4 m in front of S1: paths 4 and 5, diff 1 m. vary f 100..2000: maxima f = 340 n -> 340,680,...,1700 (5); minima 170,510,...,1870 (6)
+symbols: {f: positive}
+media: {air: {type: gas, v: 340 m/s}}
+sources:
+  S1: {on: air, at: [0 m, 0 m], f: f, A: 1, phase: 0, spreading: none}
+  S2: {on: air, at: [3 m, 0 m], f: f, A: 1, phase: 0, spreading: none}
+points: {P: [0 m, 4 m]}
+rays:
+  r1: {from: S1, to: P}
+  r2: {from: S2, to: P}
+observe:
+  mx: "maxima(r2, r1, vary=f, lo=100[Hz], hi=2000[Hz])"
+  mn: "minima(r1, r2, vary=f, lo=100[Hz], hi=2000[Hz])"
+  lo: "min(minima(r1, r2, vary=f, lo=20[Hz], hi=20000[Hz]))"

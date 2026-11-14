@@ -1,0 +1,19 @@
+id: 22/03/bmc_005
+number: 4
+source: {problem: 22_Travelling_Waves/03_Travelling_Waves_2/Problems/bmc_005.png, solution: 22_Travelling_Waves/03_Travelling_Waves_2/Solutions/bmc_005.png}
+format: multiple_correct
+statement: |
+  The y-x curve at an instant for a wave travelling along x axis on a string is shown. Slope
+  at the point A on the curve, as shown, is 53°. Which of the following is/are correct?
+figure: |
+  Snapshot y vs x, one hump. Point A is on the rising side before the crest (positive
+  displacement, positive slope); tangent at A makes 53° with +x (slope = tan53° = 4/3).
+options:
+  a: "Transverse velocity of the particle at point A is positive if the wave is travelling along positive x axis"
+  b: "Transverse velocity of the particle at point A is positive if the wave is travelling along negative x axis"
+  c: "Magnitude of transverse velocity of the particle at point A is greater than wave speed"
+  d: "Magnitude of transverse velocity of the particle at point A is lesser than wave speed"
+answer: [b, c]
+kinds: [graph_read, conceptual]
+physics: [particle_velocity, slope]
+notes: Uses v_p = -v ∂y/∂x for a wave f(x - vt). Depends only on local slope, not on full shape.

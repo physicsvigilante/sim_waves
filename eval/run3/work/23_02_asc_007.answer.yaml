@@ -1,0 +1,8 @@
+answer: [b]
+final_scene: 23_02_asc_007.v1.yaml
+engine_fit: full
+coverage: full
+not_represented: "nothing"
+missing_in_source: "none"
+reasoning: "Doubling the tension at fixed frequency multiplies the wavelength, hence the node spacing, by sqrt(2)."
+friction: "Node spacing as half the wavelength of the travelling wave is stated as assumption; the resonator node_spacing at fixed length does not answer it (ratio 1 for same mode)."

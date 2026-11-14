@@ -1,0 +1,16 @@
+# a fixed end is a node of the standing wave; a free end is an antinode (amplitude doubles)
+media:
+  s: {type: string, mu: 0.01 kg/m, tension: 4 N}
+  u: {type: string, mu: 0.01 kg/m, tension: 4 N}
+junctions:
+  wall: {at: 0 m, left: s, right: fixed}
+  loose: {at: 0 m, left: free, right: u}
+waves:
+  w: {harmonic: {on: s, A: 1 cm, f: 50 Hz, dir: +x, phase: 0}}
+  v: {harmonic: {on: u, A: 1 cm, f: 50 Hz, dir: -x, phase: 0}}
+  sw: {sum: [w, w_reflected]}
+  sv: {sum: [v, v_reflected]}
+observe:
+  node: "equivalent(y(sw, x=0[m], t=t), 0[m])"
+  antinode_amp: "max_over(t, abs(y(sv, x=0[m], t=t)))"
+expect: {node: true, antinode_amp: "2 cm"}

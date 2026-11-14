@@ -1,0 +1,5 @@
+answer: [c]
+final_scene: 22_02_asc_009.v1.yaml
+engine_fit: full
+reasoning: With 5*lam/2 = 0.25 m the engine solves lam = 0.1 m, f = 3300 Hz, k/2pi = 10; field equals option c only (a, b false). Option d is the same as c if its typo is read as x.
+friction: "Reading the figure (fifth zero crossing = 2.5 wavelengths) is my geometry in assume. Figure shows the wave rising at the origin, which strictly needs phase pi, but options omit a phase."

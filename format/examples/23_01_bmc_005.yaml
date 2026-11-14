@@ -1,0 +1,12 @@
+id: 23/01/bmc_005
+# Coherent waves overlapping at path positions x1 and x2: resultant amplitude at the meeting point.
+symbols: {A: positive, lam: positive, omega: positive}
+waves:
+  y1: {given: "A*sin(2*pi*x/lam - omega*t + pi/4)", units: {x: m, t: s, y: m}}
+  y2: {given: "A*sin(2*pi*x/lam - omega*t + pi/6)", units: {x: m, t: s, y: m}}
+observe:
+  amp_23_24: "max_over(t, abs(y(y1, x=23*lam/24, t=t) + y(y2, x=0[m], t=t)))"
+  amp_2lam: "max_over(t, abs(y(y1, x=2*lam, t=t) + y(y2, x=0[m], t=t)))"
+  amp_11_24: "max_over(t, abs(y(y1, x=11*lam/24, t=t) + y(y2, x=0[m], t=t)))"
+  amp_1p5: "max_over(t, abs(y(y1, x=3*lam/2, t=t) + y(y2, x=0[m], t=t)))"
+expect: {amp_23_24: "2*A", amp_11_24: 0, amp_2lam: "> 0"}

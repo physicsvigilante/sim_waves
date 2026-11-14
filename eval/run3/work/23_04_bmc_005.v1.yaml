@@ -1,0 +1,17 @@
+id: 23/04/bmc_005
+assume:
+  - "String fixed at both ends (figure: walls at both ends), fundamental mode; tension adjusted so wave speed on string = speed of sound. The string's fundamental frequency is then the reference."
+  - "Sound frequency from the string equals the string's vibration frequency. A pipe resonates if that frequency equals one of the pipe's allowed mode frequencies. End corrections neglected (none given)."
+  - "Pipes: (a) closed-open L, (b) open-open 2L, (c) open-open L/2, (d) closed-open L/2 (from figure)."
+symbols: {L: positive, v: positive}
+media:
+  wire: {type: string, mu: mu0, tension: free}
+  air: {type: gas, v: v}
+resonators:
+  s: {type: string, on: wire, length: L, ends: [fixed, fixed]}
+  pa: {type: pipe, on: air, length: L, ends: [closed, open], end_correction: 0 m}
+  pb: {type: pipe, on: air, length: 2*L, ends: [open, open], end_correction: 0 m}
+  pc: {type: pipe, on: air, length: L/2, ends: [open, open], end_correction: 0 m}
+  pd: {type: pipe, on: air, length: L/2, ends: [closed, open], end_correction: 0 m}
+observe:
+  fs: "1"

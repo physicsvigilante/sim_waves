@@ -1,0 +1,10 @@
+answer: b
+final_scene: 24_01_asc_005.v2.yaml
+engine_fit: partial
+hand_steps:
+  - "displacement amplitude s0 = p0/(rho v omega) = 12/(1.29*330.07*2700) = 1.044e-5 m"
+coverage: partial
+not_represented: "pressure-displacement relation; the scene carries omega,k only"
+missing_in_source: "none"
+reasoning: "Engine gave v = omega/k = 330.07 m/s; the hand formula then gives 1.044e-5 m (option b)."
+friction: "no observable converting pressure amplitude to displacement amplitude; v1 failed because I assumed v=330 and omega != k*v"

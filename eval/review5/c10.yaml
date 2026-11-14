@@ -1,0 +1,2 @@
+symbols: {w1: positive, w2: positive}
+observe: {a: "envelope(t, sin(w1*t) + sin(w2*t))"}

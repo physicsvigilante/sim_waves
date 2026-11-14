@@ -1,0 +1,12 @@
+id: 22/02/cnt_005
+assume:
+  - "Printed y = (a/x) sin[(2*pi/3)(t - x/b)] has an x-dependent amplitude, so the particle's maximum velocity depends on the point; evaluated at a general point x = X (positive). The problem does not say which point."
+  - "Taken in SI numbers: a in m^2, b in m/s, X in m (so the ratio a/b is read as a number-per-metre-second)."
+symbols: {b: positive, X: positive}
+unknowns: {a: positive}
+waves:
+  p: {given: "(a/x)*sin((2*pi/3)*(t - x/b))", units: {x: m, t: s, y: m}}
+given:
+  - {fact: "max_over(t, abs(vy(p, x=X, t=t))) == b[m/s]", source: stated, note: "max particle velocity equals wave velocity; evaluated at x = X because the amplitude varies with x"}
+observe:
+  a_over_b: "a/b"

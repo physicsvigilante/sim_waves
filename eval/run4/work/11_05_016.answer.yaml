@@ -1,0 +1,9 @@
+answer: "27.04 N"
+final_scene: 11_05_016.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "end correction of the pipe"
+missing_in_source: "none"
+reasoning: "Pipe fundamental 200 Hz; string first overtone (2nd harmonic) 208 Hz with string higher (from the tension-decrease statement); engine solved T = 27.04 N."
+friction: "the direction clue (decreasing tension lowers beats) had to be turned into an inequality by me"

@@ -1,0 +1,9 @@
+answer: {a: "2e-4 Pa", b: "s = 2e-9 sin(500 t - 2.5 x) m; equivalently dP = 2e-4 cos(500 t - 2.5 x) Pa"}
+final_scene: 11_03_010.v2.yaml
+engine_fit: partial
+hand_steps: ["B -> gamma*pressure hack", "20 dB -> I = 1e-10 W/m^2", "p_max = sqrt(2*rho*v*I) = 2e-4 Pa", "s_max = p_max/(rho*v*omega) = 2e-9 m", "pressure wave is 90 degrees ahead of displacement"]
+coverage: partial
+not_represented: "link between loudness, amplitude and intensity; wave amplitude left as a symbol"
+missing_in_source: "reference intensity 1e-12 W/m^2 (convention); whether 'equation of wave' means displacement or pressure"
+reasoning: "Engine gives v = 200 m/s, k = 2.5 1/m, I = 1e-10; amplitudes by hand."
+friction: "Same as other acoustics: no amplitude-from-intensity; B hack; unknown amplitude undetermined in v1 (changed to symbol)."

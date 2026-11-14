@@ -1,0 +1,10 @@
+answer: "At A the path difference is 8 m, close to lambda/2 = 7.98 m (lambda = 15.95 m), so the waves are nearly in antiphase (phase difference 0.997 pi). Minima lie on the hyperbola with foci at the speakers: x^2/(lambda/4)^2 - y^2/(25 - (lambda/4)^2) = 1, i.e. x^2/15.9 - y^2/9.1 = 1 (m^2), with lambda/4 = 3.99 m"
+final_scene: 11_04_012.v2.yaml
+engine_fit: partial
+hand_steps:
+  - "The closed hyperbola equation was derived by me; the engine only verified it numerically at three solved points (x = 6, 8, 10 m, values 1 each)."
+coverage: full
+not_represented: "only the lowest-order minimum branch (path difference lambda/2) is checked; higher orders do not occur inside |path difference| <= 10 m except 3 lambda/2 = 23.9 m > 10"
+missing_in_source: none
+reasoning: "dA = 8 m, lambda = 15.95 m, phase difference 342 pi/343; points with path difference lambda/2 satisfy the hyperbola."
+friction: "The engine cannot output a relation between x and y; I could only check a candidate relation at sample points."

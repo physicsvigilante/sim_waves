@@ -1,0 +1,20 @@
+id: 23/04/bmc_005
+format: multiple_correct
+statement: 'Figure shows a stretched string of length L and pipes of length L, 2L, L/2 and L/2 in options
+  (a), (b), (c) and (d), respectively. The tension in the string is adjusted until the speed of waves
+  on the string equals the speed of sound waves in air. The fundamental mode of oscillation is then set
+  up on the string. In which pipe(s) will the sound produce by the string causes resonance?
+
+  '
+figure: 'Top: a horizontal string drawn between two hatched vertical walls, labelled L in the middle.
+  Below, four pipe sketches in a 2x2 grid. (a) a rectangle-like pipe with a closed vertical end on the
+  left and open on the right, labelled L below it (no arrows). (b) two horizontal lines with both ends
+  open, dimension arrow labelled 2L. (c) two horizontal lines both ends open, dimension arrow labelled
+  L/2. (d) pipe closed at left, open at right, dimension arrow labelled L/2.
+
+  '
+options:
+  a: closed-open pipe of length L
+  b: open-open pipe of length 2L
+  c: open-open pipe of length L/2
+  d: closed-open pipe of length L/2

@@ -1,0 +1,12 @@
+id: 11/02/012
+assume: ["Symbolic: mu2 > mu1, same tension. Which string is 'denser' for a wave = which has the larger mu / lower speed / larger impedance."]
+symbols: {T: positive}
+unknowns: {m1: positive, m2: positive}
+media:
+  s1: {type: string, mu: m1, tension: T}
+  s2: {type: string, mu: m2, tension: T}
+given:
+  - {fact: "m2 > m1", source: stated}
+observe:
+  v1_over_v2: "speed(s1)/speed(s2)"
+  z2_over_z1: "impedance(s2)/impedance(s1)"

@@ -1,0 +1,8 @@
+id: e02
+media:
+  a: {type: string, mu: 0.01 kg/m, tension: 9 N}
+junctions:
+  J: {at: 0 m, left: a, right: a}
+waves:
+  w: {harmonic: {on: a, A: 1 cm, f: 10 Hz, dir: +x, phase: 0}}
+observe: {r: "amplitude(w_reflected)", t: "amplitude(w_transmitted)", y: "y(w, x=1[m], t=0[s])"}

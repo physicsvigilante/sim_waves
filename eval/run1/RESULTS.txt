@@ -1,0 +1,31 @@
+id               att fit      ok   answer -> key
+22/01/asc_005      1 full     Y    ['c'] -> ['c']
+22/01/asc_006      3 full     Y    ['c'] -> ['c']
+22/01/bmc_005      1 partial  n    ['a', 'b'] -> ['a', 'b', 'd']
+22/01/bmc_006      1 partial  Y    ['a', 'b'] -> ['a', 'b']
+22/01/bmc_007      1 full     Y    ['b', 'c', 'd'] -> ['b', 'c', 'd']
+22/01/cnt_006      1 full     Y    16 m -> 16.0
+22/02/asc_006      3 full     Y    ['b'] -> ['b']
+22/02/asc_007      1 partial  n    ['c'] -> ['d']
+22/02/asc_008      3 ?(bad yaml) Y    ['d'] -> ['d']
+22/02/asc_009      1 full     Y    ['c'] -> ['c']
+22/02/bmc_004      2 full     Y    ['a', 'b', 'c', 'd'] -> ['a', 'b', 'c', 'd']
+22/02/bmc_005      1 full     Y    ['a', 'c'] -> ['a', 'c']
+22/02/cnt_005      3 partial  n    a/b = 3x/(2*pi), i.e. 3/(2*pi) = 0.477 for x = 1 m (x in the same units) -> 1.5
+22/03/bmc_006      1 full     Y    ['a', 'c', 'd'] -> ['a', 'c', 'd']
+22/03/cnt_004      1 full     Y    3 -> 3.0
+22/03/cnt_006      1 full     Y    511.64 W (1296*pi^2/25, about 512 W) -> 513
+
+correct 13/16; correct on first attempt 9/16
+
+Notes (graded by hand):
+- Author: Claude Sonnet, fresh agent. It was given the OUTDATED draft FORMAT.md (v0), because
+  the v0.1 copy had failed to reach disk; the engine itself was current.
+- The 3 misses are problems with the source material, not the engine:
+  - 22/01/bmc_005: conceptual; the book key (d) is debatable.
+  - 22/02/asc_007: cluttered figure labels; the author's (c) follows the figure as described.
+  - 22/02/cnt_005: printed equation is a misprint (a/x); the engine correctly could not give
+    one answer, and the book uses a/pi.
+- Friction (author's LOG.md): figure problems without numbers (unknown point in a sine with a
+  symbolic wavelength); no "is travelling" / "wrap phase mod 2 pi" helpers; a scene aborts
+  on one non-travelling wave.

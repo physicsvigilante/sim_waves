@@ -1,0 +1,15 @@
+id: 11/04/006
+number: 6
+source: {problem: 11_Mechanical_Waves_sardana/04_Interference/Problems/006.png, solution: 11_Mechanical_Waves_sardana/04_Interference/Solutions/006.png}
+format: numerical
+statement: |
+  Two loudspeakers S1 and S2 vibrating in the same phase, each emit sounds of frequency 220 Hz uniformly in all directions. S1 has an acoustic output of 1.2 x 10^-3 watt and S2 has 1.8 x 10^-3 watt. Consider a point P such that S1P = 0.75 m and S2P = 3 m. How are the phases arriving at P related? What is the intensity at P when both S1 and S2 are on? Speed of sound in air is 330 ms^-1.
+figure: null
+options: null
+answer: "Waves arrive out of phase (phase terms pi and 4pi); resultant (as printed) P1 - P2 = 0.6 x 10^-3 watt"
+answer_value: 0.6e-3
+units: "W (as printed; the question asks for intensity in W/m^2)"
+verified: "DISPUTED. lambda = 330/220 = 1.5 m; S1P = lambda/2 (phase pi), S2P = 2 lambda (phase 4pi), so the arrivals differ by 3pi, i.e. are in antiphase: this part matches. Intensity at P, though: I1 = P1/(4 pi 0.75^2) = 1.2e-3/7.069 = 1.70e-4 W/m^2; I2 = 1.8e-3/(4 pi 9) = 1.59e-5 W/m^2. Antiphase, so I = (sqrt I1 - sqrt I2)^2 = (0.01303 - 0.00399)^2 = 8.2e-5 W/m^2. The printed key subtracts source powers (0.6 mW), which ignores the different distances and gives power, not intensity."
+kinds: [build_wavefunction, comparison]
+physics: [interference, path_difference, phase_difference, point_source_intensity, destructive_interference]
+notes: "Two parts. The book's final value is a power difference in watts and is not the intensity asked; correct value about 8.2e-5 W/m^2. Solution image ends with the P1 - P2 line, so nothing further is cut off."

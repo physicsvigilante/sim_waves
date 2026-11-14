@@ -1,0 +1,8 @@
+answer: [c] 500 m/s
+final_scene: 23_03_asc_008.v1.yaml
+engine_fit: full
+coverage: full
+not_represented: "nothing"
+missing_in_source: "none"
+reasoning: "4th harmonic at 500 Hz on 2 m gives lambda = 1 m and speed 500 m/s."
+friction: "none"

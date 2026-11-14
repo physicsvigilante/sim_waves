@@ -1,0 +1,12 @@
+id: 11/01/008
+assume:
+  - "The traced curve is modelled as a harmonic wave in space on the paper; the engine has no spring-block oscillator, so omega = sqrt(2k/m) = 10 rad/s is computed by hand and entered as a convention-free assumption."
+  - "Block released from rest at max displacement 0.02 m at t=0, so the displacement is A cos(omega t) (phase pi/2 in the sine form)."
+  - "Paper moves at 0.1 m/s; trace is the +x travelling shape at that speed (direction of paper motion not specified)."
+waves:
+  w: {harmonic: {A: 0.02 m, omega: 10 rad/s, v: 0.1 m/s, dir: +x, phase: pi/2}}
+observe:
+  lam: "wavelength(w)"
+  f: "frequency(w)"
+  k: "k(w)"
+  eq: "y(w, x=x, t=t)"

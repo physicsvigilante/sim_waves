@@ -1,0 +1,9 @@
+answer: "4.4e-12 W/m^2"
+final_scene: 11_03_012.v1.yaml
+engine_fit: none
+hand_steps: ["I = p^2/(2 rho v) = (6e-5)^2/(2*1.2*344)"]
+coverage: unsupported
+not_represented: "pressure amplitude, density and speed of sound"
+missing_in_source: none
+reasoning: "Engine cannot compute it; hand value 4.36e-12 W/m^2."
+friction: "No pressure-amplitude-to-intensity observable."

@@ -1,0 +1,23 @@
+id: 22/02/asc_007
+format: single_correct
+statement: 'Which of the following curves represents correctly the oscillation given by
+
+  y = y0 sin(ωt - φ), where 0 < φ < 90°?
+
+  '
+figure: 'Four curves of equal amplitude plotted against t, starting at t = 0. Labels are cluttered.
+
+  - A (dashed): starts at the positive maximum and falls.
+
+  - A bold curve starts at zero and falls.
+
+  - A thin curve whose left end is labelled C starts well below zero and rises steeply.
+
+  - Another thin curve starts slightly above zero and rises; the label D sits near a crest of a thin curve.
+
+  - B labels a thin curve in the middle of the plot.'
+options:
+  a: A
+  b: B
+  c: C
+  d: D

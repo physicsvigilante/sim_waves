@@ -1,0 +1,14 @@
+# run 4 (11/02/001): mass per length growing linearly up a hanging string, mu = mu0*s.
+# Tension = g * integral of mu below s = mu0*g*s^2/2, v^2 = g*s/2, front = g*t^2/8.
+symbols: {mu0: positive, g: positive, s: positive}
+media:
+  wire:
+    type: string
+    mu: "mu0*s"
+    coordinate: {origin: lower_end, direction: up, variable: s}
+    tension: {hanging: {load: 0 kg, g: g}}
+waves: {p: {pulse: {on: wire, from: lower_end, toward: up}}}
+observe:
+  T: "tension(wire, at=s)"
+  front: "front(p, t=t)"
+expect: {T: "mu0*g*s**2/2", front: "g*t**2/8"}

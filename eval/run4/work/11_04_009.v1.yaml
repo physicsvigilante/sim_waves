@@ -1,0 +1,16 @@
+id: 11/04/009
+assume:
+  - "Both branches share the same entry and exit sections; the common section length (1 m) is arbitrary and cancels."
+  - "Straight branch length = diameter 2r; arch length = half circumference, pi*r (geometry written as ray lengths, taken from the figure)."
+  - "Equal amplitudes in both branches; sound in a tube, no reflection phase. Minimum = antiphase at the detector."
+symbols: {r: positive}
+media: {air: {type: gas, v: 340 m/s}}
+sources:
+  S: {on: air, wavelength: 40 cm, A: 1, phase: 0, spreading: none}
+rays:
+  arch: {from: S, length: "1[m] + pi*r"}
+  straight: {from: S, length: "1[m] + 2*r"}
+given: []
+observe:
+  dpath: "path_difference(arch, straight)"
+  rmin: "min(minima(arch, straight, vary=r, lo=0.001[m], hi=5[m]))"

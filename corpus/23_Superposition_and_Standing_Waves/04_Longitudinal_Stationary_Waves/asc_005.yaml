@@ -1,0 +1,19 @@
+id: 23/04/asc_005
+number: 2
+source: {problem: 23_Superposition_and_Standing_Waves/04_Longitudinal_Stationary_Waves/Problems/asc_005.png, solution: 23_Superposition_and_Standing_Waves/04_Longitudinal_Stationary_Waves/Solutions/asc_005.png}
+format: single_correct
+statement: |
+  A tuning fork of frequency 340 Hz is vibrated just above the tube of 120 cm height. Water is poured slowly in the tube. What is the minimum height of water necessary for the resonance (speed of sound in the air = 340 m/sec)?
+figure: null
+options:
+  a: "15 cm"
+  b: "25 cm"
+  c: "30 cm"
+  d: "45 cm"
+answer: d
+answer_value: 45
+units: cm
+verified: "Closed-pipe air column lengths (2N-1)*25 cm = 25, 75, 125; only 25 and 75 fit in 120 cm. Water heights 95 or 45 cm; minimum 45 cm. Matches key (end correction ignored)."
+kinds: [inverse_condition]
+physics: [resonance_tube, closed_pipe, standing_waves]
+notes: Consistent. End correction ignored.

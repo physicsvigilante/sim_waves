@@ -1,0 +1,11 @@
+answer: {i: "speed x2", ii: "unchanged", iii: "speed x2", iv: "speed x1/2"}
+final_scene: 24_01_dmt_004.v2.yaml
+engine_fit: partial
+hand_steps:
+  - "case (ii): density scales with pressure at fixed T (Boyle), entered as density 4*D0"
+  - "case (i): pressure change dropped because the temperature route has no pressure input"
+coverage: partial
+not_represented: "pressure in the temperature route; right-hand column of the matching (the speed changes) is not given in the source"
+missing_in_source: "the second column / answer codes of the matching"
+reasoning: "Engine ratios: i=2, ii=1, iii=2, iv=1/2."
+friction: "pressure cannot be combined with temperature+molar mass in one gas medium; v1 rejected it"

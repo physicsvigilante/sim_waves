@@ -1,0 +1,5 @@
+# run 4: a position symbol inside mu must be declared as the coordinate variable
+symbols: {mu0: positive, alpha: positive, s: positive}
+media: {wire: {type: string, mu: "mu0 + alpha*s", tension: 100 N}}
+observe: {v: "speed(wire, at=s)"}
+expect: {error: rejected, message: "declare"}

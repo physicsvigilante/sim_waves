@@ -1,0 +1,8 @@
+answer: c (516 Hz)
+final_scene: 23_05_asc_007.v1.yaml
+engine_fit: full
+coverage: full
+not_represented: "nothing"
+missing_in_source: "none"
+reasoning: "Engine solved the unique f = 516 satisfying both beat counts."
+friction: "none"

@@ -1,0 +1,17 @@
+id: 22/02/asc_007
+number: 4
+source: {problem: 22_Travelling_Waves/02_Travelling_Waves_1/Problems/asc_007.png, solution: 22_Travelling_Waves/02_Travelling_Waves_1/Solutions/asc_007.png}
+format: single_correct
+statement: |
+  Which of the following curves represents correctly the oscillation given by
+  y = y0 sin(ωt - φ), where 0 < φ < 90°?
+figure: |
+  Four sinusoids A, B, C, D of equal amplitude vs t. Read from figure (verify):
+  A (dashed) starts at +max; B starts near 0 going up from slightly positive;
+  C starts at 0 going down (or negative steep); D starts below zero, rising.
+  Book: at t = 0, y = -y0 sin φ (negative, rising) -> curve D.
+options: {a: A, b: B, c: C, d: D}
+answer: [d]
+kinds: [graph_match]
+physics: [phase, time_series]
+notes: "Figure-reading - identify curve with y(0) = -y0 sin φ < 0 and dy/dt > 0. Curve labels in figure are cluttered."

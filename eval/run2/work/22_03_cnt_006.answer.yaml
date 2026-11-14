@@ -1,0 +1,8 @@
+answer: 511.64 W
+final_scene: 22_03_cnt_006.v1.yaml
+engine_fit: full
+coverage: full
+not_represented: "nothing"
+missing_in_source: "none"
+reasoning: "Engine: wave speed 40 m/s, power(w) = 1296*pi**2/25 W = 511.6 W (about 512 W)."
+friction: "none"

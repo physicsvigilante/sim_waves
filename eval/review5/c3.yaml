@@ -1,0 +1,1 @@
+observe: {a: "envelope(t, 2*sin(2*pi*101*t)*cos(2*pi*t))", b: "frequency_of(t, envelope(t, 3*sin(2*pi*100*t) + 4*sin(2*pi*104*t))**2)", c: "frequency_of(t, envelope(t, 3*sin(2*pi*100*t) + 4*sin(2*pi*104*t)))"}

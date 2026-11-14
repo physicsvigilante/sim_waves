@@ -1,0 +1,8 @@
+answer: [b]
+final_scene: 23_01_asc_005.v1.yaml
+engine_fit: full
+coverage: partial
+not_represented: "ceiling as a reflector (no reflection model: the reflected wave is the same wave evaluated at the 130 m path, path length computed by me with sqrt), spreading, phase change at ceiling (assumed none)"
+missing_in_source: "phase change on reflection from the ceiling; speed of sound"
+reasoning: "Engine amplitude is 2 mm (constructive) for lambda 10, 5, 2.5 and 0 for 20, 20/3, 4; 15, 25, 35 are partial. Matches option b."
+friction: "No reflector or path-length observable; the 130 m path (Pythagoras) is geometry I did by hand inside the expression."

@@ -1,0 +1,6 @@
+media: {wire: {type: string, mu: 0.01 kg/m, tension: 100 N}}
+unknowns: {n: integer}
+resonators:
+  s: {type: string, on: wire, length: 1 m, ends: [fixed, fixed]}
+given: ["frequency(s, harmonic=n) == 200[Hz]"]
+observe: {n: n, a: "nodes(s, harmonic=n)", b: "mode_shape(s, harmonic=n, x=(1/8)[m])"}

@@ -1,0 +1,9 @@
+answer: {t: "0.47 s (= 12 m / 25.56 m/s)"}
+final_scene: 11_02_007.v1.yaml
+engine_fit: partial
+hand_steps: ["t = L/v = 12 m / 25.56 m/s = 0.4695 s", "tension = weight of the 5 kg object (entered in the tension field)"]
+coverage: partial
+not_represented: "pulley, hanging object, tube weight and stretch"
+missing_in_source: none
+reasoning: "Engine: mu = 0.075 kg/m, v = 14 sqrt30/3 = 25.56 m/s."
+friction: "No pulse travel-time observable on a uniform string (front(p,t=1s) just returns v, pulses on a uniform string have no length-limited time)."

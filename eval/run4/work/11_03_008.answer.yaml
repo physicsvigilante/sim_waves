@@ -1,0 +1,9 @@
+answer: "5270 m/s"
+final_scene: 11_03_008.v1.yaml
+engine_fit: partial
+hand_steps: ["B entered as gamma*pressure with gamma=1"]
+coverage: partial
+not_represented: "solid medium (disguised as a gas)"
+missing_in_source: none
+reasoning: "Engine: v = 5270.5 m/s through the disguised route."
+friction: "No bulk modulus input; solids/liquids absent."

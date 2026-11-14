@@ -1,0 +1,15 @@
+id: 11/04/004
+number: 4
+source: {problem: 11_Mechanical_Waves_sardana/04_Interference/Problems/004.png, solution: 11_Mechanical_Waves_sardana/04_Interference/Solutions/004.png}
+format: numerical
+statement: |
+  Sound waves from a tuning fork A reach a point P by two separate paths ABP and ACP. When ACP is greater than ABP by 11.5 cm, there is silence at P. When the difference is 23 cm the sound becomes loudest at P and when 34.5 cm there is silence again and so on. Calculate the minimum frequency of the fork if the velocity of sound is taken to be 331.2 ms^-1.
+figure: null
+options: null
+answer: "1440 Hz"
+answer_value: 1440
+units: Hz
+verified: "Consecutive silence (11.5 cm), loudest (23 cm), silence (34.5 cm) means 11.5 cm = lambda/2, lambda = 23 cm; f = 331.2/0.23 = 1440 Hz. Matches key."
+kinds: [inverse_condition]
+physics: [interference, path_difference, wavelength, frequency]
+notes: "No figure in the problem. The word 'minimum' is slightly odd; the sequence of silences and maxima fixes lambda = 23 cm uniquely."

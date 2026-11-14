@@ -1,0 +1,10 @@
+id: 22/01/bmc_006
+assume:
+  - "Generic transverse harmonic wave on a string moving +x, phase 0. The engine can show the field as a function of (x,t), y at fixed t, y at fixed x."
+symbols: {A: positive, k: positive, omega: positive}
+waves:
+  w: {harmonic: {A: A, k: k, omega: omega, dir: +x, phase: 0}}
+observe:
+  field: "field(w)"
+  shape_at_t0: "y(w, x=x, t=0)"
+  particle_vs_t: "y(w, x=0, t=t)"

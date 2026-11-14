@@ -1,0 +1,9 @@
+answer: "Bridges at 72 cm and 96 cm from the left end (segments 72, 24, 18 cm), segment order as read left to right"
+final_scene: 11_05_005.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: nothing
+missing_in_source: "order of the segments with frequencies 1:3:4"
+reasoning: "Solved L1 = 72 cm, L2 = 24 cm, L3 = 18 cm; bridges at L1 and L1+L2."
+friction: none

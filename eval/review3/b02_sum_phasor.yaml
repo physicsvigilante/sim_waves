@@ -1,0 +1,17 @@
+id: b02
+symbols: {k: positive, w: positive}
+waves:
+  y1: {harmonic: {A: 3 cm, omega: w, k: k, dir: -x, phase: 0}}
+  y2: {harmonic: {A: 4 cm, omega: w, k: k, dir: -x, phase: pi/2}}
+  y3: {harmonic: {A: 4 cm, omega: w, k: k, dir: +x, phase: 0}}
+  y4: {harmonic: {A: 3 cm, omega: w, k: k, dir: +x, phase: 0}}
+  tot: {sum: [y1, y2]}
+  st: {sum: [y1, y3]}
+  nest: {sum: [tot, y2]}
+observe:
+  amp: "amplitude(tot)"
+  ph: "phase(tot, x=0[m], t=0[s])"
+  vel: "velocity(tot)"
+  stmax: "max_over(t, abs(y(st, x=x, t=t)))"
+  trav: "is_travelling(st)"
+  namp: "amplitude(nest)"

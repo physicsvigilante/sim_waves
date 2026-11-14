@@ -1,0 +1,5 @@
+answer: [b, c, d]
+final_scene: 22_01_bmc_007.v1.yaml
+engine_fit: full
+reasoning: ay + omega^2*y simplifies to 0 (y and a opposite); v equals omega*y shifted in time by a quarter period, and a equals omega*v shifted by a quarter period (pi/2 gaps); y and v are not in phase (a false).
+friction: The engine has no direct 'phase difference between two time signals' observable; I built the check from time-shifted differences, which uses a mild amount of my own formula (omega*y, shift pi/(2*omega)).

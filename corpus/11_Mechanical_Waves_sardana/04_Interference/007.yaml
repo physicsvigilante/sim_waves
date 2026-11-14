@@ -1,0 +1,15 @@
+id: 11/04/007
+number: 7
+source: {problem: 11_Mechanical_Waves_sardana/04_Interference/Problems/007.png, solution: 11_Mechanical_Waves_sardana/04_Interference/Solutions/007.png}
+format: numerical
+statement: |
+  A sound source capable of producing sound of variable frequencies is located at a distance of 1 m from a reflecting wall as shown in Figure. A detector D is lying at a point shown in Figure. The various distances are also indicated. If the speed of sound in air is 340 ms^-1, find the frequencies of sound within the audible range, which will have maximum intensity at detector?
+figure: "A vertical wall on the left. Source S is 1 m to the right of the wall. Detector D is 20 m to the right of S's vertical line (horizontal distance S to D = 20 m, shown with a dashed vertical line down to D), and 10 m below S (a 10 m vertical arrow along the wall spans S's level to D's level; D lies on a dashed horizontal line from the wall bottom). Solution figure adds the image source S' 1 m behind the wall (2 m from S) and a reflection point on the wall; SD = sqrt(20^2 + 10^2) = 22.36 m, S'D = sqrt(22^2 + 10^2) = 24.17 m."
+options: null
+answer: "f = n (188 Hz) = 188, 376, 564, ... Hz"
+answer_value: 188
+units: Hz
+verified: "Direct path 22.36 m, reflected path (via image) 24.17 m, path difference 1.805 m (key rounds to 1.81). Maxima when delta = n lambda, f = n v/delta = n*188 Hz (188.3 exact). Matches key."
+kinds: [inverse_condition, graph_read]
+physics: [interference, reflection, image_source, path_difference]
+notes: "The audible range (about 20 Hz to 20 kHz) is not stated numerically; key lists the series without a cutoff (n up to about 106). No phase change assumed on reflection from the rigid wall."

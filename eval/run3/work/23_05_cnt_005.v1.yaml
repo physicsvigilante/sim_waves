@@ -1,0 +1,18 @@
+id: 23/05/cnt_005
+assume:
+  - "Wires are uniform round wires, fixed ends, fundamental modes. Ratios given: T 8:1, L 36:35, d 4:1, density 1:2 (wire 1 : wire 2)."
+  - "Absolute scale set by unknown T and fixed through the 360 Hz higher-pitch frequency; d0, l, rho0 are symbols that cancel."
+symbols: {l: positive, d0: positive, rho0: positive}
+unknowns: {T: positive}
+media:
+  w1: {type: string, density: rho0, diameter: 4*d0, tension: 8*T}
+  w2: {type: string, density: 2*rho0, diameter: d0, tension: T}
+resonators:
+  r1: {type: string, on: w1, length: 36*l, ends: [fixed, fixed]}
+  r2: {type: string, on: w2, length: 35*l, ends: [fixed, fixed]}
+given:
+  - {fact: "max(frequency(r1, harmonic=1), frequency(r2, harmonic=1)) == 360[Hz]", source: stated, note: "higher pitch note"}
+observe:
+  f1: "frequency(r1, harmonic=1)"
+  f2: "frequency(r2, harmonic=1)"
+  beats: "beat_frequency(frequency(r1, harmonic=1), frequency(r2, harmonic=1))"

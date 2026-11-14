@@ -1,0 +1,15 @@
+id: 11/02/007
+number: 7
+source: {problem: 11_Mechanical_Waves_sardana/02_Transverse_Wave_in_String_and_Properties/Problems/007.png, solution: 11_Mechanical_Waves_sardana/02_Transverse_Wave_in_String_and_Properties/Solutions/007.png}
+format: numerical
+statement: |
+  One end of 12 m long rubber tube with a total mass of 900 g is fastened to a fixed support. A cord attached to the other and passes over a pulley and supports an object with a mass of 5 kg. The tube is struck a transverse blow at one end. Find the time required for the pulse to reach the other end. Take g = 9.8 m/s^2.
+figure: null
+options: null
+answer: "t = 0.47 s"
+answer_value: 0.47
+units: s
+verified: "Matches key. T = 5*9.8 = 49 N; mu = 0.9/12 = 0.075 kg/m; v = sqrt(49/0.075) = 25.56 m/s; t = 12/25.56 = 0.469 s."
+kinds: [derived_medium]
+physics: [wave_speed, tension, linear_mass_density, travel_time]
+notes: "Problem text is split across the image with a gap (the figure is in the solution). Solution figure: vertical tube AB standing on the floor at A with B at its top; cord from B over a pulley hung from the ceiling to a hanging block m. Tube is taken as under tension mg and its own weight neglected."

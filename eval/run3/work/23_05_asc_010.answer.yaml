@@ -1,0 +1,8 @@
+answer: c
+final_scene: 23_05_asc_010.v1.yaml
+engine_fit: full
+coverage: full
+not_represented: "Amount of wax loading"
+missing_in_source: "The amount by which wax lowers the frequency is not given"
+reasoning: "Engine solved fA = 259 Hz (before wax) and 253 Hz after; so answer c (259 Hz)."
+friction: "Needed to assume wax lowers frequency."

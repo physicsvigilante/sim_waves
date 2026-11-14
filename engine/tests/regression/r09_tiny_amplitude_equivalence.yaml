@@ -1,0 +1,6 @@
+# review a10: two different 1e-10 m waves must not be 'equivalent'
+waves:
+  w1: {given: "1e-10*sin(x - 4*t)", units: {x: m, t: s, y: m}}
+  w2: {given: "1e-10*cos(x + 9*t)", units: {x: m, t: s, y: m}}
+observe: {same: "equivalent(field(w1), field(w2))"}
+expect: {same: false}

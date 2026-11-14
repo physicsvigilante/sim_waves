@@ -1,0 +1,16 @@
+id: 22/02/asc_009
+assume:
+  - "Dimension arrow runs from the origin to the fifth zero crossing after the origin (figure description), so 5 half-wavelengths = 0.25 m."
+  - "Wave moves +x (stated), curve rises from origin at t=0, so phase = 0."
+unknowns: {lam: positive}
+waves:
+  w: {harmonic: {A: 0.05 m, v: 330 m/s, lambda: lam, dir: +x, phase: 0}}
+given:
+  - {fact: "5*wavelength(w)/2 == 0.25[m]", source: figure, note: "fifth zero crossing after origin at 0.25 m"}
+observe:
+  lam: "wavelength(w)"
+  f: "frequency(w)"
+  k: "k(w)"
+  opt_a: "equivalent(field(w), 0.05*sin(2*pi*(4000*t - 12.5*x)))"
+  opt_b: "equivalent(field(w), 0.05*sin(2*pi*(4000*t - 122.5*x)))"
+  opt_c: "equivalent(field(w), 0.05*sin(2*pi*(3300*t - 10*x)))"

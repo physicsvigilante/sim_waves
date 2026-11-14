@@ -1,0 +1,9 @@
+answer: "String 2 is denser (larger mu, lower wave speed, larger impedance); string 1 is the 'rarer' one"
+final_scene: 11_02_012.v2.yaml
+engine_fit: partial
+hand_steps: ["Reading the result as m2>m1 -> v1/v2 = sqrt(m2/m1) > 1 (inequality between two symbols could not be put in given)"]
+coverage: full
+not_represented: "walls and fixed supports (not needed)"
+missing_in_source: "figure has no numbers; which side is string 2 comes from the figure description"
+reasoning: "Engine: v1/v2 = sqrt(m2/m1) and impedance ratio sqrt(m2/m1), so with m2 > m1 string 2 has lower speed and larger impedance."
+friction: "v1 failed: 'm2 > m1' with only unknown symbols is not checkable; cannot state an ordering of two symbols. The question is conceptual (what 'dense' means for a wave)."

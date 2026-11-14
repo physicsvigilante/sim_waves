@@ -1,0 +1,8 @@
+id: 11/02/006
+media:
+  wire: {type: string, mass: 5 g, length: 50 cm, tension: free, Y: 16e11 Pa, area: 1 mm^2}
+waves:
+  w: {harmonic: {on: wire, A: 1 mm, f: 100 Hz, v: 80 m/s, dir: +x, phase: 0}}
+observe:
+  T: "tension(wire)"
+  mu: "mu(wire)"

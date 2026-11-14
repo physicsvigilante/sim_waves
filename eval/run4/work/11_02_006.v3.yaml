@@ -1,0 +1,10 @@
+id: 11/02/006
+assume: ["Tension is an unknown T, fixed by the stated wave speed 80 m/s; extension is then a hand step with Y and area."]
+unknowns: {T: positive}
+media:
+  wire: {type: string, mass: 5 g, length: 50 cm, tension: T}
+waves:
+  w: {harmonic: {on: wire, A: 1 mm, f: 100 Hz, v: 80 m/s, dir: +x, phase: 0}}
+observe:
+  T: "T"
+  mu: "mu(wire)"

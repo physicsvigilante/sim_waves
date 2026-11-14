@@ -1,0 +1,8 @@
+answer: [b, c]
+final_scene: 23_02_bmc_005.v1.yaml
+engine_fit: partial
+coverage: full
+not_represented: "nothing"
+missing_in_source: "definition of intensity for a standing wave"
+reasoning: "Displacement is zero at x = 0 for all t (node, reflection phase pi); amplitude varies with position (0, 2 cm, 0, 2 cm), so b and c. Option d: amplitude at a point does not change with time (not checked as intensity)."
+friction: "No intensity observable for a standing wave; option d needed a definition."

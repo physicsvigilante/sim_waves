@@ -1,0 +1,6 @@
+media: {wire: {type: string, mu: 0.01 kg/m, tension: 100 N}}
+unknowns: {n: integer}
+resonators:
+  s: {type: string, on: wire, length: 1 m, ends: [fixed, fixed]}
+given: ["count(nodes(s, harmonic=n)) == 5"]
+observe: {n: n}

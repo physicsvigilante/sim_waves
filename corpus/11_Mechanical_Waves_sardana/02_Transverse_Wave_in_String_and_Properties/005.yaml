@@ -1,0 +1,16 @@
+id: 11/02/005
+number: 5
+source: {problem: 11_Mechanical_Waves_sardana/02_Transverse_Wave_in_String_and_Properties/Problems/005.png, solution: 11_Mechanical_Waves_sardana/02_Transverse_Wave_in_String_and_Properties/Solutions/005.png}
+format: numerical
+statement: |
+  A uniform rope of length 10 cm and mass 4 kg hangs vertically from a rigid support. A block of mass 2 kg is attached to the free end of the rope. A transverse pulse of wavelength 0.06 m is produced at the lower end of the rope, what is the wavelength of the pulse when it reaches the top of the rope?
+figure: |
+  Rope hanging from a ceiling with a 2 kg block at the bottom. Rope labelled 4 kg. Point 1 marked at the lower end of the rope (just above the block), point 2 at the top end (at the support).
+options: null
+answer: "lambda_2 = sqrt(3) * 0.06 = 0.06*sqrt(3) m (about 0.104 m)"
+answer_value: 0.1039
+units: m
+verified: "Matches key. T1 = 2g (bottom), T2 = (2+4)g = 6g (top); frequency constant so lambda proportional to v proportional to sqrt(T): lambda2 = 0.06*sqrt(6g/2g) = 0.06*sqrt(3) = 0.104 m."
+kinds: [nonuniform_medium, ratio]
+physics: [wave_speed, tension, wavelength, hanging_rope]
+notes: "Rope length given as 10 cm (odd for a 4 kg rope and a 0.06 m wavelength pulse; length is not used in the solution). Mass of rope between the points handled as full 4 kg at the top."

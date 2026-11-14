@@ -1,0 +1,23 @@
+id: 11/05/003
+number: 3
+source: {problem: 11_Mechanical_Waves_sardana/05_Stationary_Waves_and_Beats/Problems/003.png, solution: 11_Mechanical_Waves_sardana/05_Stationary_Waves_and_Beats/Solutions/003.png}
+format: numerical
+statement: |
+  The vibrations of a string fixed at both ends are described by the equation
+  y = (5 mm) sin[(1.57 cm^-1) x] sin[(314 s^-1) t]
+  (a) What is the maximum displacement of the particle at x = 5.66 cm?
+  (b) What are the wavelengths and the wave speeds of the two transverse waves that combine to give the above vibration?
+  (c) What is the velocity of the particle at x = 5.66 cm at time t = 2 s?
+  (d) If the length of the string is 10 cm, locate the nodes and the antinodes. How many loops are formed in the vibration.
+figure: null
+options: null
+answer: "(a) 2.56 mm; (b) lambda = 4 cm, v = 200 cm/s = 2 m/s; (c) 78.5 cm/s; (d) nodes at x = 0, 2, 4, ... cm; antinodes at x = 1, 3, 5, ... cm; 5 loops"
+answer_value: {max_displacement_mm: 2.56, wavelength_cm: 4, wave_speed_m_per_s: 2, particle_velocity_cm_per_s: 78.5, loops: 5}
+units: {max_displacement_mm: mm, wavelength_cm: cm, wave_speed_m_per_s: m/s, particle_velocity_cm_per_s: cm/s, loops: count}
+verified: |
+  DISPUTED on (c) only. (a) A(x) = 0.5 cm * sin(1.57*5.66) = 0.5 * 0.5129 = 0.2565 cm = 2.56 mm, matches. (b) lambda = 2 pi/1.57 = 4.00 cm, v = 314/1.57 = 200 cm/s, matches. (d) nodes every 2 cm (0,2,...,10), antinodes at 1,3,5,7,9 cm, 5 loops, matches.
+  (c) v_p = 157 sin(1.57 x) cos(314 t) cm/s. With the given numbers sin(8.886) = 0.5129 and cos(628) = 0.9503 (628 rad is not an exact multiple of 2 pi), so v_p = 157*0.5129*0.9503 = 76.5 cm/s. The key 78.5 = 157 * 0.5 corresponds to sin(kx) rounded to 0.5 and cos = 1; with cos = 1 exactly the value would be 80.5 cm/s. No consistent evaluation gives 78.5.
+kinds: [given_wavefunction, derived_medium]
+physics: [standing_waves, string_modes, particle_velocity, nodes, antinodes]
+notes: |
+  Solution writes A(x) = 2.56 cm in (a) then A_max = 2.56 mm; the correct value of the product is 0.256 cm = 2.56 mm (unit slip in the intermediate line). Part (c) key is rounding-dependent (cos(314*2) is very sensitive to rounding of 314 vs 100 pi). The solution figure shows a 10 cm string with 5 loops between fixed ends. Four sub-questions (a)-(d) in one record.

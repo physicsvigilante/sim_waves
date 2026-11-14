@@ -1,0 +1,17 @@
+id: 22/02/asc_009
+format: single_correct
+statement: 'If the speed of the wave shown in the figure is 330 m/s in the given medium, then the
+
+  equation of the wave propagating in the positive x-direction will be (all quantities in MKS).
+
+  '
+figure: 'Snapshot y vs x. Dashed lines at y = +0.05 m and -0.05 m mark the crests and troughs. The curve
+
+  starts at the origin (y = 0) and rises. A dimension arrow labelled 0.25 m runs from the origin to the
+
+  fifth zero crossing after the origin.'
+options:
+  a: y = 0.05 sin 2π(4000t - 12.5x)
+  b: y = 0.05 sin 2π(4000t - 122.5x)
+  c: y = 0.05 sin 2π(3300t - 10x)
+  d: y = 0.05 sin 2π(3300t - 10t)

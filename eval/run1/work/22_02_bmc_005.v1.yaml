@@ -1,0 +1,16 @@
+id: 22/02/bmc_005
+assume:
+  - "Snapshot at t=0 of a +x harmonic wave of frequency n; a is the first crest, so y(a)=A, crest at x=xa; b next zero (falling) at xa+lam/4, c trough at xa+lam/2, d zero (rising) at xa+3*lam/4, e crest at xa+lam."
+  - "ab = lam/4 (from figure positions a to b)."
+  - "Phase 0 with crest of sin(omega t - kx + phase) at x=0 requires phase = pi/2, so xa = 0."
+symbols: {A: positive, n: positive, lam: positive}
+waves:
+  w: {harmonic: {A: A, f: n, lambda: lam, dir: +x, phase: pi/2}}
+observe:
+  ab: "lam/4"
+  speed_over_n_ab: "speed(w)/(n*(lam/4))"
+  a_phase_now: "phase(w, x=0, t=0)"
+  d_phase_now: "phase(w, x=3*lam/4, t=0)"
+  a_phase_later: "phase(w, x=0, t=4/(3*n))"
+  a_later_minus_d_now_over_2pi: "(phase(w, x=0, t=4/(3*n)) - phase(w, x=3*lam/4, t=0))/(2*pi)"
+  phase_gap_b_e: "phase(w, x=lam/4, t=0) - phase(w, x=lam, t=0)"

@@ -1,0 +1,7 @@
+media:
+  a: {type: string, mu: 0.01 kg/m, tension: 9 N}
+  b: {type: string, mu: 0.04 kg/m, tension: 9 N}
+junctions: {J: {at: 0 m, left: a, right: b}}
+waves: {w: {harmonic: {on: a, A: 1 cm, f: 10 Hz, dir: +x, phase: 0}}}
+observe: {y_wrong_side: "y(w, x=1[m], t=0[s])"}
+expect: {error: rejected, message: "outside medium"}

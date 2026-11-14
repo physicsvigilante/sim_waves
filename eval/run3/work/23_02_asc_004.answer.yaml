@@ -1,0 +1,8 @@
+answer: [b]
+final_scene: 23_02_asc_004.v1.yaml
+engine_fit: full
+coverage: full
+not_represented: "nothing (specific string values assumed; the loop structure is scale-free)"
+missing_in_source: "none"
+reasoning: "Ratio of displacements within one loop is +1 (same phase), across a node -1, so only option b."
+friction: "Cannot express 'all particles in a region' for an infinite set; sampled with points in a concrete scene."

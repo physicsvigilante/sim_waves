@@ -1,0 +1,9 @@
+id: 23/05/asc_007
+assume:
+  - "Beat frequency is |f_fork - f_oscillator|; the fork's true frequency is the one unknown consistent with both readings."
+unknowns: {f: positive}
+given:
+  - {fact: "beat_frequency(f, 514[Hz]) == 2[Hz]", source: stated}
+  - {fact: "beat_frequency(f, 510[Hz]) == 6[Hz]", source: stated}
+observe:
+  f: "f"

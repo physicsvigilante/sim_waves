@@ -1,0 +1,25 @@
+id: 22/02/asc_009
+number: 6
+source: {problem: 22_Travelling_Waves/02_Travelling_Waves_1/Problems/asc_009.png, solution: 22_Travelling_Waves/02_Travelling_Waves_1/Solutions/asc_009.png}
+format: single_correct
+statement: |
+  If the speed of the wave shown in the figure is 330 m/s in the given medium, then the
+  equation of the wave propagating in the positive x-direction will be (all quantities in MKS).
+figure: |
+  Snapshot y vs x. Amplitude 0.05 m (dashed lines at ±0.05). Curve starts at origin rising.
+  A dimension arrow of 0.25 m spans 2.5 wavelengths (from origin to the third zero-crossing
+  after... i.e. 5 half-waves).
+options:
+  a: "y = 0.05 sin 2π(4000t - 12.5x)"
+  b: "y = 0.05 sin 2π(4000t - 122.5x)"
+  c: "y = 0.05 sin 2π(3300t - 10x)"
+  d: "y = 0.05 sin 2π(3300t - 10t)"
+answer: [c]
+answer_value: "λ = 0.1 m, f = 3300 Hz"
+kinds: [graph_read, build_wavefunction, equation_form]
+physics: [wavelength, frequency, sinusoidal_wave]
+notes: |
+  Book typo: writes 5λ/2 = 0.025 (should be 0.25). Also the drawn snapshot rises from the
+  origin (+sin kx) while option (c) at t=0 gives -sin(20πx); book ignores the phase sign.
+  Engine check of "equation matches figure" would flag this - decide whether options are
+  compared up to phase.

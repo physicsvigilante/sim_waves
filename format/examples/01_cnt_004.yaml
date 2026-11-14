@@ -1,0 +1,6 @@
+id: 22/01/cnt_004
+waves:
+  p: {given: "3/(2 + (x - 4*t)**2)", units: {x: m, t: s, y: m}}
+observe:
+  v: "velocity(p)"            # signed; engine finds c with y_t + c*y_x = 0
+expect: {v: "4 m/s"}

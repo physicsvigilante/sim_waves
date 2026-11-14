@@ -1,0 +1,13 @@
+id: 11/02/004
+assume: ["Uniform string of density rho and cross-section S; mu = rho*S. Wave on it has speed omega/k."]
+symbols: {A: positive, k: positive, omega: positive, rho: positive, S: positive}
+media:
+  s: {type: string, density: rho, area: S, tension: free}
+waves:
+  w: {harmonic: {on: s, A: A, k: k, omega: omega, dir: +x, phase: 0}}
+observe:
+  P: "power(w)"
+  v: "speed(w)"
+  mu: "mu(s)"
+  sl: "slope(w, x=x, t=t)"
+  vy: "vy(w, x=x, t=t)"

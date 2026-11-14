@@ -1,0 +1,15 @@
+id: 11/03/002
+number: 2
+source: {problem: 11_Mechanical_Waves_sardana/03_Sound_Waves_and_Properties/Problems/002.png, solution: 11_Mechanical_Waves_sardana/03_Sound_Waves_and_Properties/Solutions/002.png}
+format: numerical
+statement: |
+  Calculate the ratio of speed of sound in hydrogen gas to the rms speed of hydrogen molecules.
+figure: null
+options: null
+answer: "sqrt(7/15)"
+answer_value: 0.6831
+units: dimensionless
+verified: "v_sound = sqrt(gamma P/rho), v_rms = sqrt(3P/rho), ratio = sqrt(gamma/3) = sqrt(7/15) = 0.683 with gamma = 7/5. Matches key."
+kinds: [derived_medium, ratio]
+physics: [speed_of_sound, rms_speed, adiabatic_index]
+notes: "gamma = 7/5 for diatomic H2 is not stated in the problem; it is assumed by the solution (rigid-rotor, no vibration). Key leaves the answer as sqrt(7/15) without a decimal."

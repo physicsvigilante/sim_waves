@@ -1,0 +1,12 @@
+answer: {a: "0.364 m", b: "9.84e3 Hz", c: "y = 4e-6 sin(17.3*0.5) cos(6.18e4 t) m, i.e. 4e-6*sin(8.64 rad)*cos(2 pi 9.84e3 t); k=2pi/lambda=17.3 rad/m"}
+final_scene: 11_05_008.v1.yaml
+engine_fit: none
+hand_steps:
+  - "Fixed-free rod with 6 antinodes -> L = (2n-1) lambda/4 with n=6 -> lambda = 4L/11 = 0.364 m"
+  - "v = sqrt(Y/rho) = sqrt(6.4e10/5e3) = 3578 m/s; f = v/lambda = 9.84 kHz"
+  - "Mid-point x=0.5 m: y = 4e-6 sin(k x) cos(w t) with k = 2pi/lambda, w = 2 pi f"
+coverage: unsupported
+not_represented: "the whole rod (media type rod is rejected)"
+missing_in_source: "whether the 'six antinodes' count includes the free end (assumed yes, n=6 -> 11 quarter wavelengths)"
+reasoning: "Engine rejects rods; everything answered from own knowledge. Corrected (a): lambda = 4/11 m = 0.364 m; (b) about 9.8e3 Hz; (c) y = 4e-6 sin(k*0.5) cos(2 pi f t) m."
+friction: "rods (longitudinal waves with Y and density) not supported"

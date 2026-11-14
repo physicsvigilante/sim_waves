@@ -1,0 +1,26 @@
+id: 11/05/003
+assume:
+  - "Component waves: 2.5 sin(1.57 x - 314 t) and 2.5 sin(1.57 x + 314 t) (mm, x in cm, t in s), whose sum is the stated standing wave."
+  - "Part (d): string modelled as a fixed-fixed resonator of length 10 cm on a wire of arbitrary mu and T (they cancel in mode geometry); the mode is taken as the 5th harmonic: 2*L/lambda = 4.995 for the stated 1.57/cm (the engine refused an exact match because 1.57 is a rounded pi/2); the rounding is treated as the textbook rounding."
+  - "x in the equivalence check is an SI number (metres): 1.57 per cm = 157 per m."
+symbols: {mu: positive, T: positive}
+waves:
+  f1: {given: "2.5*sin(1.57*x - 314*t)", units: {x: cm, t: s, y: mm}}
+  f2: {given: "2.5*sin(1.57*x + 314*t)", units: {x: cm, t: s, y: mm}}
+  tot: {sum: [f1, f2]}
+media:
+  wire: {type: string, mu: mu, tension: T}
+resonators:
+  r: {type: string, on: wire, length: 10 cm, ends: [fixed, fixed]}
+given: []
+observe:
+  same: "equivalent(y(tot, x=x, t=t), 5*sin(157*x)*sin(314*t)*1[mm])"
+  maxdisp: "max_over(t, abs(y(tot, x=5.66[cm], t=t)))"
+  lam: "wavelength(f1)"
+  v1: "velocity(f1)"
+  v2: "velocity(f2)"
+  vy: "vy(tot, x=5.66[cm], t=2[s])"
+  lam5: "wavelength(r, harmonic=5)"
+  nodes: "nodes(r, harmonic=5)"
+  antinodes: "antinodes(r, harmonic=5)"
+  nloops: "count(antinodes(r, harmonic=5))"

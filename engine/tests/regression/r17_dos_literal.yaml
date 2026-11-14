@@ -1,0 +1,3 @@
+waves: {w: {given: "1e99999999*sin(x - t)", units: {x: m, t: s, y: m}}}
+observe: {v: "speed(w)"}
+expect: {error: rejected, message: "out of range"}

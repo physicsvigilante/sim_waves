@@ -1,0 +1,5 @@
+symbols: {A: positive}
+waves:
+  y1: {given: "A*sin(2*pi*200*t)", units: {x: m, t: s, y: m}}
+  y2: {given: "2*A*sin(2*pi*204*t + pi/4)", units: {x: m, t: s, y: m}}
+observe: {a: "max_over(t, envelope(t, y(y1, x=0[m]) + y(y2, x=0[m])))", b: "(max_over(t, envelope(t, y(y1, x=0[m]) + y(y2, x=0[m])))/min_over(t, envelope(t, y(y1, x=0[m]) + y(y2, x=0[m]))))**2", c: "envelope(t, y(y1, x=0[m]) + y(y2, x=0[m]))"}

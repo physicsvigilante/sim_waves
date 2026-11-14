@@ -1,0 +1,26 @@
+id: 23/01/dmt_004
+number: 10
+source: {problem: 23_Superposition_and_Standing_Waves/01_Superposition_and_Standing_Waves/Problems/dmt_004.png, solution: 23_Superposition_and_Standing_Waves/01_Superposition_and_Standing_Waves/Solutions/dmt_004.png}
+format: matrix_match
+statement: |
+  Two small speakers separated by some distance emit sound of same frequency. At some point A, the intensity due to each of them is I0. Path length from one of the speakers to A is lambda/2 larger than the path length from the other speaker to A. lambda is wavelength of the sound. Column (I) gives characteristics of the two speakers and Column (II) gives the resultant intensity at A. Match them.
+figure: null
+options:
+  column_i:
+    a: "The speakers are incoherent, and phase difference between them changes rapidly"
+    b: "The speakers are coherent and in phase"
+    c: "The speakers are coherent but have a phase difference pi between them"
+    d: "The speakers are coherent and in phase. The two speakers and the point A lie on a straight line"
+  column_ii:
+    p: "I0"
+    q: "4 I0"
+    r: "0"
+    s: "2 I0"
+answer: {a: s, b: r, c: q, d: r}
+answer_value: null
+units: null
+verified: "(a) incoherent: intensities add, 2 I0. (b) path lambda/2 gives pi, destructive, 0. (c) source pi plus path pi gives in phase, 4 I0 (amplitude 2 sqrt(I0), squared). (d) same as (b), 0. Matches key."
+kinds: [conceptual, ratio]
+physics: [interference, coherence, intensity, phase_difference]
+notes: |
+  In the solution, (c) is written as I = (sqrt(I0) + sqrt(I0)) = 4 I0 with the square missing. Option (d) with A collinear with the speakers is still a lambda/2 path difference as stated, so it is the same as (b).

@@ -1,0 +1,14 @@
+id: 23/04/asc_004
+# Resonance tube: first and second resonances with the same fork.
+symbols: {v: positive}
+unknowns: {e: real}
+media:
+  air: {type: gas, v: v}
+resonators:
+  p1: {type: pipe, on: air, length: 22.7 cm, ends: [closed, open], end_correction: e}
+  p2: {type: pipe, on: air, length: 70.2 cm, ends: [closed, open], end_correction: e}
+given:
+  - {fact: "frequency(p1, harmonic=1) == frequency(p2, harmonic=3)", source: stated, note: "first and second resonance with one fork"}
+observe:
+  e: "e"
+expect: {e: "1.05 cm"}

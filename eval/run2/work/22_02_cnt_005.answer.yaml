@@ -1,0 +1,8 @@
+answer: "a/b = 3*X/(2*pi), where X is the position of the particle (about 0.48 s*m if X = 1 m); no single number follows from the problem as printed"
+final_scene: 22_02_cnt_005.v2.yaml
+engine_fit: partial
+coverage: partial
+not_represented: "the wave speed b is used as given; the engine says the printed function is not a travelling wave (is_travelling False) so velocity(p) could not be used"
+missing_in_source: "the position x at which the particle's maximum velocity is meant; amplitude a/x depends on x"
+reasoning: "Engine: max |vy| at x = X is 2*pi*a/(3*X); setting it equal to b gives a/b = 3*X/(2*pi). The result depends on X, so the problem is under-determined."
+friction: "A wave whose amplitude falls as 1/x is not in the travelling form; the wave velocity had to be taken from b by hand. Units of a and a/b are awkward (m^2 and m*s)."

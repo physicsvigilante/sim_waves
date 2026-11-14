@@ -1,0 +1,14 @@
+id: d04
+media:
+  a: {type: string, mu: 0.01 kg/m, tension: 9 N}
+  b: {type: string, mu: 0.04 kg/m, tension: 9 N}
+junctions:
+  J: {at: 0 m, left: a, right: b}
+waves:
+  w: {harmonic: {on: a, A: 1 cm, f: 10 Hz, dir: +x, phase: 0}}
+  st: {sum: [w, w_reflected]}
+observe: {a: "amplitude(w_transmitted)"}
+view:
+  - {snapshot: w, t: 0 s}
+  - {snapshot: w_transmitted, t: 0 s}
+  - {animate: st}

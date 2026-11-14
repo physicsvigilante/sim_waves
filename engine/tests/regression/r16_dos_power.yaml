@@ -1,0 +1,4 @@
+symbols: {a: positive}
+waves: {w: {given: "a*9**9**9**9*sin(x - t)", units: {x: m, t: s, y: m}}}
+observe: {v: "speed(w)"}
+expect: {error: rejected, message: "exponent too large"}

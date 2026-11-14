@@ -1,0 +1,10 @@
+id: 23/01/bmc_007
+symbols: {a: positive, omega: positive, k: positive}
+waves:
+  y1: {given: "a*sin(omega*t - k*x)", units: {x: m, t: s, y: m}}
+  y2: {given: "a*cos(omega*t - k*x)", units: {x: m, t: s, y: m}}
+  total: {sum: [y1, y2]}
+observe:
+  amp: "amplitude(total)"
+  lead: "wrap(phase(total, x=0[m], t=0[s]) - phase(y1, x=0[m], t=0[s]))"
+expect: {amp: "sqrt(2)*a", lead: "pi/4"}

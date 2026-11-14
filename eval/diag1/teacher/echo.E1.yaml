@@ -1,0 +1,26 @@
+# parent: eval/diag1/baselines/echo.yaml
+# change: ceiling height 25 m -> 30 m (teacher's rebuild; value is the teacher's choice, noted in assume)
+# kind: property change
+id: diag1/echo
+# Baseline (developer-authored fixture). A source and a listener 120 m apart on the floor of a
+# large hall with a rigid flat ceiling (now 30 m). Sound reaches the listener directly and
+# by one reflection from the ceiling.
+assume:
+  - "Ceiling height 30 m is the teacher's rebuild choice (assumption), not a stated value."
+  - "Amplitudes at the listener taken equal (spreading: none)."
+  - "Rigid ceiling: no pressure phase change on reflection."
+symbols: {lam: positive}
+media:
+  air: {type: gas, v: 340 m/s}
+sources:
+  S: {on: air, at: [0 m, 0 m], f: "340[m/s]/lam", A: 1, phase: 0, spreading: none}
+reflectors:
+  ceiling: {point: [0 m, 30 m], normal: [0, -1], boundary: rigid}
+points:
+  P: [120 m, 0 m]
+rays:
+  direct: {from: S, to: P}
+  up: {from: S, to: P, via: ceiling}
+observe:
+  path_diff: "path_difference(up, direct)"
+  longest_max: "max(maxima(up, direct, vary=lam, lo=0.5[m], hi=100[m]))"

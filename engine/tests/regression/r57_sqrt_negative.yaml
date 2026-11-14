@@ -1,0 +1,3 @@
+# review 5 #1
+observe: {m: "min_over(t, sqrt(sin(t)))"}
+expect: {error: rejected, message: "becomes negative"}

@@ -1,0 +1,20 @@
+id: 23/01/bmc_006
+number: 5
+source: {problem: 23_Superposition_and_Standing_Waves/01_Superposition_and_Standing_Waves/Problems/bmc_006.png, solution: 23_Superposition_and_Standing_Waves/01_Superposition_and_Standing_Waves/Solutions/bmc_006.png}
+format: multiple_correct
+statement: |
+  Two waves are propagating along a taut string that coincides with the x-axis. The first wave can be expressed as y1 = A cos[k(x - vt)] and the second has the wave function given by y = A cos[k(x + vt) + phi]. The wavelength is lambda.
+figure: null
+options:
+  a: "constructive interference occurs at x = 0 if phi = pi"
+  b: "constructive interference occurs at x = l if phi = 2 pi"
+  c: "destructive interference occurs at x = 0 if phi = pi"
+  d: "destructive interference occurs at x = l if phi = 2 pi"
+answer: [b, c]
+answer_value: null
+units: null
+verified: "At x=0: y1 = A cos(kvt), y2 = A cos(kvt + phi); phi = pi gives destructive (c true, a false). If 'l' means lambda, kx = 2 pi leaves the same condition as x=0, so phi = 2 pi gives constructive (b true, d false). Matches key."
+kinds: [given_wavefunction, inverse_condition, conceptual]
+physics: [interference, phase_difference]
+notes: |
+  Misprints in the problem image: the fourth option is labelled (b) again (should be (d)); "x = l" in options b and d is evidently x = lambda (the solution writes x = lambda). The key (b, c) only works with that reading.

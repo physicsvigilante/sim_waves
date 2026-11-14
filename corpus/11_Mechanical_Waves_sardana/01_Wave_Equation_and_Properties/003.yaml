@@ -1,0 +1,19 @@
+id: 11/01/003
+number: 3
+source: {problem: 11_Mechanical_Waves_sardana/01_Wave_Equation_and_Properties/Problems/003.png, solution: 11_Mechanical_Waves_sardana/01_Wave_Equation_and_Properties/Solutions/003.png}
+format: numerical
+statement: |
+  A pulse is propagating on a long stretched string along its length taken as positive x-axis. Shape of the string at t = 0 is given by
+  y = sqrt(a^2 - x^2), when |x| >= a
+  y = 0, when |x| <= 0
+  Study the propagation of this pulse, if it is travelling in positive x-direction with speed v.
+figure: null
+options: null
+answer: "y(x,t) = sqrt(a^2 - (x - vt)^2) when |x - vt| <= a; 0 otherwise. Semicircular pulse of radius a moving in +x with speed v, centre at x = vt."
+answer_value: "sqrt(a^2 - (x - v t)^2)"
+units: m
+verified: "Matches key (with the inequalities corrected). y^2 + x^2 = a^2 with y >= 0 is a semicircle of radius a; for +x travel replace x by x - vt; at t = 0 it reduces to the given form."
+kinds: [build_wavefunction, symbolic]
+physics: [pulse, wave_function, travelling_wave, wave_speed]
+notes: |
+  Misprints in the problem: the conditions are printed as |x| >= a and |x| <= 0; they should be |x| <= a (sqrt branch) and |x| >= a (zero branch). The solution repeats a misprint ("|x - vt| >= 0" for the zero branch, should be >= a). The solution's figure shows (a) the semicircle of radius a at t = 0 centred at origin with v arrow to the right, and (b) the same semicircle displaced by distance vt to the right; no numbers.

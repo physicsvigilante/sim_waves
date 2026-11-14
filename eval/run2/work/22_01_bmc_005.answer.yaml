@@ -1,0 +1,8 @@
+answer: [a, b, d]
+final_scene: 22_01_bmc_005.v2.yaml
+engine_fit: partial
+coverage: full
+not_represented: "nothing"
+missing_in_source: "statement d is ambiguous: 'particle velocity depends on wave properties not medium'; read as the particle-velocity amplitude (or its dependence on the wave parameters)"
+reasoning: "speed(w) = sqrt(T/mu), diff wrt A and f is 0 (b true, c false); velocity(w) equals speed(w) at all x while vy depends on x (a true); max vy = 2*pi*A*f, derivative wrt mu = 0 (d true under the amplitude reading). The instantaneous vy at a fixed point does depend on mu through the phase delay, so d is reading-dependent."
+friction: "No way to say 'depends on the medium' except by differentiating with respect to a chosen symbol; the reading of d (amplitude vs instantaneous velocity) is the author's choice."

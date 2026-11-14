@@ -1,0 +1,16 @@
+id: 11/02/003
+number: 3
+source: {problem: 11_Mechanical_Waves_sardana/02_Transverse_Wave_in_String_and_Properties/Problems/003.png, solution: 11_Mechanical_Waves_sardana/02_Transverse_Wave_in_String_and_Properties/Solutions/003.png}
+format: numerical
+statement: |
+  Two blocks each having a mass of 3.2 kg are connected by a wire CD and the system is suspended from the ceiling by another wire AB as shown in Figure. The linear mass density of the wire AB is 10 g/m and that of CD is 8 g/m. Calculate the speed of a transverse wave pulse produced in AB and in CD.
+figure: |
+  Vertical arrangement: ceiling at top, wire AB hangs from A (top) to B, ending at the first block (3.2 kg); from this block wire CD hangs from C (top) to D, ending at the second (lower) block (3.2 kg).
+options: null
+answer: "v_AB = 80 m/s; v_CD = sqrt(4000) = 63.24 m/s"
+answer_value: [80, 63.24]
+units: m/s
+verified: "Matches key (g = 10 m/s^2, masses of wires neglected). T_AB = 6.4 g = 64 N, v = sqrt(64/0.010) = 80 m/s. T_CD = 3.2 g = 32 N, v = sqrt(32/0.008) = sqrt(4000) = 63.25 m/s (key 63.24, rounding)."
+kinds: [derived_medium]
+physics: [wave_speed, tension, linear_mass_density]
+notes: "Solution uses g = 10 m/s^2 (not stated in problem) and neglects the weight of the wires. sqrt(4000) = 63.246, key prints 63.24 (truncation)."

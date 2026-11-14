@@ -1,0 +1,14 @@
+id: 22/02/cnt_005
+assume:
+  - "Amplitude a/x varies with x so the engine rejects it as a fixed-shape wave; wave velocity is read off the argument (t - x/b): speed b (not engine-derived)."
+  - "Max particle speed is evaluated at a fixed position x0."
+  - "The result depends on x0; the book's number corresponds to x0 = 1 m (unit position)."
+symbols: {a: positive, b: positive, x0: positive}
+waves:
+  p: {given: "(a/x)*sin((2*pi/3)*(t - x/b))", units: {x: m, t: s, y: m}}
+given:
+  - "max_over(t, abs(vy(p, x=x0, t=t))) == b"
+observe:
+  vmax: "max_over(t, abs(vy(p, x=x0, t=t)))"
+  a_over_b: "a/b"
+  a_over_b_x0_1: "(a/b)/x0"

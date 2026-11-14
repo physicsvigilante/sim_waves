@@ -1,0 +1,19 @@
+id: 23/01/bmc_007
+number: 6
+source: {problem: 23_Superposition_and_Standing_Waves/01_Superposition_and_Standing_Waves/Problems/bmc_007.png, solution: 23_Superposition_and_Standing_Waves/01_Superposition_and_Standing_Waves/Solutions/bmc_007.png}
+format: multiple_correct
+statement: |
+  Two waves y1 = a sin(omega t - kx) and y2 = a cos(omega t - kx) superimpose at a point:
+figure: null
+options:
+  a: "the resultant amplitude is sqrt(2) a"
+  b: "if I is the intensity of each source then I_max = 2I"
+  c: "the resultant wave leads y1 by a phase angle of pi/4"
+  d: "data insufficient to arrive at options (b) and (c)"
+answer: [a, b, c]
+answer_value: null
+units: null
+verified: "y2 = a sin(omega t - kx + pi/2), phase diff pi/2, resultant amplitude sqrt(2) a, resultant phase pi/4 ahead of y1, intensity 2a^2 -> 2I. Matches key."
+kinds: [given_wavefunction, conceptual]
+physics: [superposition, phase_difference, intensity]
+notes: In option b "I_max = 2I" is simply the resultant intensity here (phase diff fixed at pi/2), not a true maximum over phase (which would be 4I); wording is loose but the key treats it as true.

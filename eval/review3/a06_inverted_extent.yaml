@@ -1,0 +1,13 @@
+id: a06
+symbols: {A: positive}
+media:
+  a: {type: string, mu: 0.01 kg/m, tension: 9 N}
+  b: {type: string, mu: 0.04 kg/m, tension: 9 N}
+junctions:
+  J: {at: 0 m, left: a, right: b}
+  wall: {at: -1 m, left: b, right: fixed}
+waves:
+  w: {harmonic: {on: a, A: A, f: 10 Hz, dir: +x, phase: 0}}
+observe:
+  yt: "y(w_transmitted, x=0.5[m], t=0[s])"
+  amp: "amplitude(w_transmitted)"

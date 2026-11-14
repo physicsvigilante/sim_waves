@@ -1,0 +1,17 @@
+id: 23/02/asc_008
+assume:
+  - "The problem gives w and k only symbolically. Scale-free question (phase at x = 0 only), so w = 10 rad/s, k = 5 rad/m, a = 1 mm are fixed by assumption; the second wave uses the same w, k, a, travelling the opposite way."
+  - "Node at x = 0 means the sum of the two waves is zero there at all times."
+waves:
+  y1: {given: "0.001*cos(10*t - 5*x + pi/3)", units: {x: m, t: s, y: m}}
+  oa: {given: "0.001*sin(10*t + 5*x + pi/3)", units: {x: m, t: s, y: m}}
+  ob: {given: "0.001*cos(10*t + 5*x + pi/3)", units: {x: m, t: s, y: m}}
+  oc: {given: "0.001*cos(10*t + 5*x + 2*pi/3)", units: {x: m, t: s, y: m}}
+  od: {given: "0.001*cos(10*t + 5*x + 4*pi/3)", units: {x: m, t: s, y: m}}
+observe:
+  node_a: "equivalent(y(y1, x=0[m], t=t) + y(oa, x=0[m], t=t), 0[m])"
+  node_b: "equivalent(y(y1, x=0[m], t=t) + y(ob, x=0[m], t=t), 0[m])"
+  node_c: "equivalent(y(y1, x=0[m], t=t) + y(oc, x=0[m], t=t), 0[m])"
+  node_d: "equivalent(y(y1, x=0[m], t=t) + y(od, x=0[m], t=t), 0[m])"
+  v1: "velocity(y1)"
+  va: "velocity(oa)"

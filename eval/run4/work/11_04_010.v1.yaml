@@ -1,0 +1,21 @@
+id: 11/04/010
+assume:
+  - "Coordinates: wall is the line x = 2 m (rigid), S at (0, 0) and D at (0, y); the midpoint of SD is 2 m from the wall as in the figure."
+  - "Equal amplitudes (spreading none): only the phase condition matters. Rigid wall: no phase change for pressure."
+  - "Part (a) only here: maximum = in-phase arrival. y is a symbol varied by maxima()."
+symbols: {y: positive}
+media: {air: {type: gas, v: 360 m/s}}
+sources:
+  S: {on: air, f: 180 Hz, A: 1, phase: 0, spreading: none, at: [0 m, 0 m]}
+reflectors:
+  wall: {point: [2 m, 0 m], normal: [-1, 0], boundary: rigid}
+points:
+  D: [0 m, y]
+rays:
+  direct: {from: S, to: D}
+  bounce: {from: S, to: D, via: wall}
+given: []
+observe:
+  dpath: "path_difference(bounce, direct)"
+  ymax: "min(maxima(bounce, direct, vary=y, lo=0.01[m], hi=50[m]))"
+  all: "maxima(bounce, direct, vary=y, lo=0.01[m], hi=50[m])"

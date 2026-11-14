@@ -1,0 +1,14 @@
+id: 24/01/asc_005
+format: single_correct
+statement: 'The pressure variation in a sound wave in air is given by
+
+  delta p = 12 sin(8.18 x - 2700 t + pi/4) N m^-2.
+
+  If density of air is 1.29 kg m^-3, the displacement amplitude is
+
+  '
+options:
+  a: 0.089 x 10^-5 m
+  b: 1.044 x 10^-5 m
+  c: 2.011 x 10^-5 m
+  d: 2.732 x 10^-5 m

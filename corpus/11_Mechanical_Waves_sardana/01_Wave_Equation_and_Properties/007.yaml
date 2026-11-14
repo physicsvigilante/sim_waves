@@ -1,0 +1,15 @@
+id: 11/01/007
+number: 7
+source: {problem: 11_Mechanical_Waves_sardana/01_Wave_Equation_and_Properties/Problems/007.png, solution: 11_Mechanical_Waves_sardana/01_Wave_Equation_and_Properties/Solutions/007.png}
+format: numerical
+statement: |
+  A wave pulse moving to the right along the x-axis is represented by the wave function y(x,t) = 2/((x - 3t)^2 + 1), where x and y are measured in cm and t is measured in seconds. Plot the wave function at t = 0, t = 1 s and t = 2 s.
+figure: null
+options: null
+answer: "Speed 3 cm/s, amplitude 2 cm. y(x,0) = 2/(x^2+1), y(x,1) = 2/((x-3)^2+1), y(x,2) = 2/((x-6)^2+1). Three identical bell-shaped pulses of peak 2 cm centred at x = 0, 3, 6 cm."
+answer_value: 3
+units: cm/s
+verified: "Matches key. Peak at x = 3t, height 2 cm. Solution figure (not part of the problem): three humps labelled y(x,0), y(x,1), y(x,2) with peaks at x = 0, 3, 6 cm, height 2 cm, arrow 3 cm/s to the right, x ticks at -3, 0, 3, 6."
+kinds: [given_wavefunction, graph_match]
+physics: [pulse, travelling_wave, wave_speed, amplitude]
+notes: The answer is a set of plots; the key is described in words from the solution figure.

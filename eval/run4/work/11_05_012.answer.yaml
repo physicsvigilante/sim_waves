@@ -1,0 +1,9 @@
+answer: {frequency: "82.5 Hz", tension: "81.7 N (81.675 N)"}
+final_scene: 11_05_012.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "end correction of the tube (neglected); wire near open end only drives the tube"
+missing_in_source: "none"
+reasoning: "Tube fundamental 330/(4*1)=82.5 Hz; wire fundamental equated to it, engine solved T."
+friction: "none"

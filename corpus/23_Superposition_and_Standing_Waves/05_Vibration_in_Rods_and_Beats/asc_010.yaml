@@ -1,0 +1,19 @@
+id: 23/05/asc_010
+number: 7
+source: {problem: 23_Superposition_and_Standing_Waves/05_Vibration_in_Rods_and_Beats/Problems/asc_010.png, solution: 23_Superposition_and_Standing_Waves/05_Vibration_in_Rods_and_Beats/Solutions/asc_010.png}
+format: single_correct
+statement: |
+  When a tuning fork A of unknown frequency is sounded with another tuning fork B of frequency 256 Hz, then 3 beats per second are observed. After that A is loaded with wax and sounded, the again 3 beats per second are observed. The frequency of the tuning fork A is
+figure: null
+options:
+  a: "250 Hz"
+  b: "253 Hz"
+  c: "259 Hz"
+  d: "262 Hz"
+answer: c
+answer_value: 259
+units: Hz
+verified: "Loading lowers A. If A were 253, loading would give more than 3 beats; so A is above 256: A = 259, loaded A = 253 (3 beats again). Matches key."
+kinds: [inverse_condition]
+physics: [beats, tuning_fork, loading]
+notes: Consistent. The solution's argument is terse (sets n_B - n_A(loaded) = 3 and then writes n_A = n_B + 3).

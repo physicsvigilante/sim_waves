@@ -1,0 +1,15 @@
+id: 23/03/cnt_006
+assume:
+  - "'Separation between successive nodes' is the node spacing of the standing wave (lambda/2)."
+  - "The vibrator drives the string at a resonance, so the string's mode frequency equals 100 Hz."
+unknowns: {n: integer}
+media:
+  s: {type: string, mass: 1 g, length: 20 cm, tension: 0.5 N}
+resonators:
+  r: {type: string, on: s, length: 20 cm, ends: [fixed, fixed]}
+given:
+  - {fact: "frequency(r, harmonic=n) == 100[Hz]", source: stated, note: "string set into vibration at 100 Hz, fixed at both ends"}
+  - {fact: "n >= 1", source: convention}
+observe:
+  n: "n"
+  spacing: "node_spacing(r, harmonic=n)"

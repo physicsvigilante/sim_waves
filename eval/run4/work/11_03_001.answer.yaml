@@ -1,0 +1,9 @@
+answer: {a: "4.98 Pa", b: "3.01e-6 m"}
+final_scene: 11_03_001.v3.yaml
+engine_fit: partial
+hand_steps: ["p_max = sqrt(2*rho*v*I) with I=0.0283 W/m^2 from engine", "A = p_max/(rho*v*omega), omega = 2*pi*600"]
+coverage: partial
+not_represented: "pressure amplitude and displacement amplitude (no observable from intensity); speed of sound and density unused in the scene"
+missing_in_source: none
+reasoning: "Engine gives I = 4/(45 pi) W/m^2 = 0.0283; the amplitudes follow by hand."
+friction: "No pressure- or displacement-amplitude-from-intensity observable; gas medium cannot host an emitter (v1 gas+emitter rejected; v2 density unused rejected); open3d has no v or density."

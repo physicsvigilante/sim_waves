@@ -1,0 +1,10 @@
+id: 11/01/006
+format: multiple_correct
+statement: 'Out of the following functions, which one(s) represent(s) a wave?
+
+  '
+options:
+  a: 1/(x + vt)
+  b: ln(x + vt)
+  c: (x - vt)^2
+  d: e^(-(x - vt)^2)

@@ -1,0 +1,9 @@
+id: 22/03/cnt_006
+assume: ["Wave travels +x with phase 0; the power does not depend on either."]
+media:
+  s: {type: string, mu: 0.05 kg/m, tension: 80 N}
+waves:
+  w: {harmonic: {on: s, A: 6 cm, f: 60 Hz, dir: +x, phase: 0}}
+observe:
+  P: "power(w)"
+  v: "speed(w)"

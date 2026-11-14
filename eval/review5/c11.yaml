@@ -1,0 +1,1 @@
+observe: {a: "max_over(t, 3*sin(100*t) + 4*sin(104*t))", b: "max_over(t, sin(t) + sin(3*t))", c: "max_over(t, envelope(t, sin(t) + sin(3*t)))"}

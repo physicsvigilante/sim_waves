@@ -1,0 +1,8 @@
+id: c05
+media:
+  air: {type: gas, v: 340 m/s}
+waves:
+  w: {harmonic: {on: air, A: 1 mm, f: 170 Hz, dir: +x, phase: 0}}
+junctions:
+  wall: {at: 1 m, left: air, right: fixed}
+observe: {lam: "wavelength(w)"}

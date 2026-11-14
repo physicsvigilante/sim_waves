@@ -1,0 +1,10 @@
+id: b11
+unknowns: {c: positive, e: positive}
+media: {air: {type: gas, v: c}}
+resonators:
+  p1: {type: pipe, on: air, length: 17 cm, ends: [closed, open], end_correction: e}
+  p2: {type: pipe, on: air, length: 52 cm, ends: [closed, open], end_correction: e}
+given:
+  - {fact: "frequency(p1, harmonic=1) == 500[Hz]", source: stated}
+  - {fact: "frequency(p2, harmonic=3) == 500[Hz]", source: stated}
+observe: {c: "c", e: "e", ns: "node_spacing(p2, harmonic=3)", ot: "harmonic(p2, overtone=2)"}

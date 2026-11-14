@@ -1,0 +1,18 @@
+id: 23/02/asc_006
+number: 3
+source: {problem: 23_Superposition_and_Standing_Waves/02_Reflection_and_Refraction_of_Stationary_Waves/Problems/asc_006.png, solution: 23_Superposition_and_Standing_Waves/02_Reflection_and_Refraction_of_Stationary_Waves/Solutions/asc_006.png}
+format: single_correct
+statement: |
+  At a certain instant a stationary transverse wave is found to have maximum kinetic energy. The appearance of string at that instant is
+figure: null
+options:
+  a: "sinusoidal shape with amplitude A/3"
+  b: "sinusoidal shape with amplitude A/2"
+  c: "sinusoidal shape with amplitude A"
+  d: "straight line"
+answer: d
+answer_value: null
+units: null
+kinds: [conceptual]
+physics: [standing_waves, energy, kinetic_energy]
+notes: Consistent. Max KE occurs when every particle passes through its mean position, so the string is straight.

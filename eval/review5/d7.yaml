@@ -1,0 +1,1 @@
+observe: {a: "envelope(t, sin(100*t) + sin(104*t), 3)"}

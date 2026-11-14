@@ -1,0 +1,12 @@
+answer: {a: "about 707 Hz (assuming fixed ends)", b: "11 Hz; about 64 times smaller than 707 Hz"}
+final_scene: 11_05_004.v2.yaml
+engine_fit: partial
+hand_steps:
+  - "Part (a) entirely by hand: rho = m/(A L) = 1e5 kg/m^3, v = sqrt(Y/rho) = 1414 m/s, f = v/2L = 707 Hz (longitudinal rod waves not supported)."
+  - "Density 1e5 kg/m^3 computed by hand for the thermal tension."
+  - "Ratio 707/11."
+coverage: partial
+not_represented: "part (a), longitudinal vibrations; end conditions of (a) not stated (clamped assumed)"
+missing_in_source: "end conditions for part (a)"
+reasoning: "Engine: thermal tension 48.4 N, mu 0.1 kg/m, v 22 m/s, f1 = 11 Hz; plucking at the middle leaves harmonics 1, 3, 5."
+friction: "Rods and longitudinal waves are not in the format; thermal tension needs density that I had to compute."

@@ -1,0 +1,14 @@
+id: 22/02/bmc_004
+format: multiple_correct
+statement: 'A wave equation which gives the displacement along the Y direction is given by
+
+  y = 10^4 sin(60t + 2x), where x and y are in metres and t is time in seconds. This
+
+  represents a wave
+
+  '
+options:
+  a: travelling with a velocity of 30 m/s in the negative X direction
+  b: of wavelength π metre
+  c: of frequency 30/π Hz
+  d: of amplitude 10^4 metre travelling along the negative X direction

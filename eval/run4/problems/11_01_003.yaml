@@ -1,0 +1,12 @@
+id: 11/01/003
+format: numerical
+statement: 'A pulse is propagating on a long stretched string along its length taken as positive x-axis.
+  Shape of the string at t = 0 is given by
+
+  y = sqrt(a^2 - x^2), when |x| >= a
+
+  y = 0, when |x| <= 0
+
+  Study the propagation of this pulse, if it is travelling in positive x-direction with speed v.
+
+  '

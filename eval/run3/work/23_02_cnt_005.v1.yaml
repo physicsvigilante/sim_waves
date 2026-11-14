@@ -1,0 +1,18 @@
+id: 23/02/cnt_005
+assume:
+  - "Boundary between two strings under the same tension; the second string's density mu2 is unknown and fixed by the reflected amplitude being half the incident one. The problem does not say which side is denser."
+  - "No energy is absorbed at the boundary, so energy not reflected is transmitted."
+symbols: {mu1: positive, T: positive, A: positive, omega: positive}
+unknowns: {mu2: positive}
+media:
+  s1: {type: string, mu: mu1, tension: T}
+  s2: {type: string, mu: mu2, tension: T}
+junctions:
+  J: {at: 0 m, left: s1, right: s2}
+waves:
+  w: {harmonic: {on: s1, A: A, omega: omega, dir: +x, phase: 0}}
+given:
+  - {fact: "amplitude(w_reflected) == amplitude(w)/2", source: stated}
+observe:
+  frac_transmitted: "power(w_transmitted)/power(w)"
+  mu_ratio: "mu2/mu1"

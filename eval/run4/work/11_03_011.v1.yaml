@@ -1,0 +1,15 @@
+id: 11/03/011
+assume:
+  - "Both gases diatomic ideal gases with one common gamma, solved from the stated v in hydrogen at 0 C."
+  - "Molar masses H2 = 2 g/mol, N2 = 28 g/mol (not given in problem)."
+  - "Mixture molar mass = (2*M_H2 + 1*M_N2)/3: mole fractions equal volume fractions for ideal gases (my mixing step, entered as an expression)."
+  - "T = 0 degC = 273.15 K, 27 degC = 300.15 K."
+unknowns: {g: positive}
+media:
+  h2:  {type: gas, gamma: g, temperature: 0 degC, molar_mass: 2 g/mol}
+  mix: {type: gas, gamma: g, temperature: 27 degC, molar_mass: "(2*2[g/mol] + 28[g/mol])/3"}
+given:
+  - {fact: "speed(h2) == 1300[m/s]", source: stated}
+observe:
+  gamma: "g"
+  v_mix: "speed(mix)"

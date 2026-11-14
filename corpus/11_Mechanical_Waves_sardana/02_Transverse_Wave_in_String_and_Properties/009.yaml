@@ -1,0 +1,15 @@
+id: 11/02/009
+number: 9
+source: {problem: 11_Mechanical_Waves_sardana/02_Transverse_Wave_in_String_and_Properties/Problems/009.png, solution: 11_Mechanical_Waves_sardana/02_Transverse_Wave_in_String_and_Properties/Solutions/009.png}
+format: numerical
+statement: |
+  A steel wire of length 64 cm weighs 5 g. If it is stretched by a force of 8 N, calculate the speed of a transverse wave passing in it.
+figure: null
+options: null
+answer: "32 m/s"
+answer_value: 32
+units: m/s
+verified: "Matches key. mu = 5e-3/0.64 kg/m; v = sqrt(T/mu) = sqrt(8*0.64/5e-3) = sqrt(1024) = 32 m/s."
+kinds: [derived_medium]
+physics: [wave_speed, tension, linear_mass_density]
+notes: Consistent.

@@ -1,0 +1,13 @@
+id: 11/02/001
+symbols: {mu0: positive, l0: positive, g: positive, s: positive}
+media:
+  wire:
+    type: string
+    mu: "mu0*s"
+    length: l0
+    coordinate: {origin: lower_end, direction: up}
+    tension: {hanging: {load: 0 kg, g: g}}
+waves:
+  p: {pulse: {on: wire, from: lower_end, toward: up}}
+observe:
+  front: "front(p, t=t)"

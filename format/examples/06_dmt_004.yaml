@@ -1,0 +1,15 @@
+id: 22/01/dmt_004
+symbols: {A: positive, k: positive, omega: positive}
+waves:
+  w1: {given: "A*sin(k*x + omega*t)", units: {x: m, t: s, y: m}}
+  w2: {given: "A*sin(k*x - omega*t)", units: {x: m, t: s, y: m}}
+  w3: {given: "A*sin(omega*t - k*x)", units: {x: m, t: s, y: m}}
+observe:                       # each is a function of t; matching to drawn curves is the LLM's job
+  i:   "slope(w1, x=0, t=t)"
+  ii:  "vy(w2, x=0, t=t)"
+  iii: "y(w3, x=0, t=t)"
+view:
+  - {plot: i,   vs: t}
+  - {plot: ii,  vs: t}
+  - {plot: iii, vs: t}
+expect: {i: "A*k*cos(omega*t)", ii: "-A*omega*cos(omega*t)", iii: "A*sin(omega*t)"}

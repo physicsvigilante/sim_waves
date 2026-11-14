@@ -1,0 +1,7 @@
+id: 11/01/003
+assume: ["Statement garbled: y = sqrt(a^2-x^2) for |x|<=a (semicircle) and 0 outside is the sensible reading; printed text has |x|>=a and |x|<=0."]
+symbols: {a: positive, v: positive}
+waves:
+  p: {given: "sqrt(a**2 - (x - v*t)**2)", units: {x: m, t: s, y: m}}
+observe:
+  vel: "velocity(p)"

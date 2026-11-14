@@ -1,0 +1,24 @@
+id: 22/03/cnt_007
+number: 13
+source: {problem: 22_Travelling_Waves/03_Travelling_Waves_2/Problems/cnt_007.png, solution: 22_Travelling_Waves/03_Travelling_Waves_2/Solutions/cnt_007.png}
+format: numerical
+statement: |
+  The figure shows a snapshot of a vibrating string at t = 0. The particle P is observed to be
+  moving up with velocity 20√3 cm/s. The tangent at P makes an angle 60° with X-axis. Calculate
+  the total energy carried by the wave per cycle of the string (in mJ), assuming that mass per
+  unit length of the string is 50 g/m.
+figure: |
+  Snapshot: Y in 1e-3 m, X in 1e-2 m. Amplitude 4 (mm); y(0) = 2√2 (mm). Zero crossings at
+  X = 1.5 (falling), 3.5 (rising), 5.5 (falling) -> λ = 4 (x 1e-2 m) = 4 cm. P on rising side
+  just after 3.5 with tangent at 60°.
+answer_value: 1.6
+units: mJ
+verified: "INCONSISTENT. Max slope A*k = 0.63 (32 deg) < tan 60; the problem as stated is impossible."
+kinds: [graph_read, inverse_condition]
+physics: [power, energy, particle_velocity, slope]
+notes: |
+  BOOK ERROR (unit slip). Book takes v_p = 20√3 m/s (given in cm/s) and λ = 4 m (axis is
+  1e-2 m). Both slips scale v and λ by 100, so f = 5 Hz is right, but power scales with v and
+  the answer is 100x too large. In SI: v = 0.2 m/s, λ = 0.04 m, f = 5 Hz, A = 4 mm,
+  P = 7.9e-5 W, E per cycle = 1.58e-5 J = 0.0158 mJ. Keep book key but mark as disputed.
+  Also: the wave travels in -x (v_p > 0 with positive slope).

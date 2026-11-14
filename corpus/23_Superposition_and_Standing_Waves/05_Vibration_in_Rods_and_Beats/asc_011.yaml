@@ -1,0 +1,19 @@
+id: 23/05/asc_011
+number: 8
+source: {problem: 23_Superposition_and_Standing_Waves/05_Vibration_in_Rods_and_Beats/Problems/asc_011.png, solution: 23_Superposition_and_Standing_Waves/05_Vibration_in_Rods_and_Beats/Solutions/asc_011.png}
+format: single_correct
+statement: |
+  When beats are produced by two waves of nearly the same frequency,
+figure: null
+options:
+  a: "the beat frequency depends on the position, where the beats are heard"
+  b: "the beat frequency decreases as time passes"
+  c: "the particles vibrate simple harmonically with a frequency equal to the difference of the two frequencies"
+  d: "the amplitude of vibration at any point changes simple harmonically with a frequency equal to the difference of the two frequencies"
+answer: d
+answer_value: null
+units: null
+kinds: [conceptual]
+physics: [beats, amplitude_modulation]
+notes: |
+  Consistent in substance. Strictly, the amplitude 2A|cos(pi (f1-f2) t)| varies at f1 - f2 in magnitude (the cos itself at (f1-f2)/2); the book accepts (d) as written. Particles vibrate at the mean frequency (f1+f2)/2, so (c) is false.

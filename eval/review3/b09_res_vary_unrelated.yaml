@@ -1,0 +1,8 @@
+id: b09
+symbols: {L: positive, q: positive}
+media: {air: {type: gas, v: 340 m/s}}
+resonators:
+  p: {type: pipe, on: air, length: 1 m, ends: [open, open], end_correction: 0 m}
+observe:
+  n: "count(resonances(p, f=170[Hz], vary=q, lo=0[m], hi=1.5[m]))"
+  m: "resonances(p, f=171[Hz], vary=q, lo=0[m], hi=1.5[m])"

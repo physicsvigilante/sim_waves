@@ -1,0 +1,9 @@
+answer: "590 m/s"
+final_scene: 11_03_011.v1.yaml
+engine_fit: partial
+hand_steps: ["mixture molar mass (2*2+28)/3 g/mol typed as expression", "M_N2 = 28 g/mol from my knowledge"]
+coverage: full
+not_represented: "nothing"
+missing_in_source: "molar masses of H2 and N2; gamma of the gases (solved as common gamma = 1.488 from the 1300 m/s datum)"
+reasoning: "Engine solved gamma from 1300 m/s at 0 C, then speed(mix) at 27 C = 590.08 m/s."
+friction: "No mixture rule; the stated hydrogen speed implies gamma 1.488 not 7/5, so a common gamma had to be assumed."

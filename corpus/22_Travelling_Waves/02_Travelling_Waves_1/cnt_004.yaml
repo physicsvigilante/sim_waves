@@ -1,0 +1,15 @@
+id: 22/02/cnt_004
+number: 12
+source: {problem: 22_Travelling_Waves/02_Travelling_Waves_1/Problems/cnt_004.png, solution: 22_Travelling_Waves/02_Travelling_Waves_1/Solutions/cnt_004.png}
+format: numerical
+statement: |
+  A travelling wave is represented by y = a sin[4t - 0.02x]. x is in cm and t is in second.
+  (i) Find the phase difference (in rad) between two particles located at a separation of
+  Δx = 10 cm. (ii) Find the phase change (in rad) of a particular particle during an interval
+  of Δt = 1.0 s.
+figure: null
+answer_value: {i: 0.2, ii: 4.0}
+units: {i: rad, ii: rad}
+kinds: [given_wavefunction]
+physics: [phase_difference]
+notes: Book shows a typo (0.002Δx) but the result 0.2 is correct. Questions 10-11 of this set are absent from the folder.

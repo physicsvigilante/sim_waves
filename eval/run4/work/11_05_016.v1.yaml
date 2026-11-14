@@ -1,0 +1,18 @@
+id: 11/05/016
+assume:
+  - "No end correction for the pipe."
+  - "Beat = |f_string - f_pipe| = 8 Hz; decreasing tension lowers f_string and lowers the beat, so f_string > f_pipe (inequality)."
+unknowns: {T: positive}
+media:
+  air: {type: gas, v: 320 m/s}
+  wire: {type: string, mass: 2.5 g, length: 25 cm, tension: T}
+resonators:
+  pipe: {type: pipe, on: air, length: 40 cm, ends: [closed, open], end_correction: 0 m}
+  w: {type: string, on: wire, length: 25 cm, ends: [fixed, fixed]}
+given:
+  - {fact: "beat_frequency(frequency(w, harmonic=harmonic(w, overtone=1)), frequency(pipe, harmonic=1)) == 8[Hz]", source: stated}
+  - {fact: "frequency(w, harmonic=2) > frequency(pipe, harmonic=1)", source: stated, note: "lowering T lowers the beat count, so string is the higher one"}
+observe:
+  T: "T"
+  fp: "frequency(pipe, harmonic=1)"
+  fs: "frequency(w, harmonic=2)"

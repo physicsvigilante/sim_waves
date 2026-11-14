@@ -1,0 +1,9 @@
+answer: "L = 15/7 m = 2.14 m"
+final_scene: 11_05_006.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: nothing
+missing_in_source: "end conditions not stated explicitly ('rigid supports' read as fixed-fixed)"
+reasoning: "n = 6 and n+1 = 7 modes with v = 300 m/s give L = 2.143 m."
+friction: none

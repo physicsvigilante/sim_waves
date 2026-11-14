@@ -1,0 +1,20 @@
+id: 23/01/asc_005
+number: 2
+source: {problem: 23_Superposition_and_Standing_Waves/01_Superposition_and_Standing_Waves/Problems/asc_005.png, solution: 23_Superposition_and_Standing_Waves/01_Superposition_and_Standing_Waves/Solutions/asc_005.png}
+format: single_correct
+statement: |
+  In a large room, a person receives direct sound waves from a source 120 metres away from him. He also receives waves from the same source which reach him, being reflected from the 25 metre high ceiling at a point halfway between them. The two waves interfere constructively for wavelength of
+figure: null
+options:
+  a: "20, 20/3, 20/5, etc."
+  b: "10, 5, 2.5, etc."
+  c: "10, 20, 30, etc."
+  d: "15, 25, 35, etc."
+answer: a
+answer_value: "lambda = 20/(2n-1) m, n = 1, 2, 3, ..."
+units: m
+verified: "Reflected path = 2*sqrt(60^2+25^2) = 130 m, direct 120 m, path diff 10 m. Ceiling reflection adds lambda/2 phase shift, so constructive when 10 + lambda/2 = n*lambda, lambda = 20/(2n-1). Matches key."
+kinds: [inverse_condition, symbolic]
+physics: [interference, path_difference, reflection_phase_change]
+notes: |
+  The problem image has no figure; the solution image draws one (source S left, listener P right, 120 m apart on a horizontal dashed line, midpoint M, ceiling point A directly above M at h = 25 m, 90 degree angle at M). Solution assumes the ceiling reflection adds a lambda/2 path difference (hard reflection). Solution uses "n=1,2,3" in 10 + lambda/2 = n*lambda.

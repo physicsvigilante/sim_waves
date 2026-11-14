@@ -1,0 +1,4 @@
+symbols: {a: positive, b: positive, c: positive}
+waves: {w: {given: "a*cos(b*x)*sin(c*t)"}}
+observe: {v: "velocity(w)"}
+expect: {error: rejected}

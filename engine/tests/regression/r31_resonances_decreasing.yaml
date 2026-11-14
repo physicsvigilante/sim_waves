@@ -1,0 +1,8 @@
+# review 3 #2: tensions at which a 1 m string resonates at 100 Hz fall with n (400/n^2 N)
+symbols: {Ts: positive}
+media: {s: {type: string, mu: 0.01 kg/m, tension: Ts}}
+resonators: {r: {type: string, on: s, length: 1 m, ends: [fixed, fixed]}}
+observe:
+  n: "count(resonances(r, f=100[Hz], vary=Ts, lo=10[N], hi=50[N]))"
+  hi_: "count(resonances(r, f=100[Hz], vary=Ts, lo=40[N], hi=50[N]))"
+expect: {n: 4, hi_: 1}

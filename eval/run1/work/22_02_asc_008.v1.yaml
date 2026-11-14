@@ -1,0 +1,24 @@
+id: 22/02/asc_008
+assume:
+  - "Snapshot at t=0 of a +x harmonic wave; A at origin with curve going down, so phase = pi (sin(-kx+pi) falls from zero)."
+  - "B is on the first falling segment (0<xB<lam/4); F = same height as B on the second falling segment; G on the rising segment right after the second trough with the same height as F."
+  - "Points are compared by phase difference / (2*pi): integer means same phase."
+symbols: {A: positive, lam: positive, v: positive, xB: positive}
+unknowns: {xG: real}
+waves:
+  w: {harmonic: {A: A, lambda: lam, v: v, dir: +x, phase: pi}}
+given:
+  - "slope(w, x=0, t=0) < 0"
+  - "y(w, x=0, t=0) == 0"
+  - "xB < lam/4"
+  - "xG > 5*lam/4"
+  - "xG < 3*lam/2"
+  - "y(w, x=xG, t=0) == y(w, x=xB + lam, t=0)"
+observe:
+  xG: "xG"
+  F_minus_B: "(phase(w, x=xB + lam, t=0) - phase(w, x=xB, t=0))/(2*pi)"
+  G_minus_F: "(phase(w, x=xG, t=0) - phase(w, x=xB + lam, t=0))/(2*pi)"
+  G_minus_B: "(phase(w, x=xG, t=0) - phase(w, x=xB, t=0))/(2*pi)"
+  C_minus_E: "(phase(w, x=lam/4, t=0) - phase(w, x=3*lam/4, t=0))/(2*pi)"
+  slopeB: "slope(w, x=xB, t=0)"
+  slopeG: "slope(w, x=xG, t=0)"

@@ -1,0 +1,12 @@
+id: 11/04/001
+format: numerical
+statement: 'Two harmonic waves are represented in SI units by,
+
+  y1(x, t) = 0.2 sin(x - 3t) and
+
+  y2(x, t) = 0.2 sin(x - 3t + phi)
+
+  Write the expression for the sum y = y1 + y2 for phi = pi/2 rad. If the phase difference phi between
+  waves is unknown and amplitude of their sum is 0.32 m, calculate phi.
+
+  '

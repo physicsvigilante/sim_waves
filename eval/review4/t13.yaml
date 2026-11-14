@@ -1,0 +1,11 @@
+media: {air: {type: gas, v: 340 m/s}}
+sources:
+  S: {on: air, f: 170 Hz, A: 1, A_at: 1 m, phase: 0, spreading: spherical}
+  Z: {on: air, f: 0 Hz, A: 1, phase: 0, spreading: none}
+  Ng: {on: air, f: -170 Hz, A: 1, phase: 0, spreading: none}
+rays:
+  r0: {from: S, length: 0 m}
+  rn: {from: S, length: -2 m}
+  z: {from: Z, length: 1 m}
+  g: {from: Ng, length: 1 m}
+observe: {a0: "amplitude(r0)", an: "amplitude(rn)", lz: "wavelength(z)", lg: "wavelength(g)"}

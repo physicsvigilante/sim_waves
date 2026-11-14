@@ -1,0 +1,12 @@
+id: 23/02/asc_007
+format: single_correct
+statement: 'Spacing between two successive nodes in a standing wave on a string is x. If frequency of
+  the standing wave is kept unchanged but tension in the string is doubled, then new spacing between successive
+  nodes will become:
+
+  '
+options:
+  a: x/sqrt(2)
+  b: sqrt(2) x
+  c: x/2
+  d: 2x

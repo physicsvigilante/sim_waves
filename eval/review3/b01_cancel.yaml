@@ -1,0 +1,7 @@
+id: b01
+symbols: {A: positive, k: positive, w: positive}
+waves:
+  y1: {harmonic: {A: A, omega: w, k: k, dir: +x, phase: 0}}
+  y2: {harmonic: {A: A, omega: w, k: k, dir: +x, phase: pi}}
+  tot: {sum: [y1, y2]}
+observe: {amp: "amplitude(tot)"}

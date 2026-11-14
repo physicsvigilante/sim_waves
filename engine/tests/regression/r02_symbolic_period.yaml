@@ -1,0 +1,7 @@
+# review a2: spacing d symbolic -> period of k depends on d
+symbols: {d: positive}
+unknowns: {k: positive}
+waves: {w: {harmonic: {A: 2 cm, omega: 3*pi rad/s, k: k, dir: +x, phase: 0}}}
+given: ["y(w, x=d, t=t) == 2[cm]*sin(3*pi*t - pi/8)"]
+observe: {v: "speed(w)"}
+expect: {error: rejected}

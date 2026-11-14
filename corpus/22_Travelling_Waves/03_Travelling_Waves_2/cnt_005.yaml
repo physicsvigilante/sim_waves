@@ -1,0 +1,16 @@
+id: 22/03/cnt_005
+number: 11
+source: {problem: 22_Travelling_Waves/03_Travelling_Waves_2/Problems/cnt_005.png, solution: 22_Travelling_Waves/03_Travelling_Waves_2/Solutions/cnt_005.png}
+format: numerical
+statement: |
+  A 2 m long rope has mass of 0.1 kg and tension of 60 N. A power source at one end sends a
+  harmonic wave with an amplitude of 1 cm down the rope. The wave is extracted at the other end
+  without any reflection. What is the frequency of the power source (in Hz), if the power
+  transmitted is 100 W?
+figure: null
+answer_value: 171
+units: Hz
+verified: "171.02 (recomputed)"
+kinds: [derived_medium, inverse_condition]
+physics: [power, wave_speed]
+notes: 'Without reflection = matched (absorbing) far end.'

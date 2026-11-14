@@ -1,0 +1,15 @@
+id: 11/03/007
+number: 7
+source: {problem: 11_Mechanical_Waves_sardana/03_Sound_Waves_and_Properties/Problems/007.png, solution: 11_Mechanical_Waves_sardana/03_Sound_Waves_and_Properties/Solutions/007.png}
+format: numerical
+statement: |
+  At what temperature will the speed of sound in hydrogen be the same as in oxygen at 100 C? Molar masses of oxygen and hydrogen are in the ratio 16 : 1.
+figure: null
+options: null
+answer: "T_H2 = 23.31 K, approximately -249.7 C"
+answer_value: 23.31
+units: K
+verified: "v = sqrt(gamma R T/M), same gamma (diatomic): T_H2 = (M_H2/M_O2) T_O2 = 373/16 = 23.31 K = -249.7 C. Matches key."
+kinds: [derived_medium, inverse_condition, comparison]
+physics: [speed_of_sound, temperature_dependence, molar_mass]
+notes: "Assumes equal gamma for both gases and ideal gas behaviour; at 23 K real hydrogen is barely gaseous (boiling point about 20 K), so the result is a textbook idealisation."

@@ -1,0 +1,9 @@
+answer: "P2 = P1/8"
+final_scene: 11_02_008.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "nothing (same string modelled as two equal-mu strings)"
+missing_in_source: none
+reasoning: "power(w2)/power(w1) = 1/8 from the engine with equal A, T->4T, f->f/4."
+friction: "A change of state of one string must be written as two strings; no 'before/after' construct."

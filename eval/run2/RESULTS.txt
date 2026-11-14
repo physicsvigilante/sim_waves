@@ -1,0 +1,19 @@
+id               att fit      ok   answer -> key
+22/01/asc_005      2 full     Y    ['c'] -> ['c']
+22/01/asc_006      1 full     Y    ['c'] -> ['c']
+22/01/bmc_005      2 partial  Y    ['a', 'b', 'd'] -> ['a', 'b', 'd']
+22/01/bmc_006      1 partial  n    ['a', 'b', 'c'] -> ['a', 'b']
+22/01/bmc_007      1 full     Y    ['b', 'c', 'd'] -> ['b', 'c', 'd']
+22/01/cnt_006      2 full     Y    16 m -> 16.0
+22/02/asc_006      1 full     Y    ['b'] -> ['b']
+22/02/asc_007      2 partial  n    ['c'] -> ['d']
+22/02/asc_008      2 full     Y    ['d'] -> ['d']
+22/02/asc_009      3 full     Y    ['c'] -> ['c']
+22/02/bmc_004      1 full     Y    ['a', 'b', 'c', 'd'] -> ['a', 'b', 'c', 'd']
+22/02/bmc_005      2 full     Y    ['a', 'c'] -> ['a', 'c']
+22/02/cnt_005      2 partial  n    a/b = 3*X/(2*pi), where X is the position of the particle (about 0.48 s*m if X = 1 m); no single number follows from the problem as printed -> 1.5
+22/03/bmc_006      1 full     Y    ['a', 'c', 'd'] -> ['a', 'c', 'd']
+22/03/cnt_004      1 full     Y    3 -> 3.0
+22/03/cnt_006      1 full     Y    511.64 W -> 513
+
+correct 13/16; correct on first attempt 7/16

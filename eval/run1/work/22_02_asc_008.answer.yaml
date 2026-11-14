@@ -1,0 +1,5 @@
+answer: [d]
+final_scene: 22_02_asc_008.v3.yaml
+engine_fit: none
+reasoning: v1 tried to solve xG (trigonometric unknown, rejected), v2 had a wrong phase (contradiction), v3 failed because inequalities between symbols (xB < lam/4) cannot be decided. Answered from knowledge: B and F are one wavelength apart, same height and same slope direction; G has the opposite slope.
+friction: Cannot bound symbols in given (needs numeric values or symbol constraints); cannot solve for a point of equal height; no way to ask 'are points in phase' directly; attempt budget exhausted by these.

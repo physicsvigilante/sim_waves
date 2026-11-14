@@ -1,0 +1,13 @@
+id: 24/01/bmc_004
+format: multiple_correct
+statement: 'A sound wave propagates in a medium of bulk''s modulus B by means of compressions and rarefactions.
+  If Pc and Pr are the pressures at compression and rarefaction respectively, a be the wave amplitude
+  and k be the angular wave number then,
+
+  '
+options:
+  a: Pc is maximum and Pr is minimum
+  b: Pc is minimum and Pr is maximum
+  c: The pressure amplitude is Bak
+  d: If the displacement wave is y = a sin(wt - kx), the pressure wave at any instant is represented as
+    P = Po cos(wt - kx) which leads displacement wave by a phase angle of pi/2

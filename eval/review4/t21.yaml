@@ -1,0 +1,11 @@
+# phase unknown from a maximum condition
+unknowns: {p: phase}
+media: {air: {type: gas, v: 340 m/s}}
+sources:
+  S1: {on: air, f: 340 Hz, A: 1, phase: p, spreading: none}
+  S2: {on: air, f: 340 Hz, A: 1, phase: 0, spreading: none}
+rays:
+  r1: {from: S1, length: 1.25 m}
+  r2: {from: S2, length: 1 m}
+given: [{fact: "resultant_amplitude(r1, r2) == 2", source: stated}]
+observe: {p: p, w: "wrap(phase_difference(r1,r2))"}

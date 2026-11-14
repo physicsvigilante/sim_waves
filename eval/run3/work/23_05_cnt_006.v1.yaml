@@ -1,0 +1,19 @@
+id: 23/05/cnt_006
+assume:
+  - "Fork frequency ff unknown; beats = |f_wire - ff| at both tensions; the wire's mass per length is unknown and the same at both tensions. The diameter (1 mm) is not needed because no density is given."
+  - "Fundamental mode of wire fixed at the two knife edges (50 cm)."
+unknowns: {mu: positive, ff: positive}
+media:
+  w100: {type: string, mu: mu, tension: 100 N}
+  w81: {type: string, mu: mu, tension: 81 N}
+resonators:
+  r100: {type: string, on: w100, length: 50 cm, ends: [fixed, fixed]}
+  r81: {type: string, on: w81, length: 50 cm, ends: [fixed, fixed]}
+given:
+  - {fact: "beat_frequency(frequency(r100, harmonic=1), ff) == 5[Hz]", source: stated}
+  - {fact: "beat_frequency(frequency(r81, harmonic=1), ff) == 5[Hz]", source: stated}
+observe:
+  mu: "mu"
+  ff: "ff"
+  f100: "frequency(r100, harmonic=1)"
+  f81: "frequency(r81, harmonic=1)"

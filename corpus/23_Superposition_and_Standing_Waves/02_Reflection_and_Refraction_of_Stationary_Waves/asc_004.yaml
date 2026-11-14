@@ -1,0 +1,18 @@
+id: 23/02/asc_004
+number: 1
+source: {problem: 23_Superposition_and_Standing_Waves/02_Reflection_and_Refraction_of_Stationary_Waves/Problems/asc_004.png, solution: 23_Superposition_and_Standing_Waves/02_Reflection_and_Refraction_of_Stationary_Waves/Solutions/asc_004.png}
+format: single_correct
+statement: |
+  In a stationary wave all the particles
+figure: null
+options:
+  a: "on either side of a node vibrate in the same phase"
+  b: "in the region between two nodes vibrate in the same phase"
+  c: "in the region between two antinodes vibrate in the same phase"
+  d: "of the medium vibrate in the same phase"
+answer: b
+answer_value: null
+units: null
+kinds: [conceptual]
+physics: [standing_waves, phase, nodes]
+notes: Consistent. Standard result (particles within one loop between adjacent nodes are in phase; adjacent loops are in antiphase).

@@ -1,0 +1,19 @@
+id: 23/03/asc_004
+assume:
+  - "mu = 10 g/m is a placeholder (not given); only frequency ratios matter, and the unknown tension absorbs it."
+  - "Sonometer wire fundamental (fixed-fixed) at lengths 20 cm and 21 cm with the same tension and wire; tension and density unspecified so tension is left an unknown that the beat facts fix."
+  - "Beat frequency is the absolute difference between fork and wire frequency, equal at 5 Hz for both lengths."
+
+unknowns: {T: positive, f0: positive}
+media:
+  wire: {type: string, mu: 10 g/m, tension: T}
+resonators:
+  r20: {type: string, on: wire, length: 20 cm, ends: [fixed, fixed]}
+  r21: {type: string, on: wire, length: 21 cm, ends: [fixed, fixed]}
+given:
+  - {fact: "beat_frequency(frequency(r20, harmonic=1), f0) == 5[Hz]", source: stated}
+  - {fact: "beat_frequency(frequency(r21, harmonic=1), f0) == 5[Hz]", source: stated}
+observe:
+  fork: "f0"
+  f_20: "frequency(r20, harmonic=1)"
+  f_21: "frequency(r21, harmonic=1)"

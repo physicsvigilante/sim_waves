@@ -1,0 +1,8 @@
+answer: [c, d]
+final_scene: 23_03_bmc_004.v1.yaml
+engine_fit: full
+coverage: full
+not_represented: "nothing"
+missing_in_source: "none"
+reasoning: "Engine gave fB/fA = 1/4, vB/vA = 1/2, fA = f of 3rd overtone (harmonic 4) of B, ratio 1. So (a) and (b) false; (c) and (d) true."
+friction: "Had to add a dummy fact (1 == 1) in v1 for no reason; harmless. Wire as fixed-fixed is an assumption (stretched wire)."

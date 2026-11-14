@@ -1,0 +1,14 @@
+id: 22/03/bmc_006
+number: 5
+source: {problem: 22_Travelling_Waves/03_Travelling_Waves_2/Problems/bmc_006.png, solution: 22_Travelling_Waves/03_Travelling_Waves_2/Solutions/bmc_006.png}
+format: multiple_correct
+statement: As a wave propagates
+figure: null
+options:
+  a: "the wave intensity remains constant for a plane wave"
+  b: "the wave intensity decreases as the inverse of the distance from the source for a spherical wave"
+  c: "the wave intensity decreases as the inverse square of the distance from the source for a spherical wave"
+  d: "the wave intensity decreases as the inverse of the distance from a line source"
+answer: [a, c, d]
+kinds: [conceptual]
+physics: [intensity, geometric_spreading]

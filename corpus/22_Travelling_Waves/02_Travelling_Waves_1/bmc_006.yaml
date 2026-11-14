@@ -1,0 +1,20 @@
+id: 22/02/bmc_006
+number: 9
+source: {problem: 22_Travelling_Waves/02_Travelling_Waves_1/Problems/bmc_006.png, solution: 22_Travelling_Waves/02_Travelling_Waves_1/Solutions/bmc_006.png}
+format: multiple_correct
+statement: |
+  A perfectly elastic uniform string is suspended vertically with its upper end fixed to a
+  ceiling and the lower end loaded with a weight. If a transverse wave is imparted to the lower
+  end of the string, the pulse will
+figure: null
+options:
+  a: "travel upward with increasing wavelength"
+  b: "travel upwards with increasing speed"
+  c: "travel upwards with decreasing frequency"
+  d: "travel upwards with constant acceleration"
+answer: [a, b, d]
+kinds: [conceptual, nonuniform_medium]
+physics: [wave_speed, tension_variation]
+notes: |
+  Tension varies along the string: T(x) = Mg + μ g x (x from bottom). v² = Mg/μ + g x, so the
+  pulse accelerates at g/2. Engine needs a medium with position-dependent tension.

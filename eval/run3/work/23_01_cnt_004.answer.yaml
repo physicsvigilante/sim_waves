@@ -1,0 +1,8 @@
+answer: "420 Hz"
+final_scene: 23_01_cnt_004.v3.yaml
+engine_fit: partial
+coverage: partial
+not_represented: "the cardboard as a reflector; the doubling of the reflected path (2 x 20 cm) was written by me as x = 40 cm; the bound f < 840 Hz was added by me to pick the first minimum"
+missing_in_source: "position of the board at the start (max); equality of the two amplitudes"
+reasoning: "Engine solved f = 420 Hz from zero response at 40 cm path change, with an assumed f < 840 Hz to remove the periodic family (v2 was ambiguous: 420, 1260, ...)."
+friction: "No reflector or path change; the factor 2 had to be typed by me; the max-to-adjacent-min condition (no minimum in between) cannot be expressed, only as a crude bound. v2 showed an infinite family."

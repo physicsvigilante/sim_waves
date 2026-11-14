@@ -1,0 +1,11 @@
+answer: {a: "(1/2) mu A^2 w^2 lambda sin^2(wt)", b: "(1/2) mu A^2 w^2 lambda", c: "(1/4) mu A^2 w^2 lambda"}
+final_scene: 11_05_009.v1.yaml
+engine_fit: partial
+hand_steps:
+  - "Standing wave y = 2A sin(kx) cos(wt); KE between adjacent nodes = (1/2) mu * integral of vy^2 dx over lambda/2 = (1/2) mu (2Aw)^2 sin^2(wt) * (lambda/4) = (1/2) mu A^2 w^2 lambda sin^2(wt)"
+  - "max over t: sin^2 = 1; cycle average of sin^2 = 1/2"
+coverage: partial
+not_represented: "energy integral over a segment; engine only gave antinode speed amplitude 4 pi A f = 2 A w and node speed 0"
+missing_in_source: "mu and the wavelength/frequency are not given (answer in symbols); sign/phase of the standing wave"
+reasoning: "Engine confirmed the antinode amplitude 2A (max velocity 2*A*w, node 0), which feeds the hand integral."
+friction: "no integral over x and no energy observable for a standing wave or segment"

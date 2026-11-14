@@ -1,0 +1,13 @@
+id: 22/01/bmc_006
+assume:
+  - "Wave equation y(x,t) is used both as particle displacement (fix x, vary t) and as shape (fix t, vary x)."
+  - "A Gaussian pulse stands for a non-sinusoidal travelling wave."
+symbols: {A: positive, k: positive, omega: positive, X: real, t0: real}
+waves:
+  w: {harmonic: {A: A, omega: omega, k: k, dir: +x, phase: 0}}
+  g: {given: "A*exp(-(x - 2*t)**2)", units: {x: m, t: s, y: m}}
+observe:
+  particle_any_x_t: "y(w, x=X, t=t)"
+  shape_at_t0: "y(w, x=x, t=t0)"
+  field: "field(w)"
+  g_is_travelling_velocity: "velocity(g)"

@@ -1,0 +1,19 @@
+id: 23/04/bmc_004
+number: 6
+source: {problem: 23_Superposition_and_Standing_Waves/04_Longitudinal_Stationary_Waves/Problems/bmc_004.png, solution: 23_Superposition_and_Standing_Waves/04_Longitudinal_Stationary_Waves/Solutions/bmc_004.png}
+format: multiple_correct
+statement: |
+  It is desired to increase the fundamental resonance frequency in a tube which is closed at one end. This can be achieved by
+figure: null
+options:
+  a: "replacing the air in the tube by hydrogen gas"
+  b: "increasing the length of the tube"
+  c: "decreasing the length of the tube"
+  d: "opening the closed end of the tube"
+answer: [a, c, d]
+answer_value: null
+units: null
+verified: "f = v/4l; v ~ 1/sqrt(M) so hydrogen raises v (a); shorter l raises f (c); open pipe v/2l is twice closed v/4l (d). Matches key."
+kinds: [conceptual, comparison]
+physics: [closed_pipe, fundamental_frequency, speed_of_sound]
+notes: Consistent.

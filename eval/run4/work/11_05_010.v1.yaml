@@ -1,0 +1,14 @@
+id: 11/05/010
+assume:
+  - "Both waves travel in the same gas; amplitude, phase and direction are irrelevant to frequency and are set only to complete the wave definitions."
+  - "20 beats in 6 s means a beat frequency 20/6 Hz."
+unknowns: {v: positive}
+media:
+  gas: {type: gas, v: v}
+waves:
+  w1: {harmonic: {on: gas, A: 1 mm, lambda: 204 cm, v: v, dir: +x, phase: 0}}
+  w2: {harmonic: {on: gas, A: 1 mm, lambda: 208 cm, v: v, dir: +x, phase: 0}}
+given:
+  - {fact: "beat_frequency(frequency(w1), frequency(w2)) == (20/6)[Hz]", source: stated}
+observe:
+  v: "v"

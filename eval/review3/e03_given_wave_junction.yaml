@@ -1,0 +1,8 @@
+id: e03
+media:
+  a: {type: string, mu: 0.01 kg/m, tension: 9 N}
+junctions:
+  J: {at: 0 m, left: a, right: fixed}
+waves:
+  w: {given: "0.01*sin(2*pi*(10*t - x/3))", units: {x: m, t: s, y: m}, on: a}
+observe: {r: "amplitude(w_reflected)"}

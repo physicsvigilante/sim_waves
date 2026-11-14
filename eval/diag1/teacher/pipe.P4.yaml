@@ -1,0 +1,16 @@
+# parent: eval/diag1/baselines/pipe.yaml
+# change: added a view panel plotting mode_shape (displacement amplitude profile) of harmonic 3 along the pipe, x from 0 (closed end) to 85 cm; added observe of nodes. Physics unchanged
+# kind: view
+id: diag1/pipe
+assume:
+  - "Plot range is the pipe itself, 0 to 85 cm; x = 0 is the closed end (format convention)."
+symbols: {x: positive}
+media:
+  air: {type: gas, v: 340 m/s}
+resonators:
+  p: {type: pipe, on: air, length: 85 cm, ends: [closed, open], end_correction: 0 m}
+observe:
+  f3: "frequency(p, harmonic=3)"
+  disp_nodes: "nodes(p, harmonic=3)"
+view:
+  - {plot: "mode_shape(p, harmonic=3, x=x)", vs: x, range: [0 m, 85 cm]}

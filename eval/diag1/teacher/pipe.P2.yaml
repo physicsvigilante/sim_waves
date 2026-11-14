@@ -1,0 +1,14 @@
+# parent: eval/diag1/baselines/pipe.yaml
+# change: closed end opened -> ends [open, open]; added observe of f2 (even harmonic) to test whether it is now allowed
+# kind: structural change
+id: diag1/pipe
+assume:
+  - "Both ends open; end correction still neglected (as in baseline)."
+media:
+  air: {type: gas, v: 340 m/s}
+resonators:
+  p: {type: pipe, on: air, length: 85 cm, ends: [open, open], end_correction: 0 m}
+observe:
+  f1: "frequency(p, harmonic=1)"
+  f2: "frequency(p, harmonic=2)"
+  f3: "frequency(p, harmonic=3)"

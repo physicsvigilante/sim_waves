@@ -1,0 +1,23 @@
+id: 11/04/007
+assume:
+  - "Coordinates from figure: wall is the line x=0, S at (1 m, 0), D at (21 m, -10 m) (20 m to the right, 10 m below S)."
+  - "Rigid wall (sound reflecting off a wall: no pressure phase change); spreading: none because amplitudes at D are not given and the question is about phase only (spreading would not move the exact in-phase condition, but the intensity maxima of two unequal-amplitude rays are still at phase coincidence)."
+  - "Audible range 20 Hz to 20000 Hz."
+symbols: {fs: positive}
+media: {air: {type: gas, v: 340 m/s}}
+sources:
+  S: {on: air, f: fs, A: 1, phase: 0, spreading: none, at: [1 m, 0 m]}
+reflectors:
+  wall: {point: [0 m, 0 m], normal: [1, 0], boundary: rigid}
+points:
+  D: [21 m, -10 m]
+rays:
+  direct: {from: S, to: D}
+  bounce: {from: S, to: D, via: wall}
+given: []
+observe:
+  dpath: "path_difference(bounce, direct)"
+  fmax: "maxima(bounce, direct, vary=fs, lo=20[Hz], hi=20000[Hz])"
+  n: "count(maxima(bounce, direct, vary=fs, lo=20[Hz], hi=20000[Hz]))"
+  fmin: "min(maxima(bounce, direct, vary=fs, lo=20[Hz], hi=20000[Hz]))"
+  fhi: "max(maxima(bounce, direct, vary=fs, lo=20[Hz], hi=20000[Hz]))"

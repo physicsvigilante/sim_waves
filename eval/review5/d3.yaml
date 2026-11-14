@@ -1,0 +1,2 @@
+symbols: {B: real, C: real, p: phase}
+observe: {a: "max_over(t, abs(B + C*sin(t)))", b: "min_over(t, abs(B + C*sin(t)))", c: "max_over(t, sqrt(B + C*sin(t)))", d: "min_over(t, B + C*sin(t+p))", e: "min_over(t, sqrt(B**2 + C**2 + 2*B*C*cos(t)))"}

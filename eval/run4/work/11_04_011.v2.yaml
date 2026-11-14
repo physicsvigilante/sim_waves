@@ -1,0 +1,31 @@
+id: 11/04/011
+assume:
+  - "Distance R from the midpoint of PQ to A, B and C is not given. Kept as a symbol; spreading none (far-field or negligible amplitude differences), so only phases matter. The result for A and C is independent of R; for B the two path lengths are exactly equal for any R."
+  - "'P is ahead of Q by 90 deg' read as source phase of P = +pi/2 and of Q = 0, in the engine's convention y = A sin(wt - ks + phase)."
+  - "Waves treated as scalar waves; speed 340 m/s chosen only to fix f = v/lambda for lambda = 20 m (f = 17 Hz)."
+symbols: {R: positive}
+media: {air: {type: gas, v: 340 m/s}}
+sources:
+  P: {on: air, f: 17 Hz, A: 1, phase: pi/2, spreading: none, at: [-2.5 m, 0 m]}
+  Q: {on: air, f: 17 Hz, A: 1, phase: 0, spreading: none, at: [2.5 m, 0 m]}
+points:
+  A: [R, 0 m]
+  B: [0 m, R]
+  C: [-R, 0 m]
+rays:
+  pA: {from: P, to: A}
+  qA: {from: Q, to: A}
+  pB: {from: P, to: B}
+  qB: {from: Q, to: B}
+  pC: {from: P, to: C}
+  qC: {from: Q, to: C}
+given:
+  - {fact: "R > 2.5[m]", source: figure, note: "A and C lie outside the segment PQ (half-length 2.5 m)"}
+observe:
+  wl: "wavelength(pA)"
+  IA: "relative_intensity(pA, qA)"
+  IB: "relative_intensity(pB, qB)"
+  IC: "relative_intensity(pC, qC)"
+  dA: "wrap(phase_difference(pA, qA))"
+  dB: "wrap(phase_difference(pB, qB))"
+  dC: "wrap(phase_difference(pC, qC))"

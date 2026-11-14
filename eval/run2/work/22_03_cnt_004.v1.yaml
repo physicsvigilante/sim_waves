@@ -1,0 +1,15 @@
+id: 22/03/cnt_004
+assume:
+  - "Same medium = same string (mu, T). Intensity on a string is proportional to power, so the intensity ratio is the power ratio."
+  - "Frequencies f and 2f (ratio 1:2); amplitudes A and n*A (ratio 1:n)."
+symbols: {mu: positive, T: positive, A: positive, f: positive}
+unknowns: {n: positive}
+media:
+  s: {type: string, mu: mu, tension: T}
+waves:
+  w1: {harmonic: {on: s, A: A, f: f, dir: +x, phase: 0}}
+  w2: {harmonic: {on: s, A: n*A, f: 2*f, dir: +x, phase: 0}}
+given:
+  - {fact: "power(w1)/power(w2) == 1/36", source: stated, note: "intensity ratio 1:36, intensity ~ power for the same string"}
+observe:
+  n: "n"

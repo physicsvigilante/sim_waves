@@ -1,0 +1,9 @@
+answer: {equation: "y = 0.02 cos(100 x - 10 t) m with x along the paper (time-trace; omega = 10 rad/s)", distance_between_maxima: "pi/50 m = 0.0628 m"}
+final_scene: 11_01_008.v1.yaml
+engine_fit: partial
+hand_steps: ["omega = sqrt(2k/m) = sqrt(2*0.5/0.01) = 10 rad/s (no spring-mass oscillator in the format)"]
+coverage: partial
+not_represented: "springs, block, SHM dynamics; paper motion direction; the trace is modelled as a +x wave at paper speed"
+missing_in_source: "direction of the paper motion; sign conventions for x on paper"
+reasoning: "Given omega, A, paper speed v = 0.1 m/s and release at max displacement (phase pi/2), the engine gives lam = pi/50 m and k = 100 rad/m."
+friction: "No oscillator (mass-spring) medium: omega had to be entered by hand."

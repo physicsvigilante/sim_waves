@@ -1,0 +1,19 @@
+id: 11/01/006
+number: 6
+source: {problem: 11_Mechanical_Waves_sardana/01_Wave_Equation_and_Properties/Problems/006.png, solution: 11_Mechanical_Waves_sardana/01_Wave_Equation_and_Properties/Solutions/006.png}
+format: multiple_correct
+statement: |
+  Out of the following functions, which one(s) represent(s) a wave?
+figure: null
+options:
+  a: "1/(x + vt)"
+  b: "ln(x + vt)"
+  c: "(x - vt)^2"
+  d: "e^(-(x - vt)^2)"
+answer: d
+answer_value: null
+units: null
+verified: "Matches key. All are functions of x +- vt, but (a) diverges at x = -vt, (b) diverges at x = -vt and is undefined for x+vt <= 0, (c) grows without bound as |x| grows. Only (d) is finite everywhere at all times."
+kinds: [classification, conceptual]
+physics: [wave_function, travelling_wave, boundedness]
+notes: Format is "which one(s)"; key is (d) only. Solution reasoning is finiteness-based.

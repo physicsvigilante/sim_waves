@@ -1,0 +1,15 @@
+id: 11/04/012
+number: 12
+source: {problem: 11_Mechanical_Waves_sardana/04_Interference/Problems/012.png, solution: 11_Mechanical_Waves_sardana/04_Interference/Solutions/012.png}
+format: numerical
+statement: |
+  Two identical speakers 10 m apart are driven by the same oscillator with a frequency of f = 21.5 Hz Figure. Explain why a receiver at point A records a minimum in sound intensity from the two speakers. If the receiver is moved in the plane of the speakers, what path should it take so that the intensity remains at a minimum? That is, determine the relationship between x and y (the coordinates of the receiver) that causes the receiver to record a minimum in sound intensity. Take the speed of sound to be 343 ms^-1.
+figure: "x-y axes with the origin midway between the speakers. S1 on the left (x = -5 m), S2 on the right (x = +5 m), 10 m apart, both on the x axis (drawn as circled dots). Point A on the x axis 9 m from S1 (so x = 4 m, 1 m from S2). A curve starts at A and bends upward to a point P at (x, y) in the upper right region."
+options: null
+answer: "Minimum at A because path difference 8 m = lambda/2 (lambda about 16 m). Minima path: sqrt((x+5)^2 + y^2) - sqrt((x-5)^2 + y^2) = 16n - 8, n = 1, 2, 3, ..."
+answer_value: "sqrt((x+5)^2+y^2) - sqrt((x-5)^2+y^2) = 16n - 8"
+units: "m"
+verified: "lambda = 343/21.5 = 15.95 m, about 16 m; at A, S1A - S2A = 9 - 1 = 8 m = lambda/2, destructive. Minima require S1P - S2P = (2n-1) lambda/2 = 16n - 8. Matches key. (Since the speakers are 10 m apart, |S1P - S2P| <= 10 m, so only |delta| = 8 m is attainable: the path through A is the hyperbola x^2/16 - y^2/9 = 1.)"
+kinds: [symbolic, inverse_condition, graph_read]
+physics: [interference, path_difference, destructive_interference, hyperbolic_nodal_lines]
+notes: "Multi-part (explain; find path; find relation). Key uses lambda rounded to 16 m, making A exactly a minimum (exact delta/lambda = 0.5015). Key states n = 1, 2, 3, ... although geometry only allows n = 1 (and its mirror, delta = -8 m, n = 0)."

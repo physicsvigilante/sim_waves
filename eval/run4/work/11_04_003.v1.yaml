@@ -1,0 +1,14 @@
+id: 11/04/003
+assume:
+  - "Waveform taken as A sin(w t - k x + phase) with the stated phases at t=0 (any position, so they are phases of the sine argument); w=3 rad/s, k=1 rad/m chosen arbitrarily (same for all, direction +x); only amplitude and phase of the sum are asked."
+  - "Phase of the resultant reported as phase(total, x=0, t=0), i.e. relative to the same reference."
+symbols: {A: positive}
+waves:
+  w1: {given: "A*sin(3*t - x)", units: {x: m, t: s, y: m}}
+  w2: {given: "(A/2)*sin(3*t - x - pi/2)", units: {x: m, t: s, y: m}}
+  w3: {given: "(A/3)*sin(3*t - x - pi)", units: {x: m, t: s, y: m}}
+  tot: {sum: [w1, w2, w3]}
+given: []
+observe:
+  Amp: "amplitude(tot)"
+  ph: "phase(tot, x=0[m], t=0[s])"

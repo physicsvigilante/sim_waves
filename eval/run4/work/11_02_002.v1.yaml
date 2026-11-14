@@ -1,0 +1,6 @@
+id: 11/02/002
+symbols: {mu0: positive, alpha: positive, l: positive, s: positive}
+media:
+  wire: {type: string, mu: "mu0 + alpha*s", length: l, tension: 100 N}
+observe:
+  v: "speed(wire, at=s)"

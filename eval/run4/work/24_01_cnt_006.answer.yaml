@@ -1,0 +1,10 @@
+answer: "3 dB (3.01 dB increase)"
+final_scene: 24_01_cnt_006.v1.yaml
+engine_fit: none
+hand_steps:
+  - "delta beta = 10 log10(I2/I1) = 10 log10 2, evaluated by the maths service as arithmetic only"
+coverage: unsupported
+not_represented: "sound level; no observable"
+missing_in_source: "none"
+reasoning: "Level formula is mine; engine only evaluated the logarithm."
+friction: "no decibel / sound level observable"

@@ -1,0 +1,9 @@
+id: b05
+symbols: {k: positive, w: positive}
+waves:
+  y1: {harmonic: {A: 3 cm, omega: w, k: k, dir: -x, phase: 0}}
+  y3: {harmonic: {A: 3 cm, omega: w, k: k, dir: +x, phase: 0}}
+  st: {sum: [y1, y3]}
+observe:
+  fo: "frequency_of(t, y(st, x=x, t=t))"
+  node: "frequency_of(t, y(st, x=0[m], t=t))"

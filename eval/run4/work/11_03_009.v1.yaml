@@ -1,0 +1,8 @@
+id: 11/03/009
+assume: ["Plane sound wave with I = 1e-3 W/m^2. The engine has no observable linking intensity to pressure amplitude, so only the intensity is represented."]
+media:
+  air: {type: open3d}
+emitters:
+  pl: {on: air, geometry: plane, intensity: 1e-3 W/m^2}
+observe:
+  I: "intensity(pl, r=1[m])"

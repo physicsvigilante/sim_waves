@@ -1,0 +1,7 @@
+media: {wire: {type: string, mu: 0.01 kg/m, tension: 100 N}, air: {type: gas, v: 340 m/s}}
+resonators:
+  s: {type: string, on: wire, length: 1 m, ends: [fixed, fixed]}
+  p: {type: pipe, on: air, length: 30 cm, ends: [closed, open], end_correction: 0.6 cm}
+unknowns: {n: integer}
+given: ["mode_shape(s, harmonic=n, x=0.25[m]) == 1", "n < 5"]
+observe: {n: n}

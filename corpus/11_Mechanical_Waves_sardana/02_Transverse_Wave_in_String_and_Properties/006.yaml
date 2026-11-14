@@ -1,0 +1,15 @@
+id: 11/02/006
+number: 6
+source: {problem: 11_Mechanical_Waves_sardana/02_Transverse_Wave_in_String_and_Properties/Problems/006.png, solution: 11_Mechanical_Waves_sardana/02_Transverse_Wave_in_String_and_Properties/Solutions/006.png}
+format: numerical
+statement: |
+  The speed of a transverse wave travelling in a wire having a length 50 cm and mass 5 g is 80 m/s. The area of cross-section of the wire is 1 mm^2 and its Young's modulus is 16 x 10^11 N/m^2. Calculate the extension of the wire over its natural length.
+figure: null
+options: null
+answer: "0.02 mm"
+answer_value: 0.02
+units: mm
+verified: "Matches key. mu = 5e-3/0.5 = 0.01 kg/m; T = mu v^2 = 0.01*6400 = 64 N; dL = T L/(A Y) = 64*0.5/(1e-6*16e11) = 2e-5 m = 0.02 mm."
+kinds: [derived_medium, inverse_condition]
+physics: [wave_speed, tension, youngs_modulus, elongation]
+notes: "Y = 16 x 10^11 N/m^2 is unrealistically large for a real wire but is used as given."

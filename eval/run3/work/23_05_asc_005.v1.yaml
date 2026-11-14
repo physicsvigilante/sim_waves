@@ -1,0 +1,15 @@
+id: 23/05/asc_005
+assume:
+  - "Beats are between the fundamentals of the two closed (closed-open) pipes; end correction neglected (none given)."
+  - "Shorter pipe length L2 < 1 m (stated: longer pipe is 1 m)."
+unknowns: {L2: positive}
+media:
+  air: {type: gas, v: 300 m/s}
+resonators:
+  long: {type: pipe, on: air, length: 1 m, ends: [closed, open], end_correction: 0 m}
+  short: {type: pipe, on: air, length: L2, ends: [closed, open], end_correction: 0 m}
+given:
+  - {fact: "beat_frequency(frequency(long, harmonic=1), frequency(short, harmonic=1)) == 4[Hz]", source: stated}
+  - {fact: "L2 < 1[m]", source: stated, note: "shorter pipe"}
+observe:
+  L2: "L2"

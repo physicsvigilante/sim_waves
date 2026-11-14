@@ -1,0 +1,20 @@
+id: 11/02/005
+assume:
+  - "g = 9.8 m/s^2 (not stated; cancels in the ratio)."
+  - "Pulse treated as a train of fixed frequency f travelling up from the lower end (point 1) to the support (point 2)."
+unknowns: {f: positive}
+media:
+  rope:
+    type: string
+    mass: 4 kg
+    length: 10 cm
+    coordinate: {origin: lower_end, direction: up}
+    tension: {hanging: {load: 2 kg, g: 9.8 m/s^2}}
+waves:
+  w: {harmonic: {on: rope, f: f, from: lower_end, toward: up}}
+given:
+  - {fact: "wavelength(w, at=0[m]) == 0.06[m]", source: stated}
+observe:
+  lam_top: "wavelength(w, at=0.1[m])"
+  lam_bottom: "wavelength(w, at=0[m])"
+  f: "f"

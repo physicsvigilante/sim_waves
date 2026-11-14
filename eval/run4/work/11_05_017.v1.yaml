@@ -1,0 +1,16 @@
+id: 11/05/017
+assume:
+  - "Displacement standing wave y = 2A' sin(kx) cos(wt)-type; engine gives frequency, wavelength, mode shape. Equation assembled by hand."
+  - "No end correction; x measured from one open end."
+symbols: {A: positive}
+media:
+  air: {type: gas, v: 330 m/s}
+resonators:
+  p: {type: pipe, on: air, length: 80 cm, ends: [open, open], end_correction: 0 m}
+observe:
+  f: "frequency(p, harmonic=1)"
+  lam: "wavelength(p, harmonic=1)"
+  k: "2*pi/wavelength(p, harmonic=1)"
+  omega: "2*pi*frequency(p, harmonic=1)"
+  shape_mid: "mode_shape(p, harmonic=1, x=40[cm])"
+  shape_end: "mode_shape(p, harmonic=1, x=0[cm])"

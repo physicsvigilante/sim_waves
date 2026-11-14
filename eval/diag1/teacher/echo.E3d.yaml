@@ -1,0 +1,28 @@
+# parent: eval/diag1/teacher/echo.E3c.yaml
+# change: removed loud_min_at (no minimum in 100-140 m; engine refused empty list); everything else kept
+# kind: new question
+id: diag1/echo
+assume:
+  - "Fixed wavelength 10 m is the teacher's choice (assumption), implemented as f = v/10 m."
+  - "Amplitudes at the listener taken equal (spreading: none)."
+  - "Rigid ceiling 25 m: no pressure phase change on reflection."
+  - "Listener distance d is a free symbol; its value is set in observe/plot only."
+symbols: {d: positive}
+media:
+  air: {type: gas, v: 340 m/s}
+sources:
+  S: {on: air, at: [0 m, 0 m], f: "340[m/s]/10[m]", A: 1, phase: 0, spreading: none}
+reflectors:
+  ceiling: {point: [0 m, 25 m], normal: [0, -1], boundary: rigid}
+points:
+  P: ["d", 0 m]
+rays:
+  direct: {from: S, to: P}
+  up: {from: S, to: P, via: ceiling}
+observe:
+  loud: "relative_intensity(up, direct)"
+  loud_max_at: "max(maxima(up, direct, vary=d, lo=100[m], hi=140[m]))"
+  n_max: "count(maxima(up, direct, vary=d, lo=100[m], hi=140[m]))"
+illustrate: {d: 120 m}
+view:
+  - {plot: "relative_intensity(up, direct)", vs: d, range: [100 m, 140 m]}

@@ -1,0 +1,15 @@
+id: 23/05/cnt_006
+number: 15
+source: {problem: 23_Superposition_and_Standing_Waves/05_Vibration_in_Rods_and_Beats/Problems/cnt_006.png, solution: 23_Superposition_and_Standing_Waves/05_Vibration_in_Rods_and_Beats/Solutions/cnt_006.png}
+format: numerical
+statement: |
+  A metal wire of diameter 1 mm is held on two knife edges separated by a distance of 50 cm. The tension in the wire is 100 N. The wire, vibrating with its fundamental frequency and a vibrating tuning fork together produces 5 beats per second. The tension in the wire is then reduced to 81 N. When the two are excited, beats are heard at the same rate. Calculate the linear mass density of the wire (in kg/m).
+figure: null
+answer: "0.01"
+answer_value: 0.01
+units: kg/m
+verified: "f = (1/2L) sqrt(T/mu) = 10/sqrt(mu) at 100 N and 9/sqrt(mu) at 81 N. Fork frequency n: 10/sqrt(mu) = n+5, 9/sqrt(mu) = n-5, subtract: 1/sqrt(mu) = 10, mu = 0.01 kg/m. Matches key."
+kinds: [inverse_condition, derived_medium]
+physics: [beats, sonometer, linear_density, tension]
+notes: |
+  Consistent. The 1 mm diameter is not used. Solution writes the fundamental as (l/2l) sqrt(T/mu) (typo for 1/2l).

@@ -1,0 +1,6 @@
+# beats: envelope max/min and the intensity ratio of maxima to minima
+observe:
+  m: "max_over(t, envelope(t, 3*sin(2*pi*100*t) + 4*sin(2*pi*104*t)))"
+  n: "min_over(t, envelope(t, 3*sin(2*pi*100*t) + 4*sin(2*pi*104*t)))"
+  r: "(max_over(t, envelope(t, 3*sin(2*pi*100*t) + 4*sin(2*pi*104*t)))/min_over(t, envelope(t, 3*sin(2*pi*100*t) + 4*sin(2*pi*104*t))))**2"
+expect: {m: 7, n: 1, r: 49}

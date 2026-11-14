@@ -1,0 +1,19 @@
+id: 22/02/asc_008
+assume:
+  - "Figure has no scale; the question does not depend on it, so lam is a free symbol and the positions are written as fractions of lam."
+  - "Wave drawn at t=0 as y = -A sin(2*pi*x/lam) (starts at A going down): +x wave with phase pi."
+  - "Positions read from figure (fractions of lam): A 0, B lam/8 (falling before first trough), C lam/4 (trough), D lam/2, E 3*lam/4 (crest), F 9*lam/8 and G 11*lam/8 (same height as B on the second falling and rising segments), H 15*lam/8. B,F same height on falling segments, so only that they are on the falling segments matters."
+symbols: {lam: positive, A: positive}
+waves:
+  w: {harmonic: {A: A, lambda: lam, v: 2 m/s, dir: +x, phase: pi}}
+given:
+  - {fact: "y(w, x=lam/4, t=0) == -A", source: figure, note: "C is the first trough"}
+observe:
+  B_F: "equivalent(y(w, x=lam/8, t=t), y(w, x=9*lam/8, t=t))"
+  F_G: "equivalent(y(w, x=9*lam/8, t=t), y(w, x=11*lam/8, t=t))"
+  C_E: "equivalent(y(w, x=lam/4, t=t), y(w, x=3*lam/4, t=t))"
+  B_G: "equivalent(y(w, x=lam/8, t=t), y(w, x=11*lam/8, t=t))"
+  dphi_BF: "wrap(phase(w, x=lam/8, t=0) - phase(w, x=9*lam/8, t=0))"
+  dphi_FG: "wrap(phase(w, x=9*lam/8, t=0) - phase(w, x=11*lam/8, t=0))"
+  dphi_CE: "wrap(phase(w, x=lam/4, t=0) - phase(w, x=3*lam/4, t=0))"
+  dphi_BG: "wrap(phase(w, x=lam/8, t=0) - phase(w, x=11*lam/8, t=0))"

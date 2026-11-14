@@ -1,0 +1,12 @@
+id: 23/03/cnt_005
+symbols: {mu: positive, L: positive}
+unknowns: {T: positive}
+media:
+  wire: {type: string, mu: mu, tension: T}
+resonators:
+  r: {type: string, on: wire, length: L, ends: [fixed, fixed]}
+given:
+  - {fact: "frequency(r, harmonic=harmonic(r, overtone=6)) - frequency(r, harmonic=3) == 1600[Hz]", source: stated}
+observe:
+  f1: "frequency(r, harmonic=1)"
+expect: {f1: "400 Hz"}

@@ -1,0 +1,8 @@
+# 22/02/cnt_006 without the 'points less than half a wavelength apart' assumption
+unknowns: {k: positive}
+waves:
+  w: {harmonic: {A: 2 cm, omega: 3*pi rad/s, k: k, dir: +x, phase: 0}}
+given:
+  - "y(w, x=1[cm], t=t) == 2[cm]*sin(3*pi*t - pi/8)"
+observe: {v: "speed(w)"}
+expect: {error: ambiguous}

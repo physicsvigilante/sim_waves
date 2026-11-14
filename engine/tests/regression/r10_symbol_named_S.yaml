@@ -1,0 +1,8 @@
+# review a11: user symbol S must not collide with engine internals
+symbols: {S: positive, mu: positive, g: positive, s: positive}
+media:
+  rope: {type: string, mu: mu, length: 1 m, coordinate: {origin: lower_end, direction: up, variable: s},
+         tension: {hanging: {load: S, g: g}}}
+waves: {p: {pulse: {on: rope, from: lower_end, toward: up}}}
+observe: {accel: "diff(front(p, t=t), t, 2)"}
+expect: {accel: "g/2"}

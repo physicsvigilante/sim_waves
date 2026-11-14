@@ -1,0 +1,15 @@
+id: 23/02/cnt_006
+number: 13
+source: {problem: 23_Superposition_and_Standing_Waves/02_Reflection_and_Refraction_of_Stationary_Waves/Problems/cnt_006.png, solution: 23_Superposition_and_Standing_Waves/02_Reflection_and_Refraction_of_Stationary_Waves/Solutions/cnt_006.png}
+format: numerical
+statement: |
+  A string is made by joining two wires. A wave of wavelength l, travelling on one wire crosses the joint. The wave on the other wire has an amplitude equal to 2/3 times the amplitude of the original wave. Find the ratio of wavelengths of the incident wave and the transmitted wave.
+figure: null
+answer: "2.0"
+answer_value: 2.0
+units: null
+verified: "a_t/a_i = 2 v2/(v1+v2) = 2/3 gives v1 = 2 v2; frequency unchanged so lambda1/lambda2 = 2. Matches key."
+kinds: [ratio, inverse_condition, nonuniform_medium]
+physics: [transmission, amplitude_coefficient, wave_speed, wavelength]
+notes: |
+  "wavelength l" in the problem is presumably lambda (lowercase L typo). The problem image has no figure; the solution draws a pulse on wire 1 moving right with speed v1 and a joint, wire 2 with speed v2. Solution text has a typo ('waved'). Result uses the string transmission coefficient 2 v2/(v1+v2).

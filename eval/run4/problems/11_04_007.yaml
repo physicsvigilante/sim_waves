@@ -1,0 +1,14 @@
+id: 11/04/007
+format: numerical
+statement: 'A sound source capable of producing sound of variable frequencies is located at a distance
+  of 1 m from a reflecting wall as shown in Figure. A detector D is lying at a point shown in Figure.
+  The various distances are also indicated. If the speed of sound in air is 340 ms^-1, find the frequencies
+  of sound within the audible range, which will have maximum intensity at detector?
+
+  '
+figure: A vertical wall on the left. Source S is 1 m to the right of the wall. Detector D is 20 m to the
+  right of S's vertical line (horizontal distance S to D = 20 m, shown with a dashed vertical line down
+  to D), and 10 m below S (a 10 m vertical arrow along the wall spans S's level to D's level; D lies on
+  a dashed horizontal line from the wall bottom). Solution figure adds the image source S' 1 m behind
+  the wall (2 m from S) and a reflection point on the wall; SD = sqrt(20^2 + 10^2) = 22.36 m, S'D = sqrt(22^2
+  + 10^2) = 24.17 m.

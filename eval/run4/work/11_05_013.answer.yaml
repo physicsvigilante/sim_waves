@@ -1,0 +1,9 @@
+answer: "closed pipe 0.75 m; open pipe either 150/151 m = 0.993 m or 150/149 m = 1.007 m; the problem as printed does not say which side"
+final_scene: 11_05_013.v1.yaml
+engine_fit: partial
+hand_steps: []
+coverage: full
+not_represented: "end corrections"
+missing_in_source: "which of the two first overtones is higher (sign of the beat)"
+reasoning: "Engine solved Lc = 3/4 m uniquely but reported two ambiguous open-pipe lengths (Lo = 150/151 or 150/149). The scene faithfully shows the ambiguity; no constraint added."
+friction: "none; ambiguity is in the source. engine_fit partial because the run ended in an AmbiguousError, so no solved list of observables"

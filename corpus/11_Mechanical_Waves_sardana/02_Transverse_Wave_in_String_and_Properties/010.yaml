@@ -1,0 +1,15 @@
+id: 11/02/010
+number: 10
+source: {problem: 11_Mechanical_Waves_sardana/02_Transverse_Wave_in_String_and_Properties/Problems/010.png, solution: 11_Mechanical_Waves_sardana/02_Transverse_Wave_in_String_and_Properties/Solutions/010.png}
+format: numerical
+statement: |
+  Two wires of different densities but same area of cross section are soldered together at one end and are stretched to a tension T. The velocity of a transverse wave in one wire is double of that in the second wire. Calculate the ratio of density of the first wire to that of the second wire.
+figure: null
+options: null
+answer: "rho1/rho2 = 1/4 = 0.25"
+answer_value: 0.25
+units: dimensionless
+verified: "Matches key. v = sqrt(T/(A rho)); v1 = 2 v2 gives rho1/rho2 = 1/4."
+kinds: [ratio, derived_medium]
+physics: [wave_speed, tension, density]
+notes: Consistent.

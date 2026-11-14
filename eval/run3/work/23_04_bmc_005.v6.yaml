@@ -1,0 +1,24 @@
+id: 23/04/bmc_005
+assume:
+  - "String fixed at both ends (figure: walls at both ends), fundamental mode; tension is whatever makes wave speed on string equal to the speed of sound (stated)."
+  - "The sound emitted has the string's frequency. A pipe resonates if the ratio fs / f1(pipe) is an allowed harmonic number: any positive integer for open-open, odd integer for closed-open. I read that ratio off the engine and judge integer/odd myself. End corrections neglected (none given)."
+  - "Pipes: (a) closed-open L, (b) open-open 2L, (c) open-open L/2, (d) closed-open L/2 (from figure)."
+symbols: {L: positive, v: positive, mu: positive}
+unknowns: {T: positive}
+media:
+  wire: {type: string, mu: mu, tension: T}
+  air: {type: gas, v: v}
+resonators:
+  s: {type: string, on: wire, length: L, ends: [fixed, fixed]}
+  pa: {type: pipe, on: air, length: L, ends: [closed, open], end_correction: 0 m}
+  pb: {type: pipe, on: air, length: 2*L, ends: [open, open], end_correction: 0 m}
+  pc: {type: pipe, on: air, length: L/2, ends: [open, open], end_correction: 0 m}
+  pd: {type: pipe, on: air, length: L/2, ends: [closed, open], end_correction: 0 m}
+given:
+  - {fact: "speed(wire, at=0[m]) == v", source: stated, note: "wave speed on string equals speed of sound"}
+observe:
+  fs: "frequency(s, harmonic=1)"
+  ratio_a: "frequency(s, harmonic=1)/frequency(pa, harmonic=1)"
+  ratio_b: "frequency(s, harmonic=1)/frequency(pb, harmonic=1)"
+  ratio_c: "frequency(s, harmonic=1)/frequency(pc, harmonic=1)"
+  ratio_d: "frequency(s, harmonic=1)/frequency(pd, harmonic=1)"

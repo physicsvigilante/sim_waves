@@ -1,0 +1,8 @@
+answer: 0.01 kg/m
+final_scene: 23_05_cnt_006.v1.yaml
+engine_fit: full
+coverage: full
+not_represented: "Wire diameter (not needed)"
+missing_in_source: "none"
+reasoning: "Engine solved mu = 0.01 kg/m, fork 95 Hz, wire fundamentals 100 and 90 Hz."
+friction: "none"

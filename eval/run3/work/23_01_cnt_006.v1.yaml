@@ -1,0 +1,11 @@
+id: 23/01/cnt_006
+assume:
+  - "Sliding tube drawn out by d lengthens the upper path by 2d (two arms). That doubling is not an engine observable; it is stated here but not computed."
+  - "Consecutive minima correspond to path-difference change of one wavelength."
+media:
+  air: {type: gas, v: 350 m/s}
+waves:
+  w: {harmonic: {on: air, A: 1 mm, f: 540 Hz, dir: +x, phase: 0}}
+observe:
+  lam: "wavelength(w)"
+  lam_cm: "wavelength(w)/1[cm]"

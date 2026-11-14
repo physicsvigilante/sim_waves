@@ -1,0 +1,8 @@
+answer: d
+final_scene: 23_04_asc_005.v2.yaml
+engine_fit: full
+coverage: full
+not_represented: "nothing"
+missing_in_source: "End correction not given (neglected)"
+reasoning: "Resonating air column lengths: water height h = 45 cm and 95 cm in range; minimum is 45 cm (option d)."
+friction: "Used resonances(vary=h) with length 120[cm]-h; list cannot be used in arithmetic but the water height itself was the varied symbol so no arithmetic needed. v1 was a YAML parse error (unquoted [ in flow mapping)."

@@ -1,0 +1,9 @@
+answer: {t: "2*sqrt(2*l0/g)"}
+final_scene: 11_02_001.v2.yaml
+engine_fit: none
+hand_steps: ["T(x) = mu0 g x^2/2, v = sqrt(g x/2), t = integral dx/v = 2 sqrt(2 l0/g) (all by hand)"]
+coverage: partial
+not_represented: "variable mass per length is accepted as mu: 'mu0*s' but the hanging-tension rule treats it as uniform: engine reports T = g*mu0*s^2 (should be mu0 g s^2/2), so its front() = g t^2/4 would give t = 2 sqrt(l0/g), WRONG by sqrt 2"
+missing_in_source: none
+reasoning: "Engine result not used because it silently mis-computes tension for non-uniform mu."
+friction: "Silent wrong tension for position-dependent mu on a hanging string (should be rejected). No integration/time-of-flight observable."

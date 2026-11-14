@@ -1,0 +1,21 @@
+id: 23/04/bmc_005
+assume:
+  - "String fixed at both ends (figure: walls at both ends), fundamental mode; tension is whatever makes wave speed on string equal to the speed of sound v (stated)."
+  - "The sound emitted has the string's frequency. A pipe resonates if that frequency equals an allowed mode frequency of the pipe. End corrections neglected (none given)."
+  - "Pipe length is written k*L; the engine lists the k at which a closed-open or open-open pipe resonates with the string's fundamental; I then compare with the figure's k: (a) 1 closed-open, (b) 2 open-open, (c) 1/2 open-open, (d) 1/2 closed-open."
+symbols: {L: positive, v: positive, mu: positive, k: positive}
+unknowns: {T: positive}
+media:
+  wire: {type: string, mu: mu, tension: T}
+  air: {type: gas, v: v}
+resonators:
+  s: {type: string, on: wire, length: L, ends: [fixed, fixed]}
+  co: {type: pipe, on: air, length: k*L, ends: [closed, open], end_correction: 0 m}
+  oo: {type: pipe, on: air, length: k*L, ends: [open, open], end_correction: 0 m}
+given:
+  - {fact: "speed(wire, at=0[m]) == v", source: stated, note: "wave speed on string equals speed of sound"}
+observe:
+  T: "T"
+  fs: "frequency(s, harmonic=1)"
+  k_closed_open: "resonances(co, f=frequency(s, harmonic=1), vary=k, lo=0.01, hi=4)"
+  k_open_open: "resonances(oo, f=frequency(s, harmonic=1), vary=k, lo=0.01, hi=4)"

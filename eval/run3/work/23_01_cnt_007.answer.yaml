@@ -1,0 +1,8 @@
+answer: "1/9"
+final_scene: 23_01_cnt_007.v1.yaml
+engine_fit: full
+coverage: partial
+not_represented: "spherical spreading, the actual positions of A and B (only distance differences used), nearly 1:2 treated as exactly 1:2"
+missing_in_source: "exact positions of A and B (only d is used)"
+reasoning: "Amplitude at A is a (2a - a) and at B is 3a, intensity ratio (1/3)^2 = 1/9."
+friction: "Source positions and path lengths not objects; used x = distance trick with 100.25*lam."

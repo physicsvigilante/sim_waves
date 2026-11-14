@@ -1,0 +1,10 @@
+answer: "482 m/s"
+final_scene: 24_01_cnt_005.v1.yaml
+engine_fit: partial
+hand_steps:
+  - "mixture molar mass = mole-weighted mean of 28 and 2 g/mol = 15 g/mol (written into the molar_mass expression)"
+coverage: full
+not_represented: "nothing"
+missing_in_source: "molar masses of N2 and H2 (standard values assumed)"
+reasoning: "Engine with gamma 7/5, T 300 K, M 15 g/mol, R 8.3: v = 20*sqrt(581) = 482.1 m/s."
+friction: "no mixture medium; mole-weighted mean typed by hand"

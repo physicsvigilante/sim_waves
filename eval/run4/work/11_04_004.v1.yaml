@@ -1,0 +1,19 @@
+id: 11/04/004
+assume:
+  - "Two paths from the fork modelled as rays of a common source; ABP taken as 1 m (any common length; only the difference matters), ACP = ABP + difference. Amplitudes equal (spreading none, equal)."
+  - "Silence = rays in antiphase, loudest = in phase."
+unknowns: {f: positive}
+media: {air: {type: gas, v: 331.2 m/s}}
+sources:
+  S: {on: air, f: f, A: 1, phase: 0, spreading: none}
+rays:
+  abp: {from: S, length: 1 m}
+  c1: {from: S, length: 1.115 m}
+  c2: {from: S, length: 1.23 m}
+  c3: {from: S, length: 1.345 m}
+given:
+  - {fact: "cos(phase_difference(c1, abp)) == -1", source: stated}
+  - {fact: "cos(phase_difference(c2, abp)) == 1", source: stated}
+  - {fact: "cos(phase_difference(c3, abp)) == -1", source: stated}
+observe:
+  f: "f"

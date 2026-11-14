@@ -1,0 +1,9 @@
+answer: {v_AB: 79.2 m/s, v_CD: 62.6 m/s}
+final_scene: 11_02_003.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: partial
+not_represented: "tension is the block weights only; mass of wires neglected (lengths not given); T entered as an expression of the loads"
+missing_in_source: "g not stated (9.8 assumed); wire masses/lengths"
+reasoning: "speed(AB) = 56 sqrt2 = 79.2 m/s with T = 2*3.2*9.8 N; speed(CD) = 28 sqrt5 = 62.6 m/s with T = 3.2*9.8 N."
+friction: "The tension of each wire (which load it carries) is my own statics, entered in the tension field."

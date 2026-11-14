@@ -1,0 +1,21 @@
+id: 22/01/bmc_004
+symbols: {a: positive, vp: positive, v: positive}     # vp is the problem's v'
+unknowns: {A: positive, omega: positive, phi: phase}  # phase = real mod 2*pi
+waves:
+  w: {harmonic: {A: A, omega: omega, v: v, dir: +x, phase: phi}}
+given:
+  - "y(w, x=0, t=period(w)/4) == a"
+  - "vy(w, x=0, t=period(w)/4) == 0"                  # 'momentarily at rest'
+  - "vy(w, x=wavelength(w)/4, t=period(w)/4) == vp"
+observe:
+  A: "amplitude(w)"
+  y: "field(w)"
+  matches_c: "equivalent(field(w), a*sin((vp/a)*(t - x/v)))"
+expect: {A: "a", matches_c: true}
+# ---- added for the view experiment (phase 2) ----
+illustrate: {a: 1 cm, v: 4 m/s, vp: 0.5 m/s}    # source is fully symbolic
+view:
+  - {animate: w}
+  - {plot: "y(w, x=0, t=t)", vs: t, range: [0 s, "2*period(w)"]}
+explore:
+  vary: {vp: [0.25 m/s, 0.5 m/s, 1 m/s]}

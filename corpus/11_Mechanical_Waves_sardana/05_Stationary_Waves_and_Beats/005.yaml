@@ -1,0 +1,15 @@
+id: 11/05/005
+number: 5
+source: {problem: 11_Mechanical_Waves_sardana/05_Stationary_Waves_and_Beats/Problems/005.png, solution: 11_Mechanical_Waves_sardana/05_Stationary_Waves_and_Beats/Solutions/005.png}
+format: numerical
+statement: |
+  A sonometer wire has a length of 114 cm between two fixed ends. Where should two bridges be placed so as to divide the wire into three segments whose fundamental frequencies are in the ratio 1 : 3 : 4?
+figure: null
+options: null
+answer: "Segment lengths L1 : L2 : L3 = 12 : 4 : 3, i.e. L1 = 72 cm, L2 = 24 cm, L3 = 18 cm"
+answer_value: {L1: 72, L2: 24, L3: 18}
+units: cm
+verified: "f proportional to 1/L at fixed tension, so L ratio = 1 : 1/3 : 1/4 = 12 : 4 : 3; sum 19 x = 114, x = 6; lengths 72, 24, 18 cm. Matches key. Bridges are therefore at 72 cm and 96 cm from one end (18 cm and 42 cm from the other end)."
+kinds: [ratio, inverse_condition]
+physics: [sonometer, string_frequency, fundamental_frequency]
+notes: "Key gives segment lengths only, not explicit bridge positions; the position of each segment (order along wire) is not specified by the question."

@@ -1,0 +1,18 @@
+id: 23/03/bmc_004
+assume:
+  - "Wires are uniform round wires of the same material type; 'diameter' used with density gives mass per length."
+  - "Both wires vibrate between fixed ends (stretched wire, fundamental = both ends fixed)."
+symbols: {L: positive, T: positive, d: positive, rho: positive}
+media:
+  A: {type: string, density: rho, diameter: d, tension: T}
+  B: {type: string, density: 2*rho, diameter: 2*d, tension: 2*T}
+resonators:
+  rA: {type: string, on: A, length: L, ends: [fixed, fixed]}
+  rB: {type: string, on: B, length: 2*L, ends: [fixed, fixed]}
+given:
+  - {fact: "1 == 1", source: stated}
+observe:
+  fB_over_fA: "frequency(rB, harmonic=1)/frequency(rA, harmonic=1)"
+  vB_over_vA: "speed(B, at=0[m])/speed(A, at=0[m])"
+  fA_over_f3B: "frequency(rA, harmonic=1)/frequency(rB, harmonic=harmonic(rB, overtone=3))"
+  n3: "harmonic(rB, overtone=3)"

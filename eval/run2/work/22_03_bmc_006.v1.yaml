@@ -1,0 +1,13 @@
+id: 22/03/bmc_006
+assume: ["Lossless medium; no absorption. Point = spherical wave, line = cylindrical, plane = plane."]
+symbols: {P: positive, Pl: positive, I0: positive, r: positive}
+media:
+  air: {type: open3d}
+emitters:
+  pt:   {on: air, geometry: point, power: P}
+  line: {on: air, geometry: line, power_per_length: Pl}
+  pl:   {on: air, geometry: plane, intensity: I0}
+observe:
+  plane_ratio_2r: "intensity(pl, r=2*r)/intensity(pl, r=r)"
+  point_ratio_2r: "intensity(pt, r=2*r)/intensity(pt, r=r)"
+  line_ratio_2r: "intensity(line, r=2*r)/intensity(line, r=r)"

@@ -1,0 +1,16 @@
+id: 22/02/cnt_006
+number: 14
+source: {problem: 22_Travelling_Waves/02_Travelling_Waves_1/Problems/cnt_006.png, solution: 22_Travelling_Waves/02_Travelling_Waves_1/Solutions/cnt_006.png}
+format: numerical
+statement: |
+  A wave is propagating in a medium. We consider two particles of medium at x1 = 0 and
+  x2 = 1 cm. The respective displacements (in cm) are y1 = 2 sin(3πt) and
+  y2 = 2 sin(3πt - π/8). Find the speed of the wave (in m/s).
+figure: null
+answer_value: 24.0
+units: cm/s
+kinds: [point_timeseries_given, inverse_condition]
+physics: [phase_difference, wave_speed]
+notes: |
+  UNIT INCONSISTENCY: question asks m/s, book computes 24 cm/s (= 0.24 m/s) and keys 24.0.
+  Assumes the smallest phase difference (λ > 1 cm); in general λ = 16/(16k+1) cm.

@@ -1,0 +1,13 @@
+id: 11/03/007
+assume:
+  - "Both ideal diatomic gases with gamma = 7/5 (assumption)."
+  - "Molar masses 16 M (O2) and M (H2): only the ratio is stated."
+symbols: {M: positive}
+unknowns: {Th: positive}
+media:
+  o2: {type: gas, gamma: 7/5, temperature: 100 degC, molar_mass: 16*M}
+  h2: {type: gas, gamma: 7/5, temperature: Th, molar_mass: M}
+given:
+  - {fact: "speed(h2) == speed(o2)", source: stated}
+observe:
+  Th: "Th"

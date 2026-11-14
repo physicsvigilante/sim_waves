@@ -1,0 +1,17 @@
+id: 11/05/002
+number: 2
+source: {problem: 11_Mechanical_Waves_sardana/05_Stationary_Waves_and_Beats/Problems/002.png, solution: 11_Mechanical_Waves_sardana/05_Stationary_Waves_and_Beats/Solutions/002.png}
+format: numerical
+statement: |
+  A string fixed at both ends has consecutive standing wave modes for which the distances between adjacent nodes are 18 cm and 16 cm respectively.
+  (a) What is the minimum possible length of the string in cm?
+  (b) If the tension is 10 N and the linear mass density is 4 gm^-1, what is the fundamental frequency, in Hz, to the nearest two digit integer.
+figure: null
+options: null
+answer: "(a) 144 cm; (b) 17.36 Hz, approx 17 Hz"
+answer_value: {length: 144, fundamental_frequency: 17}
+units: {length: cm, fundamental_frequency: Hz}
+verified: "(a) l = 18 n = 16 (n+1) gives n = 8, l = 144 cm. (b) v = sqrt(10/4e-3) = 50 m/s; lambda = 2 l = 2.88 m; f = 50/2.88 = 17.36 Hz = 17 Hz. Matches key."
+kinds: [inverse_condition, derived_medium]
+physics: [standing_waves, string_modes, nodes, wave_speed]
+notes: "Solution figure shows n loops (18 cm each) and n+1 loops (16 cm each) between fixed ends. 'Minimum possible length' is the unique solution of the two equations (n = 8)."

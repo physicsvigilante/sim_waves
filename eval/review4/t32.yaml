@@ -1,0 +1,11 @@
+symbols: {f: positive}
+media: {air: {type: gas, v: 340 m/s}}
+sources:
+  S1: {on: air, at: [0 m, 0 m], f: f, A: 1, phase: 0, spreading: none}
+  S2: {on: air, at: [3 m, 0 m], f: f, A: 1, phase: 0, spreading: none}
+points: {P: [0 m, 4 m]}
+rays:
+  r1: {from: S1, to: P}
+  r2: {from: S2, to: P}
+observe:
+  A: "resultant_amplitude(r1, r2)"

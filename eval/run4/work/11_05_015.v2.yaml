@@ -1,0 +1,12 @@
+id: 11/05/015
+assume:
+  - "Frequencies treated as plain numbers in Hz. Loading with wax lowers the fork frequency by an unknown positive amount d."
+  - "'A little wax' means the drop is small: d < 3 Hz (less than the original beat frequency). Without it d=1 and d=5 both fit; f1 is the same either way."
+unknowns: {f1: positive, d: positive}
+given:
+  - {fact: "beat_frequency(f1*1[Hz], 364[Hz]) == 3[Hz]", source: stated}
+  - {fact: "beat_frequency((f1 - d)*1[Hz], 364[Hz]) == 2[Hz]", source: stated}
+  - {fact: "d < 3", source: assumption, note: "little wax"}
+observe:
+  f1: "f1"
+  d: "d"

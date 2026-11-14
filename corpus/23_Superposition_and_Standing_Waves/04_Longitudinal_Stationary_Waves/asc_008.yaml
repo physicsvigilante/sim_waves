@@ -1,0 +1,19 @@
+id: 23/04/asc_008
+number: 5
+source: {problem: 23_Superposition_and_Standing_Waves/04_Longitudinal_Stationary_Waves/Problems/asc_008.png, solution: 23_Superposition_and_Standing_Waves/04_Longitudinal_Stationary_Waves/Solutions/asc_008.png}
+format: single_correct
+statement: |
+  A glass tube 1.5 m long and open at both ends is immersed vertically in a water tank completely. A tuning fork of 660 Hz is vibrated and kept at the upper end of the tube and the tube is gradually raised out of water. The total number of resonances heard before the tube comes out of water, taking velocity of sound air 330 m/sec is
+figure: null
+options:
+  a: "12"
+  b: "6"
+  c: "8"
+  d: "4"
+answer: b
+answer_value: 6
+units: null
+verified: "lambda = 0.5 m. Air column l = (2N-1)*0.125 m <= 1.5 m gives 2N-1 <= 12, so N <= 6 (l = 0.125, 0.375, ..., 1.375 m). 6 resonances. Matches key."
+kinds: [inverse_condition]
+physics: [resonance_tube, closed_pipe, wavelength]
+notes: Consistent. The final open-open resonance when the tube is fully out is excluded by the wording 'before the tube comes out'. Solution sets 1.5 equal to the formula and gets N approx 6 (exact N = 6.5).

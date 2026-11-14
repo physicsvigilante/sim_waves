@@ -1,0 +1,19 @@
+id: 23/03/asc_008
+number: 5
+source: {problem: 23_Superposition_and_Standing_Waves/03_Transverse_Stationary_Waves/Problems/asc_008.png, solution: 23_Superposition_and_Standing_Waves/03_Transverse_Stationary_Waves/Solutions/asc_008.png}
+format: single_correct
+statement: |
+  A string of length 2 m is fixed at both ends. If this string vibrates in its fourth normal mode with a frequency of 500 Hz, then the waves would travel on it with a velocity of
+figure: null
+options:
+  a: "125 m/s"
+  b: "250 m/s"
+  c: "500 m/s"
+  d: "1000 m/s"
+answer: c
+answer_value: 500
+units: m/s
+verified: "lambda = 2L/4 = 1 m, v = 500 * 1 = 500 m/s. Matches key."
+kinds: [build_wavefunction]
+physics: [standing_waves, harmonics, wave_speed]
+notes: Consistent. Solution writes lambda = l/2 (with l = 2 m this is 1 m).

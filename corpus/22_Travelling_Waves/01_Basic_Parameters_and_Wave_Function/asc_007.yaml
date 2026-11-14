@@ -1,0 +1,14 @@
+id: 22/01/asc_007
+number: 4
+source: {problem: 22_Travelling_Waves/01_Basic_Parameters_and_Wave_Function/Problems/asc_007.png, solution: 22_Travelling_Waves/01_Basic_Parameters_and_Wave_Function/Solutions/asc_007.png}
+format: single_correct
+statement: |
+  A transverse wave is described by y = y0 sin 2π(f t - x/λ). The maximum particle velocity
+  (v_p) is equal to four times the wave velocity if
+figure: null
+options: {a: "λ = π y0/4", b: "λ = π y0/2", c: "λ = π y0", d: "λ = 2π y0"}
+answer: [b]
+answer_value: "λ = π*y0/2"
+kinds: [given_wavefunction, inverse_condition, symbolic]
+physics: [particle_velocity, wave_speed]
+notes: Condition max(v_p) = 4 v solved for λ.

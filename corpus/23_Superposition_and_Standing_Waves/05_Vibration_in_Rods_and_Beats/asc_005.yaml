@@ -1,0 +1,19 @@
+id: 23/05/asc_005
+number: 2
+source: {problem: 23_Superposition_and_Standing_Waves/05_Vibration_in_Rods_and_Beats/Problems/asc_005.png, solution: 23_Superposition_and_Standing_Waves/05_Vibration_in_Rods_and_Beats/Solutions/asc_005.png}
+format: single_correct
+statement: |
+  Two closed organ pipes, when sounded simultaneously gave 4 beats per sec. If longer pipe has a length of 1 m. Then length of shorter pipe will be (v = 300 m/s)
+figure: null
+options:
+  a: "185.5 cm"
+  b: "94.9 cm"
+  c: "90 cm"
+  d: "80 cm"
+answer: b
+answer_value: 94.9
+units: cm
+verified: "75/l2 - 75 = 4 so 1/l2 = 1.05333, l2 = 0.9494 m = 94.9 cm. Matches key."
+kinds: [inverse_condition]
+physics: [beats, closed_pipe, fundamental_frequency]
+notes: Consistent (fundamentals assumed; end correction neglected).

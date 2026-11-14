@@ -1,0 +1,24 @@
+id: 24/01/dmt_004
+number: 6
+source: {problem: 24_Sound_Waves_and_Doppler_Effect/01_Speed_and_Intensity_of_Sound_Waves/Problems/dmt_004.png, solution: 24_Sound_Waves_and_Doppler_Effect/01_Speed_and_Intensity_of_Sound_Waves/Solutions/dmt_004.png}
+format: matrix_match
+statement: |
+  Regarding speed of sound in a gas, match the following columns and mark the correct option from the codes given below.
+figure: null
+options:
+  i: "Temperature of the gas is made 4 times and pressure 2 times"
+  ii: "Only pressure is made 4 times without change in temperature"
+  iii: "Only temperature is changed to 4 times"
+  iv: "Molecular mass of the gas is made 4 times"
+column_ii:
+  p: "Speed becomes 2 sqrt(2) times"
+  q: "Speed becomes 2 times"
+  r: "Speed remains unchanged"
+  s: "Speed becomes half"
+answer: {i: q, ii: r, iii: q, iv: s}
+answer_value: null
+units: null
+verified: "v = sqrt(gamma R T/M) depends on T and M only (pressure change at constant T changes density equally). (i) T x4 gives 2x (pressure irrelevant) = q; (ii) unchanged = r; (iii) 2x = q; (iv) M x4 gives 1/2 = s. Matches key."
+kinds: [ratio, conceptual]
+physics: [speed_of_sound_in_gas, temperature_dependence, molar_mass]
+notes: "Option (p) is unused; option (q) is matched twice (i and iii). The 'codes given below' referred to in the statement are not present in the image. Page carries heading 'Matrix type'."

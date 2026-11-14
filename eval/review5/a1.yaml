@@ -1,0 +1,47 @@
+media: {wire: {type: string, mu: 0.01 kg/m, tension: 100 N}, air: {type: gas, v: 340 m/s}}
+resonators:
+  oc: {type: pipe, on: air, length: 0.85 m, ends: [open, closed], end_correction: 0 m}
+  co: {type: pipe, on: air, length: 0.85 m, ends: [closed, open], end_correction: 0 m}
+  oce: {type: pipe, on: air, length: 0.80 m, ends: [open, closed], end_correction: 0.05 m}
+  coe: {type: pipe, on: air, length: 0.80 m, ends: [closed, open], end_correction: 0.05 m}
+  oo: {type: pipe, on: air, length: 1 m, ends: [open, open], end_correction: 0 m}
+  ooe: {type: pipe, on: air, length: 0.9 m, ends: [open, open], end_correction: 0.05 m}
+  cc: {type: pipe, on: air, length: 1 m, ends: [closed, closed], end_correction: 0.05 m}
+  ff: {type: string, on: wire, length: 1 m, ends: [free, free]}
+  xf: {type: string, on: wire, length: 1 m, ends: [fixed, free]}
+  fx: {type: string, on: wire, length: 1 m, ends: [free, fixed]}
+observe:
+  oc_n: "nodes(oc, harmonic=3)"
+  oc_a: "antinodes(oc, harmonic=3)"
+  co_n: "nodes(co, harmonic=3)"
+  co_a: "antinodes(co, harmonic=3)"
+  oce_n: "nodes(oce, harmonic=3)"
+  oce_a: "antinodes(oce, harmonic=3)"
+  oce_pn: "pressure_nodes(oce, harmonic=3)"
+  oce_pa: "pressure_antinodes(oce, harmonic=3)"
+  coe_n: "nodes(coe, harmonic=3)"
+  coe_a: "antinodes(coe, harmonic=3)"
+  oo_n: "nodes(oo, harmonic=2)"
+  oo_a: "antinodes(oo, harmonic=2)"
+  ooe_n: "nodes(ooe, harmonic=2)"
+  ooe_a: "antinodes(ooe, harmonic=2)"
+  cc_n: "nodes(cc, harmonic=2)"
+  cc_a: "antinodes(cc, harmonic=2)"
+  cc_f: "frequency(cc, harmonic=1)"
+  ff_n: "nodes(ff, harmonic=2)"
+  ff_a: "antinodes(ff, harmonic=2)"
+  xf_n: "nodes(xf, harmonic=3)"
+  xf_a: "antinodes(xf, harmonic=3)"
+  fx_n: "nodes(fx, harmonic=3)"
+  fx_a: "antinodes(fx, harmonic=3)"
+  ms1: "mode_shape(oce, harmonic=1, x=0[m])"
+  ms2: "mode_shape(coe, harmonic=1, x=0.8[m])"
+  ms3: "mode_shape(fx, harmonic=3, x=0.5[m])"
+  ms4: "mode_shape(xf, harmonic=3, x=1[m])"
+  h1: "harmonics(xf, upto=10, node_at=(2/3)[m])"
+  h2: "harmonics(fx, upto=10, node_at=(1/3)[m])"
+  h3: "harmonics(xf, upto=10, antinode_at=1[m])"
+  h4: "harmonics(ooe, upto=6, antinode_at=0[m])"
+  h5: "harmonics(oo, upto=6, antinode_at=0[m])"
+  h6: "harmonics(ff, upto=6, node_at=0.5[m])"
+  h7: "harmonics(ff, upto=6, no_node_at=0.25[m])"

@@ -1,0 +1,28 @@
+# standing-wave patterns: nodes, antinodes (displacement; pressure for pipes), touch/pluck, beats envelope
+media: {wire: {type: string, mu: 0.01 kg/m, tension: 100 N}, air: {type: gas, v: 340 m/s}}
+resonators:
+  s: {type: string, on: wire, length: 1 m, ends: [fixed, fixed]}
+  p: {type: pipe, on: air, length: 0.85 m, ends: [closed, open], end_correction: 0 m}
+  q: {type: pipe, on: air, length: 0.5 m, ends: [open, open], end_correction: 0.01 m}
+waves:
+  y1: {given: "sin(2*pi*100*t)", units: {x: m, t: s, y: m}}
+observe:
+  n3: "nodes(s, harmonic=3)"
+  a3: "antinodes(s, harmonic=3)"
+  pn: "nodes(p, harmonic=3)"
+  pan: "antinodes(p, harmonic=3)"
+  ppn: "pressure_nodes(p, harmonic=3)"
+  qn: "nodes(q, harmonic=1)"
+  qa: "antinodes(q, harmonic=2)"
+  ms: "mode_shape(s, harmonic=2, x=0.25[m])"
+  touch: "harmonics(s, upto=10, node_at=(1/3)[m])"
+  pluck: "harmonics(s, upto=6, no_node_at=0.5[m])"
+  env: "envelope(t, 3*sin(2*pi*100*t) + 4*sin(2*pi*104*t))"
+  envmax: "max_over(t, 3*sin(2*pi*100*t) + 4*sin(2*pi*100*t))"
+expect:
+  n3: "(0, 1/3, 2/3, 1)"
+  pn: "(0, 17/30)"
+  qn: "(1/4,)"
+  touch: "(3, 6, 9)"
+  pluck: "(1, 3, 5)"
+  envmax: 7

@@ -1,0 +1,13 @@
+symbols: {u: real}
+media: {air: {type: gas, v: 340 m/s}}
+sources:
+  S1: {on: air, at: [0 m, 0 m], f: 340 Hz, A: 1, phase: 0, spreading: none}
+  S2: {on: air, at: [3 m, 0 m], f: 340 Hz, A: 1, phase: 0, spreading: none}
+points: {P: [u, 4 m]}
+rays:
+  r1: {from: S1, to: P}
+  r2: {from: S2, to: P}
+observe:
+  mx: "maxima(r2, r1, vary=u, lo=-10[m], hi=10[m])"
+  n: "count(maxima(r2, r1, vary=u, lo=-10[m], hi=10[m]))"
+  nmin: "count(minima(r2, r1, vary=u, lo=-10[m], hi=10[m]))"

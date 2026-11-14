@@ -1,0 +1,16 @@
+id: 11/02/001
+number: 1
+source: {problem: 11_Mechanical_Waves_sardana/02_Transverse_Wave_in_String_and_Properties/Problems/001.png, solution: 11_Mechanical_Waves_sardana/02_Transverse_Wave_in_String_and_Properties/Solutions/001.png}
+format: numerical
+statement: |
+  A wire of variable mass per unit length mu = mu0 x, is hanging from the ceiling as shown in figure. The length of wire is l0. A small transverse disturbance is produced at its lower end. Find the time after which the disturbance will reach to the other ends.
+figure: |
+  A vertical wire hanging from a ceiling (horizontal hatched bar at top), free lower end. No numbers. (Solution figure: x measured upward from the lower end to the position of the travelling kink; v arrow pointing up.)
+options: null
+answer: "t = sqrt(8 l0 / g)"
+answer_value: "sqrt(8*l0/g)"
+units: s
+verified: "Matches key. x measured from the lower end, tension there T = g * integral(mu0 x dx) = g mu0 x^2/2; T/mu = g x/2; v = sqrt(g x/2); t = integral_0^l0 dx / sqrt(g x/2) = sqrt(2/g) * 2 sqrt(l0) = sqrt(8 l0/g)."
+kinds: [nonuniform_medium, symbolic, derived_medium]
+physics: [wave_speed, tension, linear_mass_density, hanging_wire]
+notes: "x in mu = mu0 x is measured from the lower (free) end (implied by the solution, not stated in the problem). Spelling 'other ends' as in source."

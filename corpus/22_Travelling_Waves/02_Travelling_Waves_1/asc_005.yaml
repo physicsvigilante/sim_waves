@@ -1,0 +1,15 @@
+id: 22/02/asc_005
+number: 2
+source: {problem: 22_Travelling_Waves/02_Travelling_Waves_1/Problems/asc_005.png, solution: 22_Travelling_Waves/02_Travelling_Waves_1/Solutions/asc_005.png}
+format: single_correct
+statement: The equation y = A cos^2(2π n t - 2π x/λ) represents a wave with
+figure: null
+options:
+  a: "Amplitude A/2, frequency 2n and wavelength λ/2"
+  b: "Amplitude A/2, frequency 2n and wavelength λ"
+  c: "Amplitude A, frequency 2n and wavelength 2λ"
+  d: "Amplitude A, frequency n and wavelength λ"
+answer: [a]
+kinds: [given_wavefunction, symbolic]
+physics: [amplitude, frequency, wavelength]
+notes: Needs rewriting cos² as a DC offset A/2 plus a sinusoid; "amplitude" = oscillating part.

@@ -1,0 +1,6 @@
+media: {air: {type: gas, v: 340 m/s}}
+sources: {S: {on: air, at: [0 m, 6 m], f: 340 Hz, A: 1, phase: 0, spreading: none}}
+points: {P: [0 m, 0 m, 0 m]}
+rays:
+  direct: {from: S, to: P}
+observe: {L: "length(direct)"}

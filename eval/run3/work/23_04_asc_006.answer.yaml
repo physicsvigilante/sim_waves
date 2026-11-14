@@ -1,0 +1,8 @@
+answer: c
+final_scene: 23_04_asc_006.v2.yaml
+engine_fit: partial
+coverage: full
+not_represented: "Audible range"
+missing_in_source: "Upper audible limit 20 kHz is not given (convention); lower limit irrelevant"
+reasoning: "Engine: L from fundamental 1500 Hz; overtone 6 is harmonic 13 at 19500 Hz; overtone 7 is harmonic 15 at 22500 Hz. I compared with 20 kHz by hand: 6 overtones."
+friction: "No way to count modes satisfying an inequality; an unknown integer m with only inequalities is undetermined (v1 rejected). Had to compare 19500 and 22500 with 20 kHz outside the engine."

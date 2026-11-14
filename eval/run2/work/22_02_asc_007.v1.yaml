@@ -1,0 +1,14 @@
+id: 22/02/asc_007
+assume:
+  - "The oscillation is a point's motion; modelled as a +x wave observed at x = 0 with A = y0, phase = -phi (argument omega*t - phi). k is an unused free symbol."
+symbols: {y0: positive, omega: positive, k: positive, phi: positive}
+waves:
+  w: {harmonic: {A: y0, omega: omega, k: k, dir: +x, phase: -phi}}
+given:
+  - {fact: "phi > 0[rad]", source: stated}
+  - {fact: "phi < pi/2", source: stated, note: "0 < phi < 90 deg"}
+observe:
+  y_t: "y(w, x=0, t=t)"
+  y_at_0: "y(w, x=0, t=0)"
+  vy_at_0: "vy(w, x=0, t=0)"
+  first_zero_after_0_vy_sign: "vy(w, x=0, t=0)/(y0*omega)"

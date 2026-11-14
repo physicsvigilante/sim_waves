@@ -1,0 +1,5 @@
+id: 24/01/cnt_006
+assume:
+  - "Engine has no sound-level observable; level = 10 log10(I/I0) is a hand relation, evaluated here only as arithmetic."
+observe:
+  dB: "10*log(2)/log(10)"

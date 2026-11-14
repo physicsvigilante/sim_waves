@@ -1,0 +1,5 @@
+answer: [b]
+final_scene: 22_02_asc_006.v3.yaml
+engine_fit: full
+reasoning: phase(w2) - phase(w1) = phi + pi/2; the engine-solved shift dx = -lam*(2*phi + pi)/(4*pi), magnitude (lam/2pi)(phi + pi/2).
+friction: No direct 'path difference' observable; modelled as the x shift that equalises phases. Sign and 2*pi*n branches are left to assume. v2 had a wrong hand-inserted 2*pi (my mistake).

@@ -1,0 +1,12 @@
+id: 22/01/bmc_007
+format: multiple_correct
+statement: 'For a sine wave passing through a medium, let y be the displacement of a particle, v be its
+
+  velocity and a be its acceleration:
+
+  '
+options:
+  a: y, v and a are always in the same phase
+  b: y and a are always in opposite phase
+  c: Phase difference between y and v is π/2
+  d: Phase difference between v and a is π/2

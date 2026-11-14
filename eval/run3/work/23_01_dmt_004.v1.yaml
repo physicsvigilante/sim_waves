@@ -1,0 +1,16 @@
+id: 23/01/dmt_004
+assume:
+  - "Speaker 2 modelled as the same wave evaluated lambda/2 farther along the path; the distances to A are the path lengths."
+  - "Incoherent case is not representable (needs random phase); it is computed by the LLM as a power sum I0+I0 = 2 I0 and flagged engine_fit partial."
+  - "Case c: coherent with a pi phase offset between the speakers: second wave has extra phase pi."
+  - "Case d: collinear speakers and A; with path difference lambda/2 as given the same as case b."
+symbols: {A: positive, f: positive}
+media:
+  air: {type: gas, v: 340 m/s}
+waves:
+  w1: {harmonic: {on: air, A: A, f: f, dir: +x, phase: 0}}
+  w2s: {harmonic: {on: air, A: A, f: f, dir: +x, phase: pi}}
+observe:
+  b_amp: "max_over(t, abs(y(w1, x=0[m], t=t) + y(w1, x=(wavelength(w1)/2), t=t)))/A"
+  c_amp: "max_over(t, abs(y(w1, x=0[m], t=t) + y(w2s, x=0[m], t=t)))/A"
+  c_amp_with_path: "max_over(t, abs(y(w1, x=0[m], t=t) + y(w2s, x=(wavelength(w1)/2), t=t)))/A"

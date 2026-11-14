@@ -1,0 +1,7 @@
+# run 1 friction: asking whether a wave is travelling must not abort the scene
+symbols: {a: positive, b: positive, c: positive}
+waves:
+  s: {given: "a*sin(b*x)*cos(c*t)", units: {x: m, t: s, y: m}}
+  p: {given: "a*sin(b*x - c*t)", units: {x: m, t: s, y: m}}
+observe: {standing: "is_travelling(s)", progressive: "is_travelling(p)"}
+expect: {standing: false, progressive: true}

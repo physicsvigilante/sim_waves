@@ -1,0 +1,8 @@
+answer: [d]
+final_scene: 23_02_asc_006.v1.yaml
+engine_fit: full
+coverage: full
+not_represented: "nothing (specific string assumed)"
+missing_in_source: "amplitude A is not defined for the standing wave"
+reasoning: "At t = T/4 y = 0 for all x and |vy| is at its maximum there, so the string is straight at maximum kinetic energy."
+friction: "Kinetic energy is not an observable; used |vy| maximal at a point as a proxy."

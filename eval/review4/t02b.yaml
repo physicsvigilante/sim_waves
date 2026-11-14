@@ -1,0 +1,13 @@
+symbols: {lam: positive}
+media: {air: {type: gas, v: 340 m/s}}
+sources:
+  S1: {on: air, f: "340[m/s]/lam", A: 1, phase: 0, spreading: none}
+  S2: {on: air, f: "170[m/s]/(lam/2)", A: 1, phase: 0, spreading: none}
+  S3: {on: air, f: 1.7e2 Hz, A: 1, phase: 0, spreading: none}
+  S4: {on: air, f: 170 Hz, A: 1, phase: 0, spreading: none}
+rays:
+  r1: {from: S1, length: 1 m}
+  r2: {from: S2, length: 1 m}
+  r3: {from: S3, length: 1 m}
+  r4: {from: S4, length: 1 m}
+observe: {I12: "relative_intensity(r1, r2)", I34: "relative_intensity(r3, r4)"}

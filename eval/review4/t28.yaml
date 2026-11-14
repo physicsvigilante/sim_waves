@@ -1,0 +1,10 @@
+# maxima used inside given
+unknowns: {q: positive}
+symbols: {lam: positive}
+media: {air: {type: gas, v: 340 m/s}}
+sources: {S: {on: air, f: "340[m/s]/lam", A: 1, phase: 0, spreading: none}}
+rays:
+  r1: {from: S, length: 1 m}
+  r2: {from: S, length: 3 m}
+given: [{fact: "q == max(maxima(r2, r1, vary=lam, lo=0.5[m], hi=4[m]))", source: stated}]
+observe: {q: q}

@@ -1,0 +1,9 @@
+answer: "353.6 m/s"
+final_scene: 11_05_010.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "nothing"
+missing_in_source: "none (beat frequency 20/6 Hz from 20 beats in 6 s taken as stated)"
+reasoning: "Engine solved v from beat_frequency(v/204 cm, v/208 cm)=20/6 Hz giving 353.6 m/s."
+friction: "none (the conversion 20 beats / 6 s into 20/6 Hz was typed into the fact by me)"

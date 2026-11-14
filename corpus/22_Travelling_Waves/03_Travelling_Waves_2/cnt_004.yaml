@@ -1,0 +1,12 @@
+id: 22/03/cnt_004
+number: 10
+source: {problem: 22_Travelling_Waves/03_Travelling_Waves_2/Problems/cnt_004.png, solution: 22_Travelling_Waves/03_Travelling_Waves_2/Solutions/cnt_004.png}
+format: numerical
+statement: |
+  Two harmonic waves travelling in the same medium have frequency ratio 1:2 and intensity ratio
+  1:36. If their amplitude ratio is found to be 1:n, find the value of n.
+figure: null
+answer_value: 3.0
+kinds: [ratio, inverse_condition]
+physics: [intensity]
+notes: I ∝ A² ω² in the same medium. Two symbolic setups compared.

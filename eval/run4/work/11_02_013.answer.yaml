@@ -1,0 +1,9 @@
+answer: "0.05 s"
+final_scene: 11_02_013.v2.yaml
+engine_fit: partial
+hand_steps: ["tension = spring force k*x = 160 N/m * 1 cm, typed as an expression in the tension field", "t = 40 cm / v typed into observe"]
+coverage: partial
+not_represented: "the spring itself (as an end), the wall as reflector, the pulse; the spring only supplies the tension"
+missing_in_source: "which end the pulse starts from relative to spring is stated; assumption that the pulse travels full length 40 cm"
+reasoning: "Engine gives T = 1.6 N, v = 8 m/s, t = 0.05 s."
+friction: "No way to express a spring end or a pulse covering a distance; Hooke's law has to be typed."

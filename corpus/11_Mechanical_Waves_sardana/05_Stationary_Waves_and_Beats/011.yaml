@@ -1,0 +1,15 @@
+id: 11/05/011
+number: 11
+source: {problem: 11_Mechanical_Waves_sardana/05_Stationary_Waves_and_Beats/Problems/011.png, solution: 11_Mechanical_Waves_sardana/05_Stationary_Waves_and_Beats/Solutions/011.png}
+format: numerical
+statement: |
+  An open organ pipe has a fundamental frequency of 300 Hz. The first overtone of a closed organ pipe has the same frequency as the first overtone of the open pipe. How long is each pipe? Given: Speed of sound in air is v = 330 m s^-1.
+figure: null
+options: null
+answer: "Open pipe 55 cm (0.55 m); closed pipe 41.25 cm (0.4125 m)"
+answer_value: {open_pipe: 0.55, closed_pipe: 0.4125}
+units: m
+verified: "l_open = 330/(2*300) = 0.55 m; first overtone of open = 600 Hz; closed first overtone = 3v/(4 l_c) = 600 gives l_c = 3*330/2400 = 0.4125 m. Matches key."
+kinds: [inverse_condition]
+physics: [organ_pipe, open_pipe, closed_pipe, overtones]
+notes: "In the problem image the statement is split by a blank gap mid-sentence (layout only, nothing cut off)."

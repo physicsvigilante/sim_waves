@@ -1,0 +1,10 @@
+id: 22/02/cnt_005
+assume:
+  - "Printed y = (a/x) sin[(2*pi/3)(t - x/b)] has an x-dependent amplitude; the 'maximum particle velocity' therefore depends on x. Kept at a point x = X."
+  - "a has units m^2 (so a/x is a length), b has units m/s; t in s."
+symbols: {a: positive, b: positive, X: positive}
+waves:
+  p: {given: "(a/x)*sin((2*pi/3)*(t - x/b))", units: {x: m, t: s, y: m}}
+observe:
+  trav: "is_travelling(p)"
+  vmax_at_X: "max_over(t, abs(vy(p, x=X, t=t)))"

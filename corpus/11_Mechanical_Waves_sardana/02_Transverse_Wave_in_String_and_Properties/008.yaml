@@ -1,0 +1,15 @@
+id: 11/02/008
+number: 8
+source: {problem: 11_Mechanical_Waves_sardana/02_Transverse_Wave_in_String_and_Properties/Problems/008.png, solution: 11_Mechanical_Waves_sardana/02_Transverse_Wave_in_String_and_Properties/Solutions/008.png}
+format: numerical
+statement: |
+  Energy is transmitted at a rate P1 by a wave of frequency v1, on a string with tension T1. Assuming the amplitude to remain the same, calculate the new transmission rate in terms of P1 if tension is increased to 4 T1 and the wave frequency is decreased to v1/4.
+figure: null
+options: null
+answer: "P2 = P1/8"
+answer_value: 0.125
+units: "ratio P2/P1"
+verified: "Matches key. P = (1/2) mu w^2 v A^2; v goes as sqrt(T) so v2 = 2 v1; w2 = w1/4; P2/P1 = (1/16)*2 = 1/8."
+kinds: [ratio, symbolic]
+physics: [wave_power, tension, frequency, wave_speed]
+notes: "Solution has a typo (v2 = sqrt(4 pi / mu), should be sqrt(4 T1/mu)); result unaffected. Frequency denoted by the Greek letter nu in the problem (written v1 here)."

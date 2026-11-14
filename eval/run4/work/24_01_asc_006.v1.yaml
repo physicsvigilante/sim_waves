@@ -1,0 +1,10 @@
+id: 24/01/asc_006
+assume:
+  - "Engine has no bulk modulus relation; wavenumber and displacement amplitude are the engine part."
+media:
+  air: {type: gas, v: 340 m/s}
+waves:
+  w: {harmonic: {on: air, A: 5.5e-6 m, lambda: 35 cm, dir: +x, phase: 0}}
+observe:
+  k: "k(w)"
+  A: "amplitude(w)"

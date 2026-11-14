@@ -1,0 +1,13 @@
+id: 22/01/asc_006
+assume: ["a, b, c are positive constants; b has units 1/m, c has units 1/s."]
+symbols: {a: positive, b: positive, c: positive}
+waves:
+  I:   {given: "a*cos(b*x)*sin(c*t)", units: {x: m, t: s, y: m}}
+  II:  {given: "a*sin(b*x + c*t)", units: {x: m, t: s, y: m}}
+  III: {given: "a*sin(b*x + c*t) + a*sin(b*x - c*t)", units: {x: m, t: s, y: m}}
+  IV:  {given: "a*sin(b*x - c*t)", units: {x: m, t: s, y: m}}
+observe:
+  tI: "is_travelling(I)"
+  tII: "is_travelling(II)"
+  tIII: "is_travelling(III)"
+  tIV: "is_travelling(IV)"

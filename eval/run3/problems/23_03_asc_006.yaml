@@ -1,0 +1,11 @@
+id: 23/03/asc_006
+format: single_correct
+statement: 'A second harmonic has to be generated in a string of length l stretched between two rigid
+  supports. The points where the string has to be plucked and touched are
+
+  '
+options:
+  a: Plucked at l/4 and touch at l/2
+  b: Plucked at l/4 and touch at 3l/4
+  c: Plucked at l/2 and touched at l/4
+  d: Plucked at l/2 and touched at 3l/4

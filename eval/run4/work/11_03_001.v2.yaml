@@ -1,0 +1,8 @@
+id: 11/03/001
+assume: ["Isotropic point source in free space (full sphere)."]
+media:
+  air: {type: gas, v: 340 m/s}
+emitters:
+  pt: {on: air, geometry: point, power: 0.8 W}
+observe:
+  I: "intensity(pt, r=1.5[m])"

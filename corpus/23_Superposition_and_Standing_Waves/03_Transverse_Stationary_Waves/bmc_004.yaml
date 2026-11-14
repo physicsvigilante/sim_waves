@@ -1,0 +1,19 @@
+id: 23/03/bmc_004
+number: 6
+source: {problem: 23_Superposition_and_Standing_Waves/03_Transverse_Stationary_Waves/Problems/bmc_004.png, solution: 23_Superposition_and_Standing_Waves/03_Transverse_Stationary_Waves/Solutions/bmc_004.png}
+format: multiple_correct
+statement: |
+  The length, tension, diameter and density of a wire B are double than the corresponding quantities for another stretched wire A. Then
+figure: null
+options:
+  a: "fundamental frequency of B is 1/(2 sqrt(2)) times that of A"
+  b: "the velocity of wave in B is 1/sqrt(2) times that of velocity in A"
+  c: "the fundamental frequency of A is equal to the third overtone of B"
+  d: "the velocity of wave in B is half that of velocity in A"
+answer: [c, d]
+answer_value: null
+units: null
+verified: "Area scales 4x (diameter 2x). v_B = sqrt(2F/(2 rho 4A)) = v_A/2. f_B0 = v_B/(2*2l) = f_A0/4. Third overtone of B = 4 f_B0 = f_A0. So c, d true; a, b false. Matches key."
+kinds: [ratio, derived_medium, comparison]
+physics: [string_frequency, wave_speed, overtones, tension]
+notes: Consistent. The solution works with cross-sectional area A and density r directly.

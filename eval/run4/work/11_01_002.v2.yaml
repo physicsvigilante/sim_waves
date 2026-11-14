@@ -1,0 +1,16 @@
+id: 11/01/002
+assume:
+  - "Wave travels +x, away from the source at x=0."
+  - "The snapshot instant is taken as t=0; the source phase is the unknown ph, fixed by y(0)=0 and the other two readings."
+  - "No medium given, so the harmonic wave has no string attached; speed is v = f*lambda from the engine."
+unknowns: {lam: positive, ph: phase}
+waves:
+  w: {harmonic: {A: 0.02 m, f: 500 Hz, lambda: lam, dir: +x, phase: ph}}
+given:
+  - {fact: "y(w, x=0[m], t=0[s]) == 0[m]", source: stated}
+  - {fact: "y(w, x=0.1[m], t=0[s]) == -0.01*sqrt(3)[m]", source: stated}
+  - {fact: "y(w, x=0.8[m], t=0[s]) == 0.01*sqrt(3)[m]", source: stated}
+observe:
+  lam: "lam"
+  ph: "ph"
+  v: "speed(w)"

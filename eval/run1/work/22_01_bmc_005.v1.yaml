@@ -1,0 +1,21 @@
+id: 22/01/bmc_005
+assume:
+  - "Harmonic waves stand in for a general transverse travelling wave; phase 0 chosen arbitrarily."
+  - "Two strings with different mu, same tension; two waves with different f and A on string 1."
+symbols: {T: positive, mu1: positive, mu2: positive, f1: positive, f2: positive, A1: positive, A2: positive, X1: real, X2: real, t0: real}
+media:
+  s1: {type: string, mu: mu1, tension: T}
+  s2: {type: string, mu: mu2, tension: T}
+waves:
+  wa: {harmonic: {on: s1, A: A1, f: f1, dir: +x, phase: 0}}
+  wb: {harmonic: {on: s1, A: A2, f: f2, dir: +x, phase: 0}}
+  wc: {harmonic: {on: s2, A: A1, f: f1, dir: +x, phase: 0}}
+observe:
+  v_medium: "speed(s1)"
+  v_wa: "speed(wa)"
+  v_wb: "speed(wb)"
+  v_wc: "speed(wc)"
+  vy_wa_X1: "vy(wa, x=X1, t=t0)"
+  vy_wa_X2: "vy(wa, x=X2, t=t0)"
+  vy_wc_X1: "vy(wc, x=X1, t=t0)"
+  vy_diff_media: "vy(wa, x=X1, t=t0) - vy(wc, x=X1, t=t0)"

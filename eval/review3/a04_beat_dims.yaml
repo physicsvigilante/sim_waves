@@ -1,0 +1,5 @@
+id: a04
+observe:
+  b1: "beat_frequency(3[m], 2[s])"
+  b2: "min(2[m], 3[s])"
+  b3: "beat_frequency(256[Hz], 260[Hz])"

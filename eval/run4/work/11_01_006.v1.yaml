@@ -1,0 +1,12 @@
+id: 11/01/006
+symbols: {v: positive}
+waves:
+  a: {given: "1/(x + v*t)", units: {x: m, t: s, y: m}}
+  b: {given: "log(x + v*t)", units: {x: m, t: s, y: m}}
+  c: {given: "(x - v*t)**2", units: {x: m, t: s, y: m}}
+  d: {given: "exp(-(x - v*t)**2)", units: {x: m, t: s, y: m}}
+observe:
+  a: "is_travelling(a)"
+  b: "is_travelling(b)"
+  c: "is_travelling(c)"
+  d: "is_travelling(d)"

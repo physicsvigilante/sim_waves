@@ -1,0 +1,11 @@
+answer: "r = 0.175 m (17.5 cm)"
+final_scene: 11_04_009.v2.yaml
+engine_fit: partial
+hand_steps:
+  - "Writing branch lengths as pi*r (arch) and 2*r (straight) from the figure geometry."
+  - "Speed of sound 340 m/s picked only to convert 40 cm to a frequency (v1 failed: sources cannot take a wavelength)."
+coverage: full
+not_represented: "tube bends and common sections (equal in both branches, cancel)"
+missing_in_source: none
+reasoning: "Path difference r*(pi-2); smallest r with antiphase = 0.1752 m."
+friction: "Source takes only f, not wavelength; ray length needed my own geometry."

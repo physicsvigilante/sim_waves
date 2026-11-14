@@ -1,0 +1,17 @@
+id: 11/05/002
+assume:
+  - "Two consecutive modes: harmonics n and n+1 (spacing between adjacent nodes = 18 cm for the lower, 16 cm for the higher, as spacing decreases with harmonic number)."
+  - "Part (b) data (T = 10 N, mu = 4 g/m) belong to the same string; the same length is used."
+unknowns: {L: positive, n: integer}
+media:
+  wire: {type: string, mu: 4 g/m, tension: 10 N}
+resonators:
+  r: {type: string, on: wire, length: L, ends: [fixed, fixed]}
+given:
+  - {fact: "node_spacing(r, harmonic=n) == 18[cm]", source: stated}
+  - {fact: "node_spacing(r, harmonic=n + 1) == 16[cm]", source: stated}
+observe:
+  L: "L"
+  n: "n"
+  f1: "frequency(r, harmonic=1)"
+  v: "speed(r)"

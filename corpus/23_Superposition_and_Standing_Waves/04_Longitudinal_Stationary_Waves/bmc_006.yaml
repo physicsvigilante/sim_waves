@@ -1,0 +1,20 @@
+id: 23/04/bmc_006
+number: 8
+source: {problem: 23_Superposition_and_Standing_Waves/04_Longitudinal_Stationary_Waves/Problems/bmc_006.png, solution: 23_Superposition_and_Standing_Waves/04_Longitudinal_Stationary_Waves/Solutions/bmc_006.png}
+format: multiple_correct
+statement: |
+  For a certain organ pipe, three successive resonance frequencies are observed at 425 Hz, 595 Hz and 765 Hz, respectively. The speed of sound in air is 340 m/s. Choose the correct options.
+figure: null
+options:
+  a: "The pipe is open at both the ends"
+  b: "The pipe is closed at one end"
+  c: "Fundamental frequency of pipe is 85 cm"
+  d: "Length of the pipe is 1 m"
+answer: [b, c, d]
+answer_value: null
+units: null
+verified: "Spacing 170 Hz = 2 f1, f1 = 85 Hz; 425 = 5*85, 595 = 7*85, 765 = 9*85: odd harmonics only, closed pipe; L = 340/(4*85) = 1 m. Matches key (with c read as 85 Hz)."
+kinds: [inverse_condition, conceptual]
+physics: [closed_pipe, harmonics, pipe_length]
+notes: |
+  MISPRINT in option (c): 'Fundamental frequency of pipe is 85 cm' should be 85 Hz (unit slip, also repeated in the solution text 'fundamental frequency is 85 cm'). The key includes (c) on that interpretation.

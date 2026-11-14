@@ -1,0 +1,15 @@
+id: 11/05/015
+number: 15
+source: {problem: 11_Mechanical_Waves_sardana/05_Stationary_Waves_and_Beats/Problems/015.png, solution: 11_Mechanical_Waves_sardana/05_Stationary_Waves_and_Beats/Solutions/015.png}
+format: numerical
+statement: |
+  A tuning fork produces 3 beats per second when sounded together with a fork of frequency 364 Hz. When the first fork is loaded with a little wax then the number of beats becomes two per second. What is the frequency of the first fork?
+figure: null
+options: null
+answer: "367 Hz"
+answer_value: 367
+units: Hz
+verified: "Candidates 367 or 361 Hz. Wax lowers frequency; beats fall from 3 to 2 only if the first fork is above 364 Hz (367 to 366 gives 2 beats; 361 to 360 would give 4). So 367 Hz. Matches key."
+kinds: [inverse_condition]
+physics: [beats, tuning_fork, loading]
+notes: "Consistent."

@@ -1,0 +1,8 @@
+id: 23/05/asc_006
+symbols: {a: positive}
+waves:
+  y1: {given: "a*sin(2000*pi*t)", units: {x: m, t: s, y: m}}
+  y2: {given: "a*sin(2008*pi*t)", units: {x: m, t: s, y: m}}
+observe:
+  beats: "beat_frequency(y1, y2)"
+expect: {beats: "4 Hz"}

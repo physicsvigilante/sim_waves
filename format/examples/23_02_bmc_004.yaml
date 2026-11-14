@@ -1,0 +1,16 @@
+id: 23/02/bmc_004
+# Wave from medium 1 (x < 0) meets medium 2 at x = 0. Case v1 > v2 (second string 4x denser).
+assume: ["The media are modelled as two strings under the same tension; only v1 > v2 vs v2 > v1 matters."]
+symbols: {mu: positive, T: positive, A: positive, omega: positive}
+media:
+  m1: {type: string, mu: mu, tension: T}
+  m2: {type: string, mu: 4*mu, tension: T}
+junctions:
+  J: {at: 0 m, left: m1, right: m2}
+waves:
+  w: {harmonic: {on: m1, A: A, omega: omega, dir: +x, phase: 0}}
+observe:
+  transmitted_phase_shift: "wrap(phase(w_transmitted, x=0[m], t=t) - phase(w, x=0[m], t=t))"
+  reflected_phase_shift: "wrap(phase(w_reflected, x=0[m], t=t) - phase(w, x=0[m], t=t))"
+  reflected_dir: "velocity(w_reflected)"
+expect: {transmitted_phase_shift: 0, reflected_phase_shift: "pi"}

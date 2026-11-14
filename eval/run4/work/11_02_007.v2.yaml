@@ -1,0 +1,10 @@
+id: 11/02/007
+assume:
+  - "Tension = weight of the 5 kg object, 5*9.8 N (tube weight and stretch neglected; pulley ideal)."
+media:
+  tube: {type: string, mass: 900 g, length: 12 m, tension: "5[kg]*9.8[m/s^2]", coordinate: {origin: left_end, direction: right}}
+waves:
+  p: {pulse: {on: tube, from: left, toward: right}}
+observe:
+  v: "speed(tube)"
+  front1: "front(p, t=1[s])"

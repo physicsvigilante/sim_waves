@@ -1,0 +1,6 @@
+id: b07
+waves:
+  y1: {harmonic: {f: 10 Hz, lambda: 1 m, dir: +x, phase: 0}}
+  y2: {harmonic: {A: 4 cm, f: 10 Hz, lambda: 1 m, dir: +x, phase: 0}}
+  tot: {sum: [y1, y2]}
+observe: {f: "frequency(y1)"}

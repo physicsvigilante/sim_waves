@@ -1,0 +1,19 @@
+id: 24/01/bmc_004
+number: 4
+source: {problem: 24_Sound_Waves_and_Doppler_Effect/01_Speed_and_Intensity_of_Sound_Waves/Problems/bmc_004.png, solution: 24_Sound_Waves_and_Doppler_Effect/01_Speed_and_Intensity_of_Sound_Waves/Solutions/bmc_004.png}
+format: multiple_correct
+statement: |
+  A sound wave propagates in a medium of bulk's modulus B by means of compressions and rarefactions. If Pc and Pr are the pressures at compression and rarefaction respectively, a be the wave amplitude and k be the angular wave number then,
+figure: null
+options:
+  a: "Pc is maximum and Pr is minimum"
+  b: "Pc is minimum and Pr is maximum"
+  c: "The pressure amplitude is Bak"
+  d: "If the displacement wave is y = a sin(wt - kx), the pressure wave at any instant is represented as P = Po cos(wt - kx) which leads displacement wave by a phase angle of pi/2"
+answer: [a, c, d]
+answer_value: null
+units: null
+verified: "Compression has higher pressure than rarefaction: (a) true, (b) false. dp = -B dy/dx = B a k cos(wt - kx): amplitude B a k, (c) true; it is cos vs sin, so pressure leads displacement by pi/2, (d) true. Matches key."
+kinds: [conceptual]
+physics: [sound_pressure_wave, pressure_displacement_phase, bulk_modulus]
+notes: "Page carries the section heading 'Multiple correct'. Option (d) is long and wraps with a blank gap in the image; transcribed as one option."

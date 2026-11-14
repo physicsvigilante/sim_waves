@@ -1,0 +1,8 @@
+id: b12
+symbols: {dl: positive, n: positive}
+media: {air: {type: gas, v: 340 m/s}}
+resonators:
+  p: {type: pipe, on: air, length: 1 m, ends: [closed, open], end_correction: 0 m}
+observe:
+  l1: "limit(sin(1/dl), dl, 0)"
+  fn: "frequency(p, harmonic=n)"

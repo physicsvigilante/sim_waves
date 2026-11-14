@@ -1,0 +1,5 @@
+# speed of sound from gamma, T, M agrees with gamma, P, rho for an ideal gas at the same state
+media:
+  a: {type: gas, gamma: 7/5, temperature: 300 K, molar_mass: 29 g/mol}
+observe: {v: "speed(a)"}
+expect: {v: {value: "347.2 m/s", tol: 0.1%}}

@@ -1,0 +1,10 @@
+id: e01
+media:
+  wire: {type: string, mu: 0.01 kg/m, tension: 100 N}
+resonators:
+  r: {type: string, on: wire, length: 1 m, ends: [fixed, fixed]}
+waves:
+  w: {harmonic: {on: wire, A: 1 cm, f: 77 Hz, dir: +x, phase: 0}}
+observe:
+  b: "beat_frequency(w, frequency(r, harmonic=1))"
+  n0: "frequency(r, harmonic=0)"

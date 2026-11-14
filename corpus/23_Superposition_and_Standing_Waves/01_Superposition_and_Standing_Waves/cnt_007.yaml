@@ -1,0 +1,16 @@
+id: 23/01/cnt_007
+number: 14
+source: {problem: 23_Superposition_and_Standing_Waves/01_Superposition_and_Standing_Waves/Problems/cnt_007.png, solution: 23_Superposition_and_Standing_Waves/01_Superposition_and_Standing_Waves/Solutions/cnt_007.png}
+format: numerical
+statement: |
+  S1 and S2 are two coherent sources of sound separated by distance 100.25 lambda, where A is the wavelength of sound. S1 leads S2 in phase by pi/2. A and B are two points on the line joining S1 and S2, as shown in figure. The ratio of amplitudes of the sound waves produced by the source S1 and S2 are nearly in ratio 1:2, for waves reaching at A as well as B. Find the ratio of intensity at A to that at B, is (I_A / I_B).
+figure: |
+  A horizontal line with four dots in order from left to right: A, S1, S2, B. A and B are far from the sources (A well left of S1, B well right of S2); S1 and S2 are close together with a double-headed arrow between them labelled 100.25 lambda.
+answer: "9.0"
+answer_value: 9.0
+units: null
+verified: "DISPUTED. Own check with S1 leading S2 by pi/2: at A (left of S1) S2's path is longer by d = 100.25 lambda, so S2 lags extra kd = 200.5 pi = pi/2 (mod 2pi); total phase difference (S1 minus S2) = pi/2 + pi/2 = pi, destructive: amplitude 2a - a = a. At B (right of S2) S1's path is longer, phase diff = pi/2 - pi/2 = 0, constructive: amplitude 3a. So I_A/I_B = 1/9 = 0.111, not 9."
+kinds: [inverse_condition, ratio]
+physics: [interference, phase_difference, path_difference, intensity]
+notes: |
+  Likely book error. The solution says that at A the wave from S2 arrives 'ahead' by pi/2, but a longer path gives a phase lag, not a lead. With correct sign A is the minimum and B the maximum, giving 1/9. Key 9.0 is the inverse (I_B/I_A). Also misprint: "where A is the wavelength" should be lambda. The solution's B-part text is garbled ("phase lead of pi/2", "leads by p").

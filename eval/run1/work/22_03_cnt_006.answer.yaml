@@ -1,0 +1,5 @@
+answer: 511.64 W (1296*pi^2/25, about 512 W)
+final_scene: 22_03_cnt_006.v1.yaml
+engine_fit: full
+reasoning: speed = 40 m/s and power(w) = 1296*pi^2/25 W.
+friction: none

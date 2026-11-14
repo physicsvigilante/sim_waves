@@ -1,0 +1,17 @@
+id: 22/02/asc_008
+format: single_correct
+statement: The diagram below shows the propagation of a wave. Which points are in same phase?
+figure: 'Snapshot y vs x of a sinusoid. A at the origin on the axis, curve going down from A.
+
+  B on the falling segment before the first trough; C at the first trough; D the next zero crossing
+
+  (curve rising); E the following crest; F on the falling segment before the second trough, at the same
+
+  height as B; G on the rising segment after the second trough, at the same height as F; H on the rising
+
+  segment before the next crest, above the axis.'
+options:
+  a: F, G
+  b: C and E
+  c: B and G
+  d: B and F

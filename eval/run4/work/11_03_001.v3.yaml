@@ -1,0 +1,8 @@
+id: 11/03/001
+assume: ["Isotropic point source in free space (full sphere). Engine has no pressure/displacement-amplitude observable from intensity; only I is taken from it."]
+media:
+  air: {type: open3d}
+emitters:
+  pt: {on: air, geometry: point, power: 0.8 W}
+observe:
+  I: "intensity(pt, r=1.5[m])"

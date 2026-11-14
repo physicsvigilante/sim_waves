@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>sim_waves viewer</title>
+<style>
+  :root { --ink:#1d2430; --muted:#5d6775; --line:#d9dee5; --bg:#f7f8fa; --card:#fff;
+          --accent:#2457c5; --warn:#a15c00; --warnbg:#fff4e0; --ok:#1d7a46; --faint:#b8c2d1; }
+  * { box-sizing:border-box; }
+  body { margin:0; font:14px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif; color:var(--ink); background:var(--bg); }
+  header { padding:14px 20px; border-bottom:1px solid var(--line); background:var(--card); display:flex; gap:16px; align-items:baseline; flex-wrap:wrap; }
+  header h1 { font-size:16px; margin:0; }
+  header .note { color:var(--muted); font-size:12px; }
+  nav { display:flex; gap:6px; flex-wrap:wrap; padding:10px 20px; }
+  nav button { border:1px solid var(--line); background:var(--card); padding:6px 12px; border-radius:6px; cursor:pointer; font:inherit; }
+  nav button.on { border-color:var(--accent); color:var(--accent); font-weight:600; }
+  main { display:grid; grid-template-columns: minmax(0,1.6fr) minmax(300px,1fr); gap:16px; padding:0 20px 24px; }
+  @media (max-width: 900px) { main { grid-template-columns: 1fr; } }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:8px; padding:12px 14px; margin-bottom:12px; }
+  .card h2 { font-size:13px; margin:0 0 8px; text-transform:uppercase; letter-spacing:.04em; color:var(--muted); }
+  canvas { width:100%; height:240px; display:block; }
+  .basis { font-size:12px; color:var(--muted); margin-top:4px; }
+  .controls { display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-top:6px; font-size:13px; }
+  .controls input[type=range] { flex:1; min-width:140px; }
+  .banner { background:var(--warnbg); color:var(--warn); border:1px solid #f0d2a0; border-radius:6px; padding:8px 10px; font-size:13px; margin-bottom:12px; }
+  table { width:100%; border-collapse:collapse; font-size:13px; }
+  td { padding:4px 6px; border-top:1px solid var(--line); vertical-align:top; }
+  td:first-child { color:var(--muted); white-space:nowrap; }
+  code { font-family:ui-monospace,Consolas,monospace; font-size:12px; word-break:break-word; }
+  .tag { display:inline-block; font-size:11px; padding:1px 6px; border-radius:10px; border:1px solid var(--line); color:var(--muted); margin-left:4px; white-space:nowrap; }
+  .tag.proved,.tag.exact { color:var(--ok); border-color:#b5dcc4; }
+  .tag.sampled,.tag.illustrative,.tag.undecided { color:var(--warn); border-color:#f0d2a0; }
+  .tag.stated { color:var(--ok); border-color:#b5dcc4; }
+  .tag.figure,.tag.assumption,.tag.convention,.tag.untagged { color:var(--accent); border-color:#c6d4f2; }
+  ul { margin:0; padding-left:18px; } li { margin:2px 0; }
+  .err { color:#a3261b; font-size:13px; }
+  .legend { font-size:12px; color:var(--muted); }
+  .legend b { color:var(--ink); }
+</style>
+</head>
+<body>
+<header>
+  <h1>sim_waves viewer</h1>
+  <span class="note">Every curve is sampled by the engine; this page only draws. Grey curves are the other values of the varied parameter.</span>
+</header>
+<nav id="tabs"></nav>
+<main>
+  <section id="panels"></section>
+  <aside id="info"></aside>
+</main>
+<script id="data" type="application/json">[{"id": "diag1/echo", "assume": ["Fixed wavelength 10 m is the teacher's choice (assumption), implemented as f = v/10 m.", "Amplitudes at the listener taken equal (spreading: none).", "Rigid ceiling 25 m: no pressure phase change on reflection.", "Listener distance d is a free symbol; its value is set in observe/plot only."], "facts": [], "solved": {}, "results": {"loud": {"text": "2*cos(pi*(d/5 - sqrt(d**2 + 2500)/5)) + 2", "basis": "exact", "value": 4.0, "uses_illustrative": true}, "loud_max_at": {"text": "120", "basis": "exact", "value": 120.0, "uses_illustrative": false}, "n_max": {"text": "1", "basis": "exact", "value": 1.0, "uses_illustrative": false}}, "verification": [], "illustrative": {"d": "120 m"}, "panels": [{"kind": "plot", "name": "relative_intensity(up, direct)", "expr": "relative_intensity(up, direct)", "vs": "d", "v": [100.0, 100.17, 100.33, 100.5, 100.67, 100.84, 101.0, 101.17, 101.34, 101.51, 101.67, 101.84, 102.01, 102.18, 102.34, 102.51, 102.68, 102.85, 103.01, 103.18, 103.35, 103.51, 103.68, 103.85, 104.02, 104.18, 104.35, 104.52, 104.69, 104.85, 105.02, 105.19, 105.36, 105.52, 105.69, 105.86, 106.03, 106.19, 106.36, 106.53, 106.69, 106.86, 107.03, 107.2, 107.36, 107.53, 107.7, 107.87, 108.03, 108.2, 108.37, 108.54, 108.7, 108.87, 109.04, 109.21, 109.37, 109.54, 109.71, 109.87, 110.04, 110.21, 110.38, 110.54, 110.71, 110.88, 111.05, 111.21, 111.38, 111.55, 111.72, 111.88, 112.05, 112.22, 112.38, 112.55, 112.72, 112.89, 113.05, 113.22, 113.39, 113.56, 113.72, 113.89, 114.06, 114.23, 114.39, 114.56, 114.73, 114.9, 115.06, 115.23, 115.4, 115.56, 115.73, 115.9, 116.07, 116.23, 116.4, 116.57, 116.74, 116.9, 117.07, 117.24, 117.41, 117.57, 117.74, 117.91, 118.08, 118.24, 118.41, 118.58, 118.74, 118.91, 119.08, 119.25, 119.41, 119.58, 119.75, 119.92, 120.08, 120.25, 120.42, 120.59, 120.75, 120.92, 121.09, 121.26, 121.42, 121.59, 121.76, 121.92, 122.09, 122.26, 122.43, 122.59, 122.76, 122.93, 123.1, 123.26, 123.43, 123.6, 123.77, 123.93, 124.1, 124.27, 124.44, 124.6, 124.77, 124.94, 125.1, 125.27, 125.44, 125.61, 125.77, 125.94, 126.11, 126.28, 126.44, 126.61, 126.78, 126.95, 127.11, 127.28, 127.45, 127.62, 127.78, 127.95, 128.12, 128.28, 128.45, 128.62, 128.79, 128.95, 129.12, 129.29, 129.46, 129.62, 129.79, 129.96, 130.13, 130.29, 130.46, 130.63, 130.79, 130.96, 131.13, 131.3, 131.46, 131.63, 131.8, 131.97, 132.13, 132.3, 132.47, 132.64, 132.8, 132.97, 133.14, 133.31, 133.47, 133.64, 133.81, 133.97, 134.14, 134.31, 134.48, 134.64, 134.81, 134.98, 135.15, 135.31, 135.48, 135.65, 135.82, 135.98, 136.15, 136.32, 136.49, 136.65, 136.82, 136.99, 137.15, 137.32, 137.49, 137.66, 137.82, 137.99, 138.16, 138.33, 138.49, 138.66, 138.83, 139.0, 139.16, 139.33, 139.5, 139.67, 139.83, 140.0], "y": [2.8477, 2.8677, 2.8876, 2.9073, 2.9268, 2.9462, 2.9654, 2.9844, 3.0033, 3.022, 3.0405, 3.0589, 3.077, 3.095, 3.1129, 3.1305, 3.148, 3.1653, 3.1824, 3.1993, 3.2161, 3.2327, 3.2491, 3.2653, 3.2813, 3.2972, 3.3128, 3.3283, 3.3436, 3.3587, 3.3737, 3.3884, 3.403, 3.4174, 3.4316, 3.4456, 3.4594, 3.4731, 3.4865, 3.4998, 3.5129, 3.5258, 3.5385, 3.5511, 3.5634, 3.5756, 3.5876, 3.5994, 3.611, 3.6224, 3.6337, 3.6447, 3.6556, 3.6663, 3.6769, 3.6872, 3.6974, 3.7073, 3.7171, 3.7268, 3.7362, 3.7455, 3.7545, 3.7634, 3.7722, 3.7807, 3.7891, 3.7973, 3.8053, 3.8132, 3.8209, 3.8284, 3.8357, 3.8429, 3.8498, 3.8567, 3.8633, 3.8698, 3.8761, 3.8822, 3.8882, 3.894, 3.8997, 3.9052, 3.9105, 3.9156, 3.9206, 3.9254, 3.9301, 3.9346, 3.939, 3.9432, 3.9472, 3.9511, 3.9548, 3.9584, 3.9618, 3.9651, 3.9682, 3.9711, 3.9739, 3.9766, 3.9791, 3.9815, 3.9837, 3.9858, 3.9877, 3.9895, 3.9911, 3.9926, 3.994, 3.9952, 3.9963, 3.9972, 3.998, 3.9987, 3.9992, 3.9996, 3.9999, 4.0, 4.0, 3.9999, 3.9996, 3.9992, 3.9987, 3.998, 3.9973, 3.9964, 3.9954, 3.9942, 3.993, 3.9916, 3.9901, 3.9885, 3.9867, 3.9849, 3.9829, 3.9808, 3.9786, 3.9763, 3.9739, 3.9714, 3.9687, 3.966, 3.9631, 3.9602, 3.9571, 3.9539, 3.9506, 3.9472, 3.9438, 3.9402, 3.9365, 3.9327, 3.9288, 3.9248, 3.9207, 3.9166, 3.9123, 3.9079, 3.9035, 3.8989, 3.8943, 3.8896, 3.8848, 3.8798, 3.8749, 3.8698, 3.8646, 3.8594, 3.854, 3.8486, 3.8431, 3.8376, 3.8319, 3.8262, 3.8204, 3.8145, 3.8085, 3.8025, 3.7963, 3.7902, 3.7839, 3.7776, 3.7712, 3.7647, 3.7581, 3.7515, 3.7448, 3.7381, 3.7313, 3.7244, 3.7175, 3.7105, 3.7034, 3.6962, 3.6891, 3.6818, 3.6745, 3.6671, 3.6597, 3.6522, 3.6447, 3.6371, 3.6294, 3.6217, 3.6139, 3.6061, 3.5983, 3.5903, 3.5824, 3.5744, 3.5663, 3.5582, 3.55, 3.5418, 3.5336, 3.5253, 3.5169, 3.5085, 3.5001, 3.4916, 3.4831, 3.4746, 3.466, 3.4573, 3.4487, 3.44, 3.4312, 3.4224, 3.4136, 3.4047, 3.3959, 3.3869, 3.378, 3.369, 3.3599, 3.3509, 3.3418, 3.3327], "x_label": "d (m)", "y_label": "relative_intensity(up, direct) (SI units)", "range_basis": "author-chosen display range", "uses_illustrative": false, "y_range": [2.8477, 4.0]}], "missing": ["no `explore` block: nothing declared to vary"], "variants": null}]</script>
+<script>
+const SCENES = JSON.parse(document.getElementById('data').textContent);
+let cur = 0, variant = null, timers = [];
+
+function el(tag, attrs={}, html='') { const e=document.createElement(tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (html) e.innerHTML=html; return e; }
+function esc(s) { return String(s).replace(/[&<>]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
+function fmt(v) { if (v===null||v===undefined||!isFinite(v)) return '–'; const a=Math.abs(v); if (a!==0 && (a<1e-3||a>=1e5)) return v.toExponential(2); return +v.toPrecision(4)+''; }
+function niceTicks(lo, hi, n=5) { if (hi===lo) { hi=lo+1; } const span=hi-lo, step0=span/n, mag=Math.pow(10,Math.floor(Math.log10(step0))); const step=[1,2,5,10].map(m=>m*mag).find(s=>span/s<=n)||mag*10; const t=[]; for (let v=Math.ceil(lo/step)*step; v<=hi+1e-12*span; v+=step) t.push(+v.toPrecision(12)); return t; }
+
+function drawAxes(canvas, xs, series, xlabel, ylabel, yr) {
+  const dpr = window.devicePixelRatio||1, W=canvas.clientWidth, H=canvas.clientHeight;
+  canvas.width=W*dpr; canvas.height=H*dpr; const g=canvas.getContext('2d'); g.scale(dpr,dpr);
+  const L=58,R=12,Tp=10,B=34;
+  let ymin=Infinity, ymax=-Infinity;
+  for (const s of series) for (const y of s.y) if (y!==null && isFinite(y)) { ymin=Math.min(ymin,y); ymax=Math.max(ymax,y); }
+  if (yr) { ymin=yr[0]; ymax=yr[1]; }   // engine-supplied range, fixed across frames and varied values
+  if (!isFinite(ymin)) { ymin=-1; ymax=1; }
+  if (ymin===ymax) { const d=Math.abs(ymin)||1; ymin-=d*0.5; ymax+=d*0.5; }
+  const pad=(ymax-ymin)*0.08; ymin-=pad; ymax+=pad;
+  const xmin=xs[0], xmax=xs[xs.length-1];
+  const X=v=>L+(v-xmin)/(xmax-xmin||1)*(W-L-R), Y=v=>Tp+(ymax-v)/(ymax-ymin)*(H-Tp-B);
+  g.font='11px system-ui'; g.fillStyle='#5d6775'; g.strokeStyle='#e6e9ee'; g.lineWidth=1;
+  for (const t of niceTicks(ymin,ymax)) { g.beginPath(); g.moveTo(L,Y(t)); g.lineTo(W-R,Y(t)); g.stroke(); g.textAlign='right'; g.fillText(fmt(t),L-6,Y(t)+4); }
+  for (const t of niceTicks(xmin,xmax,6)) { g.beginPath(); g.moveTo(X(t),Tp); g.lineTo(X(t),H-B); g.stroke(); g.textAlign='center'; g.fillText(fmt(t),X(t),H-B+14); }
+  if (ymin<0 && ymax>0) { g.strokeStyle='#9aa4b2'; g.beginPath(); g.moveTo(L,Y(0)); g.lineTo(W-R,Y(0)); g.stroke(); }
+  g.fillStyle='#1d2430'; g.textAlign='center'; g.fillText(xlabel,(L+W-R)/2,H-6);
+  g.save(); g.translate(12,(Tp+H-B)/2); g.rotate(-Math.PI/2); g.fillText(ylabel,0,0); g.restore();
+  for (const s of series) {
+    g.strokeStyle=s.color; g.lineWidth=s.width; g.beginPath(); let pen=false;
+    s.y.forEach((y,i)=>{ if (y===null||!isFinite(y)) { pen=false; return; } const px=X(xs[i]), py=Y(y); if (!pen) { g.moveTo(px,py); pen=true; } else g.lineTo(px,py); });
+    g.stroke();
+  }
+}
+
+function itemFor(scene) { return (scene.variants && variant!==null) ? scene.variants.items[variant] : scene; }
+function panelsFor(scene) { const it=itemFor(scene); return it.error ? [] : (it.panels||[]); }
+function otherVariantPanels(scene, idx) {
+  if (!scene.variants) return [];
+  return scene.variants.items.map((it,i)=>i===variant?null:(it.panels?it.panels[idx]:null)).filter(Boolean);
+}
+
+function render() {
+  timers.forEach(clearInterval); timers=[];
+  const sc = SCENES[cur];
+  document.querySelectorAll('nav button').forEach((b,i)=>b.classList.toggle('on', i===cur));
+  const P=document.getElementById('panels'), I=document.getElementById('info'); P.innerHTML=''; I.innerHTML='';
+  if (sc.variants) {
+    const v=sc.variants, card=el('div',{class:'card'});
+    card.appendChild(el('h2',{}, v.target_kind==='physical input' ? 'Vary a physical input (each value re-solved by the engine)' : 'Vary an illustrative value (not from the source)'));
+    const row=el('div',{class:'controls'});
+    row.innerHTML = `<span><code>${esc(v.target)}</code></span>`;
+    const r=el('input',{type:'range',min:0,max:v.items.length-1,step:1,value:variant});
+    const phys = v.target_kind==='physical input';
+    const lab=el('b',{},esc(v.items[variant].value) + (v.items[variant].is_source
+        ? (phys ? ' <span class="tag stated">source value</span>' : ' <span class="tag illustrative">scene\'s illustrative value</span>')
+        : (phys ? ' <span class="tag illustrative">not the source value</span>' : ' <span class="tag illustrative">other illustrative value</span>')));
+    r.oninput=()=>{ variant=+r.value; render(); };
+    row.appendChild(r); row.appendChild(lab); card.appendChild(row);
+    card.appendChild(el('div',{class:'legend'}, (phys ? 'Source value: ' : 'The source gives no value; the scene illustrates with ') + `<code>${esc(v.source_value)}</code>. Grey curves: the other values.`));
+    if (v.items[variant].error) card.appendChild(el('div',{class:'err'},'The engine rejected this value, so nothing is shown for it: '+esc(v.items[variant].error)));
+    P.appendChild(card);
+  }
+  const panels = panelsFor(sc) || [];
+  panels.forEach((p, idx)=>{
+    if (!p) { P.appendChild(el('div',{class:'card err'},`Panel ${idx+1} could not be drawn (see "Not drawn" on the right).`)); return; }
+    const card=el('div',{class:'card'}), c=el('canvas');
+    const title = p.kind==='plot' ? `${esc(p.name)} vs ${esc(p.vs)}` : `${p.kind}: wave ${esc(p.wave)}` + (p.kind==='snapshot'?` at t = ${fmt(p.t)} s`:'');
+    card.appendChild(el('h2',{},title)); card.appendChild(c);
+    const others = otherVariantPanels(sc, idx);
+    const basis = el('div',{class:'basis'});
+    if (p.kind==='snapshot' || p.kind==='plot') {
+      const ghosts = others.filter(o=>o.kind===p.kind).map(o=>({y:o.y, x:o.x||o.v}));
+      const xs = p.kind==='plot'?p.v:p.x;
+      const draw=()=>drawAxes(c, xs, [...ghosts.filter(g=>g.x.length===xs.length && g.x[0]===xs[0] && g.x[g.x.length-1]===xs[xs.length-1]).map(g=>({y:g.y,color:'#c9d1dd',width:1.2})), {y:p.y,color:'#2457c5',width:2}], p.x_label, p.y_label, p.y_range);
+      requestAnimationFrame(draw);
+      basis.textContent = p.kind==='plot' ? `Range: ${p.range_basis}. Expression: ${p.expr}` : `x window: ${p.x_basis}`;
+    } else if (p.kind==='animate') {
+      let k=0, playing=true;
+      const ctl=el('div',{class:'controls'}); const btn=el('button',{},'Pause'); const tr=el('input',{type:'range',min:0,max:p.t.length-1,value:0}); const tl=el('span',{class:'legend'});
+      const ghosts = others.filter(o=>o.kind==='animate' && o.frames.length===p.frames.length && o.x.length===p.x.length && o.x[o.x.length-1]===p.x[p.x.length-1]);
+      const draw=()=>{ drawAxes(c, p.x, [...ghosts.map(g=>({y:g.frames[k],color:'#c9d1dd',width:1.2})), {y:p.frames[k],color:'#2457c5',width:2}], p.x_label, p.y_label, p.y_range); tr.value=k; tl.textContent=`t = ${fmt(p.t[k])} s`; };
+      btn.onclick=()=>{ playing=!playing; btn.textContent=playing?'Pause':'Play'; };
+      tr.oninput=()=>{ k=+tr.value; playing=false; btn.textContent='Play'; draw(); };
+      ctl.append(btn,tr,tl); card.appendChild(ctl);
+      timers.push(setInterval(()=>{ if (playing) { k=(k+1)%p.t.length; draw(); } }, 70));
+      requestAnimationFrame(draw);
+      basis.textContent = `x window: ${p.x_basis}. Time window: ${p.t_basis}. Playback is slowed: one frame every 70 ms covers ${fmt(p.t[1]-p.t[0])} s.`;
+    }
+    if (p.uses_illustrative) basis.textContent += ' Drawn with illustrative values.';
+    card.appendChild(basis); P.appendChild(card);
+  });
+  if (!panels.length) P.appendChild(el('div',{class:'card err'},'Nothing is drawn for this value.'));
+
+  // info column: everything below belongs to the selected value
+  const it = itemFor(sc);
+  const card=(title, body)=>{ const c=el('div',{class:'card'}); c.appendChild(el('h2',{},title)); c.appendChild(body); I.appendChild(c); };
+  card('Scene', el('div',{},`<code>${esc(sc.id||'')}</code>`));
+  if (it.error) { card('Engine', el('div',{class:'err'}, esc(it.error))); return; }
+  const results = it.results, solved = it.solved;
+  if (Object.keys(it.illustrative||{}).length) {
+    I.appendChild(el('div',{class:'banner'}, '<b>Illustrative values</b> (not from the source; used only for drawing): ' +
+      Object.entries(it.illustrative).map(([k,v])=>`<code>${esc(k)} = ${esc(v)}</code>`).join(', ')));
+  }
+  if ((it.missing||[]).length) { const u=el('ul'); it.missing.forEach(m=>u.appendChild(el('li',{},esc(m)))); card('Not drawn', u); }
+  if (sc.assume.length) { const u=el('ul'); sc.assume.forEach(a=>u.appendChild(el('li',{},esc(a)))); card('Assumptions (author)', u); }
+  if ((it.facts||[]).length) { const u=el('ul'); it.facts.forEach(f=>u.appendChild(el('li',{},`<code>${esc(f.text)}</code><span class="tag ${f.source}">${f.source}</span>`))); card('Facts given to the engine', u); }
+  if (Object.keys(solved).length) { const t=el('table'); Object.entries(solved).forEach(([k,v])=>t.appendChild(el('tr',{},`<td>${esc(k)}</td><td><code>${esc(v)}</code></td>`))); card('Solved by the engine', t); }
+  const rt=el('table');
+  Object.entries(results).forEach(([k,r])=>{
+    const num = (r.value!==null && r.value!==undefined && r.uses_illustrative) ? ` = ${fmt(r.value)} <span class="tag illustrative">with illustrative values</span>` : '';
+    rt.appendChild(el('tr',{},`<td>${esc(k)}</td><td><code>${esc(r.text)}</code>${num}<span class="tag ${r.basis}">${r.basis}</span></td>`));
+  });
+  card('Engine results', rt);
+  if ((it.verification||[]).length) { const u=el('ul'); it.verification.forEach(v=>u.appendChild(el('li',{},`<code>${esc(v.fact)}</code><span class="tag ${v.basis}">${v.basis}</span>`))); card('Facts re-checked against the solution', u); }
+}
+
+function startVariant(s) { if (!s.variants) return null; const i=s.variants.items.findIndex(x=>x.is_source); return i>=0 ? i : 0; }
+SCENES.forEach((s,i)=>{ const b=el('button',{},esc(s.id||('scene '+(i+1)))); b.onclick=()=>{ cur=i; variant=startVariant(s); render(); }; document.getElementById('tabs').appendChild(b); });
+variant = startVariant(SCENES[0]);
+window.addEventListener('resize', render);
+render();
+</script>
+</body>
+</html>

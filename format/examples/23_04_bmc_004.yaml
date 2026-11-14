@@ -1,0 +1,19 @@
+id: 23/04/bmc_004
+# Ways to raise the fundamental of a tube closed at one end.
+assume: ["Illustrative comparison: same temperature for both gases; 'decrease/increase length' compared at 0.9L and 1.1L."]
+symbols: {L: positive, Tk: positive}
+media:
+  air: {type: gas, gamma: 7/5, temperature: Tk, molar_mass: 29 g/mol}
+  h2:  {type: gas, gamma: 7/5, temperature: Tk, molar_mass: 2 g/mol}
+resonators:
+  base:    {type: pipe, on: air, length: L, ends: [closed, open], end_correction: 0 m}
+  in_h2:   {type: pipe, on: h2, length: L, ends: [closed, open], end_correction: 0 m}
+  longer:  {type: pipe, on: air, length: 11*L/10, ends: [closed, open], end_correction: 0 m}
+  shorter: {type: pipe, on: air, length: 9*L/10, ends: [closed, open], end_correction: 0 m}
+  opened:  {type: pipe, on: air, length: L, ends: [open, open], end_correction: 0 m}
+observe:
+  a: "frequency(in_h2, harmonic=1)/frequency(base, harmonic=1)"
+  b: "frequency(longer, harmonic=1)/frequency(base, harmonic=1)"
+  c: "frequency(shorter, harmonic=1)/frequency(base, harmonic=1)"
+  d: "frequency(opened, harmonic=1)/frequency(base, harmonic=1)"
+expect: {a: "> 1", b: "< 1", c: "> 1", d: "> 1"}

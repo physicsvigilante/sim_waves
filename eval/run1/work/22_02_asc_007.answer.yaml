@@ -1,0 +1,5 @@
+answer: [c]
+final_scene: 22_02_asc_007.v1.yaml
+engine_fit: partial
+reasoning: At t=0 the engine gives y<0 and vy>0 for phi=pi/4 and pi/8, so the correct curve starts below zero and rises; the figure text says that is C. Curve identification itself is from the figure description.
+friction: Matching curves to labels is outside the engine; free angle phi with range 0<phi<pi/2 could not be a symbol with bounds, so sample values used.

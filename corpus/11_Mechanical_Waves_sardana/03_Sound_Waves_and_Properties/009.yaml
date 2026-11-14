@@ -1,0 +1,15 @@
+id: 11/03/009
+number: 9
+source: {problem: 11_Mechanical_Waves_sardana/03_Sound_Waves_and_Properties/Problems/009.png, solution: 11_Mechanical_Waves_sardana/03_Sound_Waves_and_Properties/Solutions/009.png}
+format: numerical
+statement: |
+  Find the maximum increase in pressure when a sound wave produces an energy flow of 10^-3 Wattm^-2. Velocity of sound = 340 ms^-1, density of air = 1.293 kgm^-3.
+figure: null
+options: null
+answer: "0.94 N m^-2"
+answer_value: 0.94
+units: "N m^-2 (Pa)"
+verified: "deltaP_max = sqrt(2 rho v I) = sqrt(2*1.293*340*1e-3) = sqrt(0.8792) = 0.938 Pa. Matches key."
+kinds: [derived_medium]
+physics: [sound_intensity, pressure_amplitude]
+notes: "Consistent; no errors found."

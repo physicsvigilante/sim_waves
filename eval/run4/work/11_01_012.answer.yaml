@@ -1,0 +1,9 @@
+answer: {y1: "+x at 4/3 m/s", y2: "-x at 4/3 m/s", cancel: "at t = 0.75 s everywhere (x anywhere), and at x = 1 m at all times"}
+final_scene: 11_01_012.v1.yaml
+engine_fit: full
+hand_steps: ["the times/positions to test (t=3/4 s, x=1 m) came from my own algebra on the arguments, the engine only confirmed them"]
+coverage: full
+not_represented: nothing
+missing_in_source: "units of x,t,y not given; SI assumed"
+reasoning: "velocity(y1)=4/3, velocity(y2)=-4/3; equivalent() proves total(x=1,t)=0 and total(x,t=3/4)=0."
+friction: "no observable that solves 'where/when is the sum zero'; candidates must be guessed and then verified."

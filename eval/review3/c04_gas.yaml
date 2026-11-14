@@ -1,0 +1,6 @@
+id: c04
+media:
+  g1: {type: gas, gamma: 1.4, temperature: 27 degC, molar_mass: 29 g/mol}
+  g2: {type: gas, v: 340 m/s, gamma: 1.4, pressure: 1e5 Pa}
+  g3: {type: gas, gamma: 7/5, pressure: 1e5 Pa, density: 1.29 kg/m^3, temperature: 5000 K}
+observe: {v1: "speed(g1)", v2: "speed(g2)", v3: "speed(g3)"}

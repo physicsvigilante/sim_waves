@@ -1,0 +1,9 @@
+id: 11/02/012
+assume: ["m2 > m1 is the stated order; kept symbolic (engine cannot hold the inequality between two symbols), so results are read as functions of m2/m1. Same tension T."]
+symbols: {T: positive, m1: positive, m2: positive}
+media:
+  s1: {type: string, mu: m1, tension: T}
+  s2: {type: string, mu: m2, tension: T}
+observe:
+  v1_over_v2: "speed(s1)/speed(s2)"
+  z2_over_z1: "impedance(s2)/impedance(s1)"

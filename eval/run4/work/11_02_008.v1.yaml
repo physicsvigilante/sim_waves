@@ -1,0 +1,14 @@
+id: 11/02/008
+assume:
+  - "Same string for both cases (mu fixed); amplitude A same, as stated. Case 1 and case 2 modelled as two strings of equal mu."
+symbols: {mu: positive, T1: positive, f1: positive, A: positive}
+media:
+  s1: {type: string, mu: mu, tension: T1}
+  s2: {type: string, mu: mu, tension: 4*T1}
+waves:
+  w1: {harmonic: {on: s1, A: A, f: f1, dir: +x, phase: 0}}
+  w2: {harmonic: {on: s2, A: A, f: f1/4, dir: +x, phase: 0}}
+given:
+  - {fact: "amplitude(w1) == amplitude(w2)", source: stated}
+observe:
+  ratio: "power(w2)/power(w1)"

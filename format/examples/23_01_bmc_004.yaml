@@ -1,0 +1,12 @@
+id: 23/01/bmc_004
+# Two pulses superpose. No book key (solution image missing).
+waves:
+  y1: {given: "1/(2 + (2*x - 3*t)**2)", units: {x: m, t: s, y: m}}
+  y2: {given: "-1/(2 + (2*x + 3*t - 6)**2)", units: {x: m, t: s, y: m}}
+  total: {sum: [y1, y2]}
+observe:
+  zero_at_x_1p5_always: "equivalent(y(total, x=(3/2)[m], t=t), 0[m])"
+  zero_everywhere_at_t1: "equivalent(y(total, x=x, t=1[s]), 0[m])"
+  v1: "velocity(y1)"
+  v2: "velocity(y2)"
+expect: {zero_at_x_1p5_always: true, zero_everywhere_at_t1: true, v1: "3/2 m/s", v2: "-3/2 m/s"}

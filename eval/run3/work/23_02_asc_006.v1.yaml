@@ -1,0 +1,18 @@
+id: 23/02/asc_006
+assume:
+  - "Stationary wave from a wave and its reflection at a fixed end (wall at x = 0); concrete string values fixed by assumption, since the question is about shape at the instant of maximum kinetic energy."
+  - "Kinetic energy is greatest when every element's speed is greatest. Test candidate instants t = 0 and t = T/4 for y = 0 everywhere and for |vy| at its maximum."
+media:
+  s: {type: string, mu: 0.01 kg/m, tension: 4 N}
+junctions:
+  wall: {at: 0 m, left: s, right: fixed}
+waves:
+  w: {harmonic: {on: s, A: 1 cm, f: 50 Hz, dir: +x, phase: 0}}
+  st: {sum: [w, w_reflected]}
+observe:
+  flat_at_0:   "equivalent(y(st, x=x, t=0[s]), 0[m])"
+  flat_at_T4:  "equivalent(y(st, x=x, t=(1/200)[s]), 0[m])"
+  speed_max_at_0:  "equivalent(abs(vy(st, x=(-1/20)[m], t=0[s])), max_over(t, abs(vy(st, x=(-1/20)[m], t=t))))"
+  speed_max_at_T4: "equivalent(abs(vy(st, x=(-1/20)[m], t=(1/200)[s])), max_over(t, abs(vy(st, x=(-1/20)[m], t=t))))"
+  y_at_T4_x1: "y(st, x=(-1/20)[m], t=(1/200)[s])"
+  y_at_0_x1: "y(st, x=(-1/20)[m], t=0[s])"

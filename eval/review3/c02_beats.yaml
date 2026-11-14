@@ -1,0 +1,14 @@
+id: c02
+media: {air: {type: gas, v: 340 m/s}}
+resonators:
+  p: {type: pipe, on: air, length: 1 m, ends: [closed, open], end_correction: 0 m}
+  q: {type: pipe, on: air, length: 1.01 m, ends: [closed, open], end_correction: 0 m}
+waves:
+  a: {harmonic: {A: 1 cm, f: 256 Hz, lambda: 1 m, dir: +x, phase: 0}}
+  b: {harmonic: {A: 1 cm, f: 260 Hz, lambda: 1 m, dir: -x, phase: 0}}
+  s: {sum: [a, b]}
+observe:
+  bt: "beat_frequency(frequency(p, harmonic=1), frequency(q, harmonic=1))"
+  bw: "beat_frequency(b, a)"
+  bo: "beat_frequency(omega(a), omega(b))"
+  bm: "beat_frequency(a, 250[Hz])"

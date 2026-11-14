@@ -1,0 +1,10 @@
+id: 11/02/013
+assume:
+  - "String tension equals the spring force, k*x = 160 N/m * 1 cm (spring in equilibrium at the end)."
+  - "Pulse starts at the wall end and travels the full length 40 cm to the spring."
+media:
+  s: {type: string, mass: 10 g, length: 40 cm, tension: "160[N/m]*1[cm]"}
+observe:
+  t: "40[cm]/speed(s)"
+  v: "speed(s)"
+  T: "tension(s)"

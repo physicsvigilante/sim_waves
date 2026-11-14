@@ -1,0 +1,5 @@
+answer: [a, c]
+final_scene: 22_02_bmc_005.v1.yaml
+engine_fit: full
+reasoning: speed/(n*ab) = 4 with ab = lam/4 (a true, d false); phase(b)-phase(e) is 3*pi/2 (c true); a at t=4/(3n) minus d now is 25/12 cycles, not an integer, so b is false.
+friction: "ab=lam/4, and the positions of a..e, come from my reading of the figure (assume). Same-phase test needs manual division by 2*pi; no equal-phase-mod-2pi predicate."

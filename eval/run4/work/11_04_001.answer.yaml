@@ -1,0 +1,11 @@
+answer: {a: "y = 0.283 sin(x - 3t + pi/4) m (amplitude sqrt(2)/5 = 0.283 m)", b: "phi = 1.287 rad (73.7 deg), taking 0 < phi <= pi"}
+final_scene: 11_04_001.v1.yaml
+engine_fit: partial
+hand_steps:
+  - "Rewriting the engine phase (3*pi/4 in its sin(wt - kx + phase) convention) back into the book form sin(x - 3t + pi/4)."
+  - "Converting phi = atan(24/7) to degrees."
+coverage: full
+not_represented: nothing
+missing_in_source: "sign of phi (+/-) not stated; restricted to 0<phi<=pi by assumption"
+reasoning: "Engine amplitude of y1+y2 with phi=pi/2 is sqrt(2)/5; solving amplitude==0.32 gives phi = atan(24/7)."
+friction: "Phase reported in engine's sine-with-(wt - kx) convention, book form is sin(x - 3t + ...); needed a manual translation."

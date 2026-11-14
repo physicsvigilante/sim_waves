@@ -1,0 +1,15 @@
+id: 23/02/asc_005
+# A stationary wave from a wave and its reflection at a fixed end: frequency of the particle motion.
+symbols: {X: positive}
+media:
+  s: {type: string, mu: 0.01 kg/m, tension: 4 N}
+junctions:
+  wall: {at: 0 m, left: s, right: fixed}
+waves:
+  w: {harmonic: {on: s, A: 1 cm, f: 50 Hz, dir: +x, phase: 0}}
+  standing: {sum: [w, w_reflected]}
+observe:
+  f_wave: "frequency(w)"
+  f_particle: "frequency_of(t, y(standing, x=(-1/7)[m], t=t))"
+  travelling: "is_travelling(standing)"
+expect: {f_particle: "50 Hz", travelling: false}

@@ -1,0 +1,14 @@
+id: 23/03/cnt_004
+symbols: {mu: positive, T: positive}
+media:
+  wire: {type: string, mu: mu, tension: T}
+resonators:
+  r: {type: string, on: wire, length: 1 m, ends: [fixed, fixed]}
+observe:
+  n: "harmonic(r, overtone=4)"
+  lam: "wavelength(r, harmonic=harmonic(r, overtone=4))"
+  loop: "node_spacing(r, harmonic=harmonic(r, overtone=4))"
+expect:
+  n: 5
+  lam: {value: "40 cm", book: "20", status: disputed, why: "the book reports the loop length (lambda/2) as the wavelength"}
+  loop: "20 cm"

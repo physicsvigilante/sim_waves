@@ -1,0 +1,11 @@
+# run 4 (11/01/002): the ambiguity message must show every value an unknown takes,
+# so the family k = 20*pi/3 (the book's 150 m/s) is not hidden behind the ph = pi family
+unknowns: {k: positive, ph: phase}
+waves:
+  w: {harmonic: {A: 0.02 m, f: 500 Hz, k: k, dir: +x, phase: ph}}
+given:
+  - "y(w, x=0[m], t=0[s]) == 0[m]"
+  - "y(w, x=0.1[m], t=0[s]) == -0.01*sqrt(3)[m]"
+  - "y(w, x=0.8[m], t=0[s]) == 0.01*sqrt(3)[m]"
+observe: {k: k}
+expect: {error: ambiguous, message: "20*pi/3"}

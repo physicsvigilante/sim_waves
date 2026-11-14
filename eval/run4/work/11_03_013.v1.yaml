@@ -1,0 +1,9 @@
+id: 11/03/013
+assume:
+  - "Plane wave of intensity 1e-12 W/m^2 at 1 kHz (stated). No engine observable gives pressure or displacement amplitude from intensity; only I is represented."
+media:
+  air: {type: open3d}
+emitters:
+  pl: {on: air, geometry: plane, intensity: 1e-12 W/m^2}
+observe:
+  I: "intensity(pl, r=1[m])"

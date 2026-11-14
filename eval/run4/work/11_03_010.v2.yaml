@@ -1,0 +1,20 @@
+id: 11/03/010
+assume:
+  - "Medium modelled as a 'gas' only to get v = sqrt(B/rho) via gamma=1, pressure=B, density=1 (hack)."
+  - "Loudness 20 dB means beta = 10 log10(I/I0) with I0 = 1e-12 W/m^2 (convention); I = 1e-10 W/m^2 is my inversion."
+  - "Displacement phase zero at x=0, t=0 (stated 'initial phase zero'); pressure wave is 90 degrees shifted from it."
+  - "Amplitude A left as a free symbol; the engine cannot link it to I."
+symbols: {A: positive}
+media:
+  m: {type: gas, gamma: 1, pressure: 4e4 Pa, density: 1 kg/m^3}
+  air: {type: open3d}
+waves:
+  w: {harmonic: {on: m, A: A, omega: 500 rad/s, dir: +x, phase: 0}}
+emitters:
+  pl: {on: air, geometry: plane, intensity: 1e-10 W/m^2}
+given:
+  - {fact: "10*log(1e-10[W/m^2]/1e-12[W/m^2])/log(10) == 20", source: stated}
+observe:
+  v: "speed(m)"
+  k: "k(w)"
+  I: "intensity(pl, r=1[m])"

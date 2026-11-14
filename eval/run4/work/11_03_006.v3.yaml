@@ -1,0 +1,12 @@
+id: 11/03/006
+assume:
+  - "Sound level beta = 10 log10(I/I0), I0 = 1e-12 W/m^2 (convention). I = 1e-6 W/m^2 is my inversion of 60 dB (engine cannot solve for I inside log); the given-fact below checks it."
+  - "Uniform plane wavefront at normal incidence; power = I*area and energy = power*time are hand steps."
+media:
+  air: {type: open3d}
+emitters:
+  st: {on: air, geometry: plane, intensity: 1e-6 W/m^2}
+given:
+  - {fact: "10*log(1e-6[W/m^2]/1e-12[W/m^2])/log(10) == 60", source: stated}
+observe:
+  I: "intensity(st, r=1[m])"

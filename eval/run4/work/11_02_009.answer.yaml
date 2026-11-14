@@ -1,0 +1,9 @@
+answer: "32 m/s"
+final_scene: 11_02_009.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: nothing
+missing_in_source: none
+reasoning: "speed(wire) = 32 m/s with mass 5 g, length 64 cm, tension 8 N."
+friction: none

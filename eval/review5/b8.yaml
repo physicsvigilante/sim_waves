@@ -1,0 +1,7 @@
+media: {wire: {type: string, mu: 0.01 kg/m, tension: 100 N}, air: {type: gas, v: 340 m/s}}
+resonators:
+  s: {type: string, on: wire, length: 1 m, ends: [fixed, fixed]}
+  s3: {type: string, on: wire, length: 0.3 m, ends: [fixed, fixed]}
+  sf: {type: string, on: wire, length: 0.7 m, ends: [fixed, free]}
+  co: {type: pipe, on: air, length: 0.85 m, ends: [closed, open], end_correction: 0 m}
+observe: {a: "harmonics(s, upto=9, node_at=0.5)"}

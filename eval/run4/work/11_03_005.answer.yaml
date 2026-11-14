@@ -1,0 +1,9 @@
+answer: "-2.87 % (wavelength decreases by about 2.9 %)"
+final_scene: 11_03_005.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "refraction geometry (only the wavelength change is asked)"
+missing_in_source: "gamma and molar mass of air (cancel in the ratio; kept symbolic)"
+reasoning: "Engine: percent change = -2.873 % between warm (27 C) and cold (10 C) gas at 5000 Hz."
+friction: "Needed two separate gas media for two temperatures."

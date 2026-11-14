@@ -1,0 +1,15 @@
+id: 11/05/010
+number: 10
+source: {problem: 11_Mechanical_Waves_sardana/05_Stationary_Waves_and_Beats/Problems/010.png, solution: 11_Mechanical_Waves_sardana/05_Stationary_Waves_and_Beats/Solutions/010.png}
+format: numerical
+statement: |
+  Calculate the velocity of sound in a gas in which two wavelength 204 cm and 208 cm produce 20 beats in 6 seconds.
+figure: null
+options: null
+answer: "353.6 m/s"
+answer_value: 353.6
+units: m/s
+verified: "v (1/2.04 - 1/2.08) = 20/6 Hz gives v = (20/6)(2.04*2.08/0.04) = 353.6 m/s. Matches key."
+kinds: [inverse_condition]
+physics: [beats, wavelength, speed_of_sound]
+notes: "Consistent."

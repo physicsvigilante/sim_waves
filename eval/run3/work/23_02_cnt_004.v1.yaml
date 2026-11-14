@@ -1,0 +1,19 @@
+id: 23/02/cnt_004
+assume:
+  - "Both sections are under the same tension (one continuous string); AB has linear density m and BC 4m."
+  - "The pulse is modelled by a harmonic wave of one wavelength (the format reflects/transmits only harmonic waves, not pulses). Wavelength ratios of a harmonic wave stand in for the pulse's length ratios; the frequency (pulse duration) is unchanged by the joint."
+  - "Wave travels from A towards C; joint at x = 0 with AB on the left."
+symbols: {m: positive, T: positive, A: positive, omega: positive}
+media:
+  ab: {type: string, mu: m, tension: T}
+  bc: {type: string, mu: 4*m, tension: T}
+junctions:
+  B: {at: 0 m, left: ab, right: bc}
+waves:
+  w: {harmonic: {on: ab, A: A, omega: omega, dir: +x, phase: 0}}
+observe:
+  lam_i: "wavelength(w)"
+  lam_r: "wavelength(w_reflected)"
+  lam_t: "wavelength(w_transmitted)"
+  ratio_r_over_t: "wavelength(w_reflected)/wavelength(w_transmitted)"
+  freq_ratio_t: "frequency(w_transmitted)/frequency(w)"

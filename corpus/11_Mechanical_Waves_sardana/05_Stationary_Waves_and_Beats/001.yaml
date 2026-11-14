@@ -1,0 +1,17 @@
+id: 11/05/001
+number: 1
+source: {problem: 11_Mechanical_Waves_sardana/05_Stationary_Waves_and_Beats/Problems/001.png, solution: 11_Mechanical_Waves_sardana/05_Stationary_Waves_and_Beats/Solutions/001.png}
+format: numerical
+statement: |
+  The displacement of a standing wave on a string is given by
+  y(x, t) = 0.4 sin(0.5x) cos(30t)
+  where, x and y are in centimetre. Calculate the frequency, amplitude and wave speed of the component waves. Also calculate particle velocity at x = 2.4 cm, t = 0.8 s.
+figure: null
+options: null
+answer: "f = 15/pi Hz; amplitude = 0.2 cm; wave speed = 60 cm/s; particle velocity = 10.12 cm/s at x = 2.4 cm, t = 0.8 s"
+answer_value: {frequency: 4.77, amplitude: 0.2, wave_speed: 60, particle_velocity: 10.12}
+units: {frequency: Hz, amplitude: cm, wave_speed: cm/s, particle_velocity: cm/s}
+verified: "Components 0.2 sin(0.5x -/+ 30t); omega = 30, k = 0.5 /cm; f = 30/(2 pi) = 4.77 Hz; v = 30/0.5 = 60 cm/s; v_p = -12 sin(0.5x) sin(30t) = -12 sin(1.2) sin(24 rad) = +10.128 cm/s. Matches key (key prints 10.12, truncation of 10.128)."
+kinds: [given_wavefunction]
+physics: [standing_waves, superposition, wave_speed, particle_velocity]
+notes: "Key evaluates sin(24) with 24 in radians (gives positive velocity); the printed intermediate -12 sin(1.2) sin(24) is correct. Amplitude 0.2 cm is that of each component wave (half the 0.4 antinode amplitude)."

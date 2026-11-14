@@ -1,0 +1,11 @@
+# a phase change stated by the problem (pi) moves the maxima to 10 = (n - 1/2) lambda
+symbols: {lam: positive}
+media: {air: {type: gas, v: 340 m/s}}
+sources: {S: {on: air, at: [0 m, 0 m], f: "340[m/s]/lam", A: 1, phase: 0, spreading: none}}
+reflectors: {ceiling: {point: [0 m, 25 m], normal: [0, -1], phase_change: pi}}
+points: {P: [120 m, 0 m]}
+rays:
+  direct: {from: S, to: P}
+  up: {from: S, to: P, via: ceiling}
+observe: {top: "max(maxima(up, direct, vary=lam, lo=1[m], hi=100[m]))"}
+expect: {top: 20}

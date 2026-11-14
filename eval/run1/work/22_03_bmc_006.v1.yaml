@@ -1,0 +1,16 @@
+id: 22/03/bmc_006
+assume: ["No absorption; sources have fixed power (per length for line); plane wave modelled by plane emitter of intensity I0."]
+symbols: {P: positive, I0: positive, r: positive}
+media:
+  air: {type: open3d}
+emitters:
+  pt:   {on: air, geometry: point, power: P}
+  line: {on: air, geometry: line, power_per_length: P}
+  pl:   {on: air, geometry: plane, intensity: I0}
+observe:
+  I_plane: "intensity(pl, r=r)"
+  I_point: "intensity(pt, r=r)"
+  I_line:  "intensity(line, r=r)"
+  point_scaling: "simplify(intensity(pt, r=2*r)/intensity(pt, r=r))"
+  line_scaling: "simplify(intensity(line, r=2*r)/intensity(line, r=r))"
+  plane_scaling: "simplify(intensity(pl, r=2*r)/intensity(pl, r=r))"

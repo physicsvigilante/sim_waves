@@ -1,0 +1,9 @@
+answer: c
+final_scene: 24_01_asc_004.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "reflections / absorption"
+missing_in_source: "free-field point source not stated (assumed)"
+reasoning: "Engine: point source I(10 m) = 4e-10 W/m^2 = 4e-4 uW/m^2."
+friction: "none"

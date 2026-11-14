@@ -1,0 +1,5 @@
+answer: 3
+final_scene: 22_03_cnt_004.v1.yaml
+engine_fit: full
+reasoning: With the same string, power(w2) == 36*power(w1) for frequency ratio 1:2 solves n = 3.
+friction: Intensity is modelled via power on a string (no intensity observable for string waves).

@@ -1,0 +1,19 @@
+id: 11/05/004
+number: 4
+source: {problem: 11_Mechanical_Waves_sardana/05_Stationary_Waves_and_Beats/Problems/004.png, solution: 11_Mechanical_Waves_sardana/05_Stationary_Waves_and_Beats/Solutions/004.png}
+format: numerical
+statement: |
+  Consider a steel wire of length 1 m, mass 0.1 kg and cross-sectional area 10^-6 m^2 in which longitudinal vibrations are setup.
+  (a) What is the fundamental frequency?
+  (b) The same wire is rigidly fixed at both ends and the temperature is lowered by 20 degC. If now transverse waves are set up by plucking it at the mid-point, calculate the fundamental frequency and compare this with the frequency in the first case.
+  Given: Coefficient of linear expansion of steel is 1.21x10^-5 (degC)^-1 and Young's modulus of steel is 2x10^11 N m^-2.
+figure: null
+options: null
+answer: "(a) f = 500 sqrt(2) Hz (approx 707 Hz); (b) T = 48.4 N, f = 11 Hz"
+answer_value: {longitudinal_fundamental: 707.1, tension: 48.4, transverse_fundamental: 11}
+units: {longitudinal_fundamental: Hz, tension: N, transverse_fundamental: Hz}
+verified: "(a) mu = 0.1 kg/m; v = sqrt(Y A/mu) = sqrt(2e11*1e-6/0.1) = 1414 m/s; f = v/(2 l) = 707.1 Hz = 500 sqrt(2). (b) T = Y A alpha dT = 2e11*1e-6*1.21e-5*20 = 48.4 N; v = sqrt(48.4/0.1) = 22 m/s; f = 11 Hz. Matches key."
+kinds: [derived_medium, comparison]
+physics: [longitudinal_vibration, string_modes, thermal_stress, tension, young_modulus]
+notes: |
+  The solution does not state the requested comparison explicitly; ratio is 707.1/11, about 64 (longitudinal frequency is about 64 times larger). The given data imply density 0.1 kg/(1e-6 m^2 * 1 m) = 1e5 kg/m^3, unphysical for steel (about 7.8e3), but the key uses the data as given. Two sub-questions.

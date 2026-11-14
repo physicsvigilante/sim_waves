@@ -1,0 +1,15 @@
+id: 11/03/006
+number: 6
+source: {problem: 11_Mechanical_Waves_sardana/03_Sound_Waves_and_Properties/Problems/006.png, solution: 11_Mechanical_Waves_sardana/03_Sound_Waves_and_Properties/Solutions/006.png}
+format: numerical
+statement: |
+  A window whose area is 2 m^2 opens on a street where the street noise results at the window an intensity level of 60 dB. How much acoustic power enters the window through sound waves? Now, if a sound absorber is fitted at the window, how much energy from the street will it collect in a day?
+figure: null
+options: null
+answer: "P = 2 microwatt; E = 0.173 J in one day"
+answer_value: {P: 2.0e-6, E: 0.173}
+units: "P in W; E in J"
+verified: "I = 1e-12 * 10^6 = 1e-6 W/m^2; P = I A = 2e-6 W; E = 2e-6 * 86400 = 0.1728 J. Matches key."
+kinds: [derived_medium]
+physics: [decibel_level, sound_intensity, power, energy]
+notes: "I0 = 1e-12 W/m^2 is assumed (not stated). Solution text says 'power entering the room'. Assumes constant level for 24 h and sound incident normally with all power absorbed."

@@ -1,0 +1,21 @@
+id: 11/04/010
+assume:
+  - "Same geometry as v1. Part (b): SD = y = 3 m is taken from the engine result of part (a) (v1), the position of the wall W is a symbol varied by minima()."
+  - "Wall moved to the right only, so W > 2 m. 'Out of phase by 180 degrees' read as the reflected wave being in antiphase with the direct one at D (detector at a minimum)."
+  - "Equal amplitudes (spreading none); rigid wall."
+symbols: {W: positive}
+media: {air: {type: gas, v: 360 m/s}}
+sources:
+  S: {on: air, f: 180 Hz, A: 1, phase: 0, spreading: none, at: [0 m, 0 m]}
+reflectors:
+  wall: {point: [W, 0 m], normal: [-1, 0], boundary: rigid}
+points:
+  D: [0 m, 3 m]
+rays:
+  direct: {from: S, to: D}
+  bounce: {from: S, to: D, via: wall}
+given: []
+observe:
+  Wmin: "minima(bounce, direct, vary=W, lo=2[m], hi=6[m])"
+  Wmin1: "min(minima(bounce, direct, vary=W, lo=2.001[m], hi=6[m]))"
+  move: "min(minima(bounce, direct, vary=W, lo=2.001[m], hi=6[m])) - 2[m]"

@@ -1,0 +1,15 @@
+id: 11/05/013
+number: 13
+source: {problem: 11_Mechanical_Waves_sardana/05_Stationary_Waves_and_Beats/Problems/013.png, solution: 11_Mechanical_Waves_sardana/05_Stationary_Waves_and_Beats/Solutions/013.png}
+format: numerical
+statement: |
+  The first overtone of an open organ pipe beats with the first overtone of a closed organ pipe with a beat frequency of 2.2 Hz. The fundamental frequency of the closed organ pipe is 110 Hz. Find the lengths of the pipes. Speed of sound in air is v = 330 m s^-1
+figure: null
+options: null
+answer: "Closed pipe 0.75 m; open pipe 0.99 m or 1.0067 m"
+answer_value: {closed_pipe: 0.75, open_pipe: [0.99, 1.0067]}
+units: m
+verified: "l_closed = 330/(4*110) = 0.75 m; closed first overtone = 330 Hz; open first overtone = 330 +/- 2.2 = 332.2 or 327.8 Hz = v/l_open, so l_open = 330/332.2 = 0.9934 m or 330/327.8 = 1.0067 m. Matches key (key rounds 0.9934 to 0.99)."
+kinds: [inverse_condition]
+physics: [beats, organ_pipe, overtones]
+notes: "Two possible answers for the open pipe because the sign of the frequency difference is not given."

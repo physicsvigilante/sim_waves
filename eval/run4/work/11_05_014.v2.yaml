@@ -1,0 +1,15 @@
+id: 11/05/014
+assume:
+  - "End corrections neglected."
+  - "Uncovering a hole makes an effective open pipe from the mouthpiece to the hole (pressure node at the hole); the hole position is the length of that pipe."
+unknowns: {h: positive}
+media:
+  air: {type: gas, v: 340 m/s}
+resonators:
+  flute: {type: pipe, on: air, length: 60 cm, ends: [open, open], end_correction: 0 m}
+  part: {type: pipe, on: air, length: h, ends: [open, open], end_correction: 0 m}
+given:
+  - {fact: "frequency(part, harmonic=1) == 330[Hz]", source: stated}
+observe:
+  fa: "frequency(flute, harmonic=1)"
+  h: "h"

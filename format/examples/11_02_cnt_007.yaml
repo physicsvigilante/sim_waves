@@ -1,0 +1,11 @@
+id: 22/02/cnt_007
+media:
+  cu:
+    type: string
+    density: 9000 kg/m^3
+    Y: 1.3e11 Pa
+    alpha: 1.7e-5 1/K
+    tension: {thermal: {slack_at: 30 degC, now: 10 degC}}   # clamped both ends
+observe:
+  v: "speed(cu)"
+expect: {v: {value: "70 m/s", tol: 0.5%}}   # book rounds 70.08

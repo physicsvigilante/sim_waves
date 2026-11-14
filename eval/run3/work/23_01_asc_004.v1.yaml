@@ -1,0 +1,16 @@
+id: 23/01/asc_004
+assume:
+  - "Two in-phase sources are modelled as two copies of one travelling wave in air; the path from each source to P is the distance travelled, so the wave from A is evaluated at x = AP and from B at x = BP (B placed at the origin, A 25 cm further out)."
+  - "Only the path difference matters, not AP itself; B is taken at x = 0 and A at x = 25 cm."
+  - "Both waves are taken to act at P in the same direction (same polarisation / scalar sound)."
+media:
+  air: {type: gas, v: 350 m/s}
+waves:
+  wa: {harmonic: {on: air, A: 0.3 mm, f: 350 Hz, dir: +x, phase: 0}}
+  wb: {harmonic: {on: air, A: 0.4 mm, f: 350 Hz, dir: +x, phase: 0}}
+given:
+  - {fact: "frequency(wa) == 350[Hz]", source: stated}
+  - {fact: "speed(wa) == 350[m/s]", source: stated}
+observe:
+  lam: "wavelength(wa)"
+  resultant: "max_over(t, abs(y(wa, x=25[cm], t=t) + y(wb, x=0[cm], t=t)))"

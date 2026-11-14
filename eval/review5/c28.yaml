@@ -1,0 +1,1 @@
+observe: {a: "max_over(t, sqrt(25 + 24*cos(t))/2)", b: "min_over(t, sqrt(25 + 24*cos(t))*pi)", c: "min_over(t, 0*sin(t))", d: "min_over(t, abs(3*sin(t) + 4*cos(t) + 5))"}

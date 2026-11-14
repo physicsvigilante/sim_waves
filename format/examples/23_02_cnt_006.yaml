@@ -1,0 +1,15 @@
+id: 23/02/cnt_006
+symbols: {mu1: positive, T: positive, A: positive, f: positive}
+unknowns: {mu2: positive}
+media:
+  s1: {type: string, mu: mu1, tension: T}
+  s2: {type: string, mu: mu2, tension: T}
+junctions:
+  J: {at: 0 m, left: s1, right: s2}
+waves:
+  w: {harmonic: {on: s1, A: A, f: f, dir: +x, phase: 0}}
+given:
+  - {fact: "amplitude(w_transmitted) == 2*A/3", source: stated}
+observe:
+  lam_ratio: "wavelength(w)/wavelength(w_transmitted)"
+expect: {lam_ratio: 2}

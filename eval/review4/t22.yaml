@@ -1,0 +1,13 @@
+symbols: {lam: positive}
+media: {air: {type: gas, v: 340 m/s}}
+sources: {S: {on: air, f: "340[m/s]/lam", A: 1, phase: 0, spreading: none}}
+rays:
+  r1: {from: S, length: 1 m}
+  r2: {from: S, length: 3 m}
+observe:
+  I: "relative_intensity(r1, r2)"
+illustrate: {lam: 1 m}
+view:
+  - {plot: "relative_intensity(r1, r2)", vs: lam, range: [0.5 m, 4 m]}
+explore:
+  vary: {rays.r2.length: [3 m, 3.5 m, 0 m]}

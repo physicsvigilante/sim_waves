@@ -1,0 +1,5 @@
+answer: [a, b, c, d]
+final_scene: 22_02_bmc_004.v2.yaml
+engine_fit: full
+reasoning: velocity = -30 m/s, wavelength = pi m, frequency = 30/pi Hz, amplitude = 10^4 m, so all four statements hold.
+friction: "v1 used a non-existent direction() observable although the table lists it; the sign of velocity is used instead."

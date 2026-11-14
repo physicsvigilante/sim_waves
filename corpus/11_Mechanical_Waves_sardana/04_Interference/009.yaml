@@ -1,0 +1,15 @@
+id: 11/04/009
+number: 9
+source: {problem: 11_Mechanical_Waves_sardana/04_Interference/Problems/009.png, solution: 11_Mechanical_Waves_sardana/04_Interference/Solutions/009.png}
+format: numerical
+statement: |
+  A sound wave of wavelength 40 cm enters the tube shown in Figure from the source. What must be the smallest radius r of the semi-circular part of the tube, so that minima would be received by the detector?
+figure: "A horizontal tube from Source (left) to Detector (right). In the middle the tube splits into a straight segment (along the diameter) and a semicircular arch above it of radius r (r drawn as an arrow from the centre to the arch)."
+options: null
+answer: "r = 17.54 cm"
+answer_value: 17.54
+units: cm
+verified: "DISPUTED (minor numerical). Path difference = pi r - 2r = (pi - 2) r; first minimum needs lambda/2 = 20 cm, so r = 20/(pi - 2) = 20/1.14159 = 17.52 cm, not 17.54. Method matches the book; the printed value is 0.1% high."
+kinds: [inverse_condition, graph_read]
+physics: [interference, path_difference, destructive_interference]
+notes: "Straight path length taken as the diameter 2r."

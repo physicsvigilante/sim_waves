@@ -1,0 +1,10 @@
+answer: "f = 15/pi = 4.77 Hz; component amplitude 0.2 cm; speed 60 cm/s; particle velocity at x = 2.4 cm, t = 0.8 s is 10.1 cm/s (0.1013 m/s)"
+final_scene: 11_05_001.v2.yaml
+engine_fit: partial
+hand_steps:
+  - "Splitting the standing wave into the two components 0.2 sin(0.5x -/+ 30t) (the engine confirms their sum equals the stated field)."
+coverage: full
+not_represented: nothing
+missing_in_source: none
+reasoning: "Engine: frequency of component 15/pi Hz, amplitude 0.002 m, speed 0.6 m/s, vy of the sum 0.1013 m/s."
+friction: "Unit trap: x in equivalence checks is SI metres, so 0.5/cm had to be written 50/m (v1 gave False)."

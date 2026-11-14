@@ -1,0 +1,8 @@
+id: 22/02/asc_004
+assume: ["Problem gives no phase; options all have zero phase in sine form, so phase = 0."]
+waves:
+  w: {harmonic: {A: 0.2 m, v: 360 m/s, lambda: 60 m, dir: +x, phase: 0}}
+observe:
+  f: "frequency(w)"
+  matches_c: "equivalent(field(w), 0.2*sin(2*pi*(6*t - x/60)))"
+expect: {f: "6 Hz", matches_c: true}

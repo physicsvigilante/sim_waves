@@ -1,0 +1,17 @@
+id: 24/01/dmt_004
+assume:
+  - "Ideal gas with constant gamma."
+  - "Case (ii): at fixed temperature the density of an ideal gas scales with pressure (Boyle); this is a hand relation, entered as density 4*D0 with pressure 4*P0."
+symbols: {T0: positive, M0: positive, P0: positive, D0: positive, g: positive}
+media:
+  base: {type: gas, gamma: g, temperature: T0, molar_mass: M0}
+  c1: {type: gas, gamma: g, temperature: 4*T0, molar_mass: M0}
+  c3: {type: gas, gamma: g, temperature: 4*T0, molar_mass: M0}
+  c4: {type: gas, gamma: g, temperature: T0, molar_mass: 4*M0}
+  p0: {type: gas, gamma: g, pressure: P0, density: D0}
+  p4: {type: gas, gamma: g, pressure: 4*P0, density: 4*D0}
+observe:
+  i:   "speed(c1)/speed(base)"
+  ii:  "speed(p4)/speed(p0)"
+  iii: "speed(c3)/speed(base)"
+  iv:  "speed(c4)/speed(base)"

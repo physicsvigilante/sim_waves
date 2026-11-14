@@ -1,0 +1,15 @@
+id: 11/02/002
+number: 2
+source: {problem: 11_Mechanical_Waves_sardana/02_Transverse_Wave_in_String_and_Properties/Problems/002.png, solution: 11_Mechanical_Waves_sardana/02_Transverse_Wave_in_String_and_Properties/Solutions/002.png}
+format: numerical
+statement: |
+  A wave pulse starts propagating in the positive x-direction along a non-uniform wire of length l with a mass per unit length given by mu = mu0 + alpha x and under a tension 100 N. Find the time taken by the pulse to travel from the lighter end (x = 0) to the heavier end where mu0 and alpha are constant.
+figure: null
+options: null
+answer: "t = (1/(15 alpha)) [ (mu0 + alpha l)^(3/2) - mu0^(3/2) ]"
+answer_value: "((mu0+alpha*l)**1.5 - mu0**1.5)/(15*alpha)"
+units: s
+verified: "Matches key. v = sqrt(100/(mu0+alpha x)) = 10/sqrt(mu0+alpha x); t = (1/10) integral_0^l sqrt(mu0+alpha x) dx = (1/10)(2/(3 alpha))[(mu0+alpha l)^(3/2) - mu0^(3/2)] = [..]/(15 alpha)."
+kinds: [nonuniform_medium, symbolic, derived_medium]
+physics: [wave_speed, tension, linear_mass_density, travel_time]
+notes: "Solution figure shows a horizontal wire from x = 0 to x = l with a small element dx marked. Units of tension in SI (100 N) so mu in kg/m."

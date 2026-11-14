@@ -1,0 +1,20 @@
+id: 22/03/dmt_004
+symbols: {mu: positive, T: positive}
+media:
+  s1: {type: string, mu: mu, tension: T}
+  s2: {type: string, mu: mu, tension: T}
+unknowns: {phi1: phase, phi2: phase}
+waves:
+  w1: {harmonic: {on: s1, A: 10 mm, lambda: 20 cm, dir: +x, phase: phi1}}
+  w2: {harmonic: {on: s2, A: 5 mm, lambda: 40 cm, dir: -x, phase: phi2}}
+given:                          # both snapshots start at the origin, rising
+  - "y(w1, x=0, t=0) == 0"
+  - "slope(w1, x=0, t=0) > 0"
+  - "y(w2, x=0, t=0) == 0"
+  - "slope(w2, x=0, t=0) > 0"
+observe:
+  I_ratio: "power(w1)/power(w2)"
+  dphi_A:  "(phase(w1, x=20[cm], t=0) - phase(w2, x=20[cm], t=0))/pi"
+  f_ratio: "frequency(w1)/frequency(w2)"
+  vA_ratio: "abs(vy(w1, x=20[cm], t=0))/abs(vy(w2, x=20[cm], t=0))"
+expect: {I_ratio: 16, dphi_A: "even integer", f_ratio: 2, vA_ratio: 4}

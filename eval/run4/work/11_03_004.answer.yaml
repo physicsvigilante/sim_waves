@@ -1,0 +1,9 @@
+answer: {v: "1414 m/s", wavelength: "5.84 m"}
+final_scene: 11_03_004.v1.yaml
+engine_fit: partial
+hand_steps: ["water density 1000 kg/m^3 supplied by me", "B written as gamma*pressure with gamma=1 to reuse the gas route"]
+coverage: partial
+not_represented: "liquid medium with bulk modulus (shown as a gas with a disguise)"
+missing_in_source: "density of water (not given)"
+reasoning: "Engine: v = 1000 sqrt2 = 1414 m/s, wavelength at 242 Hz = 5.844 m."
+friction: "No bulk-modulus medium; had to disguise B as a gas pressure with gamma=1."

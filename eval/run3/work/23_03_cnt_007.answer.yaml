@@ -1,0 +1,8 @@
+answer: 200 m/s
+final_scene: 23_03_cnt_007.v2.yaml
+engine_fit: full
+coverage: full
+not_represented: "nothing"
+missing_in_source: "Mass per length is not given (not needed); 'two nodes between the ends' read as two interior nodes"
+reasoning: "Reading of 'two nodes between the ends' (interior, giving 3rd harmonic) is an assumption."
+friction: "Engine solved n = 3, wavelength 2/3 m, v = 200 m/s."

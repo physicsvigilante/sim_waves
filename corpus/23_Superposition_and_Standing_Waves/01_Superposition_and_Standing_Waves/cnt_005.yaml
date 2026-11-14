@@ -1,0 +1,14 @@
+id: 23/01/cnt_005
+number: 12
+source: {problem: 23_Superposition_and_Standing_Waves/01_Superposition_and_Standing_Waves/Problems/cnt_005.png, solution: 23_Superposition_and_Standing_Waves/01_Superposition_and_Standing_Waves/Solutions/cnt_005.png}
+format: numerical
+statement: |
+  Two coherent sound sources, each having a frequency of 400 Hz, are at distances 0.2 m and 0.48 m from a point P. Each wave has intensity of 60 W/m^2 at P. Find the resultant intensity at P (in W/m^2). Speed of sound in the medium is 448 m/s.
+figure: null
+answer: "120"
+answer_value: 120
+units: W/m^2
+verified: "lambda = 448/400 = 1.12 m; path diff 0.28 m = lambda/4; phase pi/2; I = 2*60 = 120 W/m^2. Matches key."
+kinds: [build_wavefunction]
+physics: [interference, intensity, phase_difference]
+notes: Consistent.

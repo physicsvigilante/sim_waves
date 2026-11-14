@@ -1,0 +1,17 @@
+id: 23/05/cnt_004
+assume:
+  - "Wires have equal length and mass per length (identical). Wire 2's tension is T*(1+p), p > 0 (an increase)."
+  - "Length 1 m used for both (scale-free: fundamental fixed at 500 Hz by given)."
+symbols: {mu: positive}
+unknowns: {T: positive, p: positive}
+media:
+  w1: {type: string, mu: mu, tension: T}
+  w2: {type: string, mu: mu, tension: "T*(1 + p)"}
+resonators:
+  r1: {type: string, on: w1, length: 1 m, ends: [fixed, fixed]}
+  r2: {type: string, on: w2, length: 1 m, ends: [fixed, fixed]}
+given:
+  - {fact: "frequency(r1, harmonic=1) == 500[Hz]", source: stated}
+  - {fact: "beat_frequency(frequency(r1, harmonic=1), frequency(r2, harmonic=1)) == 5[Hz]", source: stated}
+observe:
+  percent: "100*p"

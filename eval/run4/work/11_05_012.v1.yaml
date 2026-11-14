@@ -1,0 +1,16 @@
+id: 11/05/012
+assume:
+  - "Tube end correction neglected."
+  - "Wire is a uniform string; its tension is solved from the resonance condition (fundamental of wire equals fundamental of tube)."
+unknowns: {T: positive}
+media:
+  air: {type: gas, v: 330 m/s}
+  wire: {type: string, mass: 0.01 kg, length: 0.3 m, tension: T}
+resonators:
+  tube: {type: pipe, on: air, length: 1 m, ends: [closed, open], end_correction: 0 m}
+  w: {type: string, on: wire, length: 0.3 m, ends: [fixed, fixed]}
+given:
+  - {fact: "frequency(w, harmonic=1) == frequency(tube, harmonic=1)", source: stated}
+observe:
+  f: "frequency(tube, harmonic=1)"
+  T: "T"

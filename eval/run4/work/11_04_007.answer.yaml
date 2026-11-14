@@ -1,0 +1,10 @@
+answer: "f = n * 188.3 Hz, n = 1, 2, ..., 106 (106 audible frequencies, from 188 Hz up to about 19962 Hz)"
+final_scene: 11_04_007.v1.yaml
+engine_fit: partial
+hand_steps:
+  - "Reading n = 1..106 from the engine's printed list and count (the list members are integer multiples of the first)."
+coverage: full
+not_represented: "unequal amplitudes of direct and reflected rays (spreading none); wall assumed rigid"
+missing_in_source: none
+reasoning: "Path difference 1.805 m; maxima at f = n*340/1.805; engine count in 20 Hz-20 kHz = 106, smallest 188.3 Hz, largest 19962 Hz."
+friction: "Lists cannot be indexed, so the answer 'n times f1' is read by eye."

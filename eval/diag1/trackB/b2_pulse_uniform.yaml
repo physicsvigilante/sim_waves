@@ -1,0 +1,7 @@
+# Track B control: the same pulse with no junction
+media:
+  a: {type: string, mu: 0.01 kg/m, tension: 9 N, coordinate: {origin: left_end, direction: right, variable: s}}
+symbols: {s: positive}
+waves:
+  p: {pulse: {on: a, from: left_end, toward: right}}
+observe: {f: "front(p, t=1[s])"}

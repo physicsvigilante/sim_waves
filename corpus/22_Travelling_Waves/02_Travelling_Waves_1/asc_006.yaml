@@ -1,0 +1,14 @@
+id: 22/02/asc_006
+number: 3
+source: {problem: 22_Travelling_Waves/02_Travelling_Waves_1/Problems/asc_006.png, solution: 22_Travelling_Waves/02_Travelling_Waves_1/Solutions/asc_006.png}
+format: single_correct
+statement: |
+  The path difference between the two waves y1 = a1 sin(ωt - 2πx/λ) and
+  y2 = a2 cos(ωt - 2πx/λ + φ) is
+figure: null
+options: {a: "(λ/2π) φ", b: "(λ/2π)(φ + π/2)", c: "(2π/λ)(φ - π/2)", d: "(2π/λ) φ"}
+answer: [b]
+answer_value: "(λ/2π)(φ + π/2)"
+kinds: [given_wavefunction, symbolic]
+physics: [phase_difference, path_difference]
+notes: cos → sin conversion adds π/2. Phase difference = φ + π/2.

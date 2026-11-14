@@ -1,0 +1,15 @@
+id: 22/03/cnt_006
+number: 12
+source: {problem: 22_Travelling_Waves/03_Travelling_Waves_2/Problems/cnt_006.png, solution: 22_Travelling_Waves/03_Travelling_Waves_2/Solutions/cnt_006.png}
+format: numerical
+statement: |
+  A taut string for which μ = 0.05 kg/m is under a tension of 80 N. Find the power to be
+  supplied to the string (in W) to generate sinusoidal waves at a frequency of 60 Hz and an
+  amplitude of 6 cm.
+figure: null
+answer_value: 513
+units: W
+verified: "511.6 (recomputed with exact π; book rounds π = 3.14)"
+kinds: [derived_medium]
+physics: [power, wave_speed]
+notes: Tolerance needed (~0.5%) because the book rounds π.

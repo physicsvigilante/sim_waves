@@ -1,0 +1,19 @@
+id: 11/02/011
+assume:
+  - "Wire QR starts at junction Q (x=0); PQ lies to the left. Far end R treated as irrelevant to the first crossing."
+  - "Pulse treated as a sinusoidal harmonic wave for amplitude coefficients."
+  - "Frequency is not given and does not affect coefficients; chosen symbol f."
+symbols: {f: positive}
+media:
+  pq: {type: string, mass: 0.06 kg, length: 4.8 m, tension: 80 N}
+  qr: {type: string, mass: 0.2 kg, length: 2.56 m, tension: 80 N}
+junctions:
+  Q: {at: 0 m, left: pq, right: qr}
+waves:
+  w: {harmonic: {on: pq, A: 3.5 cm, f: f, dir: +x, phase: 0}}
+observe:
+  t_total: "4.8[m]/speed(pq) + 2.56[m]/speed(qr)"
+  vpq: "speed(pq)"
+  vqr: "speed(qr)"
+  Ar: "amplitude(w_reflected)"
+  At: "amplitude(w_transmitted)"

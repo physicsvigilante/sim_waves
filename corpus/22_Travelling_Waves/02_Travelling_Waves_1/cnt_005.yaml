@@ -1,0 +1,15 @@
+id: 22/02/cnt_005
+number: 13
+source: {problem: 22_Travelling_Waves/02_Travelling_Waves_1/Problems/cnt_005.png, solution: 22_Travelling_Waves/02_Travelling_Waves_1/Solutions/cnt_005.png}
+format: numerical
+statement: |
+  Equation of a plane progressive wave is y = (a/x) sin[(2π/3)(t - x/b)]. If maximum velocity
+  of a particle of the medium and velocity of wave are equal, then find the value of (a/b).
+figure: null
+answer_value: 1.5
+kinds: [given_wavefunction, inverse_condition, symbolic]
+physics: [particle_velocity, wave_speed]
+notes: |
+  LIKELY MISPRINT. As printed, amplitude is a/x (position-dependent), so the condition has no
+  single answer. The book uses amplitude a/π, i.e. the intended equation is
+  y = (a/π) sin[(2π/3)(t - x/b)]. Then v0 = 2a/3 = b, a/b = 3/2. Needs human confirmation.

@@ -1,0 +1,18 @@
+id: 23/04/asc_006
+assume:
+  - "Normal human hearing upper limit 20 kHz (convention); the lower limit is irrelevant here."
+  - "End correction neglected; v symbolic since the speed cancels."
+  - "The engine cannot count modes below a limit, so I observe the frequencies of successive overtones and compare with 20 kHz myself."
+symbols: {v: positive}
+unknowns: {L: positive}
+media:
+  air: {type: gas, v: v}
+resonators:
+  p: {type: pipe, on: air, length: L, ends: [closed, open], end_correction: 0 m}
+given:
+  - {fact: "frequency(p, harmonic=1) == 1500[Hz]", source: stated}
+observe:
+  h6: "harmonic(p, overtone=6)"
+  f6: "frequency(p, harmonic=harmonic(p, overtone=6))"
+  h7: "harmonic(p, overtone=7)"
+  f7: "frequency(p, harmonic=harmonic(p, overtone=7))"

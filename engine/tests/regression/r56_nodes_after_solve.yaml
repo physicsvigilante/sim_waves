@@ -1,0 +1,7 @@
+# review 5 #3: nodes() uses a length solved in given
+media: {air: {type: gas, v: 340 m/s}}
+unknowns: {L: positive}
+resonators: {p: {type: pipe, on: air, length: L, ends: [closed, open], end_correction: 0 m}}
+given: ["frequency(p, harmonic=1) == 100[Hz]"]
+observe: {n3: "nodes(p, harmonic=3)"}
+expect: {n3: "(0, 17/30)"}

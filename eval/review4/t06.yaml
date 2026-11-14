@@ -1,0 +1,9 @@
+symbols: {L: real}
+media: {air: {type: gas, v: 340 m/s}}
+sources: {S: {on: air, f: 340 Hz, A: 1, phase: 0, spreading: none}}
+rays:
+  r1: {from: S, length: 1 m}
+  r2: {from: S, length: L}
+observe:
+  m: "maxima(r2, r1, vary=L, lo=-2[m], hi=3[m])"
+  mi: "minima(r2, r1, vary=L, lo=1[m], hi=3[m])"

@@ -1,0 +1,8 @@
+answer: c (880 Hz)
+final_scene: 23_04_asc_007.v2.yaml
+engine_fit: full
+coverage: full
+not_represented: "nothing"
+missing_in_source: "Water filling 1/4 read as air column length 3L/4; end correction neglected"
+reasoning: "Engine: L = v/880; part-filled pipe first overtone (harmonic 3) = 880 Hz."
+friction: "Initial v1 with L symbol was rejected as over-specified fact; L must be an unknown. Filling with water is modelled by a second resonator of length 3L/4."

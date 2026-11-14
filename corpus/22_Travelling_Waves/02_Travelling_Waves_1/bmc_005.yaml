@@ -1,0 +1,20 @@
+id: 22/02/bmc_005
+number: 8
+source: {problem: 22_Travelling_Waves/02_Travelling_Waves_1/Problems/bmc_005.png, solution: 22_Travelling_Waves/02_Travelling_Waves_1/Solutions/bmc_005.png}
+format: multiple_correct
+statement: |
+  The rope shown at an instant is carrying a wave travelling towards right, created by a
+  source vibrating at a frequency n. Consider the following statements
+figure: |
+  Snapshot: one full sinusoid plus. Labelled x-positions: a at first crest, b at next zero
+  crossing (descending), c at trough, d at next zero crossing (rising), e at next crest.
+  So ab = λ/4, b→e = 3λ/4, a→d = 3λ/4.
+options:
+  a: "The speed of the wave is 4n × ab"
+  b: "The medium at a will be in the same phase as d after 4/(3n) s"
+  c: "The phase difference between b and e is 3π/2"
+  d: "The speed of the wave is 2n × ab"
+answer: [a, c]
+kinds: [graph_read, symbolic]
+physics: [wave_speed, phase_difference]
+notes: Option (b) is a tricky "same phase after time" claim; needs careful definition of phase of a point.

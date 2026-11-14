@@ -1,0 +1,28 @@
+id: 11/04/008
+assume:
+  - "The figure text does not say whether the foot of the perpendicular lies between S1 and S2. Two readings are modelled together: case A (foot between, S1 at x=0, foot at 2 m, S2 at 3 m) and case B (S2 between S1 and the foot: S1 at 0, S2 at 1 m, foot at 2 m). P is 4 m above the foot in both."
+  - "Equal amplitudes, spreading none (only phase matters for the frequencies asked). Frequencies sought for audible range 20 Hz to 20 kHz."
+symbols: {fs: positive}
+media: {air: {type: gas, v: 350 m/s}}
+sources:
+  A1: {on: air, f: fs, A: 1, phase: 0, spreading: none, at: [0 m, 0 m]}
+  A2: {on: air, f: fs, A: 1, phase: 0, spreading: none, at: [3 m, 0 m]}
+  B1: {on: air, f: fs, A: 1, phase: 0, spreading: none, at: [0 m, 0 m]}
+  B2: {on: air, f: fs, A: 1, phase: 0, spreading: none, at: [1 m, 0 m]}
+points:
+  PA: [2 m, 4 m]
+  PB: [2 m, 4 m]
+rays:
+  a1: {from: A1, to: PA}
+  a2: {from: A2, to: PA}
+  b1: {from: B1, to: PB}
+  b2: {from: B2, to: PB}
+given: []
+observe:
+  dA: "path_difference(a1, a2)"
+  dB: "path_difference(b1, b2)"
+  fmaxA1: "min(maxima(a1, a2, vary=fs, lo=1[Hz], hi=100000[Hz]))"
+  fminA1: "min(minima(a1, a2, vary=fs, lo=1[Hz], hi=100000[Hz]))"
+  fmaxB1: "min(maxima(b1, b2, vary=fs, lo=1[Hz], hi=100000[Hz]))"
+  fminB1: "min(minima(b1, b2, vary=fs, lo=1[Hz], hi=100000[Hz]))"
+  fminA2: "min(minima(a1, a2, vary=fs, lo=1[Hz], hi=100000[Hz]))"

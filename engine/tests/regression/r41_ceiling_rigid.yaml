@@ -1,0 +1,16 @@
+# rays: source and listener 120 m apart, rigid ceiling 25 m up. Pressure: no phase change at
+# a rigid boundary, path difference 10 m, so maxima at lambda = 10/n.
+symbols: {lam: positive}
+media: {air: {type: gas, v: 340 m/s}}
+sources: {S: {on: air, at: [0 m, 0 m], f: "340[m/s]/lam", A: 1, phase: 0, spreading: none}}
+reflectors: {ceiling: {point: [0 m, 25 m], normal: [0, -1], boundary: rigid}}
+points: {P: [120 m, 0 m]}
+rays:
+  direct: {from: S, to: P}
+  up: {from: S, to: P, via: ceiling}
+observe:
+  d: "path_difference(up, direct)"
+  top: "max(maxima(up, direct, vary=lam, lo=1[m], hi=100[m]))"
+  n: "count(maxima(up, direct, vary=lam, lo=2[m], hi=100[m]))"
+  bottom: "max(minima(up, direct, vary=lam, lo=1[m], hi=100[m]))"
+expect: {d: 10, top: 10, n: 5, bottom: 20}

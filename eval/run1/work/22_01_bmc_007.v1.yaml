@@ -1,0 +1,13 @@
+id: 22/01/bmc_007
+assume: ["Phase of the sine wave arbitrary; evaluate at a fixed point x=X."]
+symbols: {A: positive, k: positive, omega: positive, X: real}
+waves:
+  w: {harmonic: {A: A, omega: omega, k: k, dir: +x, phase: 0}}
+observe:
+  y: "y(w, x=X, t=t)"
+  v: "vy(w, x=X, t=t)"
+  a: "ay(w, x=X, t=t)"
+  a_plus_omega2_y: "simplify(ay(w, x=X, t=t) + omega**2*y(w, x=X, t=t))"
+  v_vs_y_shift: "simplify(vy(w, x=X, t=t) - omega*y(w, x=X, t=t + pi/(2*omega)))"
+  a_vs_v_shift: "simplify(ay(w, x=X, t=t) - omega*vy(w, x=X, t=t + pi/(2*omega)))"
+  same_phase_y_v: "equivalent(y(w, x=X, t=t)/A, vy(w, x=X, t=t)/(A*omega))"

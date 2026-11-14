@@ -1,0 +1,15 @@
+id: 11/02/004
+number: 4
+source: {problem: 11_Mechanical_Waves_sardana/02_Transverse_Wave_in_String_and_Properties/Problems/004.png, solution: 11_Mechanical_Waves_sardana/02_Transverse_Wave_in_String_and_Properties/Solutions/004.png}
+format: numerical
+statement: |
+  A transverse wave travelling in a string is given by the equation y = A sin(kx - wt). Calculate the potential energy per unit volume possessed by this wave.
+figure: null
+options: null
+answer: "No answer given: solution image says only 'Already Done in Theory.'"
+answer_value: null
+units: null
+verified: "Key absent. For reference (own derivation): u_p = (1/2) rho w^2 A^2 cos^2(kx - wt) per unit volume (rho = mass density; for a string per unit length use mu), average (1/4) rho w^2 A^2. Not a book key."
+kinds: [given_wavefunction, symbolic]
+physics: [wave_energy, potential_energy_density]
+notes: "Solution image contains only the text 'Already Done in Theory.'; the book's answer is not transcribable. Marked untranscribable (no key)."

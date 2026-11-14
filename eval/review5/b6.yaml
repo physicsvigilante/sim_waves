@@ -1,0 +1,5 @@
+media: {air: {type: gas, v: 340 m/s}}
+unknowns: {e: positive}
+resonators: {pe: {type: pipe, on: air, length: 0.5 m, ends: [closed, open], end_correction: e}}
+given: ["frequency(pe, harmonic=1) == 160[Hz]"]
+observe: {a: "nodes(pe, harmonic=3)", an: "antinodes(pe, harmonic=3)", e: "e"}

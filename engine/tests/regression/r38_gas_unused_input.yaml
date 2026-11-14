@@ -1,0 +1,4 @@
+# review 3 #11
+media: {g: {type: gas, v: 340 m/s, gamma: 7/5, pressure: 1e5 Pa}}
+observe: {v: "speed(g)"}
+expect: {error: rejected, message: "not used"}

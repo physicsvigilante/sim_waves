@@ -1,0 +1,17 @@
+id: 11/03/001
+number: 1
+source: {problem: 11_Mechanical_Waves_sardana/03_Sound_Waves_and_Properties/Problems/001.png, solution: 11_Mechanical_Waves_sardana/03_Sound_Waves_and_Properties/Solutions/001.png}
+format: numerical
+statement: |
+  A point A is located at a distance r = 1.5 m from a point source of sound of frequency 600 Hz. The power of the source is 0.8 watt. Speed of sound in air is 340 ms^-1 and density of air is 1.29 kgm^-3. Find at the point A,
+  (a) the pressure oscillation amplitude (deltaP)_m
+  (b) the displacement oscillation amplitude A.
+figure: null
+options: null
+answer: "(a) (deltaP)_m = 4.98 N m^-2; (b) A = 3 x 10^-6 m"
+answer_value: {deltaP_m: 4.98, A: 3.0e-6}
+units: "deltaP_m in N m^-2 (Pa); A in m"
+verified: "I = P/(4 pi r^2) = 0.8/(4 pi 2.25) = 2.83e-2 W/m^2; deltaP_m = sqrt(2 rho v I) = sqrt(2*1.29*340*0.0283) = 4.98 Pa; A = deltaP_m/(2 pi f rho v) = 4.98/(2 pi*600*1.29*340) = 3.0e-6 m. Matches key."
+kinds: [derived_medium]
+physics: [sound_intensity, point_source, pressure_amplitude, displacement_amplitude]
+notes: "Single question with two parts. Isotropic point source assumed (I = P/4 pi r^2). Consistent; no errors found."

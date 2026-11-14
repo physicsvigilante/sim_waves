@@ -1,0 +1,19 @@
+id: 23/05/asc_012
+number: 9
+source: {problem: 23_Superposition_and_Standing_Waves/05_Vibration_in_Rods_and_Beats/Problems/asc_012.png, solution: 23_Superposition_and_Standing_Waves/05_Vibration_in_Rods_and_Beats/Solutions/asc_012.png}
+format: single_correct
+statement: |
+  Two sounding bodies are producing progressive wave given by y1 = 4 sin(400 pi t) and y2 = 3 sin(404 pi t), where t is in second which superposes near the ears of a person. The person will hear
+figure: null
+options:
+  a: "2 beats per second with intensity ratio 4/3 between maxima and minima"
+  b: "2 beats per second with intensity ratio 49 between maxima and minima"
+  c: "4 beats per second with intensity ratio 7 between maxima and minima"
+  d: "4 beats per second with intensity ratio 4/3 between maxima and minima"
+answer: b
+answer_value: null
+units: null
+verified: "f1 = 200, f2 = 202, beats 2 Hz. Amplitude max 7, min 1, intensity ratio 49. Matches key."
+kinds: [given_wavefunction, ratio]
+physics: [beats, intensity, amplitude]
+notes: Consistent.

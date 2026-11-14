@@ -1,0 +1,11 @@
+answer: "96 % of the energy passes across the obstacle"
+final_scene: 11_05_007.v3.yaml
+engine_fit: partial
+hand_steps:
+  - "Antinode/node amplitude ratio written as (A_i + A_r)/(A_i - A_r) = 3/2 by hand (v1 using max_over over x was rejected)."
+  - "Second solution mu2 = 4*mu1/9 not run, assumed to give the same transmitted power fraction (symmetric by impedance matching)."
+coverage: partial
+not_represented: "obstacle represented as a junction with a heavier string"
+missing_in_source: "sign of the reflection (denser or lighter obstacle) not stated; does not change the answer"
+reasoning: "Engine: mu2 = 9 mu1/4 gives power(transmitted)/power(incident) = 24/25 = 0.96."
+friction: "Cannot ask for antinode and node amplitudes of a partial standing wave directly; no obstacle with arbitrary reflection coefficient."

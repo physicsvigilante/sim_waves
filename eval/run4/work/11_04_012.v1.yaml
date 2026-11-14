@@ -1,0 +1,39 @@
+id: 11/04/012
+assume:
+  - "Origin midway; S1 at (-5 m, 0), S2 at (5 m, 0); A at (4 m, 0) (9 m from S1, 1 m from S2, from the figure)."
+  - "Equal amplitudes, coherent, spreading none; only phase matters. Minimum = antiphase (path difference lambda/2, the lowest-order minimum the figure's curve starting from A belongs to)."
+  - "Points on the locus: three trial points with x = 6, 8, 10 m on the upper branch are solved for y with y > 0; the closed relation between x and y is then checked against a hyperbola written by hand."
+unknowns: {y1: positive, y2: positive, y3: positive}
+media: {air: {type: gas, v: 343 m/s}}
+sources:
+  S1: {on: air, f: 21.5 Hz, A: 1, phase: 0, spreading: none, at: [-5 m, 0 m]}
+  S2: {on: air, f: 21.5 Hz, A: 1, phase: 0, spreading: none, at: [5 m, 0 m]}
+points:
+  A: [4 m, 0 m]
+  P1: [6 m, y1]
+  P2: [8 m, y2]
+  P3: [10 m, y3]
+rays:
+  a1: {from: S1, to: A}
+  a2: {from: S2, to: A}
+  p11: {from: S1, to: P1}
+  p12: {from: S2, to: P1}
+  p21: {from: S1, to: P2}
+  p22: {from: S2, to: P2}
+  p31: {from: S1, to: P3}
+  p32: {from: S2, to: P3}
+given:
+  - {fact: "path_difference(p11, p12) == wavelength(p11)/2", source: assumption, note: "lowest-order minimum branch through A"}
+  - {fact: "path_difference(p21, p22) == wavelength(p21)/2", source: assumption}
+  - {fact: "path_difference(p31, p32) == wavelength(p31)/2", source: assumption}
+observe:
+  lam: "wavelength(a1)"
+  dA: "path_difference(a1, a2)"
+  dphiA: "wrap(phase_difference(a1, a2))"
+  IA_rel: "relative_intensity(a1, a2)"
+  y1: "y1"
+  y2: "y2"
+  y3: "y3"
+  hyp1: "36/(wavelength(a1)/4)**2 - y1**2/(25 - (wavelength(a1)/4)**2)"
+  hyp2: "64/(wavelength(a1)/4)**2 - y2**2/(25 - (wavelength(a1)/4)**2)"
+  hyp3: "100/(wavelength(a1)/4)**2 - y3**2/(25 - (wavelength(a1)/4)**2)"

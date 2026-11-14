@@ -1,0 +1,8 @@
+answer: [b, c, d]
+final_scene: 22_01_bmc_007.v1.yaml
+engine_fit: full
+coverage: full
+not_represented: "nothing (one particle of a harmonic wave)"
+missing_in_source: "none"
+reasoning: "ay/y = -omega**2 (opposite phase, b true). vy equals y shifted by a quarter period and ay equals vy shifted by a quarter period (c, d true: pi/2); y, v, a are not equal functions (a false)."
+friction: "No direct 'phase difference between two quantities' observable; used equivalent() with a quarter-period time shift, where the quarter period is my own choice of test."

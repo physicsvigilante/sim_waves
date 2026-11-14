@@ -1,0 +1,10 @@
+# review 3 #10
+media:
+  a: {type: string, mu: 0.01 kg/m, tension: 9 N}
+  b: {type: string, mu: 0.04 kg/m, tension: 9 N}
+waves:
+  u: {harmonic: {on: a, A: 1 cm, f: 10 Hz, dir: +x, phase: 0}}
+  v: {harmonic: {on: b, A: 1 cm, f: 10 Hz, dir: +x, phase: 0}}
+  s: {sum: [u, v]}
+observe: {amp: "amplitude(s)"}
+expect: {error: rejected, message: "different media"}

@@ -1,0 +1,14 @@
+id: 11/03/005
+assume:
+  - "Air as ideal gas with the same gamma and molar mass in both regions; only temperature differs."
+  - "Frequency 5000 Hz unchanged across the boundary (stated)."
+  - "27 C -> 300.15 K and 10 C -> 283.15 K via degC."
+symbols: {g: positive, M: positive}
+media:
+  warm: {type: gas, gamma: g, temperature: 27 degC, molar_mass: M}
+  cold: {type: gas, gamma: g, temperature: 10 degC, molar_mass: M}
+waves:
+  w1: {harmonic: {on: warm, A: 1 mm, f: 5000 Hz, dir: +x, phase: 0}}
+  w2: {harmonic: {on: cold, A: 1 mm, f: 5000 Hz, dir: +x, phase: 0}}
+observe:
+  pct: "100*(wavelength(w2) - wavelength(w1))/wavelength(w1)"

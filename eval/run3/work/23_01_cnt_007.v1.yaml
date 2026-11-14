@@ -1,0 +1,16 @@
+id: 23/01/cnt_007
+assume:
+  - "Each source's wave is modelled as one travelling wave evaluated at that source's distance to the field point (spherical spreading ignored: A and B are far, and the stated amplitude ratio 1:2 is said to hold at both points)."
+  - "S1 leads S2 by pi/2: phase of S1 = pi/2, S2 = 0 (phase is the argument of the sine, which grows with time; a lead is a larger phase)."
+  - "Place S1 at distance 0 and S2 at distance d = 100.25 lambda along the line. For A (left of S1) the distance from S2 is the S1 distance plus d; for B (right of S2) the distance from S1 is the S2 distance plus d. Take A at 0 and B at 0 as reference positions: only the difference of distances matters."
+  - "Amplitudes taken as exactly 1:2 (the problem says nearly)."
+symbols: {a: positive, lam: positive}
+media:
+  air: {type: gas, v: 340 m/s}
+waves:
+  s1: {harmonic: {on: air, A: a, lambda: lam, v: 340 m/s, dir: +x, phase: pi/2}}
+  s2: {harmonic: {on: air, A: 2*a, lambda: lam, v: 340 m/s, dir: +x, phase: 0}}
+observe:
+  amp_A: "max_over(t, abs(y(s1, x=0[m], t=t) + y(s2, x=100.25*lam, t=t)))/a"
+  amp_B: "max_over(t, abs(y(s1, x=100.25*lam, t=t) + y(s2, x=0[m], t=t)))/a"
+  I_ratio: "(max_over(t, abs(y(s1, x=0[m], t=t) + y(s2, x=100.25*lam, t=t)))/max_over(t, abs(y(s1, x=100.25*lam, t=t) + y(s2, x=0[m], t=t))))**2"

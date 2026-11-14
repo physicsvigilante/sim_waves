@@ -1,0 +1,9 @@
+answer: {t: "(1/(15*alpha))*((mu0 + alpha*l)^(3/2) - mu0^(3/2)) s"}
+final_scene: 11_02_002.v2.yaml
+engine_fit: partial
+hand_steps: ["t = integral_0^l ds / v(s) with v = 10/sqrt(mu0+alpha s) from engine; integration done by hand"]
+coverage: full
+not_represented: nothing
+missing_in_source: none
+reasoning: "Engine gives speed(s) = 10/sqrt(alpha*s + mu0); front() on this wire is wrong (10 t/sqrt(...) treats speed as constant), so not used."
+friction: "No integral service; front(p, t) for a non-uniform non-hanging string is not a true front (uses local speed)."

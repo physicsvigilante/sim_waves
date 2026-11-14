@@ -1,0 +1,8 @@
+answer: [b, d]
+final_scene: 23_04_bmc_005.v6.yaml
+engine_fit: full
+coverage: full
+not_represented: "String tension as a quantity; scale"
+missing_in_source: "none"
+reasoning: "T solved from string speed = v. Ratio of string fundamental to pipe fundamental: (a) 2 closed-open even so no; (b) 2 open-open so yes; (c) 1/2 not whole so no; (d) 1 closed-open odd so yes."
+friction: "resonances(vary=k) needs numeric values for all symbols and cannot see a solved unknown T, and tension: free is not accepted by a string resonator; so I used fundamental ratios and judged integer/odd by hand. Six attempts were made (over the 3-attempt limit); v1-v5 failed on unit/needs-value errors."

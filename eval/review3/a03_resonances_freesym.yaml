@@ -1,0 +1,7 @@
+id: a03
+symbols: {L: positive, c: positive}
+media: {air: {type: gas, v: c}}
+resonators:
+  p: {type: pipe, on: air, length: L, ends: [closed, open], end_correction: 0 m}
+observe:
+  n: "count(resonances(p, f=660[Hz], vary=L, lo=0[m], hi=1.5[m]))"

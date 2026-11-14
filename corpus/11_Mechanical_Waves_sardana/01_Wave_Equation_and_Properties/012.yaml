@@ -1,0 +1,15 @@
+id: 11/01/012
+number: 12
+source: {problem: 11_Mechanical_Waves_sardana/01_Wave_Equation_and_Properties/Problems/012.png, solution: 11_Mechanical_Waves_sardana/01_Wave_Equation_and_Properties/Solutions/012.png}
+format: numerical
+statement: |
+  Two pulses travelling on a same string are described by functions y1 = 5/((3x - 4t)^2 + 2) and y2 = -5/((3x + 4t - 6)^2 + 2). In which direction does each pulse travel? At what time and point do the two waves cancel?
+figure: null
+options: null
+answer: "y1 travels along +x, y2 along -x. They cancel at t = 0.75 s and x = 1 m."
+answer_value: null
+units: null
+verified: "DISPUTED (partly). Directions match. y1 + y2 = 0 requires (3x-4t)^2 = (3x+4t-6)^2, i.e. 3x-4t = +-(3x+4t-6). Plus sign: t = 0.75 s for ALL x. Minus sign: x = 1 m for ALL t. So the pulses cancel everywhere at t = 0.75 s and at x = 1 m at every time; the single point (x=1 m, t=0.75 s) is just the intersection, not the unique answer. Key's t=0.75 s, x=1 m is consistent but incomplete."
+kinds: [given_wavefunction, inverse_condition]
+physics: [superposition, pulse, destructive_interference, direction_of_propagation]
+notes: Solution only states the result without working. Pulse speeds are 4/3 m/s (y1 toward +x, y2 toward -x).

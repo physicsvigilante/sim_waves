@@ -1,0 +1,4 @@
+symbols: {a: positive}
+waves: {w: {given: "a.__class__"}}
+observe: {v: "speed(w)"}
+expect: {error: rejected}

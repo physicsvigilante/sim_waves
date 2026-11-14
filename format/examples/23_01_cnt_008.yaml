@@ -1,0 +1,22 @@
+id: 23/01/cnt_008
+assume:
+  - "Coordinates from the figure: S at (0, 6 m), P at (0, 0), wall the line x = 4 m."
+  - "Sound rays add as pressure; a rigid wall reflects pressure with no phase change."
+  - "Amplitudes at P taken equal (spreading: none); only the wavelength of maxima is asked."
+symbols: {lam: positive}
+media:
+  air: {type: gas, v: 340 m/s}
+sources:
+  S: {on: air, f: "340[m/s]/lam", A: 1, phase: 0, spreading: none, at: [0 m, 6 m]}
+reflectors:
+  wall: {point: [4 m, 0 m], normal: [-1, 0], boundary: rigid}
+points:
+  P: [0 m, 0 m]
+rays:
+  direct: {from: S, to: P}
+  bounce: {from: S, to: P, via: wall}
+given: []
+observe:
+  dpath: "path_difference(bounce, direct)"
+  lam_max: "max(maxima(bounce, direct, vary=lam, lo=0.1[m], hi=100[m]))"
+expect: {dpath: 4, lam_max: 4}

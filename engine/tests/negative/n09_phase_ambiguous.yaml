@@ -1,0 +1,6 @@
+# 22/03/dmt_004 without 'rising at the origin': phase could be 0 or pi
+unknowns: {phi1: phase}
+waves: {w1: {harmonic: {A: 10 mm, lambda: 20 cm, v: 1 m/s, dir: +x, phase: phi1}}}
+given: ["y(w1, x=0, t=0) == 0"]
+observe: {p: "phase(w1, x=0, t=0)"}
+expect: {error: ambiguous}

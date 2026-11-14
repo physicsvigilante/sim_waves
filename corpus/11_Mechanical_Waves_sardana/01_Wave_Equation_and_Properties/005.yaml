@@ -1,0 +1,15 @@
+id: 11/01/005
+number: 5
+source: {problem: 11_Mechanical_Waves_sardana/01_Wave_Equation_and_Properties/Problems/005.png, solution: 11_Mechanical_Waves_sardana/01_Wave_Equation_and_Properties/Solutions/005.png}
+format: numerical
+statement: |
+  A progressive wave of frequency 500 Hz is travelling with a velocity of 360 m/s. How far apart are two points 60 degrees out of phase?
+figure: null
+options: null
+answer: "0.12 m"
+answer_value: 0.12
+units: m
+verified: "Matches key. lambda = 360/500 = 0.72 m; dx = lambda * 60/360 = 0.12 m."
+kinds: [inverse_condition]
+physics: [phase_difference, wavelength, wave_speed]
+notes: Consistent (0.12 m is the smallest separation; others differ by multiples of 0.72 m).

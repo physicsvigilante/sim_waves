@@ -1,0 +1,12 @@
+symbols: {u: real}
+media: {air: {type: gas, v: 340 m/s}}
+sources: {S: {on: air, at: [0 m, 1 m], f: 3400 Hz, A: 1, phase: 0, spreading: none}}
+reflectors: {wall: {point: [0 m, 0 m], normal: [0, 1], boundary: rigid}}
+points: {P: [u, 2 m]}
+rays:
+  d: {from: S, to: P}
+  b: {from: S, to: P, via: wall}
+observe:
+  mx: "maxima(b, d, vary=u, lo=-5[m], hi=5[m])"
+  n: "count(maxima(b, d, vary=u, lo=-5[m], hi=5[m]))"
+  nmin: "count(minima(b, d, vary=u, lo=-5[m], hi=5[m]))"

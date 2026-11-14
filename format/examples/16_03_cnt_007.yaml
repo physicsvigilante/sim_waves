@@ -1,0 +1,19 @@
+id: 22/03/cnt_007
+assume: ["Figure: A = 4 mm, y(0,0) = 2*sqrt(2) mm rising, zero crossings at 1.5, 3.5, 5.5 cm so lambda = 4 cm, P just after 3.5 cm."]
+unknowns: {d: direction, vw: positive, phi: phase, xP: real}
+media:
+  s: {type: string, mu: 50 g/m, tension: free}    # tension follows from the wave speed
+waves:
+  w: {harmonic: {on: s, A: 4 mm, lambda: 4 cm, v: vw, dir: d, phase: phi}}
+given:
+  - "y(w, x=0, t=0) == 2*sqrt(2)[mm]"
+  - "slope(w, x=0, t=0) > 0"
+  - "3.5[cm] < xP < 4.5[cm]"
+  - "slope(w, x=xP, t=0) == tan(60[deg])"
+  - "vy(w, x=xP, t=0) == 20*sqrt(3)[cm/s]"
+observe:
+  E_cycle: "power(w)*period(w)"
+expect:
+  error: inconsistent
+  why: "max slope = A*k = 0.63 (32 deg), so no point can have a 60 deg tangent"
+  book: "1.6 mJ"

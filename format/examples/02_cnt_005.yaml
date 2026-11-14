@@ -1,0 +1,7 @@
+id: 22/01/cnt_005
+waves:
+  p: {given: "0.8/(3*x**2 + 24*x*t + 48*t**2 + 4)", units: {x: m, t: s, y: m}}
+observe:
+  v: "velocity(p)"
+  speed: "speed(p)"
+expect: {v: "-4 m/s", speed: "4 m/s"}    # book keys the magnitude

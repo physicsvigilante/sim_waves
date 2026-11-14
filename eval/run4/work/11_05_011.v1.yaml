@@ -1,0 +1,16 @@
+id: 11/05/011
+assume:
+  - "Pipe end corrections are neglected (not mentioned)."
+  - "First overtone of open pipe = 2nd harmonic; of closed pipe = 3rd harmonic."
+unknowns: {Lo: positive, Lc: positive}
+media:
+  air: {type: gas, v: 330 m/s}
+resonators:
+  po: {type: pipe, on: air, length: Lo, ends: [open, open], end_correction: 0 m}
+  pc: {type: pipe, on: air, length: Lc, ends: [closed, open], end_correction: 0 m}
+given:
+  - {fact: "frequency(po, harmonic=1) == 300[Hz]", source: stated}
+  - {fact: "frequency(pc, harmonic=harmonic(pc, overtone=1)) == frequency(po, harmonic=harmonic(po, overtone=1))", source: stated}
+observe:
+  Lo: "Lo"
+  Lc: "Lc"

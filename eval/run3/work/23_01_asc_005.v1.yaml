@@ -1,0 +1,30 @@
+id: 23/01/asc_005
+assume:
+  - "Source to listener along the floor is 120 m (direct path). The reflected path is two straight legs from source to the ceiling point halfway between them (60 m along the floor, 25 m up) to the listener: each leg sqrt(60^2+25^2) m. The engine has no reflector or path observable; the reflected wave is the same travelling wave evaluated at the reflected path length."
+  - "Ceiling reflection adds no phase change (rigid-like reflection, taken as a pure path effect). The problem does not state this."
+  - "Source speed of sound 340 m/s is only needed to complete the wave; it does not affect the answer."
+  - "Equal amplitudes for direct and reflected waves."
+media:
+  air: {type: gas, v: 340 m/s}
+waves:
+  l10:  {harmonic: {on: air, A: 1 mm, lambda: 10 m,  v: 340 m/s, dir: +x, phase: 0}}
+  l5:   {harmonic: {on: air, A: 1 mm, lambda: 5 m,   v: 340 m/s, dir: +x, phase: 0}}
+  l2p5: {harmonic: {on: air, A: 1 mm, lambda: 2.5 m, v: 340 m/s, dir: +x, phase: 0}}
+  l20:  {harmonic: {on: air, A: 1 mm, lambda: 20 m,  v: 340 m/s, dir: +x, phase: 0}}
+  l20_3: {harmonic: {on: air, A: 1 mm, lambda: (20/3) m, v: 340 m/s, dir: +x, phase: 0}}
+  l4:   {harmonic: {on: air, A: 1 mm, lambda: 4 m,   v: 340 m/s, dir: +x, phase: 0}}
+  l30:  {harmonic: {on: air, A: 1 mm, lambda: 30 m,  v: 340 m/s, dir: +x, phase: 0}}
+  l15:  {harmonic: {on: air, A: 1 mm, lambda: 15 m,  v: 340 m/s, dir: +x, phase: 0}}
+  l25:  {harmonic: {on: air, A: 1 mm, lambda: 25 m,  v: 340 m/s, dir: +x, phase: 0}}
+  l35:  {harmonic: {on: air, A: 1 mm, lambda: 35 m,  v: 340 m/s, dir: +x, phase: 0}}
+observe:
+  amp_l10:  "max_over(t, abs(y(l10, x=120[m], t=t) + y(l10, x=2*sqrt(60**2 + 25**2)[m], t=t)))"
+  amp_l5:   "max_over(t, abs(y(l5, x=120[m], t=t) + y(l5, x=2*sqrt(60**2 + 25**2)[m], t=t)))"
+  amp_l2p5: "max_over(t, abs(y(l2p5, x=120[m], t=t) + y(l2p5, x=2*sqrt(60**2 + 25**2)[m], t=t)))"
+  amp_l20:  "max_over(t, abs(y(l20, x=120[m], t=t) + y(l20, x=2*sqrt(60**2 + 25**2)[m], t=t)))"
+  amp_l20_3: "max_over(t, abs(y(l20_3, x=120[m], t=t) + y(l20_3, x=2*sqrt(60**2 + 25**2)[m], t=t)))"
+  amp_l4:   "max_over(t, abs(y(l4, x=120[m], t=t) + y(l4, x=2*sqrt(60**2 + 25**2)[m], t=t)))"
+  amp_l30:  "max_over(t, abs(y(l30, x=120[m], t=t) + y(l30, x=2*sqrt(60**2 + 25**2)[m], t=t)))"
+  amp_l15:  "max_over(t, abs(y(l15, x=120[m], t=t) + y(l15, x=2*sqrt(60**2 + 25**2)[m], t=t)))"
+  amp_l25:  "max_over(t, abs(y(l25, x=120[m], t=t) + y(l25, x=2*sqrt(60**2 + 25**2)[m], t=t)))"
+  amp_l35:  "max_over(t, abs(y(l35, x=120[m], t=t) + y(l35, x=2*sqrt(60**2 + 25**2)[m], t=t)))"

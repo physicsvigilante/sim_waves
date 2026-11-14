@@ -1,0 +1,11 @@
+id: 11/01/006
+assume: ["Wave = function of x -/+ vt that is finite everywhere. a: probed at a point where x+vt=0; c, d: finiteness at large |x|."]
+symbols: {v: positive}
+waves:
+  a: {given: "1/(x + v*t)", units: {x: m, t: s, y: m}}
+  c: {given: "(x - v*t)**2", units: {x: m, t: s, y: m}}
+  d: {given: "exp(-(x - v*t)**2)", units: {x: m, t: s, y: m}}
+observe:
+  d_at_large_x: "limit(y(d, x=x, t=0[s]), x, 1000[m])"
+  d_max: "max_over(x, y(d, x=x, t=0[s]))"
+  c_max: "max_over(x, y(c, x=x, t=0[s]))"

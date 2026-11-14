@@ -1,0 +1,17 @@
+# S1 leads S2 by pi/2, 100.25 wavelengths apart (lambda = 1 m), amplitudes 1:2.
+# Left of S1 the longer path of S2 adds a lag pi/2: total pi, destructive (amplitude 1).
+# Right of S2 the lag offsets the lead: constructive (amplitude 3). I_A/I_B = 1/9.
+media: {air: {type: gas, v: 340 m/s}}
+sources:
+  S1: {on: air, at: [0 m, 0 m], f: 340 Hz, A: 1, phase: pi/2, spreading: none}
+  S2: {on: air, at: [100.25 m, 0 m], f: 340 Hz, A: 2, phase: 0, spreading: none}
+points: {A: [-5 m, 0 m], B: [110 m, 0 m]}
+rays:
+  a1: {from: S1, to: A}
+  a2: {from: S2, to: A}
+  b1: {from: S1, to: B}
+  b2: {from: S2, to: B}
+observe:
+  ratio: "relative_intensity(a1, a2) / relative_intensity(b1, b2)"
+  amp_A: "resultant_amplitude(a1, a2)"
+expect: {ratio: "1/9", amp_A: 1}

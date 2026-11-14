@@ -1,0 +1,13 @@
+id: 23/01/cnt_004
+assume:
+  - "Cardboard acts as a perfect reflector; moving it by d changes the reflected path by 2d. This path doubling is NOT modelled by the engine, so d is expressed via the reflected wave evaluated at x = 2d further along."
+  - "Direct wave and reflected wave are modelled as two equal-amplitude copies of one travelling wave, the reflected one evaluated 2*(20 cm) further along the path."
+  - "Max to adjacent min means a half-wavelength change of path difference (so intensity going from max to min is the stated 20 cm move)."
+symbols: {f: positive, A: positive}
+media:
+  air: {type: gas, v: 336 m/s}
+waves:
+  w: {harmonic: {on: air, A: A, f: f, dir: +x, phase: 0}}
+observe:
+  lam: "wavelength(w)"
+  pathshift_resp: "max_over(t, abs(y(w, x=0[m], t=t) + y(w, x=40[cm], t=t)))"

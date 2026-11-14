@@ -1,0 +1,11 @@
+id: 24/01/bmc_004
+assume:
+  - "Pressure excess = -B * dy/dx (hand relation; engine supplies the displacement derivative)."
+symbols: {a: positive, w0: positive, kk: positive, B: positive}
+waves:
+  w: {given: "a*sin(w0*t - kk*x)", units: {x: m, t: s, y: m}}
+observe:
+  dydx: "slope(w, x=x, t=t)"
+  slope_amp: "max_over(t, abs(slope(w, x=x, t=t)))"
+  slope_is_cos: "equivalent(slope(w, x=x, t=t), -a*kk*cos(w0*t - kk*x))"
+  slope_vs_disp_phase: "equivalent(-slope(w, x=x, t=t), a*kk*sin(w0*t - kk*x + pi/2))"

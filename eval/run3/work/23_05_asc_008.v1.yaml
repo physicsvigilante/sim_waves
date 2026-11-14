@@ -1,0 +1,10 @@
+id: 23/05/asc_008
+assume:
+  - "Frequencies of A and B are written as fractions of C's frequency; C is the unknown that the 5 beats fix."
+unknowns: {fC: positive}
+given:
+  - {fact: "beat_frequency(1.03*fC, 0.98*fC) == 5[Hz]", source: stated, note: "A is 3% more, B is 2% less than C"}
+observe:
+  fC: "fC"
+  fA: "1.03*fC"
+  fB: "0.98*fC"

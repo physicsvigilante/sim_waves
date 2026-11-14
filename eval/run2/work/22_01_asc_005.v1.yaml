@@ -1,0 +1,12 @@
+id: 22/01/asc_005
+assume:
+  - "The +/- in the printed equation is read as the upper-half (+) branch; the other sign only flips the sign of the answer, and the options are all positive."
+  - "a, b are lengths and c a speed (x - c*t must be a length)."
+symbols: {a: positive, b: positive, c: positive}
+waves:
+  p: {given: "(b/a)*sqrt(a**2 - (x - c*t)**2)", units: {x: m, t: s, y: m}}
+given:
+  - {fact: "y(p, x=a/2, t=0) == (b/a)*sqrt(a**2 - (a/2)**2)", source: stated, note: "trivial check that the profile is inside the support -a < x-ct < a at x=a/2, t=0"}
+observe:
+  v0: "vy(p, x=a/2, t=0)"
+  c_sign: "velocity(p)"

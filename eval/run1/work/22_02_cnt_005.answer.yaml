@@ -1,0 +1,5 @@
+answer: "a/b = 3x/(2*pi), i.e. 3/(2*pi) = 0.477 for x = 1 m (x in the same units)"
+final_scene: 22_02_cnt_005.v3.yaml
+engine_fit: partial
+reasoning: Engine solves a = 3*b*x0/(2*pi) from max |vy| at x0 equal to b.
+friction: "Wave with amplitude a/x is not a fixed-shape travelling wave, so velocity()/speed() are rejected (v1); I had to supply the wave speed b by hand in assume. Needed a hack of making a an unknown (v2 failed as over-specified). The result depends on x0."

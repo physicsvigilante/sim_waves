@@ -1,0 +1,12 @@
+id: 22/03/bmc_005
+assume: ["Only the local slope at A is known, so the shape is left as an arbitrary profile F.", "JEE convention: tan 53 deg = 4/3 (3-4-5 triangle)."]
+functions: [F]
+symbols: {c: real, xA: real}           # c = signed wave velocity
+waves:
+  w: {given: "F(x - c*t)", units: {x: m, t: s, y: m}}
+given:
+  - "slope(w, x=xA, t=0) == 4/3"
+observe:
+  vy_A: "vy(w, x=xA, t=0)"
+  ratio: "abs(vy(w, x=xA, t=0))/abs(c)"
+expect: {vy_A: "-4*c/3", ratio: "4/3"}

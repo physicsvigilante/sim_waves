@@ -1,0 +1,1 @@
+observe: {a: "max_over(t, 2*sqrt(25 + 24*cos(t)) + 1)"}

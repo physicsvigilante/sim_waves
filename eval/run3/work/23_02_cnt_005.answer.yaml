@@ -1,0 +1,8 @@
+answer: "75 %"
+final_scene: 23_02_cnt_005.v2.yaml
+engine_fit: full
+coverage: partial
+not_represented: "what the boundary is"
+missing_in_source: "which side is denser; whether it is a fixed or free end (ruled out by transmission)"
+reasoning: "Reflected amplitude half gives a transmitted power fraction of 3/4 for both mu2 = 9 mu1 (v2) and mu1/9 (v3)."
+friction: "v1 ambiguous (mu2 = mu1/9 or 9 mu1); needed an assumption to fix the sign although the answer does not depend on it."

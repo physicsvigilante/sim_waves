@@ -1,0 +1,11 @@
+id: 11/03/004
+assume:
+  - "Water modelled as a 'gas' medium only because the format has no liquid; gas route gamma*pressure = B with gamma=1, pressure=B, density = 1000 kg/m^3 gives v = sqrt(B/rho). This is a hack."
+  - "Density of water 1000 kg/m^3 is not given in the problem (assumption)."
+media:
+  water: {type: gas, gamma: 1, pressure: 2e9 Pa, density: 1000 kg/m^3}
+waves:
+  w: {harmonic: {on: water, A: 1 mm, f: 242 Hz, dir: +x, phase: 0}}
+observe:
+  v: "speed(water)"
+  lam: "wavelength(w)"

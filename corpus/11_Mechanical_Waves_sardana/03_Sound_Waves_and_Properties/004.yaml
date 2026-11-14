@@ -1,0 +1,15 @@
+id: 11/03/004
+number: 4
+source: {problem: 11_Mechanical_Waves_sardana/03_Sound_Waves_and_Properties/Problems/004.png, solution: 11_Mechanical_Waves_sardana/03_Sound_Waves_and_Properties/Solutions/004.png}
+format: numerical
+statement: |
+  Determine the speed of sound waves in water, and find the wavelength of a wave having a frequency of 242 Hz. Take B_water = 2 x 10^9 Pa.
+figure: null
+options: null
+answer: "v = 1414 m/s; wavelength = 5.84 m"
+answer_value: {v: 1414, wavelength: 5.84}
+units: "v in m/s; wavelength in m"
+verified: "v = sqrt(B/rho) = sqrt(2e9/1e3) = 1414.2 m/s; lambda = 1414.2/242 = 5.84 m. Matches key."
+kinds: [derived_medium]
+physics: [speed_of_sound, bulk_modulus, wavelength]
+notes: "Density of water (1000 kg/m^3) is not given in the problem; the solution assumes it."

@@ -1,0 +1,14 @@
+id: synthetic/same_phase
+# Not from the corpus: shows how to ask "are two points in the same phase?" with the
+# engine, and how to fix a scale when the figure gives none.
+assume: ["The figure has no scale; the question does not depend on it, so lambda = 40 cm is fixed by assumption."]
+waves:
+  w: {harmonic: {A: 1 cm, lambda: 40 cm, v: 2 m/s, dir: +x, phase: 0}}
+given:
+  - {fact: "wavelength(w) == 40[cm]", source: assumption, note: "scale-free question; any scale gives the same answer"}
+observe:
+  P_Q_same_phase: "equivalent(y(w, x=5[cm], t=t), y(w, x=45[cm], t=t))"     # one wavelength apart
+  P_R_same_phase: "equivalent(y(w, x=5[cm], t=t), y(w, x=25[cm], t=t))"     # half a wavelength apart
+  dphi_PR: "wrap(phase(w, x=5[cm], t=0) - phase(w, x=25[cm], t=0))"
+  travelling: "is_travelling(w)"
+expect: {P_Q_same_phase: true, P_R_same_phase: false, dphi_PR: "pi", travelling: true}

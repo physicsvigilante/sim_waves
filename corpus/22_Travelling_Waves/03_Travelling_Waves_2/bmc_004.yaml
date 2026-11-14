@@ -1,0 +1,15 @@
+id: 22/03/bmc_004
+number: 3
+source: {problem: 22_Travelling_Waves/03_Travelling_Waves_2/Problems/bmc_004.png, solution: 22_Travelling_Waves/03_Travelling_Waves_2/Solutions/bmc_004.png}
+format: multiple_correct
+statement: As a wave propagates,
+figure: null
+options:
+  a: "the wave intensity remains constant for a plane wave"
+  b: "the wave intensity decreases as the inverse of the distance from the source for a spherical wave"
+  c: "the wave intensity decreases as the inverse square of the distance from the source for a spherical wave"
+  d: "total intensity of the spherical wave over the spherical surface centered at the source remains constant at all times"
+answer: [a, c, d]
+kinds: [conceptual]
+physics: [intensity, geometric_spreading]
+notes: Engine needs source geometry (plane / spherical / cylindrical) with intensity vs r.

@@ -1,0 +1,11 @@
+answer: {a: "2.56 mm (about 2.5 mm)", b: "wavelength 4.0 cm (4.002 cm), speed 200 cm/s each (travelling in opposite directions)", c: "0.765 m/s (76.5 cm/s)", d: "nodes at 0, 2, 4, 6, 8, 10 cm; antinodes at 1, 3, 5, 7, 9 cm; 5 loops"}
+final_scene: 11_05_003.v3.yaml
+engine_fit: partial
+hand_steps:
+  - "Components 2.5 cos(1.57x -/+ 314t) (sign on the second) chosen by me; engine confirms the sum equals the stated field (same = True)."
+  - "Assigning the 5th harmonic to the vibration (2L/lambda = 4.995, not integer because 1.57 is a rounded pi/2)."
+coverage: full
+not_represented: nothing
+missing_in_source: "1.57 is a rounded pi/2, so the nodes/loops are consistent only to the rounding"
+reasoning: "Engine max displacement at 5.66 cm = 2.565 mm; component wavelength 4.002 cm, speed 2 m/s; vy = 0.7648 m/s; fifth harmonic of a 10 cm string has the listed nodes and antinodes."
+friction: "v1/v2 failed: sine components gave cos(wt) time dependence (my error), and an exact match of wavelength to a mode was rejected because of the rounded 1.57."

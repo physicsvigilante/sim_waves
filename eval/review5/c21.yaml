@@ -1,0 +1,2 @@
+symbols: {K: real, A: positive}
+observe: {a: "max_over(t, K*sin(t))", b: "max_over(t, K*abs(sin(t)))", c: "min_over(t, K + A*sin(t))", d: "max_over(t, K*sqrt(2+sin(t)))"}

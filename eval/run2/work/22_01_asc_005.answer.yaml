@@ -1,0 +1,8 @@
+answer: [c]
+final_scene: 22_01_asc_005.v2.yaml
+engine_fit: full
+coverage: full
+not_represented: "the lower-half (minus sign) branch of the +/- is not drawn; it only flips the sign"
+missing_in_source: "which sign of the +/- branch (affects only the sign of the velocity); not stated that a, b are lengths and c a speed"
+reasoning: "Engine gives vy(x=a/2, t=0) = sqrt(3)*b*c/(3*a) = b*c/(sqrt(3)*a), option c; velocity(p) = +c."
+friction: "The +/- profile had to be written as one branch (assumption). Omitted from v2 the v1 'stated' sanity fact that was a tautology."

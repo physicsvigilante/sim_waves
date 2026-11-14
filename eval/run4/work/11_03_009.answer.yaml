@@ -1,0 +1,9 @@
+answer: "0.938 Pa"
+final_scene: 11_03_009.v1.yaml
+engine_fit: none
+hand_steps: ["p_max = sqrt(2*rho*v*I) = sqrt(2*1.293*340*1e-3)"]
+coverage: partial
+not_represented: "pressure amplitude; speed and density of air"
+missing_in_source: none
+reasoning: "Engine only echoes I = 1e-3 W/m^2; the pressure is a hand formula."
+friction: "No intensity-to-pressure-amplitude observable; open3d has no v or density."

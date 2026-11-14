@@ -1,0 +1,23 @@
+id: 11/05/004
+assume:
+  - "Only part (b) can be modelled: longitudinal vibrations in a rod are not supported by the format (part (a) answered by hand, engine_fit partial)."
+  - "Wire is taut and just slack (zero tension) at the starting temperature; absolute temperatures chosen as 20 degC -> 0 degC, only the 20 K drop matters. Ends clamped (stated: rigidly fixed at both ends)."
+  - "Plucking at the mid-point excites odd harmonics; the fundamental is asked."
+media:
+  wire:
+    type: string
+    mass: 0.1 kg
+    length: 1 m
+    area: 1e-6 m^2
+    Y: 2e11 Pa
+    alpha: 1.21e-5 1/K
+    tension: {thermal: {slack_at: 20 degC, now: 0 degC}}
+resonators:
+  r: {type: string, on: wire, length: 1 m, ends: [fixed, fixed]}
+given: []
+observe:
+  T: "tension(wire)"
+  mu: "mu(wire)"
+  v: "speed(wire)"
+  f1: "frequency(r, harmonic=1)"
+  pluck_mid: "harmonics(r, upto=6, no_node_at=0.5[m])"

@@ -1,0 +1,12 @@
+# run 3: resonances() in observe can use unknowns the solver fixed; speed() of a resonator
+symbols: {Lx: positive}
+unknowns: {c: positive}
+media: {air: {type: gas, v: c}}
+resonators:
+  p: {type: pipe, on: air, length: 1 m, ends: [closed, open], end_correction: 0 m}
+  q: {type: pipe, on: air, length: Lx, ends: [closed, open], end_correction: 0 m}
+given: [{fact: "frequency(p, harmonic=1) == 85[Hz]", source: stated}]
+observe:
+  v: "speed(p)"
+  n: "count(resonances(q, f=255[Hz], vary=Lx, lo=0[m], hi=2[m]))"
+expect: {v: 340, n: 3}

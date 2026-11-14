@@ -1,0 +1,20 @@
+id: 11/05/001
+assume:
+  - "The standing wave is represented as the sum of two counter-propagating component waves of equal amplitude: 0.2 sin(0.5x - 30t) (to +x) and 0.2 sin(0.5x + 30t) (to -x), cm and s. This decomposition is my framing; the engine checks it reproduces the stated field."
+  - "In the equivalence check x is an SI number (metres), so 0.5 per cm is written 50 per m."
+  - "Radian arguments (0.5 cm^-1 and 30 s^-1)."
+waves:
+  f1: {given: "0.2*sin(0.5*x - 30*t)", units: {x: cm, t: s, y: cm}}
+  f2: {given: "0.2*sin(0.5*x + 30*t)", units: {x: cm, t: s, y: cm}}
+  tot: {sum: [f1, f2]}
+given: []
+observe:
+  same: "equivalent(y(tot, x=x, t=t), 0.4*sin(50*x)*cos(30*t)*1[cm])"
+  freq: "frequency(f1)"
+  amp: "amplitude(f1)"
+  speed1: "speed(f1)"
+  speed2: "speed(f2)"
+  vel1: "velocity(f1)"
+  vel2: "velocity(f2)"
+  lam: "wavelength(f1)"
+  vy: "vy(tot, x=2.4[cm], t=0.8[s])"

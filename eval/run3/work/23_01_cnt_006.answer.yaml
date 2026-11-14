@@ -1,0 +1,8 @@
+answer: "32.4 cm"
+final_scene: 23_01_cnt_006.v1.yaml
+engine_fit: partial
+coverage: unsupported
+not_represented: "the tube geometry entirely: path change = 2 x (distance slid) and consecutive minima = one wavelength apart are my own reasoning; only the wavelength (64.8 cm) came from the engine"
+missing_in_source: "tube geometry, no end effects"
+reasoning: "Engine gives lambda = 1750/27 cm = 64.8 cm; the displacement is lambda/2 = 32.4 cm because the path changes by twice the slide (not engine-derived)."
+friction: "No path-length or interferometer model; could not even express the minimum-to-minimum condition without doing physics by hand."

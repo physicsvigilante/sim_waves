@@ -1,0 +1,8 @@
+answer: 3
+final_scene: 22_03_cnt_004.v1.yaml
+engine_fit: full
+coverage: full
+not_represented: "nothing"
+missing_in_source: "intensity-power equivalence on a string stated as an assumption (same cross-section)"
+reasoning: "Same string, frequencies f and 2f, amplitudes A and n*A, power ratio 1/36: engine solves n = 3."
+friction: "Intensity of a string wave is not an observable; used power ratio instead."

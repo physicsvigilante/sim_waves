@@ -1,0 +1,19 @@
+id: 23/02/asc_007
+number: 4
+source: {problem: 23_Superposition_and_Standing_Waves/02_Reflection_and_Refraction_of_Stationary_Waves/Problems/asc_007.png, solution: 23_Superposition_and_Standing_Waves/02_Reflection_and_Refraction_of_Stationary_Waves/Solutions/asc_007.png}
+format: single_correct
+statement: |
+  Spacing between two successive nodes in a standing wave on a string is x. If frequency of the standing wave is kept unchanged but tension in the string is doubled, then new spacing between successive nodes will become:
+figure: null
+options:
+  a: "x/sqrt(2)"
+  b: "sqrt(2) x"
+  c: "x/2"
+  d: "2x"
+answer: b
+answer_value: "sqrt(2) x"
+units: null
+verified: "Node spacing = lambda/2 = v/(2f); v ~ sqrt(T), so doubling T multiplies spacing by sqrt(2). Matches key."
+kinds: [ratio, derived_medium]
+physics: [standing_waves, wave_speed, tension, wavelength]
+notes: Consistent.

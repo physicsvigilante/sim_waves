@@ -1,0 +1,10 @@
+answer: "Imin/Imax = 1/16"
+final_scene: 11_04_002.v1.yaml
+engine_fit: partial
+hand_steps:
+  - "Choosing the path lengths (4 m and 4 m vs 4 m and 5 m) that give in-phase and antiphase arrival (lambda = 2 m, so half a wavelength is 1 m)."
+coverage: partial
+not_represented: "The actual superposition geometry: modelled as two coherent rays with amplitudes 3 and 5, extreme cases built by construction."
+missing_in_source: none
+reasoning: "relative_intensity of in-phase rays = 64, of antiphase rays = 4; ratio 1/16."
+friction: "No way to ask for the min and max of a coherent sum over phase directly; had to build two ray pairs at chosen path differences."

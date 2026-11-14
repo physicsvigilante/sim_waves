@@ -1,0 +1,9 @@
+answer: {extension: 2e-5 m}
+final_scene: 11_02_006.v3.yaml
+engine_fit: partial
+hand_steps: ["extension = T*L/(Y*A) = 64 N*0.5 m/(1.6e12 Pa*1e-6 m^2) = 2e-5 m (Hooke's law, no engine observable)"]
+coverage: partial
+not_represented: "Young's modulus, area, elastic stretch"
+missing_in_source: none
+reasoning: "Engine solved T = 64 N from v = 80 m/s and mu = 0.01 kg/m."
+friction: "'tension: free' + observe tension() fails with 'need area?' (v1,v2); worked only with an unknown T symbol. No strain/extension observable."

@@ -1,0 +1,9 @@
+answer: {one_dog: "68.0 dB", five_dogs: "75.0 dB"}
+final_scene: 11_03_003.v3.yaml
+engine_fit: partial
+hand_steps: ["hemisphere handled by doubling the emitter power (point emitter is a full sphere)", "five dogs = 5 mW typed (x2 for hemisphere = 10 mW)"]
+coverage: partial
+not_represented: "hemispherical radiation (only a full-sphere point emitter exists)"
+missing_in_source: "reference intensity 1e-12 W/m^2 not given (convention)"
+reasoning: "Engine: L1 = 68.04, L5 = 75.03 via 10 log10(I/1e-12) from engine intensities."
+friction: "No hemisphere geometry; no decibel observable (typed 10*log(I/I0)/log(10)); v1 failed on '1 mW' parsing (use 1e-3 W); first try used +120 hack."

@@ -1,0 +1,15 @@
+id: 11/03/005
+number: 5
+source: {problem: 11_Mechanical_Waves_sardana/03_Sound_Waves_and_Properties/Problems/005.png, solution: 11_Mechanical_Waves_sardana/03_Sound_Waves_and_Properties/Solutions/005.png}
+format: numerical
+statement: |
+  A sound wave propagating in air has a frequency of 5000 Hz. Calculate the percentage change in wavelength when the wave front, initially in a region where T = 27 C, enters a region where the temperature decreases to 10 C.
+figure: null
+options: null
+answer: "3%"
+answer_value: 3
+units: "percent (decrease)"
+verified: "v2/v1 = sqrt(283/300) = 0.9713, frequency unchanged so lambda2/lambda1 = 0.9713; decrease = 2.87%, about 3%. Matches key (key rounds the ratio to 0.97 first)."
+kinds: [derived_medium, ratio]
+physics: [speed_of_sound, temperature_dependence, wavelength, frequency_invariance]
+notes: "Key uses 273 K offset. The 5000 Hz frequency is not needed. Result is a decrease in wavelength."

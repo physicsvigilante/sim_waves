@@ -1,0 +1,16 @@
+id: 23/01/cnt_008
+number: 15
+source: {problem: 23_Superposition_and_Standing_Waves/01_Superposition_and_Standing_Waves/Problems/cnt_008.png, solution: 23_Superposition_and_Standing_Waves/01_Superposition_and_Standing_Waves/Solutions/cnt_008.png}
+format: numerical
+statement: |
+  A person standing at a distance of 6 m from a source of sound receives sound wave in two ways, one directly from the source and the other after reflection from a rigid boundary as shown in the figure. Find the maximum wavelength (in m) for which the person will receive maximum sound intensity.
+figure: |
+  Source S at top left and person P at bottom left on a vertical line, with a double-headed arrow labelled 6 m between them (arrow label sits at the middle of the span). A rigid wall (hatched vertical line) at right. A dashed horizontal line runs from the midpoint of SP to the wall, with an arrow labelled 4 m marking the horizontal distance between the SP line and the wall. Ray from S to the wall point is labelled 5 m, and the reflected ray goes from the wall point down-left to P. A downward arrow is drawn along SP for the direct path.
+answer: "4.0"
+answer_value: 4.0
+units: m
+verified: "Reflected path = 5 + 5 = 10 m, direct 6 m, path difference 4 m. A rigid-wall reflection adds a pi phase change, so maximum intensity needs 4 = (n - 1/2) lambda, lambda = 8/(2n-1), maximum lambda = 8 m. The key 4 results from using the destructive condition 4 = n lambda."
+kinds: [graph_read, inverse_condition]
+physics: [interference, reflection_phase_change, path_difference]
+notes: |
+  DOUBTFUL KEY. The solution uses Delta x = n lambda under the heading "destructive interference" (accounting for the rigid-wall pi shift), yet the question asks for maximum intensity; under the same physics the maximum-intensity longest wavelength is 8 m. Key 4.0 corresponds to the minimum-intensity case. Geometry check: 5 = sqrt(4^2 + 3^2) is consistent.

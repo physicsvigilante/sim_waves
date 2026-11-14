@@ -1,0 +1,8 @@
+answer: [a]
+final_scene: 23_03_asc_006.v1.yaml
+engine_fit: partial
+coverage: partial
+not_represented: "plucking and touching are not represented; only the amplitude at l/4, l/2, 3l/4 of the second harmonic standing wave"
+missing_in_source: "the touching/plucking rule (a node must be touched and an antinode plucked)"
+reasoning: "Second harmonic: amplitude 0 at l/2 (node) and 2 cm at l/4 and 3l/4 (antinodes): pluck at l/4, touch at l/2."
+friction: "No pluck or touch operation in the format; rule applied by me."

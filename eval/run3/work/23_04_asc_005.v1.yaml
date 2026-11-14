@@ -1,0 +1,12 @@
+id: 23/04/asc_005
+assume:
+  - "Air column is closed at the water surface and open at the top; its length is 120 cm minus water height h."
+  - "End correction neglected (not given)."
+symbols: {h: positive}
+media:
+  air: {type: gas, v: 340 m/s}
+resonators:
+  col: {type: pipe, on: air, length: 120[cm] - h, ends: [closed, open], end_correction: 0 m}
+observe:
+  heights: "resonances(col, f=340[Hz], vary=h, lo=0[cm], hi=119[cm])"
+  n: "count(resonances(col, f=340[Hz], vary=h, lo=0[cm], hi=119[cm]))"

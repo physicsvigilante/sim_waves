@@ -1,0 +1,15 @@
+id: 23/03/asc_005
+assume:
+  - "Same string material (mu) before and after; new tension is q times the old; fundamental mode both times."
+symbols: {mu: positive, T: positive}
+unknowns: {q: positive}
+media:
+  s1: {type: string, mu: mu, tension: T}
+  s2: {type: string, mu: mu, tension: q*T}
+resonators:
+  r1: {type: string, on: s1, length: 1 m, ends: [fixed, fixed]}
+  r2: {type: string, on: s2, length: (3/4)[m], ends: [fixed, fixed]}
+given:
+  - {fact: "frequency(r2, harmonic=1) == 2*frequency(r1, harmonic=1)", source: stated}
+observe:
+  q: "q"

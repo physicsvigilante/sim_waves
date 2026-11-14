@@ -1,0 +1,8 @@
+id: d05
+symbols: {L: positive}
+media: {air: {type: gas, v: 330 m/s}}
+resonators:
+  col: {type: pipe, on: air, length: L, ends: [closed, open], end_correction: 2 cm}
+observe:
+  lengths: "resonances(col, f=660[Hz], vary=L, lo=0[m], hi=150[cm])"
+  bad: "resonances(col, f=660[m], vary=L, lo=0[s], hi=1.5[kg])"

@@ -1,0 +1,8 @@
+answer: [b]
+final_scene: 22_02_asc_006.v1.yaml
+engine_fit: full
+coverage: full
+not_represented: "nothing"
+missing_in_source: "'path difference' is not defined in the problem; read as the x-shift that gives the same phase difference (phase difference / k)"
+reasoning: "Engine: phase(w2) - phase(w1) = phi + pi/2 at every x; path difference = that / k = lam*(2*phi+pi)/(4*pi); equivalent to (lam/2pi)(phi+pi/2), option b (True)."
+friction: "Path difference needs a definition; I divide the engine phase difference by k(w1)."

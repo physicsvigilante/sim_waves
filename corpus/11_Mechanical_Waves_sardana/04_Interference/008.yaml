@@ -1,0 +1,17 @@
+id: 11/04/008
+number: 8
+source: {problem: 11_Mechanical_Waves_sardana/04_Interference/Problems/008.png, solution: 11_Mechanical_Waves_sardana/04_Interference/Solutions/008.png}
+format: numerical
+statement: |
+  Two sound sources S1 and S2 emit pure sinusoidal waves in phase. If the speed of sound is 350 ms^-1, then for what frequencies,
+  (a) constructive interference occurs at P?
+  (b) destructive interference occurs at P?
+figure: "S1 and S2 lie on a horizontal line, S1 on the left and S2 on the right. The foot of the perpendicular from P is 2 m from S1 and 1 m from S2 (labels 2 m and 1 m on the horizontal line). P is 4 m directly above that foot (label 4 m on the dashed vertical)."
+options: null
+answer: "(a) 1000 Hz, 2000 Hz, 3000 Hz, ...; (b) 500 Hz, 1500 Hz, 2500 Hz, ..."
+answer_value: {constructive: "n*1000 Hz, n = 1, 2, 3, ...", destructive: "(2n-1)*500 Hz, n = 1, 2, 3, ..."}
+units: Hz
+verified: "S1P = sqrt(20) = 4.472 m, S2P = sqrt(17) = 4.123 m, delta = 0.349 m (key rounds to 0.35). Constructive f = n v/delta = n*1003 about n*1000 Hz; destructive f = (2n-1) v/(2 delta) = (2n-1)*501 about (2n-1)*500 Hz. Matches key (key rounds delta to 0.35)."
+kinds: [inverse_condition, graph_read]
+physics: [interference, path_difference, constructive_interference, destructive_interference]
+notes: "Two parts. Key uses delta = 0.35 m exactly, so the frequencies are rounded values (exact delta gives about 1003 n and 501.5 (2n-1))."

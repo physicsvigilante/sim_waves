@@ -1,0 +1,16 @@
+id: 23/04/asc_007
+assume:
+  - "Closed pipe is closed at one end, open at the other; initial fundamental 220 Hz."
+  - "Water fills 1/4 of the length: remaining air column is 3L/4, still closed (at water) and open (top). End correction neglected."
+symbols: {v: positive}
+unknowns: {L: positive}
+media:
+  air: {type: gas, v: v}
+resonators:
+  full: {type: pipe, on: air, length: L, ends: [closed, open], end_correction: 0 m}
+  part: {type: pipe, on: air, length: 3*L/4, ends: [closed, open], end_correction: 0 m}
+given:
+  - {fact: "frequency(full, harmonic=1) == 220[Hz]", source: stated}
+observe:
+  f_first_overtone: "frequency(part, harmonic=harmonic(part, overtone=1))"
+  h: "harmonic(part, overtone=1)"

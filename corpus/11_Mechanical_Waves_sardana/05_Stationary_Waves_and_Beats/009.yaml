@@ -1,0 +1,19 @@
+id: 11/05/009
+number: 9
+source: {problem: 11_Mechanical_Waves_sardana/05_Stationary_Waves_and_Beats/Problems/009.png, solution: 11_Mechanical_Waves_sardana/05_Stationary_Waves_and_Beats/Solutions/009.png}
+format: numerical
+statement: |
+  A string is stretched with tension T between two rigid supports. A wave y = A sin(kx - wt) is produced in the string at left end. Stationary waves are formed due to reflection from the rigid supports. Calculate the
+  (a) instantaneous kinetic energy contained in the string between two nodes.
+  (b) maximum kinetic energy.
+  (c) average kinetic energy over a cycle.
+figure: null
+options: null
+answer: "(a) K = pi k A^2 T sin^2(wt); (b) K_max = pi k A^2 T; (c) <K> = pi k A^2 T / 2"
+answer_value: "K_max = pi*k*A^2*T"
+units: J
+verified: "y = 2A sin(kx) cos(wt); v_p = -2 A w sin(kx) sin(wt); K = integral over 0..lambda/2 of (1/2) mu v_p^2 dx = 2 mu A^2 w^2 sin^2(wt) (lambda/4) = (mu w^2 lambda A^2/2) sin^2(wt); with mu w^2 = k^2 T and lambda = 2 pi/k this is pi k A^2 T sin^2(wt). Max = pi k A^2 T, average = half of it. Matches key."
+kinds: [symbolic, build_wavefunction]
+physics: [standing_waves, kinetic_energy, string, tension]
+notes: |
+  Misprint in solution equation (1): v_p printed as -2 A w sin(kx) cos(wt); the correct derivative of y = 2A sin(kx) cos(wt) is -2 A w sin(kx) sin(wt), and the final result K proportional to sin^2(wt) uses the correct form. A is the amplitude of each travelling component (antinode amplitude 2A). Three sub-questions.

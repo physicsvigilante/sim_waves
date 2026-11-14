@@ -1,0 +1,15 @@
+id: 11/02/013
+number: 13
+source: {problem: 11_Mechanical_Waves_sardana/02_Transverse_Wave_in_String_and_Properties/Problems/013.png, solution: 11_Mechanical_Waves_sardana/02_Transverse_Wave_in_String_and_Properties/Solutions/013.png}
+format: numerical
+statement: |
+  A string of length 40 cm and weighing 10 g is attached to a spring at one end and to a fixed wall at the other end. The spring has a spring constant of 160 N/m and is stretched by 1 cm. If a wave pulse is produced on the string near the wall, calculate the time taken by the wave pulse to reach the spring.
+figure: null
+options: null
+answer: "t = 0.05 s"
+answer_value: 0.05
+units: s
+verified: "Matches key. T = kx = 160*0.01 = 1.6 N; v = sqrt(T l/m) = sqrt(1.6*0.4/0.01) = 8 m/s; t = 0.4/8 = 0.05 s."
+kinds: [derived_medium]
+physics: [wave_speed, tension, spring_force, travel_time]
+notes: Consistent.

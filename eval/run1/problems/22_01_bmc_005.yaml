@@ -1,0 +1,9 @@
+id: 22/01/bmc_005
+format: multiple_correct
+statement: Mark out the correct statement(s) for a transverse travelling mechanical wave on a string.
+options:
+  a: The wave speed is same for the entire wave, while particle velocity is different for different points
+    at a particular instant
+  b: Wave speed depends upon property of the medium but not on the wave properties
+  c: Wave speed depends upon both the properties of the medium and on the properties of wave
+  d: Particle velocity depends upon properties of the wave and not on medium properties

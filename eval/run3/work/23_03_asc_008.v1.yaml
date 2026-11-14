@@ -1,0 +1,14 @@
+id: 23/03/asc_008
+assume:
+  - "Uniform string; mass density and tension are not given, so tension is an unknown fixed by the 500 Hz fourth mode."
+symbols: {mu: positive}
+unknowns: {T: positive}
+media:
+  s: {type: string, mu: mu, tension: T}
+resonators:
+  r: {type: string, on: s, length: 2 m, ends: [fixed, fixed]}
+given:
+  - {fact: "frequency(r, harmonic=4) == 500[Hz]", source: stated, note: "fourth normal mode (taken as the 4th harmonic, n = 4)"}
+observe:
+  v: "speed(s)"
+  lam: "wavelength(r, harmonic=4)"

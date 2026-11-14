@@ -1,0 +1,18 @@
+id: 23/01/cnt_005
+assume:
+  - "Each wave's intensity at P is stated (60 W/m^2), so spreading is irrelevant: amplitudes at P are taken equal (spreading: none)."
+  - "The sources' own phases are equal (coherent, no phase difference stated)."
+symbols: {a: positive}
+media:
+  air: {type: gas, v: 448 m/s}
+sources:
+  S1: {on: air, f: 400 Hz, A: a, phase: 0, spreading: none}
+  S2: {on: air, f: 400 Hz, A: a, phase: 0, spreading: none}
+rays:
+  r1: {from: S1, length: 0.2 m}
+  r2: {from: S2, length: 0.48 m}
+given: []
+observe:
+  dphi: "wrap(phase_difference(r1, r2))"
+  I: "60[W/m^2] * relative_intensity(r1, r2) / relative_intensity(r1)"
+expect: {I: 120}

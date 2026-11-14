@@ -1,0 +1,20 @@
+id: 23/02/bmc_004
+number: 6
+source: {problem: 23_Superposition_and_Standing_Waves/02_Reflection_and_Refraction_of_Stationary_Waves/Problems/bmc_004.png, solution: 23_Superposition_and_Standing_Waves/02_Reflection_and_Refraction_of_Stationary_Waves/Solutions/bmc_004.png}
+format: multiple_correct
+statement: |
+  A plane wave y = A sin w(t - x/v1) strikes a plane boundary that is normal to the direction of wave propagation. The boundary is at x = 0 and separates two media M1 and M2. The reflected and transmitted waves have speeds v1 and v2, respectively.
+figure: null
+options:
+  a: "for all values of v1 and v2 the phase of transmitted wave is same as that of incident wave"
+  b: "the equation of reflected wave for v1 > v2 can be y = A sin w(t - x/v1)"
+  c: "the equation of reflected wave for v1 > v2 can be y = A sin w(t + x/v1 + pi)"
+  d: "the equation of reflected wave for v2 > v1 can be y = A sin w(t + x/v1)"
+answer: [a, c, d]
+answer_value: null
+units: null
+verified: "Reflected wave travels in -x so must contain t + x/v1 (rules out b). For v1 > v2 reflection is from a denser/slower medium: phase flip pi (c). For v2 > v1 no flip (d). Transmitted wave has no phase change (a). Matches key."
+kinds: [equation_form, conceptual]
+physics: [reflection, transmission, phase_change, boundary]
+notes: |
+  The options use amplitude A for the reflected wave, which is only exact for special impedance ratios; 'can be' wording is taken as loose (phase/direction only). Solution describes v1 > v2 as 'rarer to denser'.

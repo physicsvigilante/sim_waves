@@ -1,0 +1,5 @@
+media:
+  cu: {type: string, density: 9000 kg/m^3, Y: 1.3e11 Pa, alpha: 1.7e-5 1/K,
+       tension: {thermal: {slack_at: 10 degC, now: 30 degC}}}
+observe: {v: "speed(cu)"}
+expect: {error: rejected}

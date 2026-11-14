@@ -1,0 +1,10 @@
+answer: d
+final_scene: 24_01_asc_006.v1.yaml
+engine_fit: partial
+hand_steps:
+  - "B = p0/(k s0) = 14/(17.952*5.5e-6) = 1.42e5 Pa"
+coverage: partial
+not_represented: "pressure variation and bulk modulus; v1 had an arbitrary assumed speed 340 m/s that plays no role"
+missing_in_source: "none"
+reasoning: "Engine gave k = 40*pi/7 and A; B = p0/(k A) hand-evaluated gives 1.42e5 Pa."
+friction: "no pressure/bulk modulus observables for a gas wave"

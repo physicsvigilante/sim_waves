@@ -1,0 +1,9 @@
+answer: {description: "Pulse of peak 2 cm, same shape, centred at x=0, 3 cm, 6 cm at t=0, 1, 2 s; speed 3 cm/s to the right", plotted: "y0, y1, y2 expressions below; snapshots in view"}
+final_scene: 11_01_007.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: nothing
+missing_in_source: none
+reasoning: "velocity(p)=3 cm/s; y(x,t) = 2/((x-3t)^2+1) cm. (engine printed in metres: y0 = 1/(50(10000x^2+1)) with x in m.) View not rendered (run only)."
+friction: "run prints SI; I did not render the view panels."

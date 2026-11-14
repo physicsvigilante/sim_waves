@@ -1,0 +1,17 @@
+id: 22/02/asc_009
+assume:
+  - "Origin is itself a zero crossing; the fifth zero crossing after it is five half-wavelengths away, so 5*lam/2 = 0.25 m (read from figure description)."
+  - "All options have no phase term, so phase = 0 is taken (strictly the snapshot rising at origin would need phase pi at t=0; options ignore it)."
+  - "Option d has a typo (10t), read as 10x; it equals option c."
+unknowns: {lam: positive}
+waves:
+  w: {harmonic: {A: 0.05 m, v: 330 m/s, lambda: lam, dir: +x, phase: 0}}
+given:
+  - "5*lam/2 == 0.25[m]"
+observe:
+  lam: "lam"
+  f: "frequency(w)"
+  k_over_2pi: "k(w)/(2*pi)"
+  match_a: "equivalent(field(w), 0.05*sin(2*pi*(4000*t - 12.5*x)))"
+  match_b: "equivalent(field(w), 0.05*sin(2*pi*(4000*t - 122.5*x)))"
+  match_c: "equivalent(field(w), 0.05*sin(2*pi*(3300*t - 10*x)))"

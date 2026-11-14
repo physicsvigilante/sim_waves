@@ -1,0 +1,9 @@
+id: b06
+media:
+  s1: {type: string, mu: 0.01 kg/m, tension: 9 N}
+  s2: {type: string, mu: 0.01 kg/m, tension: 9 N}
+waves:
+  y1: {harmonic: {on: s1, A: 3 cm, f: 10 Hz, dir: +x, phase: 0}}
+  y2: {harmonic: {on: s2, A: 4 cm, f: 10 Hz, dir: +x, phase: 0}}
+  tot: {sum: [y1, y2]}
+observe: {amp: "amplitude(tot)"}

@@ -1,0 +1,2 @@
+symbols: {K: real}
+observe: {b: "max_over(t, K*abs(sin(t)))"}

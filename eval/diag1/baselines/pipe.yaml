@@ -1,0 +1,10 @@
+id: diag1/pipe
+# Baseline (developer-authored fixture). A pipe 85 cm long, closed at one end and open at
+# the other, in air at 340 m/s. End correction neglected.
+media:
+  air: {type: gas, v: 340 m/s}
+resonators:
+  p: {type: pipe, on: air, length: 85 cm, ends: [closed, open], end_correction: 0 m}
+observe:
+  f1: "frequency(p, harmonic=1)"
+  f3: "frequency(p, harmonic=3)"

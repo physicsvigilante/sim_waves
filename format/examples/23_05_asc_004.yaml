@@ -1,0 +1,11 @@
+id: 23/05/asc_004
+symbols: {v: positive, l: positive, dl: positive}
+media:
+  air: {type: gas, v: v}
+resonators:
+  p1: {type: pipe, on: air, length: l, ends: [open, open], end_correction: 0 m}
+  p2: {type: pipe, on: air, length: l + dl, ends: [open, open], end_correction: 0 m}
+observe:
+  beats: "beat_frequency(frequency(p1, harmonic=1), frequency(p2, harmonic=1))"
+  per_dl_small: "limit(beat_frequency(frequency(p1, harmonic=1), frequency(p2, harmonic=1))/dl, dl, 0)"
+expect: {per_dl_small: "v/(2*l**2)"}

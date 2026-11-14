@@ -1,0 +1,19 @@
+id: 23/04/bmc_005
+assume:
+  - "String fixed at both ends (figure: walls at both ends), fundamental mode; tension is whatever makes wave speed on string equal to the speed of sound (stated); a travelling wave of speed 340 m/s on the string fixes the free tension."
+  - "The sound emitted has the string's frequency. A pipe resonates if that frequency equals an allowed mode frequency of the pipe. End corrections neglected (none given)."
+  - "Scale fixed for the resonance search (L = 1 m, v = 340 m/s, mu = 1 g/m): the question is scale-free because only ratios of lengths matter. Pipe length is k*L; the engine lists k at which each pipe type resonates, and I compare with the figure's k: (a) 1 closed-open, (b) 2 open-open, (c) 1/2 open-open, (d) 1/2 closed-open."
+symbols: {k: positive}
+media:
+  wire: {type: string, mu: 1 g/m, tension: free}
+  air: {type: gas, v: 340 m/s}
+waves:
+  w: {harmonic: {on: wire, A: 1 mm, v: 340 m/s, f: 170 Hz, dir: +x, phase: 0}}
+resonators:
+  s: {type: string, on: wire, length: 1 m, ends: [fixed, fixed]}
+  co: {type: pipe, on: air, length: "k*1[m]", ends: [closed, open], end_correction: 0 m}
+  oo: {type: pipe, on: air, length: "k*1[m]", ends: [open, open], end_correction: 0 m}
+observe:
+  fs: "frequency(s, harmonic=1)"
+  k_closed_open: "resonances(co, f=frequency(s, harmonic=1), vary=k, lo=0.01, hi=4)"
+  k_open_open: "resonances(oo, f=frequency(s, harmonic=1), vary=k, lo=0.01, hi=4)"

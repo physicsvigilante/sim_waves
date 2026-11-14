@@ -1,0 +1,11 @@
+id: 23/03/bmc_004
+format: multiple_correct
+statement: 'The length, tension, diameter and density of a wire B are double than the corresponding quantities
+  for another stretched wire A. Then
+
+  '
+options:
+  a: fundamental frequency of B is 1/(2 sqrt(2)) times that of A
+  b: the velocity of wave in B is 1/sqrt(2) times that of velocity in A
+  c: the fundamental frequency of A is equal to the third overtone of B
+  d: the velocity of wave in B is half that of velocity in A

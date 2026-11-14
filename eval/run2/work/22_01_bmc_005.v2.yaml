@@ -1,0 +1,21 @@
+id: 22/01/bmc_005
+assume:
+  - "One generic sinusoidal wave on a uniform string; mu, T, A, f are free symbols. Statements are checked by differentiating engine observables with respect to wave parameters."
+symbols: {mu: positive, T: positive, A: positive, f: positive, X: real, t0: real}
+media:
+  rope: {type: string, mu: mu, tension: T}
+waves:
+  w: {harmonic: {on: rope, A: A, f: f, dir: +x, phase: 0}}
+observe:
+  speed: "speed(w)"
+  speed_same_everywhere: "equivalent(velocity(w), speed(w))"
+  dv_dA: "diff(speed(w), A)"
+  dv_df: "diff(speed(w), f)"
+  dv_dT: "diff(speed(w), T)"
+  vy_point: "vy(w, x=X, t=t0)"
+  vy_depends_on_x: "diff(vy(w, x=X, t=t0), X)"
+  vy_wrt_mu: "diff(vy(w, x=X, t=t0), mu)"
+  vy_wrt_A: "diff(vy(w, x=X, t=t0), A)"
+  vy_amp: "max_over(t0, abs(vy(w, x=X, t=t0)))"
+  vy_amp_wrt_mu: "diff(max_over(t0, abs(vy(w, x=X, t=t0))), mu)"
+  vy_amp_wrt_A: "diff(max_over(t0, abs(vy(w, x=X, t=t0))), A)"

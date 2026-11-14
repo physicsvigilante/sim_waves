@@ -1,0 +1,12 @@
+id: 22/02/asc_006
+format: single_correct
+statement: 'The path difference between the two waves y1 = a1 sin(ωt - 2πx/λ) and
+
+  y2 = a2 cos(ωt - 2πx/λ + φ) is
+
+  '
+options:
+  a: (λ/2π) φ
+  b: (λ/2π)(φ + π/2)
+  c: (2π/λ)(φ - π/2)
+  d: (2π/λ) φ

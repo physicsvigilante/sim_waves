@@ -1,0 +1,19 @@
+id: 11/04/001
+assume:
+  - "Part (b): phi taken in (0, pi]; the sign of phi cannot change the amplitude, so only this range is asked."
+unknowns: {phi: phase}
+waves:
+  y1: {given: "0.2*sin(x - 3*t)", units: {x: m, t: s, y: m}}
+  y2a: {given: "0.2*sin(x - 3*t + pi/2)", units: {x: m, t: s, y: m}}
+  ya: {sum: [y1, y2a]}
+  y2b: {given: "0.2*sin(x - 3*t + phi)", units: {x: m, t: s, y: m}}
+  yb: {sum: [y1, y2b]}
+given:
+  - {fact: "amplitude(yb) == 0.32[m]", source: stated}
+  - {fact: "phi > 0", source: assumption, note: "sign of phi irrelevant to amplitude"}
+  - {fact: "phi <= pi", source: assumption, note: "same"}
+observe:
+  A_a: "amplitude(ya)"
+  ph_a: "phase(ya, x=0[m], t=0[s])"
+  phi: "phi"
+  A_b: "amplitude(yb)"

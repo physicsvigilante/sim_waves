@@ -1,0 +1,19 @@
+id: 23/04/asc_004
+number: 1
+source: {problem: 23_Superposition_and_Standing_Waves/04_Longitudinal_Stationary_Waves/Problems/asc_004.png, solution: 23_Superposition_and_Standing_Waves/04_Longitudinal_Stationary_Waves/Solutions/asc_004.png}
+format: single_correct
+statement: |
+  In a resonance pipe the first and second resonances are obtained at depths 22.7 cm and 70.2 cm respectively. What will be the end correction?
+figure: null
+options:
+  a: "1.05 cm"
+  b: "115.5 cm"
+  c: "92.5 cm"
+  d: "113.5 cm"
+answer: a
+answer_value: 1.05
+units: cm
+verified: "(l2 + x)/(l1 + x) = 3 gives x = (l2 - 3 l1)/2 = (70.2 - 68.1)/2 = 1.05 cm. Matches key."
+kinds: [inverse_condition]
+physics: [resonance_tube, end_correction, closed_pipe]
+notes: Consistent.

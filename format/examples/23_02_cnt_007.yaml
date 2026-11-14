@@ -1,0 +1,15 @@
+id: 23/02/cnt_007
+symbols: {mu1: positive, T: positive, f: positive}
+unknowns: {mu2: positive}
+media:
+  s1: {type: string, mu: mu1, tension: T}
+  s2: {type: string, mu: mu2, tension: T}
+junctions:
+  J: {at: 0 m, left: s1, right: s2}
+waves:
+  w: {harmonic: {on: s1, A: 2 cm, f: f, dir: +x, phase: 0}}
+given:
+  - {fact: "speed(s1) == 3*speed(s2)", source: stated}
+observe:
+  A_t: "amplitude(w_transmitted)"
+expect: {A_t: "1 cm"}

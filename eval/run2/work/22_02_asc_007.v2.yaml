@@ -1,0 +1,14 @@
+id: 22/02/asc_007
+assume:
+  - "The oscillation is one point's motion; modelled as a +x wave observed at x = 0 with A = y0 and phase = -phi (argument omega*t - phi). k is an unused free symbol."
+  - "Engine cannot decide a symbolic bound 0 < phi < 90 deg, so two sample values inside the range are used (30 and 60 deg). The qualitative shape (starts below zero, rising) should not depend on which value in the range is used; the two samples check that."
+symbols: {y0: positive, omega: positive, k: positive}
+waves:
+  w30: {harmonic: {A: y0, omega: omega, k: k, dir: +x, phase: -pi/6}}
+  w60: {harmonic: {A: y0, omega: omega, k: k, dir: +x, phase: -pi/3}}
+observe:
+  y_t_30: "y(w30, x=0, t=t)"
+  y0_30: "y(w30, x=0, t=0)/y0"
+  vy0_30: "vy(w30, x=0, t=0)/(y0*omega)"
+  y0_60: "y(w60, x=0, t=0)/y0"
+  vy0_60: "vy(w60, x=0, t=0)/(y0*omega)"

@@ -1,0 +1,22 @@
+id: 11/05/005
+assume:
+  - "Same wire (same tension and mu) in all segments; segments in order from the left with fundamental frequencies f1 : f2 : f3 = 1 : 3 : 4 (other orders just permute the segments; reading order assumed)."
+  - "Wire tension and mu are arbitrary symbols; they cancel in the ratios."
+symbols: {mu: positive, T: positive}
+unknowns: {L1: positive, L2: positive, L3: positive}
+media:
+  wire: {type: string, mu: mu, tension: T}
+resonators:
+  r1: {type: string, on: wire, length: L1, ends: [fixed, fixed]}
+  r2: {type: string, on: wire, length: L2, ends: [fixed, fixed]}
+  r3: {type: string, on: wire, length: L3, ends: [fixed, fixed]}
+given:
+  - {fact: "L1 + L2 + L3 == 114[cm]", source: stated}
+  - {fact: "frequency(r2, harmonic=1) == 3*frequency(r1, harmonic=1)", source: stated}
+  - {fact: "frequency(r3, harmonic=1) == 4*frequency(r1, harmonic=1)", source: stated}
+observe:
+  L1: "L1"
+  L2: "L2"
+  L3: "L3"
+  bridge1: "L1"
+  bridge2: "L1 + L2"

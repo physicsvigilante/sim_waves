@@ -1,0 +1,9 @@
+answer: {power: "2e-6 W", energy_per_day: "0.173 J (86400 s)"}
+final_scene: 11_03_006.v3.yaml
+engine_fit: partial
+hand_steps: ["60 dB -> I = 1e-6 W/m^2 (engine cannot solve for I inside log: v1, v2 failed)", "P = I*A = 2e-6 W", "E = P*86400 s = 0.1728 J"]
+coverage: partial
+not_represented: "window area as a collecting surface; time integration"
+missing_in_source: "reference intensity 1e-12 W/m^2 (convention)"
+reasoning: "Engine confirms the plane emitter intensity 1e-6 W/m^2 is 60 dB with I0=1e-12; power and energy by hand."
+friction: "Unknown inside log rejected as 'inside sine/cosine'; no power-through-area or energy-over-time observable (flux only through spheres)."

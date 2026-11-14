@@ -1,0 +1,9 @@
+# cylindrical; and unknown amplitude spherical; symbolic distance
+symbols: {r: positive}
+media: {air: {type: gas, v: 340 m/s}}
+sources:
+  S: {on: air, at: [0 m, 0 m], f: 340 Hz, A: 2, A_at: 1 m, phase: 0, spreading: cylindrical}
+  Q: {on: air, at: [0 m, 0 m], f: 340 Hz, A: 2, A_at: 1 m, phase: 0, spreading: spherical}
+points: {P: [r, 0 m], P4: [4 m, 0 m]}
+rays: {c: {from: S, to: P4}, s: {from: Q, to: P}, s4: {from: Q, to: P4}}
+observe: {ac: "amplitude(c)", as: "amplitude(s)", ratio: "relative_intensity(s4)/relative_intensity(s)", aS: "amplitude(Q)"}

@@ -1,0 +1,11 @@
+id: 22/02/asc_006
+assume:
+  - "Path difference = shift in x that gives the waves equal phase (taking the smallest equivalent shift, no 2*pi*n ambiguity)."
+  - "Convert cos to sine form via the engine's phase observable."
+symbols: {a1: positive, a2: positive, omega: positive, lam: positive, phi: real, X: real, T0: real}
+waves:
+  w1: {given: "a1*sin(omega*t - 2*pi*x/lam)", units: {x: m, t: s, y: m}}
+  w2: {given: "a2*cos(omega*t - 2*pi*x/lam + phi)", units: {x: m, t: s, y: m}}
+observe:
+  dphase: "phase(w2, x=X, t=T0) - phase(w1, x=X, t=T0)"
+  eq_b: "equivalent(field(w2), a2*sin(omega*t - 2*pi*(x + (lam/(2*pi))*(phi + pi/2))/lam + 0*phi + phi*0))"

@@ -1,0 +1,14 @@
+id: 23/02/cnt_008
+number: 15
+source: {problem: 23_Superposition_and_Standing_Waves/02_Reflection_and_Refraction_of_Stationary_Waves/Problems/cnt_008.png, solution: 23_Superposition_and_Standing_Waves/02_Reflection_and_Refraction_of_Stationary_Waves/Solutions/cnt_008.png}
+format: numerical
+statement: |
+  Two wires of different linear mass densities are soldered together end to end and are then stretched under tension. The wave speed in the first wire is twice in the second wire. Fraction of the incident power that is reflected at the junction is 1/beta. Find the value of beta.
+figure: null
+answer: "9.0"
+answer_value: 9.0
+units: null
+verified: "A_r/A_i = (v2 - v1)/(v1 + v2) = -1/3, power fraction = 1/9, beta = 9. Matches key."
+kinds: [ratio, nonuniform_medium]
+physics: [reflection, power, amplitude_coefficient, wave_speed]
+notes: Consistent.

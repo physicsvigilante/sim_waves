@@ -1,0 +1,6 @@
+# review a5: unknown frequency inside a time identity -> refused (was falsely 'inconsistent')
+unknowns: {om: positive}
+waves: {w: {harmonic: {A: 2 cm, omega: om, k: 1 1/m, dir: +x, phase: 0}}}
+given: ["y(w, x=0, t=t) == 2[cm]*sin(3*pi*t)"]
+observe: {om: "om"}
+expect: {error: rejected, message: "unknown frequency"}

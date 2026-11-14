@@ -1,0 +1,6 @@
+id: 11/03/008
+assume: ["Solid modelled as a 'gas' medium only to get v = sqrt(B/rho): gamma=1, pressure=B. Hack: the format has no solids with bulk modulus."]
+media:
+  al: {type: gas, gamma: 1, pressure: 7.5e10 Pa, density: 2.70e3 kg/m^3}
+observe:
+  v: "speed(al)"

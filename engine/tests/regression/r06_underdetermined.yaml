@@ -1,0 +1,7 @@
+# review a6: one fact, two unknowns -> undetermined, not 'ambiguous'
+symbols: {a: positive}
+unknowns: {A: positive, phi: phase}
+waves: {w: {harmonic: {A: A, omega: 3*pi rad/s, k: 1 1/m, dir: +x, phase: phi}}}
+given: ["y(w, x=0, t=0) == a"]
+observe: {A: "A"}
+expect: {error: undetermined}

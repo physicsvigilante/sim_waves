@@ -1,0 +1,11 @@
+answer: {a: "SD = 3 m", b: "0.60 m (wall moves from 2 m to about 2.60 m)"}
+final_scene: 11_04_010.v1.yaml
+engine_fit: partial
+hand_steps:
+  - "Part (b) not solved by the engine: minima() raised 'no value gives a minimum' (v2, v3) while maxima() over the same variable worked, so I solved sqrt(4W^2+9) - 3 = 3 m (path difference 1.5 lambda) by hand: W = 2.598 m, move 0.598 m."
+  - "SD = 3 m from (a) reused as given in (b)."
+coverage: full
+not_represented: "(b) only via hand calculation; the v2/v3 scenes are a failed attempt"
+missing_in_source: "'out of phase by 180 degrees' for (b) could also be reached by moving the wall closer; read as moving right (further), antiphase with path difference 1.5 lambda"
+reasoning: "v1 engine: path difference sqrt(y^2+16) - y, smallest y with a maximum is 3 m (and v3 listed d=2 as a maximum, consistent)."
+friction: "minima() with a varied reflector/source position failed although maxima() worked (possible engine bug); no way to vary wall position separate from the source."

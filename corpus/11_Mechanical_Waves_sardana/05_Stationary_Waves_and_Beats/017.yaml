@@ -1,0 +1,15 @@
+id: 11/05/017
+number: 17
+source: {problem: 11_Mechanical_Waves_sardana/05_Stationary_Waves_and_Beats/Problems/017.png, solution: 11_Mechanical_Waves_sardana/05_Stationary_Waves_and_Beats/Solutions/017.png}
+format: numerical
+statement: |
+  Write the equation for the fundamental standing sound waves of antinode amplitude A, in a tube that is open at both ends. If the tube is 80 cm long and speed of the wave is 330 m s^-1.
+figure: null
+options: null
+answer: "y = A cos(3.93 x) sin(1297 t)"
+answer_value: "y = A cos(kx) sin(wt) with k = 3.93 /m, w = 1297 /s"
+units: m
+verified: "lambda = 2 l = 1.6 m, k = 2 pi/1.6 = 3.927 /m, w = v k = 330*3.927 = 1296 rad/s. Displacement antinodes at both open ends (x measured from end A), so y = A cos(kx) sin(wt). Matches key (key uses rounded k = 3.93 giving w = 1297)."
+kinds: [build_wavefunction]
+physics: [open_pipe, standing_waves, fundamental_frequency]
+notes: "Solution figure shows the tube A to B with the fundamental pattern (single node at centre, antinodes at both ends, length l = lambda/2). Time phase and origin of x (end A) are a convention."

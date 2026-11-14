@@ -1,0 +1,9 @@
+answer: {A: 2 cm, f: 100 Hz, wavelength: 30 cm, v: 30 m/s}
+final_scene: 11_01_009.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: nothing
+missing_in_source: none
+reasoning: "Engine: A=0.02 m, f=100, lam=0.3 m, velocity=30 (m/s) = 3000 cm/s; positive: +x."
+friction: none

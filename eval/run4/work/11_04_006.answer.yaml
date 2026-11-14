@@ -1,0 +1,11 @@
+answer: "Phases at P differ by pi (antiphase; path difference 2.25 m = 1.5 lambda); I = 8.2e-5 W/m^2"
+final_scene: 11_04_006.v1.yaml
+engine_fit: partial
+hand_steps:
+  - "Source amplitudes at 1 m taken proportional to sqrt(power): sqrt(1.2e-3)=0.034641, sqrt(1.8e-3)=0.042426 (rounded numbers typed by me)."
+  - "Combining the intensity of one source at P (from the point emitter) with relative_intensity of the two-ray pair: I = I1*relI(r1,r2)/relI(r1)."
+coverage: full
+not_represented: nothing
+missing_in_source: none
+reasoning: "dphi = pi, lambda = 1.5 m; I1 = 1.70e-4, I2 = 1.59e-5 W/m^2; combined = 8.17e-5 W/m^2 (equals (sqrt I1 - sqrt I2)^2)."
+friction: "Emitter power and source amplitude live in separate blocks (emitters vs sources); amplitude-from-power link had to be made by hand."

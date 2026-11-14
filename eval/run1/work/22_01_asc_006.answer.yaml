@@ -1,0 +1,5 @@
+answer: [c]
+final_scene: 22_01_asc_006.v3.yaml
+engine_fit: full
+reasoning: Engine rejects I and III as "not a travelling wave of fixed shape" (v1 rejected I, v2 rejected III); II and IV give velocities -c/b and +c/b.
+friction: A rejected wave aborts the whole scene, so each suspect wave needed its own attempt to find out which was rejected; no "is_travelling(w)" observable or boolean result.

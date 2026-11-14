@@ -1,0 +1,11 @@
+id: 24/01/asc_005
+assume:
+  - "Plane wave in air, travelling +x (the printed kx - wt form); speed follows from omega and k, solved by the engine."
+  - "Engine has no pressure-displacement relation; the displacement amplitude is a hand step."
+unknowns: {v: positive}
+media:
+  air: {type: gas, v: v}
+waves:
+  w: {harmonic: {on: air, A: 1 m, omega: 2700 rad/s, k: 8.18 rad/m, dir: +x, phase: pi/4}}
+observe:
+  v: "speed(w)"

@@ -1,0 +1,20 @@
+id: 23/02/bmc_005
+assume:
+  - "Rigid support at x = 0 with the string on x < 0 (the incident wave travels toward +x). Concrete values (A 1 cm, 50 Hz, mu 0.01 kg/m, T 4 N) fixed by assumption; the question concerns the nature of the pattern."
+  - "Option d (intensity varying periodically with time) is read as the amplitude envelope varying in time; the engine gives only the amplitude at a point and the time dependence of y."
+media:
+  s: {type: string, mu: 0.01 kg/m, tension: 4 N}
+junctions:
+  wall: {at: 0 m, left: s, right: fixed}
+waves:
+  w: {harmonic: {on: s, A: 1 cm, f: 50 Hz, dir: +x, phase: 0}}
+  st: {sum: [w, w_reflected]}
+observe:
+  displacement_at_support: "equivalent(y(st, x=0[m], t=t), 0[m])"
+  amp_at_support: "max_over(t, abs(y(st, x=0[m], t=t)))"
+  amp_at_quarter: "max_over(t, abs(y(st, x=(-1/10)[m], t=t)))"
+  amp_at_half: "max_over(t, abs(y(st, x=(-1/5)[m], t=t)))"
+  amp_at_quarter_next: "max_over(t, abs(y(st, x=(-3/10)[m], t=t)))"
+  travelling: "is_travelling(st)"
+  y_quarter_in_time: "frequency_of(t, y(st, x=(-1/10)[m], t=t))"
+  refl_phase_shift: "wrap(phase(w_reflected, x=0[m], t=t) - phase(w, x=0[m], t=t))"

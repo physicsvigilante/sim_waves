@@ -1,0 +1,18 @@
+id: 23/02/asc_005
+number: 2
+source: {problem: 23_Superposition_and_Standing_Waves/02_Reflection_and_Refraction_of_Stationary_Waves/Problems/asc_005.png, solution: 23_Superposition_and_Standing_Waves/02_Reflection_and_Refraction_of_Stationary_Waves/Solutions/asc_005.png}
+format: single_correct
+statement: |
+  When a stationary wave is formed, then its frequency is
+figure: null
+options:
+  a: "same as that of the individual waves"
+  b: "twice that of the individual waves"
+  c: "half that of the individual waves"
+  d: "none of the above"
+answer: a
+answer_value: null
+units: null
+kinds: [conceptual]
+physics: [standing_waves, frequency]
+notes: Consistent. Solution compares y_incident = a sin(wt - kx) with y_stationary = a sin(wt) cos(kx).

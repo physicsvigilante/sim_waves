@@ -1,0 +1,13 @@
+id: 24/01/asc_004
+assume:
+  - "Radio speaker is a point source radiating spherically into open air (no reflections or absorption)."
+unknowns: {P: positive}
+media:
+  air: {type: open3d}
+emitters:
+  spk: {on: air, geometry: point, power: P}
+given:
+  - {fact: "intensity(spk, r=2[m]) == 1e-8[W/m^2]", source: stated, note: "1e-2 uW/m^2"}
+observe:
+  I10: "intensity(spk, r=10[m])"
+  I10_uW: "intensity(spk, r=10[m])/1e-6[W/m^2]"

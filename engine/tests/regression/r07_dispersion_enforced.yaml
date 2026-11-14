@@ -1,0 +1,7 @@
+# review a7: rope fixes v = 34.6 m/s and f = 10 Hz, so lambda = 3.46 m; a 1 m fact contradicts
+media: {rope: {type: string, mu: 50 g/m, tension: 60 N}}
+unknowns: {lam: positive}
+waves: {w: {harmonic: {on: rope, A: 1 cm, f: 10 Hz, lambda: lam, dir: +x, phase: 0}}}
+given: ["wavelength(w) == 1[m]"]
+observe: {lam: "wavelength(w)"}
+expect: {error: inconsistent}

@@ -1,0 +1,18 @@
+id: 11/04/010
+number: 10
+source: {problem: 11_Mechanical_Waves_sardana/04_Interference/Problems/010.png, solution: 11_Mechanical_Waves_sardana/04_Interference/Solutions/010.png}
+format: numerical
+statement: |
+  A source emitting sound of frequency 180 Hz is placed in front of an obstacle at a distance 2 m from it. A detector is also placed in front of obstacle at the same distance from it.
+  (a) Find the minimum distance between the source and detector for which the detector detects a maximum sound.
+  (b) How much further to the right must the obstacle be moved if the two waves are to be out of phase by 180 degrees.
+  Speed of sound in air = 360 ms^-1.
+figure: "A vertical obstacle (wall) on the right. Source S (bottom) and detector D (top) lie on a vertical line to the left of the wall, each 2 m from the wall (2 m dashed horizontal line from the midpoint of SD to the wall). Solution figure labels the separation SD = y, midpoint C, and reflection point O on the wall."
+options: null
+answer: "(a) y = 3 m; (b) z = 0.6 m"
+answer_value: {y: 3.0, z: 0.6}
+units: m
+verified: "lambda = 360/180 = 2 m. Reflected path = 2 sqrt((y/2)^2 + 4) = sqrt(y^2 + 16); delta = sqrt(y^2+16) - y = lambda = 2 gives y = 3 m. For (b) delta = 3 lambda/2 = 3 m: 2 sqrt(2.25 + (2+z)^2) = 6, z = sqrt(6.75) - 2 = 0.598 m, about 0.6 m. Matches key."
+kinds: [inverse_condition, graph_read]
+physics: [interference, reflection, path_difference]
+notes: "Two parts. Part (b) interprets 'out of phase by 180 deg' as the nearest minimum (delta = 3 lambda/2) with y fixed at 3 m. No phase change at reflection assumed. The statement says 'the two waves' without defining direct and reflected, inferred from the solution."

@@ -1,0 +1,9 @@
+answer: "367 Hz"
+final_scene: 11_05_015.v2.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "nothing; the wax lowering the frequency is encoded as f1-d with d>0"
+missing_in_source: "size of the frequency drop (needed an assumption d<3 to remove an irrelevant ambiguity)"
+reasoning: "Engine solved f1=367 Hz (f1 = 361 is excluded because wax would then raise the beat count)."
+friction: "v1 ambiguous only in d (1 or 5), f1=367 in both; needed an assumption on d"

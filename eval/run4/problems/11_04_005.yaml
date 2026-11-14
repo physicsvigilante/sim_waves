@@ -1,0 +1,7 @@
+id: 11/04/005
+format: numerical
+statement: 'A wave is represented by y1 = 10 cos(5x + 25t) where x is measured in meters and t in seconds.
+  A second wave for which y2 = 20 cos(5x + 25t + pi/3) interferes with the first wave. Calculate the amplitude
+  and phase of the resultant wave.
+
+  '

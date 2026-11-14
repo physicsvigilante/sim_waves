@@ -1,0 +1,15 @@
+id: 24/01/cnt_005
+number: 8
+source: {problem: 24_Sound_Waves_and_Doppler_Effect/01_Speed_and_Intensity_of_Sound_Waves/Problems/cnt_005.png, solution: 24_Sound_Waves_and_Doppler_Effect/01_Speed_and_Intensity_of_Sound_Waves/Solutions/cnt_005.png}
+format: numerical
+statement: |
+  A gaseous mixture has 5 mol of nitrogen and 5 mol of hydrogen. Find the speed of sound in the mixture (in m/s) at 27 degC. Value of gamma for both nitrogen and hydrogen is 1.4. Value of gas constant R is 8.3 J/mol K.
+figure: null
+options: null
+answer: "482"
+answer_value: 482
+units: m/s
+verified: "M = (5*28 + 5*2)/10 = 15 g/mol = 0.015 kg/mol; T = 300 K; v = sqrt(1.4*8.3*300/0.015) = sqrt(2.324e5) = 482 m/s. Matches key."
+kinds: [derived_medium]
+physics: [speed_of_sound_in_gas, gas_mixture, molar_mass]
+notes: "Statement has a layout gap mid-sentence in the image (nothing cut off). Molar masses 28 and 2 g/mol are assumed, not stated."

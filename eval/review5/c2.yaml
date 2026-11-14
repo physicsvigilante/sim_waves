@@ -1,0 +1,1 @@
+observe: {a: "envelope(t, 3*sin(2*pi*100*t) + 4*sin(2*pi*104*t) + 2*cos(2*pi*100*t))", b: "max_over(t, envelope(t, 3*sin(2*pi*100*t) + 4*sin(2*pi*104*t) + 4*cos(2*pi*100*t)))", c: "min_over(t, envelope(t, 3*sin(2*pi*100*t) + 4*sin(2*pi*104*t) + 4*cos(2*pi*100*t)))"}

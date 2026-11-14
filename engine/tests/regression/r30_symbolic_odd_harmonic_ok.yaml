@@ -1,0 +1,7 @@
+# the allowed case still solves: 510 Hz is the 3rd harmonic of a 0.5 m closed pipe
+unknowns: {n: integer}
+media: {air: {type: gas, v: 340 m/s}}
+resonators: {p: {type: pipe, on: air, length: 0.5 m, ends: [closed, open], end_correction: 0 m}}
+given: ["frequency(p, harmonic=n) == 510[Hz]"]
+observe: {n_: "n"}
+expect: {n_: 3}

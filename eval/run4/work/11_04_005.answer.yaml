@@ -1,0 +1,10 @@
+answer: "Amplitude 10*sqrt(7) = 26.5 (m); phase +atan(sqrt(3)/2) = 0.714 rad (40.9 deg): y = 26.5 cos(5x + 25t + 0.714)"
+final_scene: 11_04_005.v1.yaml
+engine_fit: partial
+hand_steps:
+  - "Candidate cosine phase atan(sqrt(3)/2) written by me, confirmed by the engine with equivalent() (chk = True). The engine phase is pi - atan(2*sqrt(3)/3) in its sine convention."
+coverage: full
+not_represented: nothing
+missing_in_source: "unit of the amplitudes (taken as metres)"
+reasoning: "Engine amplitude of y1+y2 = 10*sqrt(7); the proposed cos form is equivalent to the engine sum."
+friction: "Phase is reported in the sine convention, while the problem uses cos; I had to guess the cos phase and verify it."

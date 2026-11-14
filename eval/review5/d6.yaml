@@ -1,0 +1,1 @@
+observe: {a: "envelope(t, sin(100*t)**2 + sin(104*t))", b: "envelope(t, exp(-t)*sin(100*t) + sin(104*t))", c: "envelope(t, t*sin(100*t) + sin(104*t))", d: "envelope(t, sin(100*t) + 0*sin(104*t))", e: "max_over(t, t*sin(t))"}

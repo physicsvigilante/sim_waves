@@ -1,0 +1,8 @@
+answer: [c]
+final_scene: 22_02_asc_009.v3.yaml
+engine_fit: full
+coverage: full
+not_represented: "nothing"
+missing_in_source: "option d is malformed (10t instead of 10x); phase 0 read from figure"
+reasoning: "With 5*lam/2 = 0.25 m the engine solves lam = 0.1 m, f = 3300 Hz, field = sin(pi*(6600 t - 20 x))/20 = 0.05 sin 2pi(3300 t - 10 x): option c."
+friction: "Using equivalent() against the option formulas in v2 exceeded the 120 s limit, so v3 compares by reading the printed field. 'Fifth zero crossing' counted as 5*lam/2 is my reading of the figure description."

@@ -1,0 +1,16 @@
+id: 11/01/001
+assume: ["Figure text: 3 crests and 2 troughs over 0 to 0.2 m, so the span is 2.5 wavelengths (stated in the figure description)."]
+unknowns: {lam: positive, ph: phase}
+waves:
+  w: {harmonic: {A: 0.06 m, v: 300 m/s, lambda: lam, dir: +x, phase: ph}}
+given:
+  - {fact: "0.2[m] == 5*wavelength(w)/2", source: figure, note: "2.5 wavelengths span"}
+  - {fact: "y(w, x=0[m], t=0[s]) == 0[m]", source: figure}
+  - {fact: "slope(w, x=0[m], t=0[s]) > 0", source: figure}
+observe:
+  lam: "lam"
+  f: "frequency(w)"
+  omega: "omega(w)"
+  k: "k(w)"
+  ph: "ph"
+  yxt: "y(w, x=x, t=t)"

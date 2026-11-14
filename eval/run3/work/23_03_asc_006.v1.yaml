@@ -1,0 +1,20 @@
+id: 23/03/asc_006
+assume:
+  - "String of length L = 1 m (scale-free) fixed at x=-1 m and x=0; the second harmonic is represented by a standing wave with wavelength equal to the resonator's second-harmonic wavelength, as sum of an incident wave and its reflection at a wall at x = 0. The far end at x = -L is checked to be a node."
+  - "The pattern for the question: plucking at a point excites the mode only if the point is an antinode; touching a point damps the modes that have an antinode there, so the touched point must be a node. The engine gives mode amplitudes at the points; the plucking/touching rule is the LLM's reading."
+media:
+  s: {type: string, mu: 0.01 kg/m, tension: 4 N}
+junctions:
+  wall: {at: 0 m, left: s, right: fixed}
+resonators:
+  r: {type: string, on: s, length: 1 m, ends: [fixed, fixed]}
+waves:
+  w: {harmonic: {on: s, A: 1 cm, lambda: 1 m, dir: +x, phase: 0}}
+  st: {sum: [w, w_reflected]}
+observe:
+  lam_h2: "wavelength(r, harmonic=2)"
+  lam_wave: "wavelength(w)"
+  amp_L4:  "max_over(t, abs(y(st, x=(-1/4)[m], t=t)))"
+  amp_L2:  "max_over(t, abs(y(st, x=(-1/2)[m], t=t)))"
+  amp_3L4: "max_over(t, abs(y(st, x=(-3/4)[m], t=t)))"
+  amp_L:   "max_over(t, abs(y(st, x=(-1)[m], t=t)))"

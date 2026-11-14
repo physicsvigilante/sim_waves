@@ -1,0 +1,8 @@
+id: 22/01/asc_005
+assume: ["Take the + branch of the +-; the - branch only flips the sign of the velocity.", "Initial means t=0."]
+symbols: {a: positive, b: positive, c: positive}
+waves:
+  p: {given: "(b/a)*sqrt(a**2 - (x - c*t)**2)", units: {x: m, t: s, y: m}}
+observe:
+  v0: "vy(p, x=a/2, t=0)"
+  wv: "velocity(p)"

@@ -1,0 +1,15 @@
+id: 11/05/016
+number: 16
+source: {problem: 11_Mechanical_Waves_sardana/05_Stationary_Waves_and_Beats/Problems/016.png, solution: 11_Mechanical_Waves_sardana/05_Stationary_Waves_and_Beats/Solutions/016.png}
+format: numerical
+statement: |
+  A string 25 cm long and having a mass of 2.5 g is under tension. A pipe closed at one end is 40 cm long. When the string is set vibrating in its first overtone and the air in the pipe in its fundamental frequency, 8 beats per second are heard. It is observed that decreasing the tension in the string decrease the beat frequency. If the speed of sound in air is 320 m s^-1, find the tension in the string.
+figure: null
+options: null
+answer: "27.04 N"
+answer_value: 27.04
+units: N
+verified: "Pipe f = 320/(4*0.4) = 200 Hz. Lowering tension lowers beats, so string frequency is above 200 Hz: 208 Hz. First overtone of string = v_s/l: 208 = (1/0.25) sqrt(T/mu), mu = 2.5e-3/0.25 = 0.01 kg/m; T = mu (208*0.25)^2 = 0.01*52^2 = 27.04 N. Matches key."
+kinds: [inverse_condition, derived_medium]
+physics: [beats, string_modes, closed_pipe, tension]
+notes: "Consistent."

@@ -1,0 +1,12 @@
+id: 22/02/bmc_004
+assume: ["The printed 10^4 is read as amplitude 1e4 m (units as stated: x, y in m, t in s)."]
+waves:
+  w: {given: "10**4*sin(60*t + 2*x)", units: {x: m, t: s, y: m}}
+observe:
+  v: "velocity(w)"
+  speed: "speed(w)"
+  lam: "wavelength(w)"
+  f: "frequency(w)"
+  A: "amplitude(w)"
+  lam_is_pi: "equivalent(wavelength(w), pi[m])"
+  f_is_30_over_pi: "equivalent(frequency(w), 30/pi[Hz])"

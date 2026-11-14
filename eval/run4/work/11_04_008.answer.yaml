@@ -1,0 +1,10 @@
+answer: {a: "f = n * 1003 Hz (about 1000 n Hz), n = 1, 2, ...", b: "f = (n + 1/2) * 1003 Hz, i.e. 501 Hz, 1504 Hz, 2506 Hz, ..."}
+final_scene: 11_04_008.v1.yaml
+engine_fit: partial
+hand_steps:
+  - "Generalising the lowest values (maxima 1002.8, minima 501.4 Hz) to the full families n*f and (n+1/2)*f."
+coverage: full
+not_represented: nothing
+missing_in_source: "whether the foot of the perpendicular lies between S1 and S2 (two readings modelled; both give the same path difference 0.349 m)"
+reasoning: "Path difference sqrt(20)-sqrt(17) = 0.349 m; lowest maximum 1002.8 Hz, lowest minimum 501.4 Hz."
+friction: "Needed two source/ray sets to cover figure ambiguity; the family pattern was not printed because I only asked for min."

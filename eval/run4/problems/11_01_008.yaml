@@ -1,0 +1,16 @@
+id: 11/01/008
+format: numerical
+statement: 'One end of each of two identical springs, each of force-constant 0.5 N/m, are attached on
+  the opposite sides of a wooden block of mass 0.01 kg. The other ends of the springs are connected to
+  separate rigid supports such that the springs are unstretched and are collinear in a horizontal plane,
+  as shown in Figure. To the wooden piece is fixed a pointer which touches a vertically moving plane paper.
+  The wooden piece, kept on a smooth horizontal table is now displaced by 0.02 m along the line of springs
+  and released. If the speed of paper is 0.1 m/s, find the equation of path traced by pointer on paper
+  and the distance between two consecutive maxima on this path.
+
+  '
+figure: 'Block of mass m on a table between two springs, each labelled k, each attached to a rigid wall
+  on its far end. Springs are horizontal and collinear; block rests on a horizontal table (smooth). No
+  numbers on the figure other than labels k and m.
+
+  '

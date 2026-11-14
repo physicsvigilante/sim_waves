@@ -1,0 +1,19 @@
+id: 23/05/asc_007
+number: 4
+source: {problem: 23_Superposition_and_Standing_Waves/05_Vibration_in_Rods_and_Beats/Problems/asc_007.png, solution: 23_Superposition_and_Standing_Waves/05_Vibration_in_Rods_and_Beats/Solutions/asc_007.png}
+format: single_correct
+statement: |
+  A tuning fork whose frequency as given by manufacturer is 512 Hz is being tested with an accurate oscillator. It is found that the fork produces a beat of 2 Hz when oscillator reads 514 Hz but produces a beat of 6 Hz when oscillator reads 510 Hz. The actual frequency of fork is
+figure: null
+options:
+  a: "508 Hz"
+  b: "512 Hz"
+  c: "516 Hz"
+  d: "518 Hz"
+answer: c
+answer_value: 516
+units: Hz
+verified: "514 +- 2 gives 512 or 516; 510 +- 6 gives 504 or 516; common value 516. Matches key."
+kinds: [inverse_condition]
+physics: [beats, tuning_fork]
+notes: Consistent.

@@ -1,0 +1,19 @@
+id: 23/01/asc_004
+number: 1
+source: {problem: 23_Superposition_and_Standing_Waves/01_Superposition_and_Standing_Waves/Problems/asc_004.png, solution: 23_Superposition_and_Standing_Waves/01_Superposition_and_Standing_Waves/Solutions/asc_004.png}
+format: single_correct
+statement: |
+  Two sources of sound A and B produces the wave of 350 Hz, they vibrate in the same phase. The particle P is vibrating under the influence of these two waves, if the amplitudes at the point P produced by the two waves is 0.3 mm and 0.4 mm, then the resultant amplitude of the point P will be when AP - BP = 25 cm and the velocity of sound is 350 m/sec
+figure: null
+options:
+  a: "0.7 mm"
+  b: "0.1 mm"
+  c: "0.2 mm"
+  d: "0.5 mm"
+answer: d
+answer_value: 0.5
+units: mm
+verified: "lambda = 350/350 = 1 m; path diff 0.25 m = lambda/4; phase diff pi/2; A = sqrt(0.3^2+0.4^2) = 0.5 mm. Matches key."
+kinds: [build_wavefunction, ratio]
+physics: [interference, phase_difference, path_difference, amplitude_superposition]
+notes: Consistent; no errors found.

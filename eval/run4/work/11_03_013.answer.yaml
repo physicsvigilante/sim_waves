@@ -1,0 +1,9 @@
+answer: {pressure_amplitude: "2.94e-5 Pa", max_displacement: "1.08e-11 m"}
+final_scene: 11_03_013.v1.yaml
+engine_fit: none
+hand_steps: ["p = sqrt(2*rho*v*I)", "s = p/(rho*v*omega), omega = 2*pi*1000"]
+coverage: unsupported
+not_represented: "pressure and displacement amplitudes"
+missing_in_source: none
+reasoning: "Engine echoes I only; both amplitudes by hand."
+friction: "No amplitude-from-intensity observable."

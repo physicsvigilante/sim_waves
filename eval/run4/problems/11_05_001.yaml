@@ -1,0 +1,10 @@
+id: 11/05/001
+format: numerical
+statement: 'The displacement of a standing wave on a string is given by
+
+  y(x, t) = 0.4 sin(0.5x) cos(30t)
+
+  where, x and y are in centimetre. Calculate the frequency, amplitude and wave speed of the component
+  waves. Also calculate particle velocity at x = 2.4 cm, t = 0.8 s.
+
+  '

@@ -1,0 +1,8 @@
+answer: "205"
+final_scene: 23_03_asc_004.v3.yaml
+engine_fit: partial
+coverage: full
+not_represented: "nothing"
+missing_in_source: "tension and density of the sonometer wire"
+reasoning: "v3 solved the facts with a typo of mine (I wrote 25 Hz instead of 5 Hz), giving f0 = 1025 Hz with f_20 = 1050 and f_21 = 1000 (the fork lies between the two wire frequencies). With the correct 5 Hz the same structure gives 205 Hz (option c, from my own scaling, not an engine result; no further revisions allowed)."
+friction: "beat_frequency inside given crashed the engine (sympy NaN comparison); worked around with squared differences, then spent my last revision."

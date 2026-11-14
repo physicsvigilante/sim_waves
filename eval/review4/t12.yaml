@@ -1,0 +1,12 @@
+# one random-phase source, direct + reflection differing by lambda/2 -> self-cancel: I = 0; plus an independent coherent source A=3 -> 9
+media: {air: {type: gas, v: 340 m/s}}
+sources:
+  N: {on: air, f: 170 Hz, A: 1, phase: random, spreading: none}
+  M: {on: air, f: 170 Hz, A: 1, phase: random, spreading: none}
+  C: {on: air, f: 170 Hz, A: 3, phase: 0, spreading: none}
+rays:
+  n1: {from: N, length: 1 m}
+  n2: {from: N, length: 2 m}
+  m1: {from: M, length: 1 m}
+  c: {from: C, length: 1 m}
+observe: {I0: "relative_intensity(n1, n2)", I1: "relative_intensity(n1, n2, c)", I2: "relative_intensity(n1, m1)", I3: "relative_intensity(n1, n1)"}

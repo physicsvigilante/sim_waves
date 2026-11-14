@@ -1,0 +1,9 @@
+answer: {wavelength_top: "0.104 m (= 0.06*sqrt(3) = 3*sqrt3/50 m)"}
+final_scene: 11_02_005.v2.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: nothing
+missing_in_source: "rope length 10 cm with 4 kg is odd (but used as stated); g not stated (cancels)"
+reasoning: "Frequency solved from lam(bottom)=0.06 m is 35/3 Hz; wavelength(w, at=0.1 m) = 3sqrt3/50 m."
+friction: "v1 with g, f both symbolic was 'over-specified' (fact with no unknowns); g had to be numeric."

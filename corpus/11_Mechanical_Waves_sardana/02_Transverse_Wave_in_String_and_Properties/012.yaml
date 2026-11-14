@@ -1,0 +1,16 @@
+id: 11/02/012
+number: 12
+source: {problem: 11_Mechanical_Waves_sardana/02_Transverse_Wave_in_String_and_Properties/Problems/012.png, solution: 11_Mechanical_Waves_sardana/02_Transverse_Wave_in_String_and_Properties/Solutions/012.png}
+format: numerical
+statement: |
+  Two strings 1 and 2 are taut between two fixed supports (as shown in figure) such that the tension in both strings is same. Mass per unit length of 2 is more than that of 1. Explain which string is denser for a transverse travelling wave.
+figure: |
+  Two strings joined end to end between two fixed vertical supports (left and right walls). String 1 (thin line) on the left, string 2 (thicker line) on the right. No numbers.
+options: null
+answer: "String 2 is denser (mu2 > mu1 so v2 < v1); string 1 is rarer."
+answer_value: null
+units: null
+verified: "Matches key. v = sqrt(T/mu), same T, so larger mu gives lower speed; the lower-speed medium (string 2) is the optically denser analogue."
+kinds: [conceptual, comparison]
+physics: [wave_speed, linear_mass_density, tension, medium_density]
+notes: "Conceptual question; 'denser' means higher mu / lower wave speed."

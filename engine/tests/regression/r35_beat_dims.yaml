@@ -1,0 +1,4 @@
+# review 3 #5: dimension checks on beat_frequency and resonances
+media: {air: {type: gas, v: 340 m/s}}
+observe: {b: "beat_frequency(3[m], 2[s])"}
+expect: {error: rejected, message: "beat_frequency"}

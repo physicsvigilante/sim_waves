@@ -1,0 +1,3 @@
+media: {a: {type: string, mu: 0.05 kg/m, tension: 60 N, ends: {left: fixed, right: fixed}}}
+observe: {v: "speed(a)"}
+expect: {error: rejected, message: "not modelled"}

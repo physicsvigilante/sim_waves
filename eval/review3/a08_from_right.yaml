@@ -1,0 +1,22 @@
+id: a08
+symbols: {A: positive}
+media:
+  a: {type: string, mu: 0.01 kg/m, tension: 9 N}
+  b: {type: string, mu: 0.04 kg/m, tension: 9 N}
+junctions:
+  J: {at: 2 m, left: a, right: b}
+  end: {at: 5 m, left: b, right: free}
+waves:
+  w: {harmonic: {on: b, A: A, f: 10 Hz, dir: -x, phase: pi/3}}
+  u: {harmonic: {on: b, A: A, f: 10 Hz, dir: +x, phase: pi/3}}
+  st: {sum: [u, u_reflected]}
+observe:
+  cont: "equivalent(y(w, x=2[m], t=t) + y(w_reflected, x=2[m], t=t), y(w_transmitted, x=2[m], t=t))"
+  slopecont: "equivalent(slope(w, x=2[m], t=t) + slope(w_reflected, x=2[m], t=t), slope(w_transmitted, x=2[m], t=t))"
+  r: "y(w_reflected, x=2[m], t=t)/y(w, x=2[m], t=t)"
+  tr: "amplitude(w_transmitted)/A"
+  dphi: "wrap(phase(w_reflected, x=2[m], t=0[s]) - phase(w, x=2[m], t=0[s]))"
+  freeend: "max_over(t, abs(y(st, x=5[m], t=t)))"
+  freeslope: "max_over(t, abs(slope(st, x=5[m], t=t)))"
+  vtrans: "velocity(w_transmitted)"
+  lamt: "wavelength(w_transmitted)"

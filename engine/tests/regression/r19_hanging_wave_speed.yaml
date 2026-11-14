@@ -1,0 +1,7 @@
+# review minor: speed(w) on a non-uniform medium raised AttributeError
+symbols: {M: positive, mu: positive, g: positive, s: positive}
+media:
+  rope: {type: string, mu: mu, coordinate: {origin: lower_end, direction: up, variable: s}, tension: {hanging: {load: M, g: g}}}
+waves: {w: {harmonic: {on: rope, f: 5 Hz, from: lower_end, toward: up}}}
+observe: {v: "speed(w)"}
+expect: {error: rejected}

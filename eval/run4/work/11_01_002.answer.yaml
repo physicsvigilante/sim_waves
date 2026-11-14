@@ -1,0 +1,9 @@
+answer: {v: "75 m/s if lambda > 0.1 m is assumed (lambda = 0.15 m); the stated data alone do not fix it"}
+final_scene: 11_01_002.v3.yaml
+engine_fit: partial
+hand_steps: ["v = f*lambda with lambda = 2*pi/k for the chosen k=40*pi/3 (the engine run ended 'ambiguous', it did not output v)", "choice of the lambda>0.1 m constraint (not run: attempts exhausted)"]
+coverage: full
+not_represented: "nothing"
+missing_in_source: "Problem as printed is ambiguous: the three readings allow infinitely many wavelengths (k = 40pi/3, 100pi/3, 160pi/3, ... with ph=pi). Needs a bound on wavelength."
+reasoning: "v1 (wavelength unknown) and v2 rejected for unknown inside sine; v3 with k unknown reports an infinite family. Book answer 75 m/s corresponds to the smallest listed k."
+friction: "Unknown wavelength inside sin() is refused; must use k. A family of solutions cannot be filtered by a bound without another attempt. An empty stray file 11_01_002.v4.yaml was created by mistake (could not delete); it was never run."

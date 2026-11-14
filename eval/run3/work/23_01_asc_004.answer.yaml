@@ -1,0 +1,8 @@
+answer: [d]
+final_scene: 23_01_asc_004.v1.yaml
+engine_fit: full
+coverage: partial
+not_represented: "sources, spreading, geometry of AP and BP (only the path difference 25 cm is used, via evaluating one wave at two distances)"
+missing_in_source: "none (assumes equal polarisation and same-direction displacement at P)"
+reasoning: "Resultant amplitude at P from the two in-phase waves with a 25 cm path difference (lambda = 1 m) is 0.5 mm."
+friction: "No two-source/path-difference object; modelled by evaluating the same wave at x = AP and x = BP, and summing by hand inside max_over."

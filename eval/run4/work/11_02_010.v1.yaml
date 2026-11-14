@@ -1,0 +1,11 @@
+id: 11/02/010
+assume: ["Each wire's mu = density*area; tension same in both (stated)."]
+symbols: {a: positive, T: positive}
+unknowns: {r1: positive, r2: positive}
+media:
+  s1: {type: string, density: r1, area: a, tension: T}
+  s2: {type: string, density: r2, area: a, tension: T}
+given:
+  - {fact: "speed(s1) == 2*speed(s2)", source: stated}
+observe:
+  ratio: "r1/r2"

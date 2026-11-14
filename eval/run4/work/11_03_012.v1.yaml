@@ -1,0 +1,9 @@
+id: 11/03/012
+assume: ["The engine has no observable relating pressure amplitude to intensity; only a placeholder plane emitter is declared. Answer is by hand."]
+symbols: {I: positive}
+media:
+  air: {type: open3d}
+emitters:
+  pl: {on: air, geometry: plane, intensity: I}
+observe:
+  I: "intensity(pl, r=1[m])"

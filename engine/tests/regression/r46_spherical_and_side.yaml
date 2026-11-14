@@ -1,0 +1,8 @@
+# a listener behind the reflector cannot receive its reflection
+media: {air: {type: gas, v: 340 m/s}}
+sources: {S: {on: air, at: [0 m, 0 m], f: 340 Hz, A: 1, A_at: 1 m, phase: 0, spreading: spherical}}
+reflectors: {wall: {point: [2 m, 0 m], normal: [-1, 0], boundary: rigid}}
+points: {P: [3 m, 0 m]}
+rays: {bad: {from: S, to: P, via: wall}}
+observe: {L: "length(bad)"}
+expect: {error: rejected, message: "same side"}
