@@ -207,3 +207,19 @@ See `eval/run4/SCORECARD.md`.
 - **Next physics by demand:** acoustic pressure/intensity/bulk modulus (9), liquid and
   solid media including rods (7), decibels (4), gas mixtures and rms speed (4),
   springs/statics (4).
+
+## Corrections after diagnostic 1
+
+Each correction has a test:
+
+- **Pulse on a junctioned string:** it ignored the junction (silent wrong). Now refused
+  with the reason (r62).
+- **Run behaviour:** one observable that cannot be computed no longer stops the run (charter
+  section 7). It is reported as NOT AVAILABLE; the others stand; the exit status is non-zero
+  (r64). Fact errors still stop the run.
+- **Viewer:** list-valued and unavailable observables export as text instead of crashing
+  (test_export 10).
+- **Value at a point:** `at(expr, name=value)` replaces the `illustrate` workaround the
+  teacher needed (r63).
+
+The diagnostic's frozen outcomes are unchanged in `eval/diag1/`.

@@ -198,7 +198,12 @@ class Scene:
             return DIMLESS
         if fname in ("max_over", "min_over"):
             return args[1] if len(args) > 1 else None
-        if fname in ("min", "max", "limit"):
+        if fname in ("min", "max", "limit", "at"):
+            if fname == "at":
+                for k_ in node.keywords:
+                    if k_.arg in self.names and isinstance(self.names[k_.arg], sp.Symbol):
+                        want_ = {"x": LENGTH, "t": TIME}.get(k_.arg) or self.symbol_dims.get(self.names[k_.arg])
+                        chk.same(kwargs.get(k_.arg), want_, f"the value given for {k_.arg} in at()")
             return args[0] if args else None
         if fname == "diff":
             if len(args) < 2 or args[0] is None or args[1] is None:
@@ -731,6 +736,10 @@ class Pulse:
             raise SceneError(f"{w}.on: must be a string medium")
         if _direction(sc, spec, self.medium, w) != 1:
             raise SceneError(f"{w}: v0 supports pulses launched from the coordinate origin forward")
+        if any(self.medium in J.side.values() for J in getattr(sc, "junctions", [])):
+            raise SceneError(f"{w}: pulses are not yet reflected or transmitted at junctions (a pulse has "
+                             f"no shape in v0). On uniform strings the junction coefficients would apply to "
+                             f"any pulse shape; for now use a harmonic wave to get r and t")
 
     def front(self, t):
         S, tau = sp.Dummy("S", positive=True), sp.Dummy("tau", positive=True)
@@ -1400,13 +1409,30 @@ def _minmax(fn, args):
     return fn(*args)
 
 
+def _at(sc, e, **values):
+    """The value of an expression with some variables set, e.g. at(expr, d=120[m])."""
+    if not values:
+        raise SceneError("at(expr, name=value, ...): give at least one variable")
+    rep = {}
+    for name, val in values.items():
+        sym = sc.names.get(name)
+        if not isinstance(sym, sp.Symbol):
+            raise SceneError(f"at(): '{name}' is not a variable or symbol of the scene")
+        if sym in sc.unknowns:
+            raise SceneError(f"at(): '{name}' is an unknown; its value comes from the facts")
+        rep[sym] = sp.sympify(val)
+    if isinstance(e, sp.Tuple):
+        return sp.Tuple(*[sp.sympify(i).xreplace(rep) for i in e])
+    return sp.sympify(e).xreplace(rep)
+
+
 def _wrap(_sc, a):
     """Reduce an angle to the interval (-pi, pi]."""
     return a - 2 * sp.pi * sp.ceiling((a - sp.pi) / (2 * sp.pi))
 
 
 OBSERVABLES = {
-    "is_travelling": _is_travelling,
+    "is_travelling": _is_travelling, "at": _at,
     "wrap": _wrap,
     "harmonic": _harmonic, "node_spacing": _node_spacing, "beat_frequency": _beat_frequency,
     "resonances": _resonances, "count": _count,

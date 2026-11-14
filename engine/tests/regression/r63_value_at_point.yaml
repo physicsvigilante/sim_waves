@@ -1,0 +1,13 @@
+# diag1 teacher test: the value of an observable at a chosen point, without `illustrate`
+symbols: {d: positive}
+media: {air: {type: gas, v: 340 m/s}}
+sources: {S: {on: air, at: [0 m, 0 m], f: 34 Hz, A: 1, phase: 0, spreading: none}}
+reflectors: {ceiling: {point: [0 m, 25 m], normal: [0, -1], boundary: rigid}}
+points: {P: [d, 0 m]}
+rays:
+  direct: {from: S, to: P}
+  up: {from: S, to: P, via: ceiling}
+observe:
+  I120: "at(relative_intensity(up, direct), d=120[m])"
+  I100: "at(relative_intensity(up, direct), d=100[m])"
+expect: {I120: 4, I100: {value: 2.84769, tol: 0.0001}}
