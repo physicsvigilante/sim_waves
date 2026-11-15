@@ -1,0 +1,13 @@
+id: f5
+media:
+  s1: {type: string, mu: 0.01 kg/m, tension: 100 N}
+junctions: {L: {at: 0 m, left: fixed, right: s1}}
+waves:
+  p: {pulse: {on: s1, shape: "0.01*max(0, 1 - abs(x - 100)/0.1)", units: {x: cm, y: m}, dir: -x}}
+  n: {pulse: {on: s1, shape: "-0.01*max(0, 1 - abs(x - 1)/0.1)", units: {x: m, y: m}, dir: -x}}
+observe:
+  yr: "y(p_reflected, x=0.5[m], t=0.015[s])"
+  yr_edge: "y(p_reflected, x=0.5005[m], t=0.015[s])"
+  amp_n: "amplitude(n)"
+  ynr: "y(n_reflected, x=0.5[m], t=0.015[s])"
+  slope_r: "slope(p_reflected, x=0.5005[m], t=0.015[s])"

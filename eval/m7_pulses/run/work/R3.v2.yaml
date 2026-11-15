@@ -1,0 +1,15 @@
+id: m7/R3
+symbols: {s: positive}
+assume:
+  - "Pulse launched at A (s = 0), moves toward B; no reflection, tension uniform."
+media:
+  rope:
+    type: string
+    mu: "10[g/m] + 10[g/m^2]*s"
+    tension: 16 N
+    coordinate: {origin: left_end, direction: right, variable: s}
+waves:
+  p: {pulse: {on: rope, from: left_end, toward: right}}
+observe:
+  T_AB: "travel_time(rope, start=0[m], end=3[m])"
+  d_half: "front(p, t=7[ms]*(1/1))"

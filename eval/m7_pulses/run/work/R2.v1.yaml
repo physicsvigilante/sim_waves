@@ -1,0 +1,17 @@
+id: m7/R2
+assume:
+  - "Half-sine pulse as stated; one junction at the origin."
+media:
+  L: {type: string, mu: 20 g/m, tension: 18 N}
+  R: {type: string, mu: 180 g/m, tension: 18 N}
+junctions:
+  J: {at: 0 m, left: L, right: R}
+waves:
+  p: {pulse: {on: L, shape: "0.004*sin(pi*(x + 1.2)/0.6)*(step(x + 1.2) - step(x + 0.6))", units: {x: m, y: m}, dir: +x}}
+observe:
+  vL: "speed(L)"
+  vR: "speed(R)"
+  A_t: "amplitude(p_transmitted)"
+  y_t: "y(p_transmitted, x=0.01[m], t=0.1[s])"
+  peak_t: "peak(p_transmitted, t=0.1[s])"
+  pw: "power(p_transmitted)"

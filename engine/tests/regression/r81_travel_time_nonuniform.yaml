@@ -1,0 +1,7 @@
+# m7: travel time on a horizontal string with mu = mu0 (1 + s/L) under fixed tension T
+# t = integral sqrt(mu/T) ds = (2 L sqrt(mu0/T)/3) (2^(3/2) - 1)
+symbols: {s: positive}
+media:
+  rope: {type: string, mu: "0.01*(1 + s/2)", tension: 1 N, coordinate: {origin: left_end, direction: right, variable: s}}
+observe: {t: "travel_time(rope, start=0[m], end=2[m])"}
+expect: {t: {value: 0.24379, tol: 0.0001}}

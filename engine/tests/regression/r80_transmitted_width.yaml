@@ -1,0 +1,14 @@
+# m7: transmitted pulse is t = 2/3 times as tall and v2/v1 as wide (heavier string: v2 = v1/2)
+media:
+  a: {type: string, mu: 0.01 kg/m, tension: 4 N}
+  b: {type: string, mu: 0.04 kg/m, tension: 4 N}
+junctions: {J: {at: 1 m, left: a, right: b}}
+waves:
+  p: {pulse: {on: a, shape: "0.01*max(0, 1 - abs(x - 0.5)/0.1)", units: {x: m, y: m}, dir: +x}}
+observe:
+  At: "amplitude(p_transmitted)"
+  # at t = 0.05 s the incident centre would be at 1.5 m: transmitted centre at 1 + 0.5/2 = 1.25 m,
+  # half-width 0.05 m, so y(1.275) = half the transmitted peak
+  y_half: "y(p_transmitted, x=1.275[m], t=0.05[s])"
+  y_out: "y(p_transmitted, x=1.31[m], t=0.05[s])"
+expect: {At: "1/150", y_half: "1/300", y_out: 0}

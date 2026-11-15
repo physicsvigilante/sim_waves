@@ -260,3 +260,45 @@ friction:
 - units mW, kW, kHz, kPa;
 - `pressure_amplitude` of several rays;
 - reverting the medium/resonator length cross-check added after review 6.
+
+## Milestone 7: shaped pulses (before review)
+
+Built to `eval/m7_pulses/PLAN.md`:
+- pulses with a shape, moving at the string speed;
+- image-method reflection and transmission at junctions and at fixed/free ends;
+- the qualification check that the pulse starts on its own string;
+- refusal on non-uniform strings;
+- `peak`, `step` and `travel_time`.
+
+**Extremes service:** finding the peak needs a piecewise-aware extremes search, because
+sympy's `maximum` cannot handle `Max`, `abs` or `step` shapes.
+- Candidates are the interval ends or limits at infinity, the breakpoints on both sides,
+  and the critical points of each piece within its own region.
+
+**Motivating cases:** `11_02_011` (0.14 s, 1.5 cm reflected, inverted, 2.0 cm
+transmitted) and `11_01_010` (velocity -2, amplitude 2) reproduce the book.
+
+Tests: r78–r82.
+
+## Review 7 (Fable 5.2, medium): shaped pulses
+
+The full report is in `eval/review7/REPORT.md`.
+
+| # | Finding | Fix | Test |
+|---|---|---|---|
+| 1 | `peak`/`amplitude` returned 0 silently when the peak position or the instant was symbolic | Symbolic extremes are an error; a lone pulse's height is the same at every instant | r85 |
+| 2 | A second reflection was silently missing | A derived pulse heading for another junction or end is refused (one reflection per scene) | r83 |
+| 3 | `travel_time` ignored string extents and could be negative | Ends checked against the string; always non-negative | r86 |
+| 4 | `peak` of overlapping Gaussians timed out | A 15 s symbolic budget, then a numerical scan with golden-section refinement, shown as a decimal | r84 |
+| 5 | The FORMAT window idiom `step*step` doubled at joints | The idiom is now `step(x-a) - step(x-b)` (half-open) | r82 |
+| 6 | A symbolic far-string mu blocked `amplitude(p_reflected)` | A derived peak is |coefficient| x the incident peak | reviewer f5 |
+| 7 | Stale messages ("use a harmonic wave") | Rewritten | — |
+| 8 | A pulse straddling the junction behind it was accepted | The start-on-own-string check covers both ends | reviewer f* |
+
+**Reserved transfer (m7):** 3 of 3 reserved problems matched in every part, with no
+production change needed to author them (`eval/m7_pulses/RESULT.md`). After the run:
+- `peak_position` added;
+- documented that observables can be nested;
+- documented the horizontal pulse launch.
+
+Remaining observation gaps: pulse extent and pulse/segment energy.

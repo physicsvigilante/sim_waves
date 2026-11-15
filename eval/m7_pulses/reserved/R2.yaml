@@ -1,0 +1,17 @@
+id: m7/R2
+format: numerical
+statement: |
+  Two long strings are joined at the origin and stretched along the x-axis under a common
+  tension of 18 N. The string on the left (x < 0) has linear mass density 20 g/m; the string
+  on the right (x > 0) has linear mass density 180 g/m. At t = 0 a single half-sine pulse
+  lies entirely on the left string, moving in the +x direction towards the joint. At t = 0
+  its displacement is y = (4.0 mm) sin[pi (x + 1.20 m) / (0.60 m)] for
+  -1.20 m <= x <= -0.60 m, and y = 0 elsewhere. Ignore gravity and damping.
+  (a) Find the length (spatial extent along x) of the transmitted pulse on the right string.
+  (b) Find the position x of the peak of the transmitted pulse at t = 0.10 s.
+  (c) Find the energy carried by the transmitted pulse, in mJ.
+figure: |
+  Horizontal x-axis with the joint at x = 0. Left string (x < 0): linear mass density
+  20 g/m. Right string (x > 0): linear mass density 180 g/m. Common tension 18 N.
+  At t = 0 a single upward half-sine hump of height 4.0 mm spans x = -1.20 m to x = -0.60 m
+  (peak at x = -0.90 m), with an arrow pointing in +x towards the joint.

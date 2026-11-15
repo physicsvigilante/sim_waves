@@ -1,0 +1,18 @@
+id: 11/02/011
+# A pulse sent along wire PQ into the heavier wire QR (same tension): time to reach R;
+# amplitudes of the reflected and transmitted pulses.
+assume:
+  - "The pulse shape is not given; a narrow Gaussian of the stated 3.5 cm height, launched near P, stands for it. Amplitudes and times do not depend on the shape."
+  - "Lengths as stated; P at x = 0."
+media:
+  PQ: {type: string, mass: 0.06 kg, length: 4.8 m, tension: 80 N}
+  QR: {type: string, mass: 0.2 kg, length: 2.56 m, tension: 80 N}
+junctions: {Q: {at: 4.8 m, left: PQ, right: QR}}
+waves:
+  p: {pulse: {on: PQ, shape: "0.035*exp(-((x - 0.5)/0.05)**2)", units: {x: m, y: m}, dir: +x}}
+observe:
+  t_PR: "travel_time(PQ, start=0[m], end=4.8[m]) + travel_time(QR, start=4.8[m], end=7.36[m])"
+  A_reflected: "amplitude(p_reflected)"
+  A_transmitted: "amplitude(p_transmitted)"
+  y_reflected_peak: "y(p_reflected, x=4.3[m], t=0.06[s])"   # v = 80 m/s on PQ; reflected centre 9.1 - 80 t = 4.3 m: inverted
+expect: {t_PR: 0.14, A_reflected: "3/200", A_transmitted: "1/50", y_reflected_peak: "-3/200"}

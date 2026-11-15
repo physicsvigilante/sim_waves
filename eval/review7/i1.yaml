@@ -1,0 +1,20 @@
+id: i1
+symbols: {mu2: positive}
+media:
+  s1: {type: string, mu: 0.04 kg/m, tension: 100 N}
+  s2: {type: string, mu: 0.01 kg/m, tension: 100 N}
+  s3: {type: string, mu: mu2, tension: 100 N}
+junctions: {J: {at: 2 m, left: s1, right: s2}, K: {at: 10 m, left: s2, right: s3}}
+waves:
+  p: {pulse: {on: s1, shape: "0.01*max(0, 1 - abs(x - 0.5)/0.1)", units: {x: m, y: m}, dir: +x}}
+  q: {pulse: {on: s2, shape: "0.01*max(0, 1 - abs(x - 5)/0.1)", units: {x: m, y: m}, dir: +x}}
+observe:
+  Ar: "amplitude(p_reflected)"
+  At: "amplitude(p_transmitted)"
+  yr: "y(p_reflected, x=1.9[m], t=0.032[s])"
+  yt_half: "y(p_transmitted, x=2.3[m], t=0.032[s])"
+  yt_pk: "y(p_transmitted, x=2.2[m], t=0.032[s])"
+  Aq: "amplitude(q_reflected)"
+  yq: "y(q_reflected, x=9[m], t=0.06[s])"
+  yqt: "at(y(q_transmitted, x=10.5[m], t=0.06[s]), mu2=0.04)"
+  far: "y(p_transmitted, x=9.9[m], t=0.2[s])"

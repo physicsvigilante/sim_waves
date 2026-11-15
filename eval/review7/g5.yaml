@@ -1,0 +1,22 @@
+id: g5
+media:
+  s1: {type: string, mu: 0.01 kg/m, tension: 100 N}
+  s2: {type: string, mu: 0.04 kg/m, tension: 100 N}
+junctions: {J: {at: 2 m, left: s1, right: s2}}
+waves:
+  w: {harmonic: {on: s1, A: 1 cm, f: 100 Hz, dir: +x, phase: 0}}
+  p: {pulse: {on: s1, shape: "0.01*max(0, 1 - abs(x - 0.5)/0.1)", units: {x: m, y: m}, dir: +x}}
+  s: {sum: [w, p]}
+  st: {sum: [w_transmitted, p_transmitted]}
+observe:
+  Aw: "amplitude(w_reflected)"
+  Ap: "amplitude(p_reflected)"
+  ys: "y(s, x=0.5[m], t=0[s])"
+  yst: "y(st, x=2.1[m], t=0.017[s])"
+  wt: "y(w_transmitted, x=2.1[m], t=0.017[s])"
+  pkw: "peak(w, t=0[s])"
+  fp: "frequency(p)"
+  lam: "wavelength(p)"
+  pw: "power(p)"
+  trav: "is_travelling(p)"
+  travr: "is_travelling(p_reflected)"

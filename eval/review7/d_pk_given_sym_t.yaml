@@ -1,0 +1,11 @@
+id: d
+symbols: {a: positive, t0: positive, A: positive}
+media:
+  s1: {type: string, mu: 0.01 kg/m, tension: 100 N}
+waves:
+  p: {pulse: {on: s1, shape: "0.01*exp(-((x - a)/0.05)**2)", units: {x: m, y: m}, dir: +x}}
+  q: {pulse: {on: s1, shape: "0.01*exp(-((x - 0.5)/0.05)**2)", units: {x: m, y: m}, dir: +x}}
+  g: {given: "0.02/(1 + (x - 3*t)**2)", units: {x: m, t: s, y: m}}
+  h: {pulse: {on: s1, shape: "A*exp(-((x - 0.5)/0.05)**2)", units: {x: m, y: m}, dir: +x}}
+observe:
+  pk_given_sym_t: "peak(g, t=t0)"

@@ -1,0 +1,9 @@
+id: 11/01/010
+# y = 10/(5 + (x + 2t)^2): direction, speed and amplitude of the pulse.
+waves:
+  p: {given: "10/(5 + (x + 2*t)**2)", units: {x: m, t: s, y: m}}
+observe:
+  velocity: "velocity(p)"
+  travelling: "is_travelling(p)"
+  amplitude: "peak(p, t=0[s])"
+expect: {velocity: -2, travelling: true, amplitude: 2}

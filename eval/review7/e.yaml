@@ -1,0 +1,17 @@
+id: e
+media:
+  s1: {type: string, mu: 0.01 kg/m, tension: 100 N}
+  s2: {type: string, mu: 0.04 kg/m, tension: 100 N}
+junctions: {J: {at: 2 m, left: s1, right: s2}}
+waves:
+  p: {pulse: {on: s1, shape: "0.02*sin(pi*(x - 1)/0.4)*step(x - 1)*step(1.4 - x)", units: {x: m, y: m}, dir: +x}}
+  rct: {pulse: {on: s1, shape: "-0.01*step(x - 0.4)*step(0.6 - x)", units: {x: cm, y: cm}, dir: +x}}
+  s: {sum: [rct, rct_reflected]}
+observe:
+  pk: "peak(p)"
+  Ar: "amplitude(p_reflected)"
+  pkt: "peak(p_transmitted, t=0.01[s])"
+  pk_rct: "peak(rct)"
+  rct_y: "y(rct, x=0.5[cm], t=0[s])"
+  rct_edge: "y(rct, x=0.6[cm], t=0[s])"
+  pk_s: "peak(s, t=0.01995[s])"

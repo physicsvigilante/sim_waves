@@ -1,0 +1,9 @@
+id: g4
+media:
+  s1: {type: string, mu: 0.01 kg/m, tension: 100 N}
+  s2: {type: string, mu: 0.04 kg/m, tension: 100 N}
+junctions: {J: {at: 2 m, left: s1, right: s2}}
+waves:
+  gw: {given: "0.02/(1 + (x - 100*t)**2)", units: {x: m, t: s, y: m}, on: s1}
+observe:
+  pk: "peak(gw, t=0[s])"

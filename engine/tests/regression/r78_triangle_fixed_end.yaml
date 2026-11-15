@@ -1,0 +1,13 @@
+# m7: triangular pulse hits a fixed end; overlap, cancellation at the wall instant, inverted reflection
+media: {s: {type: string, mu: 0.01 kg/m, tension: 4 N}}
+junctions: {end: {at: 2 m, left: s, right: fixed}}
+waves:
+  p: {pulse: {on: s, shape: "0.01*max(0, 1 - abs(x - 1)/0.2)", units: {x: m, y: m}, dir: +x}}
+  tot: {sum: [p, p_reflected]}
+observe:
+  v: "speed(s)"
+  y1: "y(tot, x=1.9[m], t=0.04[s])"
+  pk: "peak(tot, t=0.05[s])"
+  pk2: "peak(tot, t=0.045[s])"
+  amp_r: "amplitude(p_reflected)"
+expect: {y1: "1/200", pk: 0, pk2: "1/100", amp_r: "1/100"}

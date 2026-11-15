@@ -5,4 +5,4 @@ media:
 junctions: {J: {at: 0 m, left: a, right: b}}
 waves: {p: {pulse: {on: a, from: left}}}
 observe: {f: "front(p, t=1[s])"}
-expect: {error: rejected, message: "junctions"}
+expect: {error: rejected, message: "cannot meet a junction"}

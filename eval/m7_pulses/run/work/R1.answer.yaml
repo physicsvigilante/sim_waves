@@ -1,0 +1,10 @@
+answer: {a: "1.2 mm", b: "3.0 mm at x = 0.70 m"}
+final_scene: R1.v2.yaml
+engine_fit: partial
+hand_steps:
+  - "Location of the maximum (x = 0.70 m): read from a grid of 11 probe points y(tot, x, 10 ms); no argmax observable. Values rise to 3.0 mm at 0.70 and fall symmetrically (2.7 mm at 0.69 and 0.71); peak_b (3.0 mm) is engine-computed."
+coverage: full
+not_represented: "nothing (string left of the clamp is taken as long; no left end)"
+missing_in_source: none
+reasoning: "Engine gives y(0.76 m,10 ms)=3/2500 m and peak(tot,10 ms)=3 mm; probes put the maximum at x=0.70 m (incident and inverted reflected pulses overlap)."
+friction: "No observable returns the position of a maximum; had to probe. Pulse with straddling-the-wall shapes need image method (handled by sum p, p_reflected)."

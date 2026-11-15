@@ -1,0 +1,16 @@
+# review 7 #2: a second reflection is not modelled: refused, not silently missing
+media:
+  s1: {type: string, mu: 0.01 kg/m, tension: 100 N}
+junctions: {L: {at: 0 m, left: free, right: s1}, R: {at: 2 m, left: s1, right: fixed}}
+waves:
+  p: {pulse: {on: s1, shape: "0.01*max(0, 1 - abs(x - 0.5)/0.1)", units: {x: m, y: m}, dir: +x}}
+  q: {pulse: {on: s1, shape: "0.01*max(0, 1 - abs(x - 0.5)/0.1)", units: {x: m, y: m}, dir: -x}}
+  s: {sum: [p, p_reflected]}
+observe:
+  yr: "y(p_reflected, x=1.9[m], t=0.016[s])"
+  qr: "y(q_reflected, x=0.1[m], t=0.006[s])"
+  wall: "y(s, x=2[m], t=0.015[s])"
+  wallq: "y(q, x=0[m], t=0.005[s]) + y(q_reflected, x=0[m], t=0.005[s])"
+  twice: "y(s, x=0.5[m], t=0.04[s])"
+  pk_twice: "peak(s, t=0.04[s])"
+expect: {error: rejected, message: "reflected again"}

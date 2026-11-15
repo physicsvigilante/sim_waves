@@ -1,0 +1,11 @@
+id: g1
+media:
+  s1: {type: string, mu: 0.01 kg/m, tension: 100 N}
+  s2: {type: string, mu: 0.04 kg/m, tension: 100 N}
+junctions: {J: {at: 2 m, left: s1, right: s2}}
+waves:
+  u: {pulse: {on: s1, shape: "0.01*max(0, 1 - abs(x - 1.95)/0.1)", units: {x: m, y: m}, dir: -x}}
+observe:
+  yu: "y(u, x=1.9[m], t=0[s])"
+  pku: "peak(u, t=0[s])"
+  out: "y(u, x=2.01[m], t=0[s])"

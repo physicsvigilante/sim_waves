@@ -1,0 +1,22 @@
+id: g2
+symbols: {L: positive, g: positive, M: positive, s: positive, x1: positive, x2: positive}
+media:
+  s1: {type: string, mu: 0.01 kg/m, tension: 100 N}
+  s2: {type: string, mu: 0.04 kg/m, tension: 100 N}
+  rope: {type: string, mu: 0.5 kg/m, tension: {hanging: {load: 0 kg, g: g}}, coordinate: {origin: lower_end, direction: up, variable: s}}
+  lin: {type: string, mu: "0.01*(1 + s)**2", tension: 100 N, coordinate: {origin: left_end, direction: right, variable: s}}
+  air: {type: gas, v: 340 m/s}
+junctions: {J: {at: 2 m, left: s1, right: s2}}
+observe:
+  across: "travel_time(s1, start=0[m], end=5[m])"
+  rev: "travel_time(s2, start=5[m], end=2[m])"
+  sym: "travel_time(s1, start=x1, end=x2)"
+  hang: "travel_time(rope, start=0[m], end=L)"
+  hang_rev: "travel_time(rope, start=L, end=0[m])"
+  lin: "travel_time(lin, start=0[m], end=1[m])"
+  lin_rev: "travel_time(lin, start=1[m], end=0[m])"
+  lin_sym: "travel_time(lin, start=x2, end=x1)"
+  air: "travel_time(air, start=0[m], end=680[m])"
+  nounit: "travel_time(s1, start=0, end=2)"
+  one: "travel_time(s1, start=0[m])"
+  badunit: "travel_time(s1, start=0[s], end=2[s])"
