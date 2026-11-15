@@ -1,0 +1,18 @@
+id: B4/jee_advanced/17
+assume:
+  - "Train moves straight toward the observer; start 1000 m away (not stated; ratio cannot depend on it)."
+  - "Whistle frequency 500 Hz is an illustrative value (not stated); only the ratio f1/f2 is read."
+  - "Two trains modelled as two sources in one scene, each its own case."
+media: {air: {type: gas, v: 340 m/s}}
+sources:
+  T1: {on: air, at: [-1000 m, 0 m], velocity: [34 m/s, 0 m/s], f: 500 Hz, A: 1, phase: 0, spreading: none}
+  T2: {on: air, at: [-1000 m, 0 m], velocity: [17 m/s, 0 m/s], f: 500 Hz, A: 1, phase: 0, spreading: none}
+points:
+  O: [0 m, 0 m]
+rays:
+  h1: {from: T1, to: O}
+  h2: {from: T2, to: O}
+observe:
+  f1: frequency(h1, emitted=0[s])
+  f2: frequency(h2, emitted=0[s])
+  ratio: frequency(h1, emitted=0[s])/frequency(h2, emitted=0[s])

@@ -18,9 +18,11 @@ from .errors import SceneError, UndeterminedError
 from .expr import Ref
 from .expr import dimension_of
 from .units import split_quantity
-from .scene import (D_FREQ, D_PRESS, DIMLESS, LENGTH, OBS_DIMS, OBSERVABLES, TWO_PI, GasMedium, T,
+from .scene import (D_FREQ, D_PRESS, D_SPEED, DIMLESS, LENGTH, OBS_DIMS, OBSERVABLES, TWO_PI, GasMedium, T,
                     acoustic_density, dim,
                     _keys, _obj)
+from .units import TIME
+from . import doppler as _dop
 
 KEYS = ("sources", "reflectors", "points", "rays")
 SPREADING = ("none", "spherical", "hemispherical", "cylindrical")
@@ -47,7 +49,8 @@ def _dot(a, b):
 
 
 class Source:
-    KEYS_ = {"on", "at", "f", "A", "A_at", "phase", "spreading", "power"}
+    KEYS_ = {"on", "at", "f", "A", "A_at", "phase", "spreading", "power", "velocity", "starts", "circle",
+             "emits_from"}
 
     def __init__(self, sc, name, spec):
         w = f"sources.{name}"
@@ -58,6 +61,11 @@ class Source:
             raise SceneError(f"{w}.on: point sources need a gas or fluid medium (sound)")
         self.medium = m
         self.at = _vector(sc, spec["at"], f"{w}.at") if "at" in spec else None
+        moves = any(k in spec for k in _dop.Motion.KEYS)
+        if moves and self.at is None:
+            raise SceneError(f"{w}: a moving source needs `at`, its position at t = 0 (or when it starts)")
+        self.motion = _dop.Motion(sc, self.at, spec, w, D_SPEED) if moves else _dop.FixedMotion(self.at)
+        self.emits_from = sc.quantity(spec.get("emits_from"), TIME, f"{w}.emits_from")
         if "spreading" not in spec or "phase" not in spec or \
                 ("A" in spec) == ("power" in spec):
             raise SceneError(f"{w}: give phase, spreading (none | spherical | hemispherical | cylindrical), "
@@ -121,7 +129,7 @@ class Source:
 
 
 class Reflector:
-    KEYS_ = {"point", "normal", "boundary", "phase_change"}
+    KEYS_ = {"point", "normal", "boundary", "phase_change", "velocity"}
 
     def __init__(self, sc, name, spec):
         w = f"reflectors.{name}"
@@ -133,6 +141,17 @@ class Reflector:
         self.n = _plain_vector(sc, spec["normal"], f"{w}.normal")
         if len(self.n) != len(self.p0):
             raise SceneError(f"{w}: point and normal must have the same number of components")
+        self.velocity = [sp.Integer(0)] * len(self.p0)
+        self.moving = False
+        if "velocity" in spec:
+            vel = spec["velocity"]
+            if not isinstance(vel, list) or len(vel) != len(self.p0):
+                raise SceneError(f"{w}.velocity: a list of {len(self.p0)} speeds; `point` is where the wall "
+                                 f"is at t = 0")
+            self.velocity = [sc.quantity(c, D_SPEED, f"{w}.velocity[{i}]") for i, c in enumerate(vel)]
+            if _dop._cross_zero(self.velocity, self.n) is not True:
+                raise SceneError(f"{w}.velocity: v0 moves a wall only along its normal")
+            self.moving = True
         if ("boundary" in spec) == ("phase_change" in spec):
             raise SceneError(f"{w}: give exactly one of boundary (rigid | open) or phase_change "
                              f"(only when the problem itself states the phase change)")
@@ -157,10 +176,27 @@ class Ray:
     path of stated length (tubes)."""
     KEYS_ = {"from", "to", "via", "length", "phase_change"}
 
+    @property
+    def L(self):
+        if self.moving:
+            raise SceneError(f"ray '{self.name}': something on it moves (or the air moves), so it has no fixed "
+                             f"path; path lengths, phases and intensities are not defined in v0. Ask "
+                             f"frequency(ray, t=...), emitted_at(...) or arrives_at(...)")
+        if self._L.is_zero:
+            raise SceneError(f"ray '{self.name}': the path has zero length (the source is at the point)")
+        return self._L
+
+    @L.setter
+    def L(self, value):
+        self._L = value
+
     def __init__(self, sc, name, spec):
         w = f"rays.{name}"
         _keys(spec, self.KEYS_, w)
         self.name = name
+        self.sc = sc
+        self.via_ref = None
+        self.moving = False
         src = sc.objects.get(spec.get("from"))
         if not isinstance(src, Source):
             raise SceneError(f"{w}.from: a source defined in `sources`")
@@ -176,6 +212,7 @@ class Ray:
             if self.L.is_positive is False or (self.L.is_number and not self.L > 0):
                 raise SceneError(f"{w}.length: must be positive")
             self.to = None
+            self.moving = src.motion.moving
             if "phase_change" in spec:
                 self.dphi = sc.quantity(spec["phase_change"], DIMLESS, f"{w}.phase_change")
             return
@@ -208,9 +245,12 @@ class Ray:
                                  f"'{ref.name}'; use numbers or positive symbols for the positions")
             start = ref.image(src.at)
             self.dphi = ref.dphi
+            self.via_ref = ref
+        wind = getattr(src.medium, "wind", None)
+        self.moving = src.motion.moving or to.motion.moving or bool(self.via_ref and self.via_ref.moving) or \
+            bool(wind and any(_dop._decide(c) != "zero" for c in wind))
         self.L = sp.sqrt(sum((a - b) ** 2 for a, b in zip(start, to.at)))
-        if self.L.is_zero:
-            raise SceneError(f"{w}: the path has zero length")
+
 
     def amplitude(self):
         return self.source.amplitude_at(self.L)
@@ -248,7 +288,16 @@ class Ray:
 class Point:
     def __init__(self, sc, name, value):
         self.name = name
-        self.at = _vector(sc, value, f"points.{name}")
+        w = f"points.{name}"
+        if isinstance(value, dict):
+            _keys(value, {"at"} | set(_dop.Motion.KEYS), w)
+            if "at" not in value:
+                raise SceneError(f"{w}: a moving point needs `at`, its position at t = 0 (or when it starts)")
+            self.at = _vector(sc, value["at"], f"{w}.at")
+            self.motion = _dop.Motion(sc, self.at, value, w, D_SPEED)
+        else:
+            self.at = _vector(sc, value, w)
+            self.motion = _dop.FixedMotion(self.at)
 
 
 def build(sc, data):
@@ -440,11 +489,17 @@ def _length(_sc, r):
     return _obj(r, (Ray,), "length").L
 
 
-def _distance(_sc, a, b):
+def _distance(_sc, a, b, t=None):
     pa, pb = (_obj(v, (Point, Source), "distance") for v in (a, b))
     if pa.at is None or pb.at is None or len(pa.at) != len(pb.at):
         raise SceneError("distance(): two positions with the same number of coordinates")
-    return sp.sqrt(sum((x - y) ** 2 for x, y in zip(pa.at, pb.at)))
+    if t is None:
+        if pa.motion.moving or pb.motion.moving:
+            raise SceneError("distance(): one of them moves; give t=")
+        return sp.sqrt(sum((x - y) ** 2 for x, y in zip(pa.at, pb.at)))
+    t = sp.sympify(t).xreplace(getattr(_sc, "solution", None) or {})
+    qa, qb = (_dop._seg_at(p.motion.segments(), t, "distance()")[2](t) for p in (pa, pb))
+    return sp.simplify(sp.sqrt(sum((x - y) ** 2 for x, y in zip(qa, qb))))
 
 
 def _wrap_obs(name, handler):
@@ -479,20 +534,55 @@ def _ray_phase(o, x=None, t=None):
 
 
 _wrap_obs("amplitude", _ray_amplitude)
-_wrap_obs("frequency", lambda o, at=None, harmonic=None: _ray_or_source(o).f)
-_wrap_obs("omega", lambda o: TWO_PI * _ray_or_source(o).f)
-_wrap_obs("period", lambda o: 1 / _ray_or_source(o).f)
-_wrap_obs("wavelength", lambda o, at=None, harmonic=None: TWO_PI / _ray_or_source(o).k)
-_wrap_obs("k", lambda o, at=None: _ray_or_source(o).k)
+def _ray_frequency(o, at=None, harmonic=None, t=None, emitted=None):
+    if isinstance(o, Source):
+        if t is not None or emitted is not None:
+            raise SceneError(f"frequency({o.name}): a source's own frequency; for what a listener hears, "
+                             f"ask frequency(<ray>, t=...)")
+        return o.f
+    if t is None and emitted is None:
+        if o.moving:
+            raise SceneError(f"frequency({o.name}): something on this ray moves (or the air moves), so the "
+                             f"heard frequency can change with time; give t= (when heard) or emitted= "
+                             f"(when emitted)")
+        return o.source.f
+    return _dop.heard_frequency(o, t, emitted)
+
+
+def _ray_wavelength(o, at=None, harmonic=None, t=None, emitted=None):
+    if isinstance(o, Ray) and (o.moving or t is not None or emitted is not None):
+        if t is None and emitted is None:
+            raise SceneError(f"wavelength({o.name}): something on this ray moves; give t= or emitted=")
+        return _dop.air_wavelength(o, t, emitted)
+    if t is not None or emitted is not None:
+        raise SceneError("wavelength(source): no t= or emitted=; ask wavelength(<ray>, t=...)")
+    return TWO_PI / _ray_or_source(o).k
+
+
+_wrap_obs("frequency", _ray_frequency)
+def _still(o, fname):
+    if isinstance(o, Ray) and o.moving:
+        raise SceneError(f"{fname}({o.name}): something on this ray moves (or the air moves); the heard "
+                         f"frequency changes with time: ask frequency({o.name}, t=...) and work from it")
+    return _ray_or_source(o)
+
+
+_wrap_obs("omega", lambda o: TWO_PI * _still(o, "omega").f)
+_wrap_obs("period", lambda o: 1 / _still(o, "period").f)
+_wrap_obs("wavelength", _ray_wavelength)
+_wrap_obs("k", lambda o, at=None: _still(o, "k").k)
 _wrap_obs("phase", _ray_phase)
 
 OBSERVABLES.update({
+    "emitted_at": lambda _sc, r, t=None: _dop.emitted_at(_obj(r, (Ray,), "emitted_at"), t),
+    "arrives_at": lambda _sc, r, emitted=None: _dop.arrives_at(_obj(r, (Ray,), "arrives_at"), emitted),
     "length": _length, "distance": _distance, "path_difference": _path_difference,
     "phase_difference": _phase_difference, "resultant_amplitude": _resultant_amplitude,
     "relative_intensity": _relative_intensity,
     "maxima": _extrema("maxima"), "minima": _extrema("minima"),
 })
 OBS_DIMS.update({
+    "emitted_at": TIME, "arrives_at": TIME,
     "length": LENGTH, "distance": LENGTH, "path_difference": LENGTH, "phase_difference": DIMLESS,
     "resultant_amplitude": None, "relative_intensity": None, "maxima": None, "minima": None,
 })

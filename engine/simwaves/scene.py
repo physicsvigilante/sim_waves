@@ -271,7 +271,7 @@ class Scene:
     def call_dim(self, fname, args, kwargs, node, chk):
         if fname in self.functions:
             return None
-        for key, want in (("x", LENGTH), ("t", TIME), ("at", LENGTH), ("r", LENGTH), ("node_at", LENGTH),
+        for key, want in (("x", LENGTH), ("t", TIME), ("emitted", TIME), ("at", LENGTH), ("r", LENGTH), ("node_at", LENGTH),
                           ("start", LENGTH), ("end", LENGTH),
                           ("antinode_at", LENGTH), ("no_node_at", LENGTH)):
             if key in kwargs:
@@ -401,10 +401,20 @@ def make_medium(sc, name, spec):
     raise SceneError(f"media.{name}: type '{spec['type']}' not supported yet (string, gas, fluid, rod, open3d)")
 
 
+def _wind(sc, spec, w):
+    """The velocity of the air (a list of speeds), or None."""
+    wind = spec.get("wind")
+    if wind is None:
+        return None
+    if not isinstance(wind, list) or len(wind) not in (2, 3):
+        raise SceneError(f"{w}.wind: a list of 2 or 3 speeds, like positions, e.g. [10 m/s, 0 m/s]")
+    return [sc.quantity(c, D_SPEED, f"{w}.wind[{i}]") for i, c in enumerate(wind)]
+
+
 class GasMedium:
     """Air or another gas: speed of sound given directly, or from gamma, P, rho, or from
     gamma, T, molar mass (uses the gas constant R, an exact SI constant)."""
-    KEYS = {"type", "v", "gamma", "pressure", "density", "temperature", "molar_mass", "gas_constant"}
+    KEYS = {"type", "v", "gamma", "pressure", "density", "temperature", "molar_mass", "gas_constant", "wind"}
 
     def __init__(self, sc, name, spec):
         w = f"media.{name}"
@@ -416,7 +426,8 @@ class GasMedium:
         Tk, M = q("temperature", TEMP, temperature=True), q("molar_mass", MASS)
         R = q("gas_constant", dim(L=2, M=1, T=-2, K=-1))
         Rg = R_GAS if R is None else R
-        cands, used = [q("v", D_SPEED)], {"type", "v", "density"}    # density is always a property
+        cands, used = [q("v", D_SPEED)], {"type", "v", "density", "wind"}    # density is always a property
+        self.wind = _wind(sc, spec, w)
         # density from the ideal-gas law when pressure, temperature and molar mass are all given
         rho_c = [rho]
         if P is not None and Tk is not None and M is not None:
@@ -454,11 +465,12 @@ class GasMedium:
 
 class FluidMedium(GasMedium):
     """A liquid (or any fluid): speed of sound from bulk modulus and density, or given."""
-    KEYS = {"type", "v", "bulk_modulus", "compressibility", "density"}
+    KEYS = {"type", "v", "bulk_modulus", "compressibility", "density", "flow"}
 
     def __init__(self, sc, name, spec):
         w = f"media.{name}"
         _keys(spec, self.KEYS, w)
+        self.wind = _wind(sc, dict(spec, wind=spec.get("flow")) if "flow" in spec else spec, w)
         self.name, self.kind, self.mu, self.extent = name, "fluid", None, None
         q = lambda k, d: sc.quantity(spec.get(k), d, f"{w}.{k}")
         kappa = q("compressibility", dim(1, -1, 2))
@@ -1583,10 +1595,13 @@ def _node_spacing(_sc, r, harmonic=None):
     return _resonator(r, "node_spacing").wavelength(harmonic) / 2
 
 
-def _beat_frequency(_sc, a, b):
-    """Beat frequency of two oscillations: waves, or two frequencies."""
-    fa = OBSERVABLES["frequency"](_sc, a) if isinstance(a, Ref) else sp.sympify(a)
-    fb = OBSERVABLES["frequency"](_sc, b) if isinstance(b, Ref) else sp.sympify(b)
+def _beat_frequency(_sc, a, b, t=None):
+    """Beat frequency of two oscillations: waves, two frequencies, or two rays heard at time t."""
+    kw = {} if t is None else {"t": t}
+    if kw and not (isinstance(a, Ref) or isinstance(b, Ref)):
+        raise SceneError("beat_frequency(..., t=...): t= needs at least one ray")
+    fa = OBSERVABLES["frequency"](_sc, a, **kw) if isinstance(a, Ref) else sp.sympify(a)
+    fb = OBSERVABLES["frequency"](_sc, b, **kw) if isinstance(b, Ref) else sp.sympify(b)
     return sp.Abs(fa - fb)
 
 

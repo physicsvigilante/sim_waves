@@ -1,0 +1,12 @@
+
+media: {air: {type: gas, v: 340 m/s}}
+sources: {car: {on: air, at: [-100 m, 0 m, 0 m], velocity: [20 m/s, 0 m/s, 5 m/s], f: 500 Hz, A: 1, phase: 0, spreading: none}, zs: {on: air, at: [0 m, 0 m, 0 m], velocity: [0 m/s, 0 m/s, 30 m/s], f: 500 Hz, A: 1, phase: 0, spreading: none}}
+points: {M: {at: [0 m, 50 m, 30 m], velocity: [3 m/s, -12 m/s, 4 m/s]}, Z: [0 m, 0 m, 100 m]}
+rays: {r: {from: car, to: M}, zr: {from: zs, to: Z}}
+observe:
+  t2: "frequency(r, t=2[s])"    # 529.78123
+  t9: "frequency(r, t=9[s])"    # 472.91242
+  te9: "emitted_at(r, t=9[s])"  # 8.7685118
+  arr1: "arrives_at(r, emitted=1[s])"  # 1.28112772
+  z: "frequency(zr, emitted=0[s])"   # 548.387
+  d: "distance(car, M, t=2[s])"

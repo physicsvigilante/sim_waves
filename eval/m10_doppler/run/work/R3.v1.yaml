@@ -1,0 +1,20 @@
+id: B4/jee_main/50
+assume:
+  - "Source and observer on one line, approaching each other; source starts 1000 m left of the observer, at rest relative to air frame; observer at +1000 m moving toward it."
+  - "Numbers vs=20 m/s, f0=500 Hz, speed of sound 340 m/s are illustrative (problem gives only vs<v); only the functional form of f(v0) is read."
+  - "Observer speed v0 is a symbol; heard frequency read at the emission instant t=0."
+symbols: {v0: positive}
+media: {air: {type: gas, v: 340 m/s}}
+sources:
+  S: {on: air, at: [-1000 m, 0 m], velocity: [20 m/s, 0 m/s], f: 500 Hz, A: 1, phase: 0, spreading: none}
+points:
+  O: {at: [1000 m, 0 m], velocity: ["-v0", 0 m/s]}
+rays:
+  h: {from: S, to: O}
+observe:
+  f_of_v0: frequency(h, emitted=0[s])
+  slope: diff(frequency(h, emitted=0[s]), v0)
+  slope2: diff(frequency(h, emitted=0[s]), v0, 2)
+  f_at_0: at(frequency(h, emitted=0[s]), v0=0[m/s])
+  f_at_10: at(frequency(h, emitted=0[s]), v0=10[m/s])
+  f_at_20: at(frequency(h, emitted=0[s]), v0=20[m/s])

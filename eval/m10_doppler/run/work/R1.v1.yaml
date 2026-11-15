@@ -1,0 +1,23 @@
+id: B4/single/44
+assume:
+  - "Straight-line passage with the listener a small perpendicular distance (1 m) off the line, so the path is nearly head-on; exactly head-on would pass through the listener."
+  - "Source speed, frequency and start distance are not given; arbitrary values, answer must be scale-free."
+arbitrary: {f0: 500 Hz, u: 30 m/s, d: 1 m, D: 200 m}
+media: {air: {type: gas, v: 340 m/s}}
+sources:
+  S: {on: air, at: ["-D", 0 m], velocity: [u, 0 m/s], f: f0, A: 1, phase: 0, spreading: none}
+points:
+  O: ["0 m", d]
+rays:
+  heard: {from: S, to: O}
+given:
+  - {fact: "u < 340[m/s]", source: assumption, note: "subsonic"}
+observe:
+  f_early: frequency(heard, t=1[s])
+  f_mid_before: frequency(heard, t=5[s])
+  f_just_before: frequency(heard, t=6.6[s])
+  f_just_after: frequency(heard, t=6.7[s])
+  f_late: frequency(heard, t=12[s])
+  f_later: frequency(heard, t=20[s])
+view:
+  - {plot: "frequency(heard, t=t)", vs: t, range: [0 s, 14 s]}

@@ -1,0 +1,11 @@
+media: {air: {type: gas, v: 340 m/s, wind: [10 m/s, 0 m/s]}}
+sources: {st: {on: air, at: [0 m, 0 m], emits_from: 0 s, f: 500 Hz, A: 1, phase: 0, spreading: none}}
+points: {P: [-50 m, 0 m]}
+reflectors: {wall: {point: [500 m, 0 m], normal: [-1, 0], boundary: rigid}}
+rays: {s: {from: st, to: P, via: wall}, d: {from: st, to: P}}
+observe:
+  wl: "wavelength(s, t=5[s])"     # 330/500 = 0.66
+  wld: "wavelength(d, t=5[s])"    # 0.66
+  early_echo: "frequency(s, t=3[s])"   # arrives 3.0952: no sound
+  early_beat: "beat_frequency(s, d, t=3[s])"   # no sound
+  dnow: "frequency(d, t=3[s])"   # 500

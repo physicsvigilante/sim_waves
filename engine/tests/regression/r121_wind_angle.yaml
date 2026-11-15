@@ -1,0 +1,8 @@
+# m10: 24/03 cnt_006 #13: wind at 60 deg (exact, not the component formula)
+arbitrary: {D: 300 m}
+media: {air: {type: gas, v: 340 m/s, wind: ["20*cos(pi/3)[m/s]", "20*sin(pi/3)[m/s]"]}}
+sources: {S: {on: air, at: [0 m, 0 m], velocity: [30 m/s, 0 m/s], f: 1024 Hz, A: 1, phase: 0, spreading: none}}
+points: {O: [D, 0 m]}
+rays: {r: {from: S, to: O}}
+observe: {f: "frequency(r, emitted=0[s])"}
+expect: {f: "1024*sqrt(1153)/383 + 394240/383"}

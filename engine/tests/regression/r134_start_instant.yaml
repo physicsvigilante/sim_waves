@@ -1,0 +1,10 @@
+# m10 review: heard at the instant the source starts: emitted earlier, at rest
+media: {air: {type: gas, v: 350 m/s}}
+sources: {S: {on: air, at: [0 m, 0 m], velocity: [10 m/s, 0 m/s], starts: 5 s, emits_from: 0 s, f: 500 Hz, A: 1, phase: 0, spreading: none}}
+points: {P: [100 m, 40 m], M: {at: [100 m, 40 m], velocity: [-20 m/s, 5 m/s], starts: 2 s}, X: [350 m, 0 m]}
+rays: {r: {from: S, to: P}, m: {from: S, to: M}, xr: {from: S, to: X}}
+observe:
+  just: "frequency(xr, t=1.001[s])"
+  at5: "frequency(xr, t=5[s])"
+  post: "frequency(xr, t=6.5[s])"
+expect: {at5: 500, post: "8750/17", just: 500}

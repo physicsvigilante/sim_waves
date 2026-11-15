@@ -276,7 +276,11 @@ def _panel(sc, spec, sol, illus, missing, fixed):
                       {k: v for k, v in illus.items() if k != var}, {var}, missing, f"plot {target}")
     if e is None:
         return None, {}
-    fn = sp.lambdify(var, e, "math")
+    from .doppler import HeardFrequency
+    if e.has(HeardFrequency):          # each instant solved on its own (emission time)
+        fn = lambda v_: sp.N(e.xreplace({var: sp.Float(v_, 20)}), 15)
+    else:
+        fn = sp.lambdify(var, e, "math")
     vs = [rng[0] + (rng[1] - rng[0]) * i / (N_PLOT - 1) for i in range(N_PLOT)]
     ys = []
     for v in vs:

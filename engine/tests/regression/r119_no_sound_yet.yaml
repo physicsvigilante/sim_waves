@@ -1,0 +1,7 @@
+# m10: before the first sound arrives the listener hears nothing
+media: {air: {type: gas, v: 350 m/s}}
+sources: {S: {on: air, at: [0 m, 0 m], emits_from: 0 s, f: 1000 Hz, A: 1, phase: 0, spreading: none}}
+points: {P: [-800 m, 0 m]}
+rays: {r: {from: S, to: P}}
+observe: {early: "frequency(r, t=1[s])"}
+expect: {error: rejected, message: "no sound yet"}

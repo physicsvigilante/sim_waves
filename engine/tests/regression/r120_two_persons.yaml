@@ -1,0 +1,16 @@
+# m10: 24/03 bmc_004 #6: beats heard by a moving and a still person
+arbitrary: {D: 10 m}
+media: {air: {type: gas, v: 300 m/s}}
+sources:
+  SA: {on: air, at: [0 m, 0 m], velocity: [2 m/s, 0 m/s], f: 596 Hz, A: 1, phase: 0, spreading: none}
+  SB: {on: air, at: [D, 0 m], f: 600 Hz, A: 1, phase: 0, spreading: none}
+points:
+  A: {at: [0 m, 0 m], velocity: [2 m/s, 0 m/s]}
+  B: [D, 0 m]
+rays: {AA: {from: SA, to: A}, BA: {from: SB, to: A}, AB: {from: SA, to: B}, BB: {from: SB, to: B}}
+observe:
+  fBA: "frequency(BA, t=D/(1000[m/s]))"
+  fAB: "frequency(AB, t=D/(1000[m/s]))"
+  beatsA: "beat_frequency(AA, BA, t=D/(1000[m/s]))"
+  beatsB: "beat_frequency(AB, BB, t=D/(1000[m/s]))"
+expect: {fBA: 604, fAB: 600, beatsA: 8, beatsB: 0}

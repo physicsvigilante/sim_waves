@@ -1,0 +1,16 @@
+
+media: {air: {type: gas, v: 340 m/s}}
+sources:
+  a: {on: air, at: [-100 m, 0 m], velocity: [17 m/s, 0 m/s], f: 500 Hz, A: 1, phase: 0, spreading: none}
+  b: {on: air, at: [100 m, 0 m], velocity: [17 m/s, 0 m/s], f: 510 Hz, A: 1, phase: 0, spreading: none}
+points: {O: [0 m, 0 m]}
+rays: {ra: {from: a, to: O}, rb: {from: b, to: O}}
+observe:
+  beat: "beat_frequency(ra, rb, t=1[s])"   # 500*340/323=526.316 ; 510*340/357=485.714 -> 40.602
+  nob: "beat_frequency(ra, rb)"
+  mix: "beat_frequency(ra, 500[Hz], t=1[s])"
+  ri: "relative_intensity(ra, rb)"
+  pd: "phase_difference(ra, rb)"
+  mx: "resultant_amplitude(ra, rb)"
+  amp: "amplitude(ra)"
+  ph: "phase(ra, t=1[s])"

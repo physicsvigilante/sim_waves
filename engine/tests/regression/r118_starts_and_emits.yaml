@@ -1,0 +1,11 @@
+# m10: 24/02 dmt_004 #9: source emits from 0 s, moves from 5 s
+media: {air: {type: gas, v: 350 m/s}}
+sources: {S: {on: air, at: [0 m, 0 m], velocity: [10 m/s, 0 m/s], starts: 5 s, emits_from: 0 s, f: 1000 Hz, A: 1, phase: 0, spreading: none}}
+points: {P1: [450 m, 0 m], P2: [250 m, 0 m], P3: [-800 m, 0 m], P4: [-250 m, 0 m]}
+rays: {r1: {from: S, to: P1}, r2: {from: S, to: P2}, r3: {from: S, to: P3}, r4: {from: S, to: P4}}
+observe:
+  a: "frequency(r1, t=6[s])"
+  b: "frequency(r2, t=6[s])"
+  c: "frequency(r3, t=7[s])"
+  d: "frequency(r4, t=7[s])"
+expect: {a: 1000, b: "17500/17", c: 1000, d: "8750/9"}

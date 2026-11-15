@@ -1,0 +1,7 @@
+
+media: {air: {type: gas, v: 340 m/s}}
+symbols: {vs: positive, vo: positive, D: positive}
+sources: {a: {on: air, at: [0 m, 0 m], velocity: [vs, 0 m/s], f: 500 Hz, A: 1, phase: 0, spreading: none}}
+points: {O: {at: [D, 0 m], velocity: [-vo, 0 m/s]}}
+rays: {r: {from: a, to: O}}
+observe: {f: "frequency(r, emitted=0[s])", ft: "frequency(r, t=1[s])", arr: "arrives_at(r, emitted=0[s])"}

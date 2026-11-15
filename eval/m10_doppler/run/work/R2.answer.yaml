@@ -1,0 +1,9 @@
+answer: [D]
+final_scene: R2.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "nothing"
+missing_in_source: "whistle frequency and start distance (ratio independent; 500 Hz and 1000 m used as assumptions)"
+reasoning: "Engine: f1 = 5000/9 Hz, f2 = 10000/19 Hz, ratio = 19/18, option D."
+friction: "Illustrative f0 could not be declared arbitrary because 34 m/s scaled x89 is supersonic."

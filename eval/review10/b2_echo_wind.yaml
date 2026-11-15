@@ -1,0 +1,21 @@
+
+media: {air: {type: gas, v: 340 m/s, wind: [10 m/s, 0 m/s]}}
+sources: {car: {on: air, at: [0 m, 0 m], velocity: [20 m/s, 0 m/s], f: 500 Hz, A: 1, phase: 0, spreading: none}, st: {on: air, at: [0 m, 0 m], f: 500 Hz, A: 1, phase: 0, spreading: none}}
+points: {P: [-50 m, 0 m], drv: {at: [0 m, 0 m], velocity: [20 m/s, 0 m/s]}}
+reflectors:
+  wall: {point: [500 m, 0 m], normal: [-1, 0], boundary: rigid}
+  app: {point: [500 m, 0 m], normal: [-1, 0], boundary: rigid, velocity: [-5 m/s, 0 m/s]}
+rays:
+  s: {from: st, to: P, via: wall}
+  e: {from: car, to: P, via: wall}
+  d: {from: car, to: P}
+  ed: {from: car, to: drv, via: wall}
+  am: {from: st, to: P, via: app}
+observe:
+  still: "frequency(s, t=5[s])"   # 500
+  arr: "arrives_at(s, emitted=0[s])"  # 500/350 + 550/330 = 3.0952
+  echo: "frequency(e, t=5[s])"    # 500*350/330 = 530.303
+  direct: "frequency(d, t=5[s])"  # 500*330/350 = 471.4286
+  beat: "beat_frequency(e, d, t=5[s])"
+  drv: "frequency(ed, t=5[s])"    # 500*350/330 * (330+20)/330 = 562.44
+  am: "frequency(am, t=5[s])"     # wall hears 500*(350+5)/350; re-emits toward -x: sound speed 330; f*(330)/(330-5) => 500*355/350*330/325 = 514.945

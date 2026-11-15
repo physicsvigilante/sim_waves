@@ -1,0 +1,21 @@
+id: B4/jee_main/50
+book: wanes_full.pdf, Archive JEE Main, problem 50 [Online 2015], page 4.112
+type: single_correct
+statement: |
+  A source of sound emits sound waves at frequency f0. It is moving towards an
+  observer with fixed speed vs (vs < v, where v is the speed of sound in air). If
+  the observer were to move towards the source with speed v0, one of the following
+  two graphs (A and B) will give the correct variation of the frequency f heard by
+  the observer as v0 is changed. The variation of f with v0 is given correctly by
+figure: |
+  Two sketch graphs side by side, no numbers.
+  Graph (A): vertical axis f, horizontal axis v0. A straight line rising to the
+  right; it does not pass through the origin (it meets the f axis above the
+  origin; the part near the axis is drawn dashed, the rest solid).
+  Graph (B): vertical axis f, horizontal axis 1/v0. Also a straight line rising to
+  the right, drawn the same way (dashed near the f axis, then solid).
+options:
+  A: "graph A with slope = f0/(v - vs)"
+  B: "graph A with slope = f0/(v + vs)"
+  C: "graph B with slope = f0/(v - vs)"
+  D: "graph B with slope = f0/(v + vs)"

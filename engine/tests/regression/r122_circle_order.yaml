@@ -1,0 +1,10 @@
+# m10: 24/02 asc_006 #3: source on a circle, order n2 > n3 > n1
+arbitrary: {R: 2 m, u: 1 m/s, D: 50 m}
+media: {air: {type: gas, v: 340 m/s}}
+sources: {S: {on: air, at: [0 m, "-R"], circle: {center: [0 m, 0 m], speed: u, sense: cw}, f: 500 Hz, A: 1, phase: 0, spreading: none}}
+points: {O: [D, 0 m]}
+rays: {r: {from: S, to: O}}
+observe:
+  n3: "frequency(r, emitted=3*pi*R/(2*u))"
+  b_order: "step(frequency(r, emitted=pi*R/u) - frequency(r, emitted=3*pi*R/(2*u)))*step(frequency(r, emitted=3*pi*R/(2*u)) - frequency(r, emitted=0[s]))"
+expect: {n3: 500, b_order: 1}

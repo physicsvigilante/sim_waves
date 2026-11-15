@@ -1,0 +1,18 @@
+
+media: {air: {type: gas, v: 340 m/s, wind: [10 m/s, 0 m/s]}}
+sources: {car: {on: air, at: [0 m, 0 m], velocity: [20 m/s, 0 m/s], f: 500 Hz, A: 1, phase: 0, spreading: none}, st: {on: air, at: [0 m, 0 m], f: 500 Hz, A: 1, phase: 0, spreading: none}}
+points: {O: [1000 m, 0 m], B: [-1000 m, 0 m], bike: {at: [1000 m, 0 m], velocity: [-15 m/s, 0 m/s]}}
+rays: {r: {from: car, to: O}, b: {from: car, to: B}, s: {from: st, to: bike}, so: {from: st, to: O}}
+observe:
+  along: "frequency(r, emitted=0[s])"      # 500*350/330=530.303
+  against: "frequency(b, emitted=0[s])"    # 500*330/350=471.4286
+  lis: "frequency(s, emitted=0[s])"        # 500*365/350=521.4286
+  still: "frequency(so, t=10[s])"          # 500
+  wl_still: "wavelength(so, t=10[s])"      # air frame: 340/ f_air; f_air = 500*340/350 -> lambda=0.70
+  wl_along: "wavelength(r, emitted=0[s])"  # (350-20)/500 = 0.66
+  wl_against: "wavelength(b, emitted=0[s])"  # (330+20)/500=0.70
+  arr: "arrives_at(so, emitted=0[s])"      # 1000/350
+  f0: "frequency(so)"
+  L: "length(so)"
+  pd: "path_difference(so, r)"
+  ri: "relative_intensity(so)"

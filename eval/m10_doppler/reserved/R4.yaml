@@ -1,0 +1,20 @@
+id: B4/jee_advanced/50
+book: wanes_full.pdf, Archive JEE Advanced, Multiple Correct Choice Type Problems, problem 18 [IIT-JEE 1990], page 4.117 (problem 50 in the archive's running numbering)
+type: multiple_correct
+statement: |
+  A stationary observer receives a sound of frequency f0 = 2200 Hz. The apparent
+  frequency f varies with time as shown in figure. Speed of sound = 300 m s^-1.
+  Choose the correct alternative(s)
+figure: |
+  Graph with vertical axis "f (Hz)" and horizontal axis "t (s)". Two horizontal
+  dashed lines are labelled 2000 (upper) and 1800 (lower) on the f axis; a level
+  above them is labelled f_m. The curve starts at the f axis at height f_m, nearly
+  flat, then decreases smoothly in an S shape, crossing the 2000 dashed line, and
+  levels off approaching the 1800 dashed line from above at large t.
+  (The statement prints f0 = 2200 Hz; the figure marks 2000 on the crossing line.
+  Transcribed as printed.)
+options:
+  A: "speed of source is 66.7 m s^-1"
+  B: "f_m shown in figure cannot be greater than 2500 Hz"
+  C: "speed of source is 33.33 m s^-1"
+  D: "f_m shown in figure cannot be greater than 2250 Hz"

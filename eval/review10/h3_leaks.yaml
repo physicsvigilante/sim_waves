@@ -1,0 +1,18 @@
+
+media: {air: {type: gas, v: 340 m/s}}
+sources: {car: {on: air, at: [-100 m, 0 m], velocity: [20 m/s, 0 m/s], f: 500 Hz, A: 1, phase: 0, spreading: none}}
+points: {O: [0 m, 0 m], same: {at: [-100 m, 0 m], velocity: [20 m/s, 0 m/s]}, here: [-100 m, 0 m]}
+rays: {tube: {from: car, length: 3 m}, own: {from: car, to: same}, r: {from: car, to: O}, h: {from: car, to: here}}
+observe:
+  a: "frequency(tube)"
+  b: "frequency(tube, t=1[s])"
+  own: "frequency(own, t=1[s])"
+  ownL: "length(own)"
+  per: "period(r)"
+  h0: "frequency(h, t=0[s])"
+  h1: "frequency(h, emitted=0[s])"
+  h2: "frequency(h, t=1[s])"   # source moved away from 'here': 500*340/360
+  fsrc: "frequency(car)"
+  srct: "frequency(car, t=1[s])"
+  both: "frequency(r, t=1[s], emitted=0[s])"
+  dist: "distance(car, O)"

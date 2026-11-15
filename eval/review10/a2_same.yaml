@@ -1,0 +1,9 @@
+
+media: {air: {type: gas, v: 340 m/s}}
+sources: {car: {on: air, at: [0 m, 0 m], velocity: [20 m/s, 0 m/s], f: 500 Hz, A: 1, phase: 0, spreading: none}}
+points: {bike: {at: [100 m, 0 m], velocity: [10 m/s, 0 m/s]}, chase: {at: [-100 m, 0 m], velocity: [30 m/s, 0 m/s]}}
+rays: {r: {from: car, to: bike}, c: {from: car, to: chase}}
+observe:
+  ahead: "frequency(r, emitted=0[s])"      # 515.625
+  ahead_late: "frequency(r, t=30[s])"      # source passed listener at t=10: f(340+10)/(340+20)=486.11
+  chase: "frequency(c, t=1[s])"            # f (340+30)/(340+20) = 513.889

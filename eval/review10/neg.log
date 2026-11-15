@@ -1,0 +1,14 @@
+[PASS] n01_ambiguous_wavelength.yaml: rejected as expected (ambiguous): infinitely many situations fit the facts, e.g. k=25*pi/2; k=425*pi/2; k=825*pi/2; k=1225*pi/2. Values seen: k in {25*pi/2, 425*pi/2, 825*pi/2, 1225*pi/2, 1625*pi/2, 2025*pi/2, ...}. Add a constraint and record the reason in 'assume'.
+[PASS] n02_missing_unit.yaml: rejected as expected (rejected): media.s.tension: number '60' needs a unit
+[PASS] n03_wrong_dimension.yaml: rejected as expected (rejected): waves.w.A: unit 'Hz' has the wrong dimension
+[PASS] n04_overspecified.yaml: rejected as expected (rejected): waves.w: frequency, wavelength and speed are inconsistent (omega != k*v)
+[PASS] n05_missing_phase.yaml: rejected as expected (undetermined): wave 'w': phase is not specified
+[PASS] n06_injection.yaml: rejected as expected (rejected): waves.w: give units for x, y and t (e.g. units: {x: m, t: s, y: m})
+[PASS] n07_attribute.yaml: rejected as expected (rejected): waves.w: give units for x, y and t (e.g. units: {x: m, t: s, y: m})
+[PASS] n08_typo_key.yaml: rejected as expected (rejected): waves.w: unknown key(s) ['lamda']; allowed: ['A', 'dir', 'f', 'from', 'intensity', 'k', 'lambda', 'omega', 'on', 'period', 'phase', 'pressure_amplitude', 'toward', 'v']
+[PASS] n09_phase_ambiguous.yaml: rejected as expected (ambiguous): 2 situations fit the facts, e.g. phi1=pi; phi1=0. Values seen: phi1 in {0, pi}. Add a constraint and record the reason in 'assume'.
+[PASS] n10_standing_not_travelling.yaml: rejected as expected (rejected): waves.w: give units for x, y and t (e.g. units: {x: m, t: s, y: m})
+[PASS] n11_slack_wire.yaml: rejected as expected (rejected): media.cu: wire is slack (now >= slack_at); no tension
+[PASS] n12_undeclared_symbol.yaml: rejected as expected (rejected): waves.w: give units for x, y and t (e.g. units: {x: m, t: s, y: m})
+
+summary: PASS 12

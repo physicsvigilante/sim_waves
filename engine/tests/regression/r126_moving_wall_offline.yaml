@@ -1,0 +1,8 @@
+# m10: a moving wall off the line is refused
+media: {air: {type: gas, v: 340 m/s}}
+sources: {S: {on: air, at: [0 m, 0 m], f: 500 Hz, A: 1, phase: 0, spreading: none}}
+points: {O: [0 m, 5 m]}
+reflectors: {wall: {point: [50 m, 0 m], normal: [-1, 0], boundary: rigid, velocity: [-5 m/s, 0 m/s]}}
+rays: {r: {from: S, to: O, via: wall}}
+observe: {f: "frequency(r, emitted=0[s])"}
+expect: {error: rejected, message: "one line"}

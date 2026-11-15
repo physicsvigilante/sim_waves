@@ -1,0 +1,17 @@
+
+media: {air: {type: gas, v: 340 m/s}}
+sources: {toy: {on: air, at: [2 m, 0 m], circle: {center: [0 m, 0 m], speed: 30 m/s, sense: ccw}, f: 500 Hz, A: 1, phase: 0, spreading: none}, lin: {on: air, at: [-50 m, 1 m], velocity: [25 m/s, 0 m/s], f: 500 Hz, A: 1, phase: 0, spreading: none}}
+points: {O: [10 m, 0 m], C: {at: [10 m, 3 m], circle: {center: [10 m, 0 m], speed: 20 m/s, sense: cw}}}
+rays: {r: {from: toy, to: O}, b: {from: toy, to: C}, l: {from: lin, to: C}}
+observe:
+  a: "frequency(r, t=0.3[s])"    # 530.97322
+  b: "frequency(r, t=1[s])"      # 465.07605
+  te: "emitted_at(r, t=1[s])"    # 0.96792872
+  arr: "arrives_at(r, emitted=0.2[s])"  # 0.235245027
+  rt: "arrives_at(r, emitted=emitted_at(r, t=1[s]))"
+  both1: "frequency(b, t=0.3[s])"   # 544.25071
+  both2: "frequency(b, t=1[s])"     # 436.47190
+  l1: "frequency(l, t=0.5[s])"      # 571.08561
+  l2: "frequency(l, t=3[s])"        # 477.42890
+  fe: "frequency(b, emitted=0.2[s])"
+  wl: "wavelength(r, t=1[s])"
