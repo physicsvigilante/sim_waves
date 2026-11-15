@@ -1,0 +1,19 @@
+id: B4/jee_main/16
+number: 16
+source: "book p.109, JEE Main archive Q16 [Online April 2019]"
+format: single_correct
+statement: >-
+  A wire of length 2L is made by joining two wires A and B of same length but different radii r and 2r and made of the same material. It is vibrating at a frequency such that the joint of the two wires forms a node. If the number of antinodes in wire A is p and that in B is q then the ratio p : q is
+figure: "Wire made of two segments joined end to end, fixed at both outer ends (walls at left and right). Left segment A (thinner, radius r) has length L; right segment A/B (thicker, radius 2r) has length L. Figure labels both halves with length L. The figure's right segment is labelled 'A' as printed; the text identifies it as B."
+options:
+  A: "4 : 9"
+  B: "1 : 2"
+  C: "3 : 5"
+  D: "1 : 4"
+answer: B
+answer_value: "1:2"
+units: null
+verified: "Matches key. Same material, so mu_B = 4 mu_A and v_B = v_A/2. With ends and joint all nodes, f = p v_A/(2L) = q v_B/(2L) gives p/q = 1/2."
+kinds: [inverse_condition, nonuniform_medium, ratio]
+physics: [standing wave, composite string, node at joint, linear density]
+notes: "Figure label on the right segment reads 'A' in the book (likely a misprint for B)."

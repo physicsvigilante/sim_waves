@@ -1,0 +1,11 @@
+id: B4/single/71
+assume:
+  - "Wax lowers B's frequency (fB2 < fB), by less than the beat frequency (fB2 stays above 100 Hz)."
+unknowns: {fB: positive, fB2: positive}
+given:
+  - {fact: "beat_frequency(100[Hz], fB) == 2[Hz]", source: stated}
+  - {fact: "beat_frequency(100[Hz], fB2) == 1[Hz]", source: stated}
+  - {fact: "fB2 < fB", source: stated, note: "wax on prongs lowers frequency"}
+  - {fact: "fB2 > 100[Hz]", source: assumption, note: "see assume"}
+observe:
+  fB: "fB"

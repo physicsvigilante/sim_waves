@@ -1,0 +1,19 @@
+id: B4/jee_main/1
+number: 1
+source: "book p.107, JEE Main archive Q1 [Online September 2020]"
+format: single_correct
+statement: >-
+  Two identical strings X and Z made of same material have tension T_X and T_Z in them. Their fundamental frequencies are 450 Hz and 300 Hz, respectively, then the ratio T_X / T_Z is
+figure: null
+options:
+  A: "0.44"
+  B: "1.5"
+  C: "2.25"
+  D: "1.25"
+answer: C
+answer_value: 2.25
+units: null
+verified: "Matches key. f ~ sqrt(T) for identical strings, so T ratio = (450/300)^2 = 2.25."
+kinds: [ratio, comparison]
+physics: [fundamental frequency of string, tension]
+notes: null

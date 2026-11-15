@@ -1,0 +1,9 @@
+answer: [b]
+final_scene: B4_jee_advanced_28.v2.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "nothing"
+missing_in_source: "none"
+reasoning: "Only option B gives zero at x=0 for all t and a non-travelling (standing) total; C cancels completely (no wave), A and D leave amplitude sqrt(2) at x=0."
+friction: "Option A printed with a typo ('kx x wt'), read as sin(kx+wt). Needed concrete k, w, a to run (assumption)."

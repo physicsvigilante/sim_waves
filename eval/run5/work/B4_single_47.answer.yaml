@@ -1,0 +1,10 @@
+answer: [a]
+final_scene: B4_single_47.v1.yaml
+engine_fit: partial
+hand_steps:
+  - "Matching ratio^2 = 2021/1921 = 303.15/288.15 to option a (340*sqrt(303/288)); option d with pressure factor is wrong because pressure drops out"
+coverage: full
+not_represented: "nothing"
+missing_in_source: "gamma and molar mass not given; the scene's absolute speed (340.09) is from the assumed molar mass 29 g/mol, not from the stated 340 m/s"
+reasoning: "Engine: v2/v1 = sqrt(303.15/288.15) = 1.0257, independent of the pressure change, so option a."
+friction: "The stated 340 m/s could not be used as a given (it would over-specify with molar mass); scene ratio only."

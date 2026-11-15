@@ -1,0 +1,10 @@
+answer: [C]
+final_scene: B4_jee_main_10.v3.yaml
+engine_fit: partial
+hand_steps:
+  - "Hooke's law: extension = T*L/(A*Y) = 81 N * 0.6 m / (1e-6 m^2 * 16e11 Pa) = 3.04e-5 m, about 0.03 mm. The engine has no elastic-extension observable for a string."
+coverage: partial
+not_represented: "Young's modulus, area and elongation; the scene has only mass, length, speed, tension and mu"
+missing_in_source: none
+reasoning: "Engine: mu = 0.01 kg/m and tension T = 81 N from the stated speed. Extension by Hooke's law in hand, near 0.03 mm."
+friction: "Tension 'free' makes tension() unavailable; had to make tension an unknown fixed by the wave's speed. Y and area (stress, strain) cannot be used on a string medium (area only appears through density)."

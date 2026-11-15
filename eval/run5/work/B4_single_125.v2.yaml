@@ -1,0 +1,13 @@
+id: B4/single/125
+assume:
+  - "n = 100 Hz (scale). Equal amplitudes, in phase at t=0, one point. Probe: what does the engine say about a three-frequency sum?"
+waves:
+  f1: {given: "cos(2*pi*99*t)", units: {x: m, t: s, y: m}}
+  f2: {given: "cos(2*pi*100*t)", units: {x: m, t: s, y: m}}
+  f3: {given: "cos(2*pi*101*t)", units: {x: m, t: s, y: m}}
+  s12: {sum: [f1, f2]}
+  s3: {sum: [f1, f2, f3]}
+observe:
+  env12_max: "max_over(t, envelope(t, y(s12, x=0[m], t=t)))"
+  f_env12: "frequency_of(t, y(s3, x=0[m], t=t))"
+  b: "beat_frequency(frequency(f1), frequency(f2))"

@@ -1,0 +1,21 @@
+id: B4/integer/14
+assume:
+  - "Part (b) only. Point source radiating spherically in free space, no damping."
+  - "Source power 5.0265e-6 W = pi/625000 W is the value the engine solved in v1 from the 30 dB at 20 m; carried over by hand because two log-unknowns cannot be solved together."
+  - "Sound is just not heard at the threshold level 0 dB (I0 = 1e-12 W/m^2), the standard reference (convention)."
+unknowns: {d: positive}
+media:
+  air: {type: gas, v: 340 m/s, density: 1.29 kg/m^3}
+sources:
+  S: {on: air, at: [0 m, 0 m], f: 500 Hz, power: "(pi/625000)[W]", phase: 0, spreading: spherical}
+points:
+  p20: [20 m, 0 m]
+  pd: [d, 0 m]
+rays:
+  r20: {from: S, to: p20}
+  rd: {from: S, to: pd}
+given:
+  - {fact: "sound_level(intensity(r20)) == 30", source: stated}
+  - {fact: "sound_level(intensity(rd)) == 0", source: convention, note: "threshold of hearing"}
+observe:
+  d: "d"

@@ -1,0 +1,18 @@
+id: B4/jee_main/40
+assume:
+  - "Both strings sound their fundamental, same length (1 m) and same mass per length (10 g/m), only tension differs (scale choice, irrelevant to the answer)."
+  - "String B tension before = TB, after = TB2 > TB (stated: tension increased)."
+unknowns: {TB: positive, TB2: positive}
+media:
+  b0: {type: string, mu: 10 g/m, tension: TB}
+  b1: {type: string, mu: 10 g/m, tension: TB2}
+resonators:
+  r0: {type: string, on: b0, length: 1 m, ends: [fixed, fixed]}
+  r1: {type: string, on: b1, length: 1 m, ends: [fixed, fixed]}
+given:
+  - {fact: "beat_frequency(425[Hz], frequency(r0, harmonic=1)) == 5[Hz]", source: stated}
+  - {fact: "beat_frequency(425[Hz], frequency(r1, harmonic=1)) == 2[Hz]", source: stated, note: "beat decreases by 3 Hz"}
+  - {fact: "TB2 > TB", source: stated}
+observe:
+  fB_original: "frequency(r0, harmonic=1)"
+  fB_after: "frequency(r1, harmonic=1)"

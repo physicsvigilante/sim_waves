@@ -1,0 +1,9 @@
+answer: [c]
+final_scene: B4_single_173.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "nothing"
+missing_in_source: "gamma of both gases (assumed 7/5)"
+reasoning: "Engine: speed ratio hydrogen/oxygen = 4 at equal temperature with equal gamma."
+friction: none

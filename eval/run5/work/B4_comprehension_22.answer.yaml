@@ -1,0 +1,11 @@
+answer: [b]
+final_scene: B4_comprehension_22.v1.yaml
+engine_fit: partial
+hand_steps:
+  - "Path lengths: shorter arc S to D = quarter circumference = (pi/2)R, longer arc = (3 pi/2)R (read from the 90-degree figure; entered as stated-length rays with R = 1 m)."
+  - "Reading the engine's list of minima wavelengths (2*pi/(2m+1) m, m=0..) as multiples of R and taking the largest."
+coverage: partial
+not_represented: "The circular tube itself (curvature, tube cross-section) and the splitting of intensity I0; only two rays with the two arc lengths are modelled, amplitudes taken equal."
+missing_in_source: "none (R is symbolic; I set R = 1 m only for the search range)"
+reasoning: "Engine: path difference = pi (m, with R = 1 m), minima at lambda = 2pi/(2m+1), largest 2 pi, i.e. 2 pi R."
+friction: "Lengths in rays must be numeric (stated-length ray with symbol R and a search range with units forced me to set R = 1 m); no way to give a geometric circle/arc."

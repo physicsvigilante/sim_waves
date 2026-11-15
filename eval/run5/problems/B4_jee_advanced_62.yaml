@@ -1,0 +1,15 @@
+id: B4/jee_advanced/62
+format: matrix_match
+statement: Column I shows four systems, each of the same length L, for producing standing waves. The lowest
+  possible natural frequency of a system is called its fundamental frequency, whose wavelength is denoted
+  as lambda_f. Match each system with statements given in Column II describing the nature and wavelength
+  of the standing waves.
+figure: 'Column I entries each have a small sketch of the system spanning from 0 to L: (A) pipe closed
+  at one end (a pipe drawn from x=0 to x=L); (B) pipe open at both ends (pipe from 0 to L); (C) stretched
+  wire clamped at both ends (wire with clamps at 0 and L); (D) stretched wire clamped at both ends and
+  at mid-point (clamps at 0 and L, plus a clamp/support at L/2, marked L/2). No other numbers.'
+options:
+  A: Pipe closed at one end
+  B: Pipe open at both ends
+  C: Stretched wire clamped at both ends
+  D: Stretched wire clamped at both ends and at mid-point

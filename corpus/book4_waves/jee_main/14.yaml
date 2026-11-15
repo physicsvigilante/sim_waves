@@ -1,0 +1,19 @@
+id: B4/jee_main/14
+number: 14
+source: "book p.108, JEE Main archive Q14 [Online January 2020]"
+format: single_correct
+statement: >-
+  Three harmonic waves having equal frequency v and same intensity I0, have phase angles 0, pi/4 and -pi/4 respectively. When they are superimposed the intensity of the resultant wave is close to
+figure: null
+options:
+  A: "5.8 I0"
+  B: "0.2 I0"
+  C: "I0"
+  D: "3 I0"
+answer: A
+answer_value: 5.8
+units: I0
+verified: "Matches key. Amplitude = A(1 + 2cos(pi/4)) = 2.414 A, intensity = 5.83 I0."
+kinds: [build_wavefunction, ratio]
+physics: [superposition, phasors, intensity]
+notes: null

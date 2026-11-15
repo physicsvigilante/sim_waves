@@ -1,0 +1,22 @@
+id: B4/jee_advanced/28
+assume:
+  - "a = 1 m, k = 2 rad/m, w = 3 rad/s fixed for scale; the node test at x = 0 does not depend on them."
+  - "Option A is printed 'sin(kx x wt)'; read as sin(kx + wt) (typo)."
+waves:
+  y1: {given: "cos(2*x - 3*t)", units: {x: m, t: s, y: m}}
+  oA: {given: "sin(2*x + 3*t)", units: {x: m, t: s, y: m}}
+  oB: {given: "-cos(2*x + 3*t)", units: {x: m, t: s, y: m}}
+  oC: {given: "-cos(2*x - 3*t)", units: {x: m, t: s, y: m}}
+  oD: {given: "-sin(2*x - 3*t)", units: {x: m, t: s, y: m}}
+  tA: {sum: [y1, oA]}
+  tB: {sum: [y1, oB]}
+  tC: {sum: [y1, oC]}
+  tD: {sum: [y1, oD]}
+observe:
+  trav_B: "is_travelling(tB)"
+  trav_C: "is_travelling(tC)"
+  trav_A: "is_travelling(tA)"
+  node_A: "max_over(t, abs(y(tA, x=0[m], t=t)))"
+  node_B: "max_over(t, abs(y(tB, x=0[m], t=t)))"
+  node_C: "max_over(t, abs(y(tC, x=0[m], t=t)))"
+  node_D: "max_over(t, abs(y(tD, x=0[m], t=t)))"

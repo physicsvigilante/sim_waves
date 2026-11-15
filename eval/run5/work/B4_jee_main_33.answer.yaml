@@ -1,0 +1,9 @@
+answer: [d]
+final_scene: B4_jee_main_33.v2.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "nothing"
+missing_in_source: "none"
+reasoning: "Engine solved T = 25/2 N = 12.5 N from the wave speed 50 m/s and mu = 5 g/m."
+friction: "tension: free refused to report tension (set by its wave); needed an unknown T plus the given wave's cross-check (v1 failed)."

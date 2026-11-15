@@ -1,0 +1,9 @@
+answer: [c]
+final_scene: B4_single_92.v2.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "background noise; reflections"
+missing_in_source: "Point-source inverse-square spreading is assumed."
+reasoning: "Engine: P = pi/2.5e7 W from 40 dB at 1 m; level 20 dB reached at d = 10 m."
+friction: "Two unknowns inside sound_level() were refused (v1); restated with intensity_of_level."

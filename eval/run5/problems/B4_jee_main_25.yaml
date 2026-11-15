@@ -1,0 +1,13 @@
+id: B4/jee_main/25
+format: single_correct
+statement: A progressive wave travelling along the positive x-direction is represented by y(x, t) = A
+  sin(kx - wt + phi). Its snapshot at t = 0 is given in the Figure. For this wave, the phase phi is
+figure: 'Snapshot of y versus x at t = 0: a sinusoidal curve with about 3 crests and 2 troughs shown (several
+  full cycles) crossing the x-axis at the origin on the y-axis. Just left of the origin the curve is positive
+  (a crest), just right of the origin it is negative (a trough follows). Amplitude A is marked from the
+  axis to a crest. No numerical values other than A.'
+options:
+  A: pi
+  B: -pi/2
+  C: pi/2
+  D: '0'

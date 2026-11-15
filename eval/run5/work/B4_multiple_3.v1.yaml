@@ -1,0 +1,10 @@
+id: B4/multiple/3
+symbols: {alpha: positive, beta: positive, a: positive}
+waves:
+  w: {given: "a*sin(alpha*t - beta*x)", units: {x: m, t: s, y: m}}
+observe:
+  v: "velocity(w)"
+  lam: "wavelength(w)"
+  f: "frequency(w)"
+  T: "period(w)"
+  om: "omega(w)"

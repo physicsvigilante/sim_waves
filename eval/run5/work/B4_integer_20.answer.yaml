@@ -1,0 +1,9 @@
+answer: "x = 4"
+final_scene: B4_integer_20.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "nothing (mode shape A sin(pi x/L) cos(omega t) is my framing of 'fundamental with max displacement A', see assume)"
+missing_in_source: "none"
+reasoning: "Engine: tension solved from f1 = omega/2pi; total energy at t=0 and at t=pi/(2 omega) is m omega^2 A^2/4 both times, so x = 4."
+friction: "Had to give the standing wave as a given y(x,t) plus a resonator tied by a fact, because there is no 'energy of mode n with amplitude A' observable."

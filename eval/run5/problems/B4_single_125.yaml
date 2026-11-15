@@ -1,0 +1,9 @@
+id: B4/single/125
+format: single_correct
+statement: Waves from three sources of the same intensity and frequencies (n - 1), n, (n + 1) Hz superpose.
+  The number of beats per second is
+options:
+  a: '0'
+  b: '1'
+  c: '2'
+  d: '3'

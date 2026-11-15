@@ -1,0 +1,18 @@
+id: B4/single/58
+assume:
+  - "Same string; tension equals weight times g, with g = 9.8 m/s^2 (cancels)."
+  - "Octave of the fundamental means fundamental frequency doubled."
+  - "'Additional weight' = new load minus 4 kg; the new load is the unknown M2 (in kg, stored as a plain number)."
+symbols: {mu: positive, L: positive}
+unknowns: {M2: positive}
+media:
+  s1: {type: string, mu: mu, tension: "4[kg]*9.8[m/s^2]"}
+  s2: {type: string, mu: mu, tension: "M2*1[kg]*9.8[m/s^2]"}
+resonators:
+  r1: {type: string, on: s1, length: L, ends: [fixed, fixed]}
+  r2: {type: string, on: s2, length: L, ends: [fixed, fixed]}
+given:
+  - {fact: "frequency(r2, harmonic=1) == 2*frequency(r1, harmonic=1)", source: stated, note: "octave"}
+observe:
+  M2: "M2"
+  extra_kg: "M2 - 4"

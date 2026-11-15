@@ -1,0 +1,13 @@
+id: B4/jee_main/10
+assume:
+  - "Uniform wire; mu from mass/length. Tension is whatever gives the stated speed. Young's-modulus extension is not an engine observable."
+unknowns: {T: positive}
+media:
+  wire: {type: string, mass: 6.0 g, length: 60 cm, tension: T}
+waves:
+  w: {harmonic: {on: wire, A: 1 mm, f: 10 Hz, v: 90 m/s, dir: +x, phase: 0}}
+given:
+  - {fact: "speed(w) == 90[m/s]", source: stated}
+observe:
+  T: "tension(wire)"
+  mu: "mu(wire)"

@@ -1,0 +1,9 @@
+answer: [a]
+final_scene: B4_single_13.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "Lengths (irrelevant to wave speed)"
+missing_in_source: "none"
+reasoning: "Engine ratio = sqrt2 : 1."
+friction: "none"

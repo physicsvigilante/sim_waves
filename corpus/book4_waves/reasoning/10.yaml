@@ -1,0 +1,26 @@
+id: B4/reasoning/10
+number: 10
+source: book p.98 (answer key p.123)
+format: single_correct
+statement: 'Statement-1: Velocity of particles while crossing mean position (in stationary waves) varies
+  from maximum at antinodes to zero at nodes.
+
+  Statement-2: Amplitude of vibration at antinodes is maximum and at nodes, the amplitude is zero and
+  all particles between two successive nodes cross the mean position together.'
+figure: null
+options:
+  A: Both statements are TRUE and STATEMENT 2 is the correct explanation of STATEMENT 1.
+  B: Both statements are TRUE but STATEMENT 2 is not the correct explanation of STATEMENT 1.
+  C: STATEMENT 1 is TRUE and STATEMENT 2 is FALSE.
+  D: STATEMENT 1 is FALSE but STATEMENT 2 is TRUE.
+answer: A
+answer_value: A
+units: null
+verified: 'Speed at mean position = omega x local amplitude: max at antinodes, zero at nodes; S2 gives
+  that amplitude profile. Both true and S2 explains S1. Matches key.'
+kinds:
+- conceptual
+physics:
+- standing_waves
+- particle_velocity
+notes: Consistent.

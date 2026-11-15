@@ -1,0 +1,16 @@
+id: B4/single/138
+assume:
+  - "The literal field (cot profile) is not a sinusoid in x, and diverges at x = 0.1 n, so the engine cannot analyse it (v2). Substituted the intended standing wave: two counter-propagating constituent waves with omega = 50*pi rad/s and k = 10*pi rad/m, equal amplitude (0.01 m, scale)."
+  - "Antinodes/nodes are read from the substituted standing wave (cos(10 pi x) profile); constituent waves share the book's omega and k."
+waves:
+  fwd: {given: "0.01*sin(50*pi*t - 10*pi*x)", units: {x: m, t: s, y: m}}
+  bwd: {given: "0.01*sin(50*pi*t + 10*pi*x)", units: {x: m, t: s, y: m}}
+  tot: {sum: [fwd, bwd]}
+observe:
+  amp_x03: "max_over(t, abs(y(tot, x=0.3[m], t=t)))"
+  amp_x015: "max_over(t, abs(y(tot, x=0.15[m], t=t)))"
+  amp_x02: "max_over(t, abs(y(tot, x=0.2[m], t=t)))"
+  amp_x025: "max_over(t, abs(y(tot, x=0.25[m], t=t)))"
+  lam: "wavelength(fwd)"
+  v_fwd: "speed(fwd)"
+  v_bwd: "velocity(bwd)"

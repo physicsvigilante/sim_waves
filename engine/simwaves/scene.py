@@ -118,8 +118,10 @@ class Scene:
         if not isinstance(name, str) or not name.isidentifier():
             raise SceneError(f"invalid name {name!r}")
         if name in RESERVED or name in self.names or name in self.functions or name in self.objects:
-            hint = " (x, t and pi are reserved: choose another name)" if name in RESERVED else ""
-            raise SceneError(f"name '{name}' is reserved or already used{hint}")
+            if name in RESERVED:
+                raise SceneError(f"name '{name}' is reserved (x, t and pi are reserved: choose another name)")
+            raise SceneError(f"name '{name}' is declared twice (a name may be a symbol, an unknown or an "
+                             f"object, but only one of them)")
 
     def _add(self, name, obj):
         self._new_name(name)
@@ -1544,6 +1546,24 @@ def _point(sc, fname, deriv):
             raise SceneError(f"{fname}(): give both x= and t=")
         _check_wave_x(wave, x)
         e = wave.field()
+        if deriv and e.has(sp.Max, sp.Min, sp.Abs, sp.Heaviside, sp.Piecewise, sp.sign):
+            e = sp.piecewise_fold(e.rewrite(sp.Piecewise))
+            d = e
+            for var in deriv:
+                d = sp.diff(d, var)
+            xv, tv = sp.sympify(x), sp.sympify(t)
+            if xv.is_number and tv.is_number:
+                from .energy import _breakpoints, _side_piece
+                at_t = sp.piecewise_fold(d.xreplace({T: tv}))
+                for q in _breakpoints(sp.piecewise_fold(e.xreplace({T: tv})), xv - 1, xv + 1, f"{fname}()"):
+                    if sp.simplify(q - xv) != 0:
+                        continue
+                    a, b = _side_piece(at_t, xv, -1), _side_piece(at_t, xv, +1)
+                    if a is not None and b is not None and sp.simplify((a - b).xreplace({X: xv})) != 0:
+                        raise SceneError(f"{fname}(): x = {xv} m is a corner of the shape at that instant, "
+                                         f"where the {'slope' if X in deriv else 'velocity'} is not defined; "
+                                         f"ask just beside it")
+            return d.xreplace({X: x, T: t}).doit()
         for var in deriv:
             e = sp.diff(e, var)
         return e.xreplace({X: x, T: t}).doit()

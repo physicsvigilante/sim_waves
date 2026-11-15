@@ -1,0 +1,33 @@
+id: B4/comprehension/28
+number: 28
+source: book p.101 (answer key p.123)
+format: single_correct
+statement: 'Passage (Comprehension 9): A wire is fixed between two rigid supports, and we pluck the mid-point
+  of string; it starts to vibrate between two extreme positions. During this oscillation, some points
+  of string vibrate with maximum amplitude while other points vibrate with minimum amplitude. These are
+  known as antinodes and nodes respectively. Suppose we have a 2 m wire which is fixed at both ends and
+  which is vibrating in its fundamental mode, the tension in the wire is 40 N and the mass of the wire
+  is 0.1 kg. At the mid-point of wire, the amplitude is 2 cm. At any instant the amplitude at x is calculated
+  from the expression y = 0.02 m sin(πx/2), then answer the following question.
+
+
+  Q28. The kinetic energy of a particle of the wire is zero'
+figure: null
+options:
+  A: at the nodal points at all times
+  B: at centre or position of antinodes at all times
+  C: at x = 1.5 m at all times
+  D: at x = 0.5 m at all times
+answer: A
+answer_value: A (nodal points)
+units: ''
+verified: Nodes (x = 0, 2 m) never move, so KE = 0 at all times; every other point has non-zero speed
+  except at its extreme positions. Matches key.
+kinds:
+- conceptual
+- given_wavefunction
+physics:
+- standing_waves
+- kinetic_energy
+- nodes
+notes: Consistent. Statement lacks units on x in the expression but the 2 m wire fixes x in m.

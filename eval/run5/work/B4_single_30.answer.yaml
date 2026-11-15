@@ -1,0 +1,9 @@
+answer: [d]
+final_scene: B4_single_30.v3.yaml
+engine_fit: full
+hand_steps: []
+coverage: partial
+not_represented: "The criterion that an echo is indistinct when its delay equals the drum interval is an assumption; no listener perception model."
+missing_in_source: "The indistinct-echo criterion (delay = beat interval) is not stated."
+reasoning: "Engine: round trips 540 m and 360 m, v = 360 m/s, initial distance 270 m."
+friction: "travel_time refuses start/end whose order is not decidable (end=2*(d-90) with unknown d); reformulated with two positive unknown path lengths and a difference fact."

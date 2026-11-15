@@ -1,0 +1,22 @@
+id: B4/single/173
+number: 173
+source: wanes_full.pdf book p.4.94 (page image p-094); key p.4.122 (p-122)
+format: single_correct
+statement: The ratio of the velocities of sound in hydrogen and oxygen at S.T.P. is
+figure: null
+options:
+  a: '16 : 1'
+  b: '8 : 1'
+  c: '4 : 1'
+  d: '2 : 1'
+answer: c
+answer_value: '4:1'
+units: null
+verified: 'v proportional to 1/sqrt(M): sqrt(32/2) = 4. Matches key.'
+kinds:
+- ratio
+- derived_medium
+physics:
+- speed_of_sound
+- molar_mass
+notes: Consistent.

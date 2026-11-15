@@ -1,0 +1,20 @@
+id: B4/integer/20
+assume:
+  - "Fundamental standing wave y = A sin(pi x/L) cos(omega t) on a uniform string of length L with both ends fixed; A is the maximum displacement (antinode)."
+  - "The string's tension is fixed by requiring the fundamental frequency to equal omega/(2 pi)."
+  - "Total energy is taken at the instant t = 0, when the string is at its extreme (all potential), and at t=pi/(2 omega) (all kinetic); both are reported to show energy is constant."
+symbols: {m: positive, L: positive, A: positive, omega: positive}
+unknowns: {T: positive}
+media:
+  s: {type: string, mass: m, length: L, tension: T}
+resonators:
+  r: {type: string, on: s, length: L, ends: [fixed, fixed]}
+waves:
+  w: {given: "A*sin(pi*x/L)*cos(omega*t)", units: {x: m, t: s, y: m}, on: s}
+given:
+  - {fact: "frequency(r, harmonic=1) == omega/(2*pi)", source: stated, note: "fundamental tone excited with angular frequency omega"}
+observe:
+  E_t0: "energy(w, start=0[m], end=L, t=0[s])"
+  E_tq: "energy(w, start=0[m], end=L, t=pi/(2*omega))"
+  ratio_t0: "energy(w, start=0[m], end=L, t=0[s])/(m*omega**2*A**2)"
+  ratio_tq: "energy(w, start=0[m], end=L, t=pi/(2*omega))/(m*omega**2*A**2)"

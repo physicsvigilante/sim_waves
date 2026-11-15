@@ -1,0 +1,19 @@
+id: B4/jee_advanced/28
+number: 28
+source: "book p.115, JEE Advanced archive, single correct Q28 [IIT-JEE 1988]"
+format: single_correct
+statement: >-
+  A wave represented by the equation y = a cos(kx - wt) is superposed with another wave to form a stationary wave such that the point x = 0 is a node. The equation for the other wave is
+figure: null
+options:
+  A: "y = a sin(kx x wt)"
+  B: "y = -a cos(kx + wt)"
+  C: "y = -a cos(kx - wt)"
+  D: "y = -a sin(kx - wt)"
+answer: B
+answer_value: "y = -a cos(kx + wt)"
+units: null
+verified: "Matches key. Need y1(0,t)+y2(0,t)=0 with a wave travelling in the opposite direction: y2 = -a cos(kx + wt)."
+kinds: [equation_form, build_wavefunction]
+physics: [standing wave formation, node condition, reflection]
+notes: "Option A is printed with a multiplication sign 'kx x wt' in the book (likely a misprint for kx - wt or kx + wt); it is not the correct option either way."

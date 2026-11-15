@@ -1,0 +1,9 @@
+id: B4/single/129
+assume: ["Fixed at both ends; 4 segments = 4th harmonic."]
+symbols: {mu: positive, T: positive}
+media:
+  s: {type: string, mu: mu, tension: T}
+resonators:
+  r: {type: string, on: s, length: 2 m, ends: [fixed, fixed]}
+observe:
+  spacing: "node_spacing(r, harmonic=4)"

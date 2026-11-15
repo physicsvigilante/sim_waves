@@ -1,0 +1,10 @@
+answer: {A: [r], B: [p], C: [p], D: [p]}
+final_scene: B4_matrix_4.v1.yaml
+engine_fit: partial
+hand_steps:
+  - "Reading the engine ratios (f 1, speed 2, wavelength 2, amplitude 4/3) as unchanged / increase / increase / increase."
+coverage: partial
+not_represented: "Meaning of 'denser' and 'rarer' for the wave in the problem (string, sound or light is not stated); 'denser to rarer' is modelled as heavy string to light string. Reflected part is ignored."
+missing_in_source: "Kind of wave and meaning of denser/rarer. For sound in fluids the denser medium usually has the larger speed, which would reverse B and C (and pressure amplitude falls). For light the speed rises, as here."
+reasoning: "On the string model frequency is unchanged, speed and wavelength rise, and transmitted displacement amplitude is 4/3 of the incident. Result depends on the model; ambiguity flagged."
+friction: "The statement is ambiguous about the wave kind; only the string model has a medium-to-medium transmission in the format. Option s ('may increase or decrease') is a hedge that cannot be tested."

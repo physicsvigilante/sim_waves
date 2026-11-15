@@ -1,0 +1,17 @@
+id: B4/integer/8
+assume:
+  - "Pressing a point on the string makes the vibrating part a shorter string of the same medium, fixed at both ends, vibrating in its fundamental."
+  - "Same tension and mass per length for both; the length of the vibrating segment is unknown Lx."
+symbols: {mu: positive, T: positive}
+unknowns: {Lx: positive}
+media:
+  g: {type: string, mu: mu, tension: T}
+resonators:
+  open_str: {type: string, on: g, length: 90 cm, ends: [fixed, fixed]}
+  pressed:  {type: string, on: g, length: Lx, ends: [fixed, fixed]}
+given:
+  - {fact: "frequency(open_str, harmonic=1) == 124[Hz]", source: stated}
+  - {fact: "frequency(pressed, harmonic=1) == 186[Hz]", source: stated}
+observe:
+  Lx: "Lx"
+  Lother: "90[cm] - Lx"

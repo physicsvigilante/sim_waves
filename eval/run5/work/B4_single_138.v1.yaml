@@ -1,0 +1,7 @@
+id: B4/single/138
+assume: ["Field taken literally as given."]
+waves:
+  w: {given: "0.02*cos(pi/2 + 50*pi*t)/tan(10*pi*x)", units: {x: m, t: s, y: m}}
+observe:
+  y_x015: "max_over(t, abs(y(w, x=0.15[m], t=t)))"
+  f: "frequency_of(t, y(w, x=0.1[m]+0.025[m], t=t))"

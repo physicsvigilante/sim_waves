@@ -1,0 +1,15 @@
+id: B4/single/27
+assume:
+  - "Air, gamma = 7/5, M = 29 g/mol; same closed-open pipe, fundamental in unison at 300 K. The beat count does not depend on the harmonic or on gamma, M."
+  - "Pipe length does not change with temperature."
+unknowns: {L: positive}
+media:
+  a300: {type: gas, gamma: 7/5, temperature: 300 K, molar_mass: 29 g/mol}
+  a301: {type: gas, gamma: 7/5, temperature: 301 K, molar_mass: 29 g/mol}
+resonators:
+  p300: {type: pipe, on: a300, length: L, ends: [closed, open], end_correction: 0 m}
+  p301: {type: pipe, on: a301, length: L, ends: [closed, open], end_correction: 0 m}
+given:
+  - {fact: "frequency(p300, harmonic=1) == 10[kHz]", source: stated}
+observe:
+  beats: "beat_frequency(frequency(p300, harmonic=1), frequency(p301, harmonic=1))"

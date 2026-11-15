@@ -1,0 +1,29 @@
+id: B4/multiple/3
+number: 3
+source: book p.94 (answer key p.122)
+format: multiple_correct
+statement: The displacement of a particle in a medium due to a wave travelling in the x-direction through
+  the medium is given by y = a sin(αt − βx) where t is time in second, α and β are constants.
+figure: null
+options:
+  A: The frequency of the wave is α.
+  B: The time period of the wave is 2π/α.
+  C: The wavelength of the wave is 2π/β.
+  D: The velocity of the wave is α/β.
+answer: B, C, D
+answer_value:
+- B
+- C
+- D
+units: null
+verified: omega = alpha so f = alpha/2pi (A false), T = 2pi/alpha, lambda = 2pi/beta, v = omega/k = alpha/beta.
+  Matches key.
+kinds:
+- given_wavefunction
+- symbolic
+physics:
+- frequency
+- period
+- wavelength
+- wave_speed
+notes: Consistent.

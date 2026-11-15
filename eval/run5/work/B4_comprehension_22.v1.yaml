@@ -1,0 +1,21 @@
+id: B4/comprehension/22
+assume:
+  - "Figure: S and D are 90 degrees apart on the tube circle, so the shorter path is a quarter circumference and the longer path is three quarters."
+  - "The source is split equally into two coherent parts; amplitude of each part taken as 1 (spreading along a tube is not modelled, so none)."
+  - "Both parts start in phase at S; no phase change at D (a detector, not a reflector)."
+  - "Scale R = 1 m fixed only so that the search range can be given with units; the result is read as a multiple of R and does not depend on it."
+  - "Speed of sound v is not stated; it only sets the frequency for a given wavelength and cancels out."
+symbols: {lam: positive, v: positive}
+media:
+  air: {type: gas, v: v}
+sources:
+  S: {on: air, f: "v/lam", A: 1, phase: 0, spreading: none}
+rays:
+  short: {from: S, length: "(pi/2)[m]"}
+  long:  {from: S, length: "(3*pi/2)[m]"}
+given:
+  - {fact: "v > 0[m/s]", source: assumption}
+observe:
+  dpath: "path_difference(long, short)"
+  minima_lam: "minima(short, long, vary=lam, lo=0.1[m], hi=20[m])"
+  max_lam: "max(minima(short, long, vary=lam, lo=0.1[m], hi=20[m]))"

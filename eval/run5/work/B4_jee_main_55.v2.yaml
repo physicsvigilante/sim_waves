@@ -1,0 +1,18 @@
+id: B4/jee_main/55
+assume:
+  - "Equal amplitudes taken as 1; frequencies n-1, n, n+1 with n a free number; phases all 0; observed at x = 0."
+  - "n > 1 so that all three frequencies are positive."
+symbols: {n: positive}
+waves:
+  w1: {given: "sin(2*pi*(n - 1)*t)", units: {x: m, t: s, y: m}}
+  w2: {given: "sin(2*pi*n*t)", units: {x: m, t: s, y: m}}
+  w3: {given: "sin(2*pi*(n + 1)*t)", units: {x: m, t: s, y: m}}
+  tot: {sum: [w1, w2, w3]}
+given:
+  - {fact: "n > 1", source: assumption, note: "frequencies must be positive"}
+observe:
+  b12: "beat_frequency(w1, w2)"
+  b23: "beat_frequency(w2, w3)"
+  b13: "beat_frequency(w1, w3)"
+  identity: "equivalent(y(tot, x=0[m], t=t), (1 + 2*cos(2*pi*t))*sin(2*pi*n*t))"
+  env_freq: "frequency_of(t, 1 + 2*cos(2*pi*t))"

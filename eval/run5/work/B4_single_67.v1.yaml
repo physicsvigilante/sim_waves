@@ -1,0 +1,12 @@
+id: B4/single/67
+assume: ["Maximum pressure variation = pressure amplitude 30 Pa."]
+media:
+  air: {type: gas, v: 300 m/s, density: 1.5 kg/m^3}
+waves:
+  w: {harmonic: {on: air, pressure_amplitude: 30 Pa, f: 1000 Hz, dir: +x, phase: 0}}
+observe:
+  s0: "displacement_amplitude(w)"
+  opt_a: "(2*pi/3)*1e-2"
+  opt_b: "2e-4/pi"
+  opt_c: "(pi/3)*1e-2"
+  opt_d: "1e-4/(3*pi)"

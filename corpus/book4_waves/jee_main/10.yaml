@@ -1,0 +1,19 @@
+id: B4/jee_main/10
+number: 10
+source: "book p.108, JEE Main archive Q10 [Online January 2020]"
+format: single_correct
+statement: >-
+  Speed of a transverse wave on a straight wire (mass 6.0 g, length 60 cm and area of cross-section 1.0 mm^2) is 90 m s^-1. If the Young's modulus of wire is 16 x 10^11 N m^-2, the extension of wire over its natural length is
+figure: null
+options:
+  A: "0.02 mm"
+  B: "0.04 mm"
+  C: "0.03 mm"
+  D: "0.01 mm"
+answer: C
+answer_value: 0.03
+units: mm
+verified: "Matches key. mu = 0.01 kg/m, T = mu v^2 = 81 N, strain = 81/(1e-6 * 16e11) = 5.06e-5, extension = 0.6 m * 5.06e-5 = 0.030 mm."
+kinds: [derived_medium, inverse_condition]
+physics: [wave speed on string, Young's modulus, tension]
+notes: null

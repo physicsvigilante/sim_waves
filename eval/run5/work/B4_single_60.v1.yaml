@@ -1,0 +1,17 @@
+id: B4/single/60
+assume:
+  - "Same material; radii r and 2r give mass per length 1 : 4 (density and diameter route)."
+  - "Joint is a node, so each half (length L/2) is a string fixed at both ends; both halves vibrate at the same frequency."
+  - "Loops = harmonic number. n = loops in the thin wire, m = loops in the thick wire."
+symbols: {rho: positive, r: positive, T: positive, L: positive, n: integer}
+unknowns: {m: integer}
+media:
+  thin: {type: string, density: rho, diameter: 2*r, tension: T}
+  thick: {type: string, density: rho, diameter: 4*r, tension: T}
+resonators:
+  r1: {type: string, on: thin, length: L/2, ends: [fixed, fixed]}
+  r2: {type: string, on: thick, length: L/2, ends: [fixed, fixed]}
+given:
+  - {fact: "frequency(r1, harmonic=n) == frequency(r2, harmonic=m)", source: stated}
+observe:
+  ratio: "n/m"

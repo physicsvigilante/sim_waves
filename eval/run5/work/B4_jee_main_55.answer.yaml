@@ -1,0 +1,10 @@
+answer: [c]
+final_scene: B4_jee_main_55.v3.yaml
+engine_fit: partial
+hand_steps:
+  - "Counting beats per second for three tones: engine gives pair beat rates 1, 1, 2 Hz and the envelope factor 1 + 2cos(2 pi t) with 1 Hz period; deciding that loudness peaks (large at t=0, small at t=0.5) count as two beats per second is mine."
+coverage: partial
+not_represented: "Loudness (intensity) envelope of three components: engine only has beat_frequency/envelope for two sinusoids."
+missing_in_source: "v value (taken as 100 Hz); the key may count 1 or 2 depending on the beat convention"
+reasoning: "Highest pair gives 2 Hz (frequency difference of extreme components), the lower pairs 1 Hz; envelope has two loudness maxima per second (unequal). Chose 2. Ambiguous: a strict loudness period would give 1."
+friction: "beat_frequency takes only two waves; n symbolic with n-1 refused (sign undetermined), 'n > 1' as fact was refused as undecidable; had to fix n = 100."

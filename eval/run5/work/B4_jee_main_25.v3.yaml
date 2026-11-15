@@ -1,0 +1,12 @@
+id: B4/jee_main/25
+assume:
+  - "The figure has no scale and the phase does not depend on it: A = 1 m, k = 2*pi/m, w = 2*pi/s are fixed. This lets me write the wave exactly as the problem's own form A sin(kx - wt + phi), avoiding the engine's sin(wt - kx + phase) convention."
+unknowns: {phi: phase}
+waves:
+  w: {given: "sin(2*pi*x - 2*pi*t + phi)", units: {x: m, t: s, y: m}}
+given:
+  - {fact: "y(w, x=0[m], t=0[s]) == 0[m]", source: figure, note: "curve crosses the origin"}
+  - {fact: "slope(w, x=0[m], t=0[s]) < 0", source: figure, note: "positive just left, negative just right"}
+  - {fact: "velocity(w) > 0[m/s]", source: stated, note: "travelling in +x"}
+observe:
+  phi: "phi"

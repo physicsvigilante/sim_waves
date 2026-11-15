@@ -1,0 +1,10 @@
+id: B4/multiple/6
+format: multiple_correct
+statement: A transverse sinusoidal wave of amplitude a, wavelength λ and frequency f is travelling on
+  a stretched string. The maximum speed of any point on the string is v/10, where v is the speed of propagation
+  of the wave. If a = 10^-3 m and v = 10 m/s, then λ and f are given by
+options:
+  A: λ = 2π × 10^-2 m
+  B: λ = 10^-3 m
+  C: f = 10^3/(2π) Hz
+  D: f = 10^4 Hz

@@ -1,0 +1,19 @@
+id: B4/jee_main/3
+number: 3
+source: "book p.107, JEE Main archive Q3 [Online September 2020]"
+format: single_correct
+statement: >-
+  A uniform thin rope of length 12 m and mass 6 kg hangs vertically from a rigid support and a block of mass 2 kg is attached to its free end. A transverse short-wave train of wavelength 6 cm is produced at the lower end of the rope. What is the wavelength of the wave train (in cm) when it reaches the top of the rope?
+figure: null
+options:
+  A: "9"
+  B: "12"
+  C: "6"
+  D: "3"
+answer: B
+answer_value: 12
+units: cm
+verified: "Matches key. Tension at bottom = 2g, at top = (2+6)g = 8g; f is constant and v ~ sqrt(T), so lambda_top = 6*sqrt(8/2) = 12 cm."
+kinds: [inverse_condition, nonuniform_medium, ratio]
+physics: [wave speed on string, tension varying along hanging rope, constant frequency]
+notes: "Rope mass is not neglected."

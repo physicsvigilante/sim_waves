@@ -1,0 +1,5 @@
+id: B4/jee_main/10
+assume:
+  - "Uniform wire; mu from mass/length. Tension is whatever gives the stated speed."
+media:
+  wire: {type: string, mass: 6.0 g, length: 60 cm, density: 1 kg/m^3, area: 1.0 mm^2, tension: free}

@@ -1,0 +1,9 @@
+answer: [A]
+final_scene: B4_jee_advanced_30.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "end correction neglected (assumed)"
+missing_in_source: "end correction not stated; neglected"
+reasoning: "Engine: closed-open pipe fundamental 512 Hz fixes L = v/2048; the open-open pipe of the same length has fundamental 1024 Hz."
+friction: none

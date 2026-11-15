@@ -1,0 +1,16 @@
+id: B4/single/30
+assume:
+  - "An echo is 'not heard distinctly' when the round-trip delay equals the interval between drum beats (the usual reading of such problems); this is NOT stated and is an assumption."
+  - "Interval = 60 s / rate: 1.5 s at 40 per minute, 1 s at 60 per minute."
+  - "Speed of sound v is not given; it is solved together with the distances."
+  - "Unknowns are the two round-trip path lengths a (first position) and b (after moving 90 m nearer), both positive; moving 90 m nearer shortens the round trip by 180 m. The wanted distance is a/2."
+unknowns: {a: positive, b: positive, v: positive}
+media:
+  air: {type: gas, v: v}
+given:
+  - {fact: "travel_time(air, start=0[m], end=a) == 60[s]/40", source: assumption, note: "round trip at the first position takes one drum interval"}
+  - {fact: "travel_time(air, start=0[m], end=b) == 60[s]/60", source: assumption, note: "round trip after moving nearer takes one interval"}
+  - {fact: "a - b == 2*90[m]", source: stated, note: "moves 90 m nearer: each way 90 m shorter, round trip 180 m"}
+observe:
+  d_initial: "a/2"
+  v: "v"

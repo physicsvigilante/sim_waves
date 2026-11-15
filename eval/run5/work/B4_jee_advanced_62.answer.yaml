@@ -1,0 +1,12 @@
+answer: {A: [p, t], B: [p, s], C: [q, s], D: [q, r]}
+final_scene: B4_jee_advanced_62.v2.yaml
+engine_fit: partial
+hand_steps:
+  - "Column II is not in the source. The statement labels were recalled from the known original problem (p longitudinal, q transverse, r lambda_f = L, s lambda_f = 2L, t lambda_f = 4L)."
+  - "Pipe = longitudinal and wire = transverse read from the medium types, not an engine result."
+  - "System D modelled as one wire of length L with a node required at L/2; its fundamental is the lowest harmonic with that node."
+coverage: partial
+not_represented: "Column II text (nature and labelled wavelengths); transverse versus longitudinal is only implied by the medium type"
+missing_in_source: "Column II entries are absent from the problem as printed. Without them the matching cannot be derived from the source alone."
+reasoning: "Engine fundamental wavelengths: A 4L, B 2L, C 2L, D L (second harmonic of the wire has the L/2 node). Combined with longitudinal/transverse by medium type."
+friction: "Had to fix L = 1 m (node_at needs a number); Column II missing; no way to express 'wavelength = k*L' as a symbolic ratio checked against a statement."

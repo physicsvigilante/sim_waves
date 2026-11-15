@@ -1,0 +1,19 @@
+id: B4/jee_advanced/36
+assume:
+  - "String needs a mu and T only to give v = 100 m/s: mu = 1 kg/m, T = 10000 N."
+  - "The driven end is vibrating with small amplitude, so it is modelled as a free (antinode) end; fixed end at x=0."
+  - "Each option's frequency f = omega/(2 pi) is checked against the modes of the fixed-free resonator."
+media:
+  wire: {type: string, mu: 1 kg/m, tension: 10000 N}
+resonators:
+  r: {type: string, on: wire, length: 3 m, ends: [fixed, free]}
+given: []
+symbols: {fs: positive}
+observe:
+  fA: "count(resonances(r, f=fs, vary=fs, lo=(25/3)[Hz]*0.99, hi=(25/3)[Hz]*1.01))"
+  fB: "count(resonances(r, f=fs, vary=fs, lo=(50/3)[Hz]*0.99, hi=(50/3)[Hz]*1.01))"
+  fC: "count(resonances(r, f=fs, vary=fs, lo=(125/3)[Hz]*0.99, hi=(125/3)[Hz]*1.01))"
+  fD: "count(resonances(r, f=fs, vary=fs, lo=125[Hz]*0.99, hi=125[Hz]*1.01))"
+  speed: "speed(r)"
+  f1: "frequency(r, harmonic=1)"
+  modeA: "mode_shape(r, harmonic=1, x=3[m])"

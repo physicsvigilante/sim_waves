@@ -1,0 +1,13 @@
+id: B4/comprehension/1
+format: single_correct
+statement: 'Passage (Comprehension 1): The vibrations of a string of length 60 cm fixed at both ends are
+  represented by the equation y = 4 sin(πx/15) cos(96πt), where x and y are in cm and t in seconds. Based
+  on the above facts, answer the following question.
+
+
+  Q1. Maximum displacement of a point at x = 5 cm is'
+options:
+  A: 4 cm
+  B: 2 cm
+  C: 2√3 cm
+  D: None of these

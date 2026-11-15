@@ -1,0 +1,20 @@
+id: B4/multiple/23
+assume:
+  - "Figure has no scale: A at x = 0 on the axis with the curve rising; B is the next axis crossing, half a wavelength on. Wavelength lam kept symbolic; amplitude a kept symbolic."
+  - "Wave moves left to right: dir +x (stated)."
+symbols: {lam: positive, a: positive, f: positive}
+unknowns: {phi: phase}
+media:
+  rope: {type: string, mu: 10 g/m, tension: free}
+waves:
+  w: {harmonic: {on: rope, A: a, lambda: lam, f: f, dir: +x, phase: phi}}
+given:
+  - {fact: "y(w, x=0[m], t=0[s]) == 0[m]", source: figure}
+  - {fact: "slope(w, x=0[m], t=0[s]) > 0", source: figure, note: "curve rises from A"}
+observe:
+  phase_A: "phase(w, x=0[m], t=0[s])"
+  phase_B: "phase(w, x=lam/2, t=0[s])"
+  phase_A_minus_B: "phase(w, x=0[m], t=0[s]) - phase(w, x=lam/2, t=0[s])"
+  vy_A: "vy(w, x=0[m], t=0[s])"
+  vy_B: "vy(w, x=lam/2, t=0[s])"
+  slope_B: "slope(w, x=lam/2, t=0[s])"

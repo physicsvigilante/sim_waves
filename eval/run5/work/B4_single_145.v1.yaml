@@ -1,0 +1,4 @@
+id: B4/single/145
+assume: ["Reference I0 = 1e-12 W/m^2 (standard decibel reference, convention). Engine uses exact log10; the problem gives log10 2 = 0.3."]
+observe:
+  L: "sound_level(2e-8[W/m^2])"

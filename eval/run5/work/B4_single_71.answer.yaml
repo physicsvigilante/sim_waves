@@ -1,0 +1,9 @@
+answer: [d]
+final_scene: B4_single_71.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "Wax effect modelled as just fB2 < fB"
+missing_in_source: "Size of the wax shift not given (assumed fB2 > 100)"
+reasoning: "Engine fB = 102 Hz."
+friction: "Beat and a one-way shift encoded with unknowns; assumption needed to avoid ambiguity."

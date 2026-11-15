@@ -1,0 +1,43 @@
+id: B4/matrix/9
+number: 9
+source: book p.105 (answer key p.123)
+format: matrix_match
+statement: Match the quantities in COLUMN-I to respective properties in COLUMN-II.
+figure: null
+options:
+  column_i:
+    A: In refraction
+    B: In reflection
+    C: In refraction from rarer to denser medium
+    D: In reflection from a denser medium
+  column_ii:
+    p: Speed of wave does not change
+    q: Wavelength is decreased
+    r: Frequency does not change
+    s: Phase change of π takes place
+answer:
+  A:
+  - r
+  B:
+  - p
+  - r
+  C:
+  - q
+  - r
+  D:
+  - p
+  - r
+  - s
+answer_value: null
+units: null
+verified: 'A: frequency only (r). B: speed and frequency unchanged (p, r). C: rarer->denser: v and lambda
+  fall, f same (q, r). D: reflection from denser: v and f unchanged, phase change pi (p, r, s). Matches
+  key.'
+kinds:
+- conceptual
+- classification
+physics:
+- reflection
+- refraction
+- wave_properties
+notes: Consistent.

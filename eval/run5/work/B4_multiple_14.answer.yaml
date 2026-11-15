@@ -1,0 +1,9 @@
+answer: [b, c]
+final_scene: B4_multiple_14.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "nothing"
+missing_in_source: "none"
+reasoning: "velocity = -1.5 m/s (negative x), wavelength 0.2 m."
+friction: "none"

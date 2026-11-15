@@ -1,0 +1,17 @@
+id: B4/single/37
+assume:
+  - "1 kgf = 1 kg * 9.8 m/s^2 (convention); the ratio does not depend on it."
+  - "Same string, same fork frequency; 4 segments = harmonic 4, 5 segments = harmonic 5."
+unknowns: {T2: positive, fk: positive}
+media:
+  s1: {type: string, mass: 1 g, length: 0.8 m, tension: "0.4[kg]*9.8[m/s^2]"}
+  s2: {type: string, mass: 1 g, length: 0.8 m, tension: T2}
+resonators:
+  r1: {type: string, on: s1, length: 0.8 m, ends: [fixed, fixed]}
+  r2: {type: string, on: s2, length: 0.8 m, ends: [fixed, fixed]}
+given:
+  - {fact: "frequency(r1, harmonic=4) == fk", source: stated}
+  - {fact: "frequency(r2, harmonic=5) == fk", source: stated, note: "same fork"}
+observe:
+  T_ratio: "tension(s2)/tension(s1)"
+  T2_over_kgf: "tension(s2)/(1[kg]*9.8[m/s^2])"

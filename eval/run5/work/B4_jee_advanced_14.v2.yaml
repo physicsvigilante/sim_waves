@@ -1,0 +1,18 @@
+id: B4/jee_advanced/14
+assume:
+  - "Figure gives no pulse widths or heights. Both pulses are taken as identical triangles (half-width 1 cm, height 0.5 cm), one up and one inverted; the question (kinetic or potential at the instant of overlap) does not depend on these values."
+  - "Left pulse centred at x = 0 at t = 0, right pulse at x = 8 cm, as in the figure."
+  - "mu = 10 g/m is a scale choice; tension is solved from the stated speed 2 cm/s through the wave-medium cross-check."
+unknowns: {T: positive}
+media:
+  rope: {type: string, mu: 10 g/m, tension: T}
+waves:
+  pa: {given: "0.005*max(0, 1 - abs(x - 0.02*t)/0.01)", units: {x: m, t: s, y: m}, on: rope}
+  pb: {given: "-0.005*max(0, 1 - abs(x - 0.08 + 0.02*t)/0.01)", units: {x: m, t: s, y: m}, on: rope}
+  total: {sum: [pa, pb]}
+observe:
+  y_mid: "y(total, x=4[cm], t=2[s])"
+  KE: "kinetic_energy(total, t=2[s])"
+  PE: "potential_energy(total, t=2[s])"
+  KE_t1: "kinetic_energy(total, t=1[s])"
+  PE_t1: "potential_energy(total, t=1[s])"

@@ -1,0 +1,9 @@
+answer: [A, C]
+final_scene: B4_multiple_6.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "nothing"
+missing_in_source: none
+reasoning: "Engine solved f = 500/pi = 10^3/(2 pi) Hz and lambda = pi/50 = 2 pi x 10^-2 m."
+friction: none

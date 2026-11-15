@@ -1,0 +1,10 @@
+answer: [b]
+final_scene: B4_single_125.v1.yaml
+engine_fit: partial
+hand_steps: 
+  - "Envelope of the three-frequency sum repeats once per second (so 1 beat/s) concluded from pairwise beat frequencies 1, 1, 2 without engine verification"
+coverage: partial
+not_represented: "Combined beat pattern of three waves"
+missing_in_source: "Whether 'number of beats' counts pair beats or loudness maxima"
+reasoning: "Pairwise beats 1, 1, 2 Hz; the total amplitude envelope has period 1 s (largest common period); answered 1."
+friction: "Sum of 3 different frequencies is refused; envelope() handles only two."

@@ -1,0 +1,15 @@
+id: B4/single/100
+assume:
+  - "Same wire, same length and linear density; only tension changes: T1 (initial) and T2 (unknown). Fundamental mode compared."
+symbols: {mu: positive, L: positive, T1: positive}
+unknowns: {T2: positive}
+media:
+  m1: {type: string, mu: mu, tension: T1}
+  m2: {type: string, mu: mu, tension: T2}
+resonators:
+  r1: {type: string, on: m1, length: L, ends: [fixed, fixed]}
+  r2: {type: string, on: m2, length: L, ends: [fixed, fixed]}
+given:
+  - {fact: "frequency(r2, harmonic=1) == (3/2)*frequency(r1, harmonic=1)", source: stated, note: "frequency increased by 50%"}
+observe:
+  increase_percent: "(T2/T1 - 1)*100"

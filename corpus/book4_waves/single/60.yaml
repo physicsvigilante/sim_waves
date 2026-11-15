@@ -1,0 +1,22 @@
+id: B4/single/60
+number: 60
+source: wanes_full.pdf book p.4.86 (page image p-086); key p.4.122 (p-122)
+format: single_correct
+statement: Two wires of radii r and 2r are welded together end to end. The combination is used as a sonometer wire and is kept under a tension T. The welded point is mid-way between the bridges. The ratio of the number of loops formed in the wires, such that the joint is a node when stationary vibrations are set up in the wires, is
+figure: null
+options:
+  a: 1/4
+  b: 1/3
+  c: 1/2
+  d: 2/3
+answer: c
+answer_value: '1/2 (loops in wire of radius r : loops in wire of radius 2r)'
+units: null
+verified: 'Same T, mu2 = 4 mu1 -> v2 = v1/2. Equal segment lengths, same f: n1 v1 = n2 v2 -> n1/n2 = v2/v1 = 1/2. Matches key.'
+kinds:
+- ratio
+- nonuniform_medium
+physics:
+- standing_wave
+- string_composite
+notes: Direction of ratio read as (r wire):(2r wire).

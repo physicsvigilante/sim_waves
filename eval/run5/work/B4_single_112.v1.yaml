@@ -1,0 +1,22 @@
+id: B4/single/112
+assume:
+  - "Sources are coherent and in phase (stated coherent; equal phase not stated)."
+  - "Each wave arrives at D with intensity I0, so equal amplitude at D: spreading none, amplitude 1 arbitrary unit."
+  - "Medium speed 340 m/s and f = 85 Hz are chosen only to make lambda = 4 m (stated); the answer does not depend on them."
+media:
+  air: {type: gas, v: 340 m/s}
+sources:
+  s1: {on: air, at: [0 m, 0 m], f: 85 Hz, A: 1, phase: 0, spreading: none}
+  s2: {on: air, at: [0 m, -3 m], f: 85 Hz, A: 1, phase: 0, spreading: none}
+points:
+  D: [4 m, 0 m]
+rays:
+  r1: {from: s1, to: D}
+  r2: {from: s2, to: D}
+given:
+  - {fact: "wavelength(s1) == 4[m]", source: stated}
+observe:
+  len2: "length(r2)"
+  pd: "path_difference(r2, r1)"
+  dphi: "wrap(phase_difference(r2, r1))"
+  I_over_I0: "relative_intensity(r1, r2)/relative_intensity(r1)"

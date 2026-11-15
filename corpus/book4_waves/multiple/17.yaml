@@ -1,0 +1,24 @@
+id: B4/multiple/17
+number: 17
+source: book p.96 (answer key p.122)
+format: multiple_correct
+statement: The velocity of sound in air is affected by change in the
+figure: null
+options:
+  A: atmospheric pressure
+  B: moisture content of air
+  C: temperature of air
+  D: composition of air
+answer: B, C, D
+answer_value:
+- B
+- C
+- D
+units: null
+verified: 'v = sqrt(gamma R T/M): depends on T, composition (M, gamma) and humidity (changes M); at fixed
+  T, pressure change alone leaves v unchanged. Matches key.'
+kinds:
+- conceptual
+physics:
+- speed_of_sound
+notes: Pressure change at constant temperature does not alter v for an ideal gas.

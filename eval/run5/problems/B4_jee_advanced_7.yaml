@@ -1,0 +1,10 @@
+id: B4/jee_advanced/7
+format: single_correct
+statement: An open pipe is in resonance in 2nd harmonic with frequency f1. Now one end of the tube is
+  closed and frequency is increased to f2 such that the resonance again occurs in nth harmonic. Choose
+  the correct option
+options:
+  A: n = 3, f2 = (3/4) f1
+  B: n = 3, f2 = (5/4) f1
+  C: n = 5, f2 = (5/4) f1
+  D: n = 5, f2 = (3/4) f1

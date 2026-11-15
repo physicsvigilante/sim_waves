@@ -1,0 +1,9 @@
+answer: [b]
+final_scene: B4_jee_main_3.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "nothing"
+missing_in_source: "g not needed (cancels)"
+reasoning: "Engine: wavelength at top 12 cm (T_top/T_bottom = 4)."
+friction: "none"

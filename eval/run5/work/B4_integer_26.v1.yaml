@@ -1,0 +1,13 @@
+id: B4/integer/26
+assume:
+  - "Quarter-length point x = L/4 measured from the first end; the string length is unspecified so L is kept symbolic (L = 1 m is used only to give numbers, the harmonic list does not depend on it)."
+  - "Fixed-fixed string; frequencies computed from engine at each harmonic."
+symbols: {L: positive}
+media:
+  s: {type: string, mu: 10 g/m, tension: 100 N}
+resonators:
+  r: {type: string, on: s, length: 1 m, ends: [fixed, fixed]}
+observe:
+  modes: "harmonics(r, upto=12, antinode_at=0.25[m])"
+  lowest: "min(harmonics(r, upto=12, antinode_at=0.25[m]))"
+  f_ratio_check: "frequency(r, harmonic=2*1)/frequency(r, harmonic=1)"

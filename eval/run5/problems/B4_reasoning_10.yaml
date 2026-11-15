@@ -1,0 +1,12 @@
+id: B4/reasoning/10
+format: single_correct
+statement: 'Statement-1: Velocity of particles while crossing mean position (in stationary waves) varies
+  from maximum at antinodes to zero at nodes.
+
+  Statement-2: Amplitude of vibration at antinodes is maximum and at nodes, the amplitude is zero and
+  all particles between two successive nodes cross the mean position together.'
+options:
+  A: Both statements are TRUE and STATEMENT 2 is the correct explanation of STATEMENT 1.
+  B: Both statements are TRUE but STATEMENT 2 is not the correct explanation of STATEMENT 1.
+  C: STATEMENT 1 is TRUE and STATEMENT 2 is FALSE.
+  D: STATEMENT 1 is FALSE but STATEMENT 2 is TRUE.

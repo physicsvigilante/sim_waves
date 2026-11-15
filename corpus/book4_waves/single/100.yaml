@@ -1,0 +1,22 @@
+id: B4/single/100
+number: 100
+source: wanes_full.pdf book p.4.89 (page image p-089); key p.4.122 (p-122)
+format: single_correct
+statement: In order to increase the frequency of transverse oscillations of a stretched wire by 50%, its tension must be increased by
+figure: null
+options:
+  a: 50%
+  b: 100%
+  c: 125%
+  d: 150%
+answer: c
+answer_value: 125%
+units: null
+verified: 'f proportional to sqrt(T): T''/T = 1.5^2 = 2.25 -> +125%. Matches key.'
+kinds:
+- inverse_condition
+- ratio
+physics:
+- string_frequency
+- tension
+notes: Consistent.

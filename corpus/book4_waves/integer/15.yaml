@@ -1,0 +1,23 @@
+id: B4/integer/15
+number: 15
+source: book p.106 (answer key p.123)
+format: numerical
+statement: A string has a linear mass density μ of 625 g m^-1 and is stretched with a tension T of 49
+  N. A wave of frequency 125 Hz and amplitude 9 mm, is travelling along the string. At what average rate
+  (in watt) is the wave transporting energy through the string?
+figure: null
+options: null
+answer: 43, 7 (as printed)
+answer_value: 43.7
+units: W
+verified: 'DISPUTED. With mu = 0.625 kg/m: v = sqrt(49/0.625) = 8.85 m/s; P = (1/2) mu omega^2 A^2 v =
+  0.5 x 0.625 x (785.4)^2 x (0.009)^2 x 8.85 = approx 138 W. The key value 43.7 W is obtained only if
+  mu = 0.0625 kg/m (62.5 g/m): v = 28 m/s, P = 43.7 W. So statement and key are inconsistent.'
+kinds:
+- given_wavefunction
+- derived_medium
+physics:
+- wave_power
+- string
+- energy_transport
+notes: Key printed '43, 7', read as 43.7.

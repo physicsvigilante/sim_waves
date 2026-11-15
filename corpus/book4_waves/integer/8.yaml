@@ -1,0 +1,21 @@
+id: B4/integer/8
+number: 8
+source: book p.106 (answer key p.123)
+format: numerical
+statement: A guitar string is 90 cm long and has a fundamental frequency of 124 Hz. Where should it be
+  pressed, in cm, from one end to produce a fundamental frequency of 186 Hz?
+figure: null
+options: null
+answer: '60'
+answer_value: 60
+units: cm
+verified: 'f inversely proportional to L: L'' = 90 x 124/186 = 60 cm vibrating length. Pressing 60 cm
+  from the end bounding the vibrating segment gives 186 Hz (equivalently 30 cm from the other end). Matches
+  key (60 cm).'
+kinds:
+- inverse_condition
+- ratio
+physics:
+- string_fundamental
+- frequency
+notes: Ambiguous which end 'one end' refers to; 30 cm would be correct from the other end. Key 60.

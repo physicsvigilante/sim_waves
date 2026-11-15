@@ -1,0 +1,19 @@
+id: B4/jee_advanced/7
+number: 7
+source: "book p.113, JEE Advanced archive, single correct Q7 [IIT-JEE 2005]"
+format: single_correct
+statement: >-
+  An open pipe is in resonance in 2nd harmonic with frequency f1. Now one end of the tube is closed and frequency is increased to f2 such that the resonance again occurs in nth harmonic. Choose the correct option
+figure: null
+options:
+  A: "n = 3, f2 = (3/4) f1"
+  B: "n = 3, f2 = (5/4) f1"
+  C: "n = 5, f2 = (5/4) f1"
+  D: "n = 5, f2 = (3/4) f1"
+answer: C
+answer_value: "n = 5, f2 = 5 f1/4"
+units: null
+verified: "Matches key. Open pipe 2nd harmonic: f1 = v/L. Closed pipe has odd harmonics f = n v/(4L) = n f1/4; f2 > f1 requires n > 4, so n = 5 (not 3), f2 = 5 f1/4."
+kinds: [inverse_condition, comparison, ratio]
+physics: [open pipe, closed pipe, harmonics]
+notes: null

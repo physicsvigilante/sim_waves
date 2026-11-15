@@ -1,0 +1,9 @@
+answer: [c]
+final_scene: B4_single_138.v3.yaml
+engine_fit: partial
+hand_steps: []
+coverage: partial
+not_represented: "The literal cot(10 pi x) profile (diverging field) replaced by a sum of two counter-propagating waves"
+missing_in_source: "none"
+reasoning: "Substituted standing wave: node at 0.15 m, antinodes at 0.2 and 0.3 m, lambda 0.2 m, constituent speed 5 m/s not 4, so (c) is incorrect."
+friction: "cot profile not supported (not a sinusoid in x, infinite at antinodes); had to swap to an intended sin/cos form."

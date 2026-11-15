@@ -1,0 +1,23 @@
+id: B4/single/5
+number: 5
+source: wanes_full.pdf book p.4.82 (page image p-082); key p.4.122 (p-122)
+format: single_correct
+statement: The frequency of a sonometer wire is 100 Hz. When the weights producing the tensions are completely immersed in water the frequency becomes 80 Hz and on immersing the weights in a certain liquid the frequency becomes 60 Hz. The specific gravity of the liquid is
+figure: null
+options:
+  a: '1.42'
+  b: '1.77'
+  c: '1.82'
+  d: '1.21'
+answer: b
+answer_value: 1.78
+units: null
+verified: 'f^2 proportional to T = W(1 - rho_liq/rho_w_body). Water: 0.64 = 1 - 1/d -> d = 1/0.36 (d = specific gravity of weights). Liquid: 0.36 = 1 - s/d -> s = 0.64 d = 0.64/0.36 = 1.78 (16/9 = 1.777). Matches key (1.77).'
+kinds:
+- inverse_condition
+- ratio
+physics:
+- buoyancy
+- sonometer
+- specific_gravity
+notes: Key 1.77 is 16/9 truncated.

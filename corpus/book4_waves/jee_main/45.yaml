@@ -1,0 +1,19 @@
+id: B4/jee_main/45
+number: 45
+source: "book p.111, JEE Main archive Q45 [2016, 2012]"
+format: single_correct
+statement: >-
+  A pipe open at both ends has a fundamental frequency f in air. The pipe is dipped vertically in water so that half of it is in water. The fundamental frequency of the air column is now
+figure: null
+options:
+  A: "f"
+  B: "f/2"
+  C: "3f/4"
+  D: "2f"
+answer: A
+answer_value: "f"
+units: Hz
+verified: "Matches key. Open pipe: f = v/2L. Half submerged gives a closed pipe of length L/2: f' = v/(4*L/2) = v/2L = f."
+kinds: [comparison, ratio]
+physics: [open pipe, closed pipe, fundamental frequency]
+notes: null

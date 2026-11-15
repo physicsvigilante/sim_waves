@@ -1,0 +1,14 @@
+id: B4/matrix/10
+assume: ["Ideal gas, gamma fixed (7/5, same gas, only ratios matter). Base state symbols T0, P0, M0."]
+symbols: {T0: positive, P0: positive, M0: positive}
+media:
+  base: {type: gas, gamma: 7/5, pressure: P0, temperature: T0, molar_mass: M0}
+  A: {type: gas, gamma: 7/5, pressure: 2*P0, temperature: 4*T0, molar_mass: M0}
+  B: {type: gas, gamma: 7/5, pressure: 4*P0, temperature: T0, molar_mass: M0}
+  C: {type: gas, gamma: 7/5, pressure: P0, temperature: 4*T0, molar_mass: M0}
+  D: {type: gas, gamma: 7/5, pressure: P0, temperature: T0, molar_mass: 4*M0}
+observe:
+  A: "speed(A)/speed(base)"
+  B: "speed(B)/speed(base)"
+  C: "speed(C)/speed(base)"
+  D: "speed(D)/speed(base)"

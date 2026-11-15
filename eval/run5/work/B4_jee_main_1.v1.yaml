@@ -1,0 +1,15 @@
+id: B4/jee_main/1
+assume: ["Identical strings: same mass per length m0 (unknown) and same length (1 m, scale free); only tensions differ. Fundamental mode."]
+unknowns: {m0: positive, TX: positive, TZ: positive}
+media:
+  X: {type: string, mu: m0, tension: TX}
+  Z: {type: string, mu: m0, tension: TZ}
+resonators:
+  rX: {type: string, on: X, length: 1 m, ends: [fixed, fixed]}
+  rZ: {type: string, on: Z, length: 1 m, ends: [fixed, fixed]}
+given:
+  - {fact: "frequency(rX, harmonic=1) == 450[Hz]", source: stated}
+  - {fact: "frequency(rZ, harmonic=1) == 300[Hz]", source: stated}
+  - {fact: "m0 == 10[g/m]", source: assumption, note: "scale only; the tension ratio does not depend on it"}
+observe:
+  ratio: "tension(X)/tension(Z)"

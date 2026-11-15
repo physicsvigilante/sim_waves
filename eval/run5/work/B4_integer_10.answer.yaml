@@ -1,0 +1,9 @@
+answer: "6 dB"
+final_scene: B4_integer_10.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "nothing"
+missing_in_source: "none (power and r1 cancel)"
+reasoning: "Engine: drop = 10*log10(4) = 6.02 dB; integer answer 6."
+friction: "none"

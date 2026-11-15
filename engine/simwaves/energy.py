@@ -206,7 +206,8 @@ def _extreme_in(kind):
             raise SceneError(f"{kind}_in(): give numeric limits with lo < hi")
         e = sp.sympify(e)
         if e.free_symbols - {var}:
-            raise SceneError(f"{kind}_in(): the expression must depend only on {var} (other symbols need values)")
+            raise SceneError(f"{kind}_in(): the expression must depend only on {var}; other symbols need values. "
+                             f"Put at(...) inside: {kind}_in({var}, at(expr, a=...), lo, hi)")
         try:
             vals = _within(20, lambda: _extreme_values(e, var, sp.Interval(lo, hi)))
         except _Budget:

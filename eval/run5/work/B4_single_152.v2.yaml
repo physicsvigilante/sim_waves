@@ -1,0 +1,17 @@
+id: B4/single/152
+assume:
+  - "String has density rho and cross-section area s (the problem's 'a' clashes with amplitude a; area written s as in the options)."
+  - "Tension is an unknown solved from the speed omega/k that the given waves imply."
+  - "The wave is y1 + y2 as written (unequal amplitudes: not a pure standing wave). 'Between adjacent antinodes' is taken as a stretch of length pi/k = half a wavelength starting at x = 0; energy averaged over one period."
+symbols: {a: positive, omega: positive, k: positive, rho: positive, s: positive}
+unknowns: {T: positive}
+media:
+  str: {type: string, density: rho, area: s, tension: T}
+waves:
+  y1: {given: "a*sin(omega*t - k*x)", units: {x: m, t: s, y: m}, on: str}
+  y2: {given: "2*a*sin(omega*t + k*x)", units: {x: m, t: s, y: m}, on: str}
+  tot: {sum: [y1, y2]}
+observe:
+  E_avg: "mean_over(t, energy(tot, start=0[m], end=pi/k, t=t), 0[s], 2*pi/omega)"
+  E_avg_ratio: "mean_over(t, energy(tot, start=0[m], end=pi/k, t=t), 0[s], 2*pi/omega)/(pi*s*rho*omega**2*a**2/(2*k))"
+  E_avg_shift: "mean_over(t, energy(tot, start=pi/(4*k), end=5*pi/(4*k), t=t), 0[s], 2*pi/omega)/(pi*s*rho*omega**2*a**2/(2*k))"

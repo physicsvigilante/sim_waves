@@ -1,0 +1,9 @@
+answer: [c]
+final_scene: B4_single_107.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: partial
+not_represented: "Change in mass per length with stretching (neglected per textbook)"
+missing_in_source: "Whether mu changes with stretch (assumed no)"
+reasoning: "Hooke: tension ratio 1:2 given as tension expressions kL/20 and kL/10; engine speed ratio sqrt(2)."
+friction: "Hooke's law is not expressible as a relation; I typed the tensions in proportion (stretch -> tension) myself."

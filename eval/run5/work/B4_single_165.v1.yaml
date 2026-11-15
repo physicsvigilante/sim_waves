@@ -1,0 +1,15 @@
+id: B4/single/165
+assume:
+  - "Both steel wires: same density (rho, symbol), same length L, same tension T; only diameter differs. Fundamental mode."
+symbols: {rho: positive, T: positive, L: positive, d2: positive}
+unknowns: {d1: positive}
+media:
+  w1: {type: string, density: rho, diameter: d1, tension: T}
+  w2: {type: string, density: rho, diameter: d2, tension: T}
+resonators:
+  r1: {type: string, on: w1, length: L, ends: [fixed, fixed]}
+  r2: {type: string, on: w2, length: L, ends: [fixed, fixed]}
+given:
+  - {fact: "frequency(r1, harmonic=1) == 4*frequency(r2, harmonic=1)", source: stated}
+observe:
+  d1_over_d2: "d1/d2"

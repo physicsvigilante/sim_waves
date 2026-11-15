@@ -1,0 +1,13 @@
+id: B4/single/47
+assume:
+  - "Air is an ideal gas with fixed gamma = 7/5 and molar mass 29 g/mol (assumption)."
+  - "76 cm Hg = 1.013e5 Pa and 75 cm Hg = 1.013e5*75/76 Pa (convention)."
+  - "15 C = 288.15 K and 30 C = 303.15 K."
+media:
+  air1: {type: gas, gamma: 7/5, pressure: 1.013e5 Pa, temperature: 15 degC, molar_mass: 29 g/mol}
+  air2: {type: gas, gamma: 7/5, pressure: "1.013e5[Pa]*75/76", temperature: 30 degC, molar_mass: 29 g/mol}
+observe:
+  v1: "speed(air1)"
+  v2: "speed(air2)"
+  ratio: "speed(air2)/speed(air1)"
+  ratio_sq_ratio_T: "(speed(air2)/speed(air1))**2"

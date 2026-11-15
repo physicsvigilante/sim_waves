@@ -1,0 +1,30 @@
+id: B4/multiple/7
+number: 7
+source: book p.95 (answer key p.122)
+format: multiple_correct
+statement: The tension in a stretched string fixed at both ends is changed by 2%, the fundamental frequency
+  is found to get changed by 15 Hz. Select the correct statement(s).
+figure: null
+options:
+  A: Wavelength of the string of fundamental frequency does not change
+  B: Velocity of propagation of wave changes by 2%
+  C: Velocity of propagation of wave changes by 1%
+  D: Original frequency is 1500 Hz
+answer: B, C, D
+answer_value:
+- B
+- C
+- D
+units: null
+verified: 'DISPUTED. v = sqrt(T/mu) so a 2% tension change gives about a 1% change in v and in f (B is
+  false: not 2%). Fundamental wavelength = 2L is unchanged (A true). 15 Hz = 1% of f -> f = 1500 Hz (D
+  true). My answer: A, C, D. Book key B, C, D lists B and omits A.'
+kinds:
+- inverse_condition
+- ratio
+physics:
+- tension
+- wave_speed
+- fundamental_frequency
+notes: Key appears to be in error (includes B, excludes A). Printed key checked against a zoomed image
+  of the key page.

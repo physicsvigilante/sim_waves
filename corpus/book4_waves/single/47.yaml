@@ -1,0 +1,22 @@
+id: B4/single/47
+number: 47
+source: wanes_full.pdf book p.4.85 (page image p-085); key p.4.122 (p-122)
+format: single_correct
+statement: The speed of sound in air at 15 C and 76 cm of mercury is 340 m s^-1. The speed of sound in air at 30 C and 75 cm of mercury will be
+figure: null
+options:
+  a: 340 sqrt(303/288)
+  b: 340 sqrt(288/303)
+  c: 340 sqrt(2)
+  d: 340 sqrt(2 x 75/76)
+answer: a
+answer_value: 340*sqrt(303/288) = 348.7
+units: m/s
+verified: 'v depends on sqrt(T) only (pressure independent for ideal gas): 340 sqrt(303/288). Matches key.'
+kinds:
+- ratio
+- derived_medium
+physics:
+- speed_of_sound
+- temperature
+notes: Consistent.

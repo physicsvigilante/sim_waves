@@ -1,0 +1,11 @@
+id: B4/comprehension/1
+assume:
+  - "The vibration is a standing wave on a string; mu and T are free symbols because only the profile is given."
+  - "Maximum displacement of a point = max over time of |y| at that x."
+symbols: {mu: positive, T: positive}
+media:
+  s: {type: string, mu: mu, tension: T}
+waves:
+  w: {given: "4*sin(pi*x/15)*cos(96*pi*t)", units: {x: cm, t: s, y: cm}, on: s}
+observe:
+  amp_at_5cm: "max_over(t, abs(y(w, x=5[cm], t=t)))"

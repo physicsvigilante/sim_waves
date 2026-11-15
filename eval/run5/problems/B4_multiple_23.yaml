@@ -1,0 +1,12 @@
+id: B4/multiple/23
+format: multiple_correct
+statement: The figure shows an instantaneous profile of a rope carrying a progressive wave moving from
+  left to right, then
+figure: Axes x and y. A sinusoidal profile starts at the origin, labelled A (on the axis at the y-axis,
+  curve rising to the right), rises to a crest, returns to the x-axis at the point labelled B, then dips
+  to a trough below the axis and ends back on the axis at the right. No numerical values given.
+options:
+  A: the phase of A is greater than the phase of B
+  B: the phase of B is greater than the phase of A
+  C: A is moving upwards
+  D: B is moving upwards

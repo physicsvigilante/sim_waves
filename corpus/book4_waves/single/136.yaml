@@ -1,0 +1,22 @@
+id: B4/single/136
+number: 136
+source: wanes_full.pdf book p.4.91 (page image p-091); key p.4.122 (p-122)
+format: single_correct
+statement: The fundamental note produced by an open organ pipe has frequency n. The fundamental note produced by a closed organ pipe of the same length will have frequency
+figure: null
+options:
+  a: n/2
+  b: 2n
+  c: n/4
+  d: 4n
+answer: a
+answer_value: n/2
+units: null
+verified: 'Open: v/2L = n; closed: v/4L = n/2. Matches key.'
+kinds:
+- ratio
+- comparison
+physics:
+- organ_pipe
+- fundamental
+notes: Printed as 'fundamental not produced' (typo for 'note'); corrected.

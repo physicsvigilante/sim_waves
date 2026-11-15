@@ -1,0 +1,10 @@
+id: B4/single/37
+format: single_correct
+statement: In Melde's experiment, a string of length 0.8 m and mass 1.0 g vibrates in 4 segments when
+  the tension in the string is 0.4 kgf. The tension in kgf required to make the string vibrate in 5 segments
+  (same fork frequency) is
+options:
+  a: 0.4 (4/5)
+  b: 0.4 (4/5)^2
+  c: 0.4 (5/4)
+  d: 0.4 (5/4)^2

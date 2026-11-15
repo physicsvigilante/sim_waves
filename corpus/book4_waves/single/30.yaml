@@ -1,0 +1,22 @@
+id: B4/single/30
+number: 30
+source: wanes_full.pdf book p.4.84 (page image p-084); key p.4.122 (p-122)
+format: single_correct
+statement: A man standing in front of a mountain beats a drum at regular intervals. The rate of drumming is generally increased and he finds that the echo is not heard distinctly when the rate becomes 40 per minute. He then moves nearer to the mountain by 90 m and finds that echo is again not heard distinctly when the drumming rate becomes 60 per minute. The distance between the mountain and the initial position of the man is
+figure: null
+options:
+  a: 205 m
+  b: 300 m
+  c: 180 m
+  d: 270 m
+answer: d
+answer_value: 270
+units: m
+verified: 'Interval 1.5 s = 2d/v and 1.0 s = 2(d-90)/v. Subtract: 0.5 = 180/v -> v = 360 m/s; d = 0.75*360 = 270 m. Matches key.'
+kinds:
+- inverse_condition
+- comparison
+physics:
+- echo
+- reflection
+notes: Speed of sound is not given in the problem; it cancels out of the two conditions (comes out 360 m/s). Echo-not-distinct interpreted as echo arriving exactly at the next stroke.

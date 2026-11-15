@@ -15,6 +15,9 @@ CORPUS = os.path.join(ROOT, "corpus")
 
 def key_for(pid):
     folder, sub, name = pid.split("/")
+    if folder == "B4":
+        f = os.path.join(CORPUS, "book4_waves", sub, f"{name}.yaml")
+        return yaml.safe_load(open(f)) if os.path.exists(f) else None
     hits = glob.glob(os.path.join(CORPUS, f"{folder}_*", f"{sub}_*", f"{name}.yaml"))
     return yaml.safe_load(open(hits[0])) if hits else None
 
@@ -33,8 +36,10 @@ def match(rec, ans):
             got = re.findall(r"\b([a-d])\b", head.lower())
         else:
             got = ans if isinstance(ans, list) else [ans]
+        if isinstance(key, str):
+            key = re.findall(r"\b([a-dA-D])\b", key)
         key = key if isinstance(key, list) else [key]
-        return sorted(str(a).strip("() ").lower() for a in got) == sorted(str(k) for k in key)
+        return sorted(str(a).strip("() ").lower() for a in got) == sorted(str(k).strip().lower() for k in key)
     if fmt == "numerical":
         want = rec["answer_value"]
         if isinstance(want, dict):
@@ -45,6 +50,9 @@ def match(rec, ans):
         g = num(ans)
         return g is not None and abs(abs(g) - abs(float(want))) <= 0.02 * max(1.0, abs(float(want)))
     if fmt == "matrix_match":
+        if isinstance(key, str):
+            key = {k.lower(): [x.strip().lower() for x in re.split(r"[,\s]+", v) if x.strip()]
+                   for k, v in re.findall(r"([A-Da-d])\s*(?:->|→|:|-)\s*([p-tP-T](?:\s*,\s*[p-tP-T])*)", key)}
         if isinstance(ans, str):           # "a->s, b->r"
             ans = {k: v for k, v in re.findall(r"([a-d])\s*(?:->|→|:)\s*([p-t])", ans)}
         if not isinstance(ans, dict):

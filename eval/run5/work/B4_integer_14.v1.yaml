@@ -1,0 +1,20 @@
+id: B4/integer/14
+assume:
+  - "Point source radiating spherically in free space, no damping; power unknown and solved."
+  - "Sound is just not heard at the threshold level 0 dB (I = I0 = 1e-12 W/m^2), the standard reference (convention)."
+symbols: {d: positive}
+unknowns: {P: positive}
+media:
+  air: {type: gas, v: 340 m/s, density: 1.29 kg/m^3}
+sources:
+  S: {on: air, at: [0 m, 0 m], f: 500 Hz, power: P, phase: 0, spreading: spherical}
+points:
+  p20: [20 m, 0 m]
+  p10: [10 m, 0 m]
+rays:
+  r20: {from: S, to: p20}
+  r10: {from: S, to: p10}
+given:
+  - {fact: "sound_level(intensity(r20)) == 30", source: stated}
+observe:
+  level10: "sound_level(intensity(r10))"

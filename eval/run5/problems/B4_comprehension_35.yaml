@@ -1,0 +1,15 @@
+id: B4/comprehension/35
+format: single_correct
+statement: 'Passage (Comprehension 11): The displacement of the medium in a sound wave is given by the
+  equation y_i = A cos(ax + bt) where A, a and b are positive constants. The wave is reflected by an obstacle
+  situated at x = 0. The intensity of the reflected wave is 0.64 times that of the incident wave. Based
+  on the above facts, answer the following question.
+
+
+  Q35. For the resultant wave formed after reflection, if v_max and v_min be the maximum and the minimum
+  values of the particle speeds in the medium, then'
+options:
+  A: v_max = 0.2 Ab, v_min = 0
+  B: v_max = 0.8 Ab, v_min = 0
+  C: v_max = −1.8 Ab, v_min = 0.2 Ab
+  D: v_max = 1.8 Ab, v_min = 0

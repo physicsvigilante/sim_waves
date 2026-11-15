@@ -1,0 +1,22 @@
+id: B4/comprehension/35
+assume:
+  - "Sound in a gas modelled as incident wave y_i = A cos(a x + b t), travelling toward -x, i.e. sin(b t + a x + pi/2)."
+  - "Reflected wave travels +x with the same omega and k; its amplitude Ar is solved from the stated intensity ratio."
+  - "Reflection phase at the obstacle is not stated; kept as a phase symbol ph and evaluated at two values to show v_max, v_min do not depend on it."
+  - "Particle speed = |dy/dt|; v_max/v_min are max/min over x of the local speed amplitude. Scale A=1 m, a=1/m, b=1/s, rho=1 kg/m^3 is an arbitrary scale; results are read in units of A*b."
+symbols: {A: positive, a: positive, b: positive, rho: positive, ph: phase}
+unknowns: {Ar: positive}
+media:
+  air: {type: gas, v: b/a, density: rho}
+waves:
+  wi: {harmonic: {on: air, A: A, omega: b, k: a, dir: -x, phase: pi/2}}
+  wr: {harmonic: {on: air, A: Ar, omega: b, k: a, dir: +x, phase: ph}}
+  tot: {sum: [wi, wr]}
+given:
+  - {fact: "intensity(wr) == 0.64*intensity(wi)", source: stated}
+observe:
+  Ar: "Ar"
+  vmax_ph0: "at(max_in(x, max_over(t, abs(vy(tot, x=x, t=t))), 0[m], 10[m]), A=1[m], a=1[1/m], b=1[1/s], rho=1[kg/m^3], ph=0[rad])"
+  vmin_ph0: "at(min_in(x, max_over(t, abs(vy(tot, x=x, t=t))), 0[m], 10[m]), A=1[m], a=1[1/m], b=1[1/s], rho=1[kg/m^3], ph=0[rad])"
+  vmax_ph1: "at(max_in(x, max_over(t, abs(vy(tot, x=x, t=t))), 0[m], 10[m]), A=1[m], a=1[1/m], b=1[1/s], rho=1[kg/m^3], ph=1[rad])"
+  vmin_ph1: "at(min_in(x, max_over(t, abs(vy(tot, x=x, t=t))), 0[m], 10[m]), A=1[m], a=1[1/m], b=1[1/s], rho=1[kg/m^3], ph=1[rad])"

@@ -1,0 +1,9 @@
+id: B4/single/173
+assume:
+  - "Both gases diatomic ideal gases, gamma = 7/5 (assumption; not stated)."
+  - "Same temperature (STP): 273 K. Molar masses 2 g/mol (H2) and 32 g/mol (O2)."
+media:
+  h2: {type: gas, gamma: 7/5, temperature: 273 K, molar_mass: 2 g/mol}
+  o2: {type: gas, gamma: 7/5, temperature: 273 K, molar_mass: 32 g/mol}
+observe:
+  ratio: "speed(h2)/speed(o2)"

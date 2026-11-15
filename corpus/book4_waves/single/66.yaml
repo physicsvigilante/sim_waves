@@ -1,0 +1,23 @@
+id: B4/single/66
+number: 66
+source: wanes_full.pdf book p.4.87 (page image p-087); key p.4.122 (p-122)
+format: single_correct
+statement: The velocities of sound in an ideal gas at temperature T1 and T2 are found to be V1 and V2 respectively. If the r.m.s. velocities of the molecules of the same gas at the same temperatures T1 and T2 are v1 and v2, respectively, then
+figure: null
+options:
+  a: v2 = v1 (V1/V2)
+  b: v2 = v1 (V2/V1)
+  c: v2 = v1 sqrt(V2/V1)
+  d: v2 = v1 sqrt(V1/V2)
+answer: b
+answer_value: v2 = v1 (V2/V1)
+units: null
+verified: 'Both V and v_rms are proportional to sqrt(T): V2/V1 = v2/v1. Matches key.'
+kinds:
+- symbolic
+- ratio
+physics:
+- speed_of_sound
+- rms_speed
+- temperature
+notes: Consistent.

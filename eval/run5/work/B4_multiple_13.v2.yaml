@@ -1,0 +1,19 @@
+id: B4/multiple/13
+assume:
+  - "Wire is slack at 30 degC and cooled; held between rigid supports, tension comes from the prevented contraction (engine 'thermal' tension)."
+  - "Dependence on the temperature fall t is read by building the same wire twice: cooled by 20 K (w1) and by 80 K (w2). Other inputs are read by at(...) on w1."
+  - "Cross-section a is a free symbol; frequency is the fundamental of the fixed-fixed wire."
+symbols: {l: positive, Y: positive, rho: positive, alpha: positive, a: positive}
+media:
+  w1: {type: string, density: rho, area: a, Y: Y, alpha: alpha, tension: {thermal: {slack_at: 30 degC, now: 10 degC}}}
+  w2: {type: string, density: rho, area: a, Y: Y, alpha: alpha, tension: {thermal: {slack_at: 30 degC, now: -50 degC}}}
+resonators:
+  r1: {type: string, on: w1, length: l, ends: [fixed, fixed]}
+  r2: {type: string, on: w2, length: l, ends: [fixed, fixed]}
+observe:
+  f1: "frequency(r1, harmonic=1)"
+  l_dep: "at(frequency(r1, harmonic=1), l=2*l)/frequency(r1, harmonic=1)"
+  Y_dep: "at(frequency(r1, harmonic=1), Y=4*Y)/frequency(r1, harmonic=1)"
+  alpha_dep: "at(frequency(r1, harmonic=1), alpha=4*alpha)/frequency(r1, harmonic=1)"
+  rho_dep: "at(frequency(r1, harmonic=1), rho=4*rho)/frequency(r1, harmonic=1)"
+  t_dep_4x_fall: "frequency(r2, harmonic=1)/frequency(r1, harmonic=1)"

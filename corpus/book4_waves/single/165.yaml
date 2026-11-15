@@ -1,0 +1,22 @@
+id: B4/single/165
+number: 165
+source: wanes_full.pdf book p.4.93 (page image p-093); key p.4.122 (p-122)
+format: single_correct
+statement: Two steel wires are stretched by the same tension. The frequency of the fundamental note emitted by one is four times that of the other. The ratio of their diameters is
+figure: null
+options:
+  a: '1 : 2'
+  b: '1 : 4'
+  c: '2 : 1'
+  d: '4 : 1'
+answer: b
+answer_value: '1:4 (diameter of wire with 4x frequency : diameter of other)'
+units: null
+verified: 'Same length, tension, material: f proportional to 1/sqrt(mu) proportional to 1/d. f1 = 4 f2 -> d1 : d2 = 1 : 4. Matches key.'
+kinds:
+- ratio
+- comparison
+physics:
+- string_frequency
+- linear_density
+notes: 'Direction of the ratio is not stated in the problem (read as higher-frequency wire : other).'

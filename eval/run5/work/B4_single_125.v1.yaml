@@ -1,0 +1,11 @@
+id: B4/single/125
+assume:
+  - "n = 100 Hz (scale; the answer does not depend on n). Equal amplitudes 1 (equal intensity), all in phase at t=0, same medium and point."
+waves:
+  f1: {given: "cos(2*pi*99*t)", units: {x: m, t: s, y: m}}
+  f2: {given: "cos(2*pi*100*t)", units: {x: m, t: s, y: m}}
+  f3: {given: "cos(2*pi*101*t)", units: {x: m, t: s, y: m}}
+observe:
+  b12: "beat_frequency(99[Hz], 100[Hz])"
+  b23: "beat_frequency(100[Hz], 101[Hz])"
+  b13: "beat_frequency(99[Hz], 101[Hz])"

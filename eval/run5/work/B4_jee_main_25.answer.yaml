@@ -1,0 +1,9 @@
+answer: [A]
+final_scene: B4_jee_main_25.v3.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "nothing (scale fixed arbitrarily, tagged assumption)"
+missing_in_source: "no scale on the figure (not needed)"
+reasoning: "With y = sin(kx - wt + phi), y(0,0) = 0 and negative slope at the origin, travelling +x, the engine solves phi = pi."
+friction: "Engine's harmonic convention is sin(wt - kx + phase); the problem uses sin(kx - wt + phi), so v1/v2 gave 0 (a different phase); had to write a given wave with fixed numbers to match the problem's form."

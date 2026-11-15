@@ -1,0 +1,16 @@
+id: B4/single/92
+assume:
+  - "Speech treated as a point source radiating uniformly (inverse-square), power P unknown and solved from the 40 dB at 1 m."
+  - "'Maximum distance heard' = distance where the level falls to the 20 dB threshold; background ignored."
+  - "Levels are stated through intensity_of_level, so P and d are each solved from a linear equation."
+unknowns: {P: positive, d: positive}
+media:
+  air: {type: open3d}
+emitters:
+  pt: {on: air, geometry: point, power: P}
+given:
+  - {fact: "intensity(pt, r=1[m]) == intensity_of_level(40)", source: stated}
+  - {fact: "intensity(pt, r=d) == intensity_of_level(20)", source: stated, note: "threshold of reasonable audibility"}
+observe:
+  d: "d"
+  P: "P"

@@ -1,0 +1,7 @@
+id: B4/single/123
+assume:
+  - "Intensities 10 and 500 microW/cm^2 converted with 1 microW = 1e-6 W and 1 cm^2 = 1e-4 m^2 (inside the bracket expressions)."
+observe:
+  L1: "sound_level(10e-6[W]/(1[cm^2]))"
+  L2: "sound_level(500e-6[W]/(1[cm^2]))"
+  diff_dB: "sound_level(500e-6[W]/(1[cm^2])) - sound_level(10e-6[W]/(1[cm^2]))"

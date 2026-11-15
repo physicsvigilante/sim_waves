@@ -1,0 +1,22 @@
+id: B4/single/13
+number: 13
+source: wanes_full.pdf book p.4.83 (page image p-083); key p.4.122 (p-122)
+format: single_correct
+statement: Two strings A and B, made of the same material, have same thickness. The length of A is half that of B while the tension on A is twice that on B. The ratio of the velocities of transverse waves in A and B is
+figure: null
+options:
+  a: 'sqrt(2) : 1'
+  b: '2 : 1'
+  c: '1 : sqrt(2)'
+  d: '1 : 2'
+answer: b
+answer_value: sqrt(2):1 (option a)
+units: null
+verified: DISPUTED. v = sqrt(T/mu); same material and thickness -> same mu; T_A = 2 T_B -> v_A/v_B = sqrt(2). Length does not enter. This is option (a); the printed key B (2:1) is not reproduced.
+kinds:
+- ratio
+- comparison
+physics:
+- wave_speed
+- string_tension
+notes: Printed key (b) appears to be a book error; computed answer is option (a).

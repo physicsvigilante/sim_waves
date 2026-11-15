@@ -1,0 +1,9 @@
+id: B4/jee_main/33
+media:
+  rope: {type: string, mu: 5 g/m, tension: T}
+unknowns: {T: positive}
+waves:
+  w: {given: "0.03*sin(450*t - 9*x)", units: {x: m, t: s, y: m}, on: rope}
+observe:
+  v: "velocity(w)"
+  T: "T"

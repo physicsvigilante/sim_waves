@@ -1,0 +1,12 @@
+id: B4/jee_main/45
+assume:
+  - "Water surface acts as a closed end; the half left above water is a closed-open pipe of length L/2. End corrections neglected."
+symbols: {v: positive, L: positive}
+media:
+  air: {type: gas, v: v}
+resonators:
+  before: {type: pipe, on: air, length: L, ends: [open, open], end_correction: 0 m}
+  after: {type: pipe, on: air, length: L/2, ends: [closed, open], end_correction: 0 m}
+given: []
+observe:
+  ratio: "frequency(after, harmonic=1)/frequency(before, harmonic=1)"

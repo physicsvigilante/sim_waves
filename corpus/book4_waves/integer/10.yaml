@@ -1,0 +1,20 @@
+id: B4/integer/10
+number: 10
+source: book p.106 (answer key p.123)
+format: numerical
+statement: A point source of sound emits a constant power with intensity inversely proportional to the
+  square of the distance from the source. By how many decibels does the sound intensity level drop when
+  you move from point P1 to P2. Distance of P2 from the source is two times the distance of source from
+  P1.
+figure: null
+options: null
+answer: '6'
+answer_value: 6
+units: dB
+verified: I2/I1 = 1/4; drop = 10 log10(4) = 6.02 dB ~ 6. Matches key.
+kinds:
+- ratio
+physics:
+- sound_intensity_level
+- decibel
+notes: Consistent.

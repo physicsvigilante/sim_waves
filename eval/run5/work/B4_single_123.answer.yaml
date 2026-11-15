@@ -1,0 +1,9 @@
+answer: [b]
+final_scene: B4_single_123.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "nothing"
+missing_in_source: "Printed options do not contain 17 dB. Engine: 16.99 dB. Option b (1.7) matches 10*log10(50)/10, i.e. the answer in bels (or a dropped factor of ten)."
+reasoning: "Engine difference 10 log10(500/10) = 16.99 dB; nearest printed option is 1.7 (b), probably 1.7 bel / mis-typed 17 dB."
+friction: "none (microW is not a unit; written 10e-6[W])"

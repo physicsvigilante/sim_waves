@@ -1,0 +1,22 @@
+id: B4/comprehension/17
+assume:
+  - "Two identical triangular pulses stand for the passage's identical pulses; real shape is not given (figure has no numbers). Scale is arbitrary and does not change which configurations occur."
+  - "Speed 1 m/s from mu=1 kg/m and T=1 N (chosen only to have a speed; passage says same speed)."
+  - "One pulse is inverted (p3) to test option B."
+media:
+  s: {type: string, mu: 1 kg/m, tension: 1 N}
+waves:
+  p1: {pulse: {on: s, shape: "0.01*max(0, 1 - abs(x + 1)/0.2)", units: {x: m, y: m}, dir: +x}}
+  p2: {pulse: {on: s, shape: "0.01*max(0, 1 - abs(x - 1)/0.2)", units: {x: m, y: m}, dir: -x}}
+  p3: {pulse: {on: s, shape: "-0.01*max(0, 1 - abs(x - 1)/0.2)", units: {x: m, y: m}, dir: -x}}
+  same: {sum: [p1, p2]}
+  opp: {sum: [p1, p3]}
+given: []
+observe:
+  apart_peak: "peak(same, t=0[s])"
+  full_overlap_peak: "peak(same, t=1[s])"
+  full_overlap_y_centre: "y(same, x=0[m], t=1[s])"
+  touching_notch: "y(same, x=0[m], t=0.8[s])"
+  just_overlapping: "y(same, x=0[m], t=0.9[s])"
+  opp_centre: "y(opp, x=0[m], t=1[s])"
+  opp_vel_note: "vy(opp, x=0[m], t=1[s])"

@@ -1,0 +1,14 @@
+id: B4/jee_advanced/7
+assume:
+  - "Same tube, end corrections neglected; closing one end gives a closed-open pipe of the same length."
+symbols: {v: positive, L: positive}
+media:
+  air: {type: gas, v: v}
+resonators:
+  open: {type: pipe, on: air, length: L, ends: [open, open], end_correction: 0 m}
+  closed: {type: pipe, on: air, length: L, ends: [closed, open], end_correction: 0 m}
+given: []
+observe:
+  r3: "frequency(closed, harmonic=3)/frequency(open, harmonic=2)"
+  r5: "frequency(closed, harmonic=5)/frequency(open, harmonic=2)"
+  r1: "frequency(closed, harmonic=1)/frequency(open, harmonic=2)"

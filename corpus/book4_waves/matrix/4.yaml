@@ -1,0 +1,39 @@
+id: B4/matrix/4
+number: 4
+source: book p.104 (answer key p.123)
+format: matrix_match
+statement: A wave is transmitted from a denser to rarer medium. Then match the following
+figure: null
+options:
+  column_i:
+    A: Frequency of wave
+    B: Speed of wave
+    C: Wavelength of wave
+    D: Amplitude of wave
+  column_ii:
+    p: will increase
+    q: will decrease
+    r: will remain unchanged
+    s: may increase or decrease
+answer:
+  A:
+  - r
+  B:
+  - p
+  C:
+  - p
+  D:
+  - p
+answer_value: null
+units: null
+verified: 'DISPUTED (D only). A -> r, B -> p, C -> p match key. For D: displacement amplitude of the transmitted
+  wave is 2Z1/(Z1+Z2) times incident, which exceeds 1 when going from denser (larger Z) to rarer, i.e.
+  increases (p), valid for a string. But for sound or for other amplitude definitions (pressure) it decreases,
+  and the problem lists ''may increase or decrease'' (s). Key gives p.'
+kinds:
+- conceptual
+- classification
+physics:
+- refraction
+- transmission
+notes: D depends on the interpretation of amplitude and wave type.

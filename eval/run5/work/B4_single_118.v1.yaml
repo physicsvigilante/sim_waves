@@ -1,0 +1,20 @@
+id: B4/single/118
+assume:
+  - "O at x = 0 is a free end; string occupies x < 0. Pulse front is 2 cm left of O, peak 3 cm left, tail 4 cm left."
+  - "mu = 1 kg/m, T = 1e-4 N chosen only to give v = 1 cm/s."
+media:
+  s: {type: string, mu: 1 kg/m, tension: 1e-4 N}
+junctions:
+  O: {at: 0 m, left: s, right: free}
+waves:
+  p: {pulse: {on: s, shape: "0.01*max(0, 1 - abs(x + 0.03)/0.01)", units: {x: m, y: m}, dir: +x}}
+  tot: {sum: [p, p_reflected]}
+given:
+  - {fact: "speed(s) == 1[cm/s]", source: stated}
+observe:
+  y_O: "y(tot, x=0[m], t=3[s])"
+  y_half: "y(tot, x=-0.005[m], t=3[s])"
+  y_1cm: "y(tot, x=-0.01[m], t=3[s])"
+  y_15: "y(tot, x=-0.015[m], t=3[s])"
+  y_far: "y(tot, x=-0.02[m], t=3[s])"
+  y_far2: "y(tot, x=-0.03[m], t=3[s])"

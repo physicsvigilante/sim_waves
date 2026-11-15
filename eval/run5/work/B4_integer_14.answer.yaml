@@ -1,0 +1,10 @@
+answer: {a: "36.02 dB (about 36)", b: "632.456 m (200*sqrt(10), about 632 m)"}
+final_scene: "B4_integer_14.v1.yaml for (a); B4_integer_14.v3.yaml for (b)"
+engine_fit: full
+hand_steps:
+  - "Source power pi/625000 W solved in v1 was typed into v3 by hand because P and d together are refused (two unknowns inside log)"
+coverage: full
+not_represented: "nothing (free-space spherical spreading, no damping, as stated); the source frequency 500 Hz is arbitrary"
+missing_in_source: "Threshold of hearing: taken as 0 dB (convention). The book probably takes 0 dB too."
+reasoning: "v1 gives 36.02 dB at 10 m (30 dB + 6 dB). v3 solves the distance where the level is 0 dB: d = 200*sqrt(10) m = 632 m."
+friction: "Two log-unknowns cannot be solved in one scene, forcing a split into two scenes and a carried number; spent two attempts."

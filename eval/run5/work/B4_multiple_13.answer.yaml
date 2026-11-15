@@ -1,0 +1,9 @@
+answer: [a, b, c, d]
+final_scene: B4_multiple_13.v2.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "nothing (cooling by 20 K from 30 degC slack state; area symbolic)"
+missing_in_source: "none (starting state assumed slack at the initial temperature)"
+reasoning: "Engine: f1 = sqrt(5 Y alpha/rho)/l for a 20 K fall; doubling l halves f, 4Y or 4 alpha doubles it, 4 rho halves it, and a 4x temperature fall doubles it, so f is proportional to 1/l, sqrt(Y), sqrt(alpha/rho), sqrt(t)."
+friction: "Temperature fall cannot be symbolic in the thermal tension (numeric degC only), so dependence on t was tested with two wires; dependence on symbols read with at()."

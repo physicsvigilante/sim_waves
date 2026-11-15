@@ -1,0 +1,12 @@
+id: B4/reasoning/20
+assume:
+  - "Newton's formula treats the pressure variations as isothermal (gamma = 1); Laplace's correction uses gamma = 7/5 for air. Same T and molar mass for both."
+  - "The 'true' speed is taken as the adiabatic one (Laplace), which agrees with experiment (convention)."
+media:
+  newton: {type: gas, gamma: 1, temperature: 273 K, molar_mass: 29 g/mol}
+  laplace: {type: gas, gamma: 7/5, temperature: 273 K, molar_mass: 29 g/mol}
+observe:
+  v_newton: "speed(newton)"
+  v_laplace: "speed(laplace)"
+  ratio: "speed(newton)/speed(laplace)"
+  pct_error: "100*(speed(laplace) - speed(newton))/speed(laplace)"

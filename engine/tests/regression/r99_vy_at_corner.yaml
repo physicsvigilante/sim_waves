@@ -1,0 +1,11 @@
+# run 5 (comprehension/17): vy at a corner printed 0 (silent wrong); now refused, beside it is fine
+media: {s: {type: string, mu: 0.01 kg/m, tension: 0.01 N}}
+waves:
+  up: {pulse: {on: s, shape: "0.01*max(0, 1 - abs(x + 1)/0.5)", units: {x: m, y: m}, dir: +x}}
+  down: {pulse: {on: s, shape: "-0.01*max(0, 1 - abs(x - 1)/0.5)", units: {x: m, y: m}, dir: -x}}
+  opp: {sum: [up, down]}
+observe:
+  y0: "y(opp, x=0[m], t=1[s])"
+  v_beside: "vy(opp, x=0.001[m], t=1[s])"
+  v_corner: "vy(opp, x=0[m], t=1[s])"
+expect: {error: rejected, message: "corner"}

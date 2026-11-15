@@ -1,0 +1,10 @@
+answer: [a]
+final_scene: B4_comprehension_28.v1.yaml
+engine_fit: partial
+hand_steps: 
+  - "Read 'KE zero at all times' as 'displacement identically zero at that point', i.e. mode_shape == 0"
+coverage: full
+not_represented: "nothing"
+missing_in_source: "none"
+reasoning: "mode_shape is 0 only at x=0 and x=2 (nodes); 1 at centre, sqrt(2)/2 at 0.5 and 1.5 m, so only nodal points have zero KE at all times (also the center is not zero)."
+friction: "No observable for particle kinetic energy of a mode at a point over all time (kinetic_density exists for waves but not for resonator modes); count(nodes) counted the two end nodes (2), unexpected."

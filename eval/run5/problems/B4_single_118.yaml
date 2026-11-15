@@ -1,0 +1,15 @@
+id: B4/single/118
+format: single_correct
+statement: A wave pulse on a string has the dimension shown in figure. The wave speed is v = 1 cm s^-1.
+  If point O is a free end. The shape of wave at time t = 3 s is
+figure: 'String along horizontal line, O (free end, black dot) at right end. Pulse moving right with v
+  = 1 cm/s (arrow above). Triangular pulse: height 1 cm; rises over 1 cm horizontal, falls over 1 cm horizontal;
+  then flat 2 cm to O. Labelled dimensions: 1 cm (height), 1 cm, 1 cm, 2 cm.'
+options:
+  a: Flat line ending at O (no pulse visible).
+  b: Flat line, then a straight rise over a horizontal distance of 1 cm up to O, which is 1 cm above the
+    baseline.
+  c: Flat line, then a straight descent over a horizontal distance of 1 cm down to O, which is 1 cm below
+    the baseline.
+  d: Flat line, then a straight rise over a horizontal distance of 1 cm up to O, which is 2 cm above the
+    baseline.

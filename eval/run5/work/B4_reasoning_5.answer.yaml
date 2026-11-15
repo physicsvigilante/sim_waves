@@ -1,0 +1,9 @@
+answer: [a]
+final_scene: B4_reasoning_5.v1.yaml
+engine_fit: partial
+hand_steps: ["Elasticity = density * v^2 is not an engine observable; Statement 2 as an explanation is judged by the LLM"]
+coverage: partial
+not_represented: "Heat exchange / thermodynamic process; bulk modulus"
+missing_in_source: "none"
+reasoning: "Engine: adiabatic speed / isothermal speed = 1.183 > 1 at same P and density, so adiabatic elasticity (proportional to v^2) is larger. Statement 2 is a thermodynamic fact the engine cannot check."
+friction: "No bulk modulus observable for gases; isothermal gas modelled by gamma = 1 by convention."

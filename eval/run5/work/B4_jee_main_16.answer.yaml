@@ -1,0 +1,9 @@
+answer: [b]
+final_scene: B4_jee_main_16.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "nothing (junction treated as a node by splitting into two fixed-fixed resonators; equal tension assumed)"
+missing_in_source: "none"
+reasoning: "Engine: speed ratio A:B = 2 (mu ratio 4), equal frequency gives p = q/2, so p:q = 1:2."
+friction: "Joint-as-node had to be modelled as two independent resonators with equal frequency; no joined-wire resonator."

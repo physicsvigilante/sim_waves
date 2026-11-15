@@ -1,0 +1,24 @@
+id: B4/reasoning/20
+number: 20
+source: book p.98 (answer key p.123)
+format: single_correct
+statement: 'Statement-1: The error in Newton''s formula of velocity of sound in air was 16%.
+
+  Statement-2: The experimental value of velocity of sound in air was not accurate.'
+figure: null
+options:
+  A: Both statements are TRUE and STATEMENT 2 is the correct explanation of STATEMENT 1.
+  B: Both statements are TRUE but STATEMENT 2 is not the correct explanation of STATEMENT 1.
+  C: STATEMENT 1 is TRUE and STATEMENT 2 is FALSE.
+  D: STATEMENT 1 is FALSE but STATEMENT 2 is TRUE.
+answer: C
+answer_value: C
+units: null
+verified: 'Newton: v = sqrt(P/rho) ~ 280 m/s vs ~332 m/s measured: error ~16%, so S1 true; the measured
+  value was accurate, so S2 false. Matches key.'
+kinds:
+- conceptual
+physics:
+- speed_of_sound
+- newton_laplace
+notes: Consistent.

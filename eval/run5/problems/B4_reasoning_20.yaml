@@ -1,0 +1,10 @@
+id: B4/reasoning/20
+format: single_correct
+statement: 'Statement-1: The error in Newton''s formula of velocity of sound in air was 16%.
+
+  Statement-2: The experimental value of velocity of sound in air was not accurate.'
+options:
+  A: Both statements are TRUE and STATEMENT 2 is the correct explanation of STATEMENT 1.
+  B: Both statements are TRUE but STATEMENT 2 is not the correct explanation of STATEMENT 1.
+  C: STATEMENT 1 is TRUE and STATEMENT 2 is FALSE.
+  D: STATEMENT 1 is FALSE but STATEMENT 2 is TRUE.

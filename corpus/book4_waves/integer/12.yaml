@@ -1,0 +1,19 @@
+id: B4/integer/12
+number: 12
+source: book p.107 (answer key p.123)
+format: numerical
+statement: A wave moves with speed 300 m/s on a wire which is under a tension of 50 N. By how much must
+  the tension be changed, in newton, to increase the speed to 312 m/s?
+figure: null
+options: null
+answer: '4'
+answer_value: 4
+units: N
+verified: T' = 50 (312/300)^2 = 54.08 N; change = 4.08 N ~ 4 N. Matches key.
+kinds:
+- ratio
+- inverse_condition
+physics:
+- wave_speed
+- tension
+notes: Consistent (answer is rounded).

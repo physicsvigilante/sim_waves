@@ -1,0 +1,9 @@
+answer: [c]
+final_scene: B4_single_112.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "nothing"
+missing_in_source: "Source phase of the two sources not stated: assumed equal (in phase). Wave speed irrelevant."
+reasoning: "Engine: s2-D = 5 m, path difference 1 m = lambda/4, phase difference pi/2, resultant intensity = 2 I0."
+friction: "Intensities are stated at D, so spreading none with equal amplitudes had to be argued in assume."

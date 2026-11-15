@@ -1,0 +1,14 @@
+id: B4/jee_advanced/14
+format: single_correct
+statement: Two pulses in a stretched string, whose centres are initially 8 cm apart, are moving towards
+  each other as shown in the figure. The speed of each pulse is 2 cm s^-1. After 2 seconds the total energy
+  of the pulses will be
+figure: 'Horizontal string. Left pulse: a triangular bump above the baseline, with an arrow above it pointing
+  right (towards the other pulse). Right pulse: a triangular dip below the baseline, with an arrow above
+  it pointing left. Dimension line between the two pulse centres: 8 cm. Speed of each pulse 2 cm/s (from
+  text).'
+options:
+  A: zero
+  B: purely kinetic
+  C: purely potential
+  D: partly kinetic and partly potential

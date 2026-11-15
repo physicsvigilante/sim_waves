@@ -1,0 +1,19 @@
+id: B4/jee_advanced/8
+number: 8
+source: "book p.113, JEE Advanced archive, single correct Q8 [IIT-JEE 2004]"
+format: single_correct
+statement: >-
+  A source of sound of frequency 600 Hz is placed inside water. The speed of sound in water is 1500 m s^-1 and in air it is 300 m s^-1. The frequency of sound recorded by an observer who is standing in air is
+figure: null
+options:
+  A: "200 Hz"
+  B: "3000 Hz"
+  C: "120 Hz"
+  D: "600 Hz"
+answer: D
+answer_value: 600
+units: Hz
+verified: "Matches key. Frequency is set by the source and unchanged on crossing the boundary; only wavelength changes."
+kinds: [conceptual, comparison]
+physics: [refraction of sound, frequency invariance across media]
+notes: null

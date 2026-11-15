@@ -1,0 +1,32 @@
+id: B4/comprehension/22
+number: 22
+source: book p.101 (answer key p.123)
+format: single_correct
+statement: 'Passage (Comprehension 7): A narrow tube is bent in the form of circle of radius R as shown.
+  Two small holes S and D are made in the tube at the positions right angles to each other. A source placed
+  at S generates a wave of intensity I0 which is equally divided into two parts. One part travels along
+  the longer path, while the other travels along the shorter path. Both the part waves meet at point D
+  where a detector is placed. Based on above information, answer the following question.
+
+
+  Q22. The maximum value of wavelength λ to produce a minimum at D is given by'
+figure: Circular tube of radius R (centre marked, radius R drawn). Hole S on the left end of the horizontal
+  diameter's level and hole D at the bottom of the circle, the two holes being at 90 degrees about the
+  centre (dashed horizontal and vertical lines through the centre).
+options:
+  A: πR
+  B: 2πR
+  C: πR/2
+  D: 3πR/2
+answer: B
+answer_value: 2πR
+units: ''
+verified: 'Short path = piR/2, long path = 3piR/2, path difference = piR. Minimum: piR = (2n+1) lambda/2
+  -> lambda = 2piR/(2n+1); max at n = 0: 2piR. Matches key.'
+kinds:
+- inverse_condition
+- symbolic
+physics:
+- interference
+- path_difference
+notes: Consistent.

@@ -1,0 +1,11 @@
+id: B4/single/138
+assume: ["Field taken literally as given; probing which observables the engine can give for a cot() profile."]
+waves:
+  w: {given: "0.02*cos(pi/2 + 50*pi*t)/tan(10*pi*x)", units: {x: m, t: s, y: m}}
+observe:
+  y_x015: "max_over(t, abs(y(w, x=0.15[m], t=t)))"
+  y_x03: "max_over(t, abs(y(w, x=0.3[m], t=t)))"
+  y_x02: "max_over(t, abs(y(w, x=0.2[m], t=t)))"
+  lam: "wavelength(w)"
+  v: "speed(w)"
+  f: "frequency(w)"

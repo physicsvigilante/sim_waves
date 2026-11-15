@@ -1,0 +1,21 @@
+id: B4/single/5
+assume:
+  - "Weights hang in the fluid: tension = weight*(1 - rho_fluid/rho_weight) (Archimedes, written by the author, not an engine formula). Weight W unknown."
+  - "mu = 1 kg/m, L = 1 m (absorbed into W)."
+  - "Water specific gravity 1; sb = specific gravity of weights, sl of liquid."
+unknowns: {W: positive, sb: positive, sl: positive}
+media:
+  air: {type: string, mu: 1 kg/m, tension: "W*1[N]"}
+  wat: {type: string, mu: 1 kg/m, tension: "W*1[N]*(1 - 1/sb)"}
+  liq: {type: string, mu: 1 kg/m, tension: "W*1[N]*(1 - sl/sb)"}
+resonators:
+  r0: {type: string, on: air, length: 1 m, ends: [fixed, fixed]}
+  r1: {type: string, on: wat, length: 1 m, ends: [fixed, fixed]}
+  r2: {type: string, on: liq, length: 1 m, ends: [fixed, fixed]}
+given:
+  - {fact: "frequency(r0, harmonic=1) == 100[Hz]", source: stated}
+  - {fact: "frequency(r1, harmonic=1) == 80[Hz]", source: stated}
+  - {fact: "frequency(r2, harmonic=1) == 60[Hz]", source: stated}
+observe:
+  sl: "sl"
+  sb: "sb"

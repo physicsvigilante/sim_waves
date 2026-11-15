@@ -1,0 +1,9 @@
+answer: [c]
+final_scene: B4_single_58.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "nothing (g = 9.8 cancels)"
+missing_in_source: "none"
+reasoning: "Engine: new load 16 kg for doubled fundamental; additional weight 12 kg."
+friction: "A symbolic load in kg needed the trick M2*1[kg]; no dimensioned unknowns."

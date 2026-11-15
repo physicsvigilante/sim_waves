@@ -1,0 +1,10 @@
+answer: [a]
+final_scene: B4_reasoning_10.v1.yaml
+engine_fit: partial
+hand_steps:
+  - "Judging that statement 2 is the explanation of statement 1 (a logical relation, not a physical number)."
+coverage: partial
+not_represented: "nothing physically; the explanation relation is outside the engine"
+missing_in_source: "none"
+reasoning: "Engine: speed amplitude zero at the wall node, 4 pi m/s at antinodes; v/amp = omega at every point; points in one loop are proved in phase, neighbouring loops in antiphase. Both statements true, S2 explains S1."
+friction: "No node/antinode observable for a summed wave, and no direct way to express 'pass the mean position together'; used equivalent() on ratios."

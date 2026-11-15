@@ -1,0 +1,9 @@
+answer: [a]
+final_scene: B4_jee_main_45.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "End correction and water-surface reflection details"
+missing_in_source: "none"
+reasoning: "Engine ratio = 1."
+friction: "none"

@@ -1,0 +1,10 @@
+id: B4/jee_advanced/58
+format: single_correct
+statement: 'Passage (Comprehension 2): Two plane harmonic sound waves are expressed by the equations y1(x,
+  t) = A cos(0.5 pi x - 100 pi t), y2(x, t) = A cos(0.46 pi x - 92 pi t) (All parameters are in SI). Based
+  on the above facts, answer the following question. Question: The speed of the sound is'
+options:
+  A: 200 m s^-1
+  B: 180 m s^-1
+  C: 192 m s^-1
+  D: 96 m s^-1

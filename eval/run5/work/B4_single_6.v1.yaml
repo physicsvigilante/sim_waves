@@ -1,0 +1,15 @@
+id: B4/single/6
+assume:
+  - "End correction neglected (0 m). P2 length fixed at 1 m (scale); only the ratio matters. Same gas and same fork frequency."
+unknowns: {L1: positive}
+media:
+  air: {type: gas, v: 340 m/s}
+resonators:
+  p1: {type: pipe, on: air, length: L1, ends: [closed, open], end_correction: 0 m}
+  p2: {type: pipe, on: air, length: 1 m, ends: [open, open], end_correction: 0 m}
+given:
+  - {fact: "frequency(p1, harmonic=harmonic(p1, overtone=1)) == frequency(p2, harmonic=harmonic(p2, overtone=3))", source: stated}
+observe:
+  ratio: "L1/1[m]"
+  n1: "harmonic(p1, overtone=1)"
+  n2: "harmonic(p2, overtone=3)"

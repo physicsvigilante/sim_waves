@@ -1,0 +1,9 @@
+answer: [a]
+final_scene: B4_single_136.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "nothing (end correction neglected)"
+missing_in_source: "none"
+reasoning: "Engine: open fundamental v/(2L) = n, closed v/(4L) = n/2."
+friction: "none"

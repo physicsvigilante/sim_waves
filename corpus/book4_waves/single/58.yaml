@@ -1,0 +1,23 @@
+id: B4/single/58
+number: 58
+source: wanes_full.pdf book p.4.86 (page image p-086); key p.4.122 (p-122)
+format: single_correct
+statement: A string stretched by a weight of 4 kg is vibrating in its fundamental mode. The additional weight required to produce an octave of the first is
+figure: null
+options:
+  a: 4 kg
+  b: 8 kg
+  c: 12 kg
+  d: 16 kg
+answer: c
+answer_value: 12
+units: kg
+verified: Octave -> f doubles -> T x4 -> 16 kg total -> 12 kg additional. Matches key.
+kinds:
+- inverse_condition
+- ratio
+physics:
+- string_frequency
+- tension
+- octave
+notes: Consistent.

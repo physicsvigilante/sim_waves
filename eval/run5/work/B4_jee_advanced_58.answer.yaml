@@ -1,0 +1,9 @@
+answer: [a]
+final_scene: B4_jee_advanced_58.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "nothing"
+missing_in_source: "none"
+reasoning: "velocity() of each wave is 200 m/s (both agree), so sound speed is 200 m/s."
+friction: "none"

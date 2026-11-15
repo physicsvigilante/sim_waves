@@ -1,0 +1,19 @@
+id: B4/jee_main/17
+number: 17
+source: "book p.109, JEE Main archive Q17 [Online April 2019]"
+format: single_correct
+statement: >-
+  The pressure wave, P = 0.01 sin[1000t - 3x] N m^-2, corresponds to the sound produced by a vibrating blade on a day when atmospheric temperature is 0 degC. On some other day when temperature is T, the speed of sound produced by the same blade and at the same frequency is found to be 336 m s^-1. Approximate value of T is
+figure: null
+options:
+  A: "4 degC"
+  B: "12 degC"
+  C: "15 degC"
+  D: "11 degC"
+answer: A
+answer_value: 4
+units: degC
+verified: "Matches key. v0 = 1000/3 = 333.3 m/s at 273 K; v ~ sqrt(T) gives T = 273*(336/333.3)^2 = 277.4 K = 4.4 degC."
+kinds: [given_wavefunction, derived_medium, inverse_condition]
+physics: [speed of sound vs temperature, pressure wave]
+notes: null

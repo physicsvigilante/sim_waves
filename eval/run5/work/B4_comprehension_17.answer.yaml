@@ -1,0 +1,9 @@
+answer: [c]
+final_scene: B4_comprehension_17.v1.yaml
+engine_fit: partial
+hand_steps: ["Reading sketch C as a single hump of the original height with both arrows: judged impossible because the engine shows full overlap doubles the height; the figure has no scale so the sketch heights cannot be compared numerically"]
+coverage: partial
+not_represented: "Exact sketch geometry and heights; options are pictures"
+missing_in_source: "figure has no numbers; sketch C is ambiguous"
+reasoning: "Engine: apart peak 0.01, touching gives y=0 at joint, full overlap peak 0.02 (double), inverted pair gives y=0 at centre with nonzero velocity. A, B, D are realisable; a single undoubled hump is not."
+friction: "Options are sketches; matching a drawing to engine output is on the LLM side."

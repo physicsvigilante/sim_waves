@@ -1,0 +1,9 @@
+answer: [b, c, d]
+final_scene: B4_multiple_17.v1.yaml
+engine_fit: partial
+hand_steps: ["Moisture content and composition act through molar mass M (and gamma): that mapping is the LLM reading"]
+coverage: partial
+not_represented: "Physical link between moisture and M/gamma"
+missing_in_source: "none"
+reasoning: "Engine speed(air) has dP = 0 at fixed T, nonzero derivative with T, M, gamma."
+friction: "No observable for composition or humidity; only M and gamma."

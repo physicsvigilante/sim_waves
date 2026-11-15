@@ -1,0 +1,10 @@
+answer: 300 Hz
+final_scene: B4_integer_26.v2.yaml
+engine_fit: partial
+hand_steps: 
+  - "Chose 6 as the next harmonic after 2 from the engine list (2, 6, 10)"
+coverage: full
+not_represented: "nothing"
+missing_in_source: "String length not given (scale free; assumed 1 m, mu 10 g/m, tension solved)"
+reasoning: "Antinode at L/4 allows harmonics 2, 6, 10; mode 2 fixed at 100 Hz by solving the tension, then harmonic 6 = 300 Hz."
+friction: "No 'next element of a list above n' operation; lists cannot be indexed, so I read the list and typed harmonic=6. Needed invented string mu and length to run a resonator."

@@ -1,0 +1,19 @@
+id: B4/jee_advanced/14
+number: 14
+source: "book p.114, JEE Advanced archive, single correct Q14 [IIT-JEE 2001]"
+format: single_correct
+statement: >-
+  Two pulses in a stretched string, whose centres are initially 8 cm apart, are moving towards each other as shown in the figure. The speed of each pulse is 2 cm s^-1. After 2 seconds the total energy of the pulses will be
+figure: "Horizontal string. Left pulse: a triangular bump above the baseline, with an arrow above it pointing right (towards the other pulse). Right pulse: a triangular dip below the baseline, with an arrow above it pointing left. Dimension line between the two pulse centres: 8 cm. Speed of each pulse 2 cm/s (from text)."
+options:
+  A: "zero"
+  B: "purely kinetic"
+  C: "purely potential"
+  D: "partly kinetic and partly potential"
+answer: B
+answer_value: "purely kinetic"
+units: null
+verified: "Matches key. Each pulse moves 4 cm in 2 s, so they coincide and cancel exactly (equal and opposite shapes): displacement zero everywhere, string velocity non-zero, energy purely kinetic."
+kinds: [graph_read, conceptual]
+physics: [pulse superposition, energy of pulses, destructive interference]
+notes: "Assumes the two pulses are identical in size and opposite in sign, as drawn."

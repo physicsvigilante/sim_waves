@@ -1,0 +1,27 @@
+id: B4/multiple/16
+number: 16
+source: book p.96 (answer key p.122)
+format: multiple_correct
+statement: As a wave propagates
+figure: null
+options:
+  A: the wave intensity remains constant for a plane wave
+  B: the wave intensity decreases as the inverse of the distance from the source for a spherical wave
+  C: the wave intensity decreases as the inverse square of the distance from the source for a spherical
+    wave
+  D: total intensity of the spherical wave over the spherical surface centered at the source remains constant
+    at all times
+answer: A, C, D
+answer_value:
+- A
+- C
+- D
+units: null
+verified: 'Plane wave: I constant; spherical: I ~ 1/r^2 (B false); intensity integrated over the surface
+  (power) is constant. Matches key.'
+kinds:
+- conceptual
+physics:
+- intensity
+- energy_conservation
+notes: D reads 'total intensity' as total power through the surface.

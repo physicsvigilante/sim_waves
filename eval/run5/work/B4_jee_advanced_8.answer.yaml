@@ -1,0 +1,10 @@
+answer: [d]
+final_scene: B4_jee_advanced_8.v1.yaml
+engine_fit: partial
+hand_steps:
+  - "Frequency of the wave in air = frequency of the source in water (continuity at the boundary) entered as an assumption fact; engine has no water-air interface."
+coverage: partial
+not_represented: "The interface, refraction/transmission; the observer and any motion."
+missing_in_source: "none"
+reasoning: "With the equality assumed, engine gives f_air = 600 Hz, lambda_water 2.5 m, lambda_air 0.5 m: wavelength changes, frequency does not."
+friction: "No interface between two sound media (only string junctions), so the key physical fact is an input rather than a result."
