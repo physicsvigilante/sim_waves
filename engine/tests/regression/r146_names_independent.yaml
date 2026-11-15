@@ -1,0 +1,4 @@
+# m11 review: five ranged/unranged names; two ranged ones never move together
+arbitrary: {a: {value: 34 m/s, below: 340 m/s}, p: 1 kg, q: 2 kg, r: 3 kg, b: {value: 17 m/s, below: 170 m/s}}
+observe: {eq: "a == 2*b"}
+expect: {error: rejected, message: "depends on the arbitrary"}

@@ -1,0 +1,4 @@
+# m11: comparing different dimensions is refused
+media: {air: {type: gas, v: 340 m/s}}
+observe: {b: "2[m] > 3[s]"}
+expect: {error: rejected, message: "dimension"}

@@ -1,0 +1,3 @@
+arbitrary: {u: {value: 20 m/s, below: 340 m/s}}
+symbols: {a: positive}
+observe: {s: "a + 1 == a", t2: "u*a > 0", t3: "u > a", t4: "u == 20", t5: "u < 340", t6: "frequency > 3"}

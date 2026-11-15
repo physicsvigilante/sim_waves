@@ -1,0 +1,10 @@
+id: R3
+type: integer
+statement: >
+  A source of sound of frequency 680 Hz moves with a constant speed (not given; less
+  than the speed of sound) along a straight horizontal road. A stationary observer stands
+  at a perpendicular distance of 170 m from the road; N is the foot of the perpendicular
+  from the observer to the road. At some instant the observer hears exactly 680 Hz.
+  How many milliseconds after the source passes through N does the observer hear this
+  frequency? (Speed of sound = 340 m/s, still air.)
+options: null

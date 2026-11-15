@@ -491,6 +491,13 @@ pl:   {on: air, geometry: plane, intensity: I}
     unseen. Pick arbitrary values of a sensible size for the problem.
   - If an observable does depend on them, it is NOT AVAILABLE ("depends on the arbitrary
     values"): the problem really does not fix it.
+  - **A ranged arbitrary value** has a physical ceiling or floor:
+    `u: {value: 20 m/s, below: 340 m/s}` (an unstated speed, below the speed of sound),
+    or `L: {value: 2 m, above: 1 m}`, or both: `L: {value: 20 cm, above: 15 cm, below: 30 cm}`.
+    - Its other runs use values across the open range (3%, 37%, 61% and 97% of the way),
+      not the x0.01–x89 scalings.
+    - With `above` only, the distance above the bound is scaled.
+    - Use a range whenever the scalings would leave the physically allowed values.
   - A name under `arbitrary` is not also declared in `symbols`. Any field may use it
     (lengths, Y, density, tension, power).
   - Use arbitrary values wherever a number is needed only to run the scene (resonance
@@ -501,6 +508,19 @@ pl:   {on: air, geometry: plane, intensity: I}
     - panels carry a note that only scale-free features mean anything;
     - `explore: {vary: {arbitrary.L: [...]}}` is labelled an arbitrary value, never a
       physical input.
+- **Comparisons in `observe`:** `a > b`, `a <= b`, chains such as `a > b > c`, and
+  `a == b`.
+  - The result is True or False, decided for all symbol values (with the stated bounds).
+  - With arbitrary values:
+    - The engine first tries a proof over every allowed value (basis "proved for every
+      allowed arbitrary value").
+    - Otherwise it checks 14 values, including values near both ends of every range
+      (basis "sampled, not proved").
+    - If the truth changes, the comparison is NOT AVAILABLE ("true for some allowed
+      values and false for others"): the option is not necessarily true.
+  - `==` between exact numbers needs exact equality; engine decimals use a relative
+    tolerance.
+  - An undecidable comparison is refused. Both sides need the same dimension.
 - **Bounds on a symbol:** a `given` fact comparing one symbol with a constant, e.g.
   `{fact: "n > 1", source: stated}`, `L >= 2[m]` or `2 < m`, is a stated bound.
   - It works for positive, real and integer symbols.

@@ -345,7 +345,10 @@ def _one(data, fixed):
         "solved": {str(k): show(sc.show_back(v)) + ("" if arb.get(k, True) else
                                                      "  (depends on the arbitrary values: for drawing only)")
                    for k, v in sol.items()},
-        "arbitrary": {k: str(v) for k, v in (data.get("arbitrary") or {}).items()},
+        "arbitrary": {k: (str(v) if not isinstance(v, dict) else
+                          f"{v.get('value')} (range: " + ", ".join(f"{b} {v[b]}" for b in ("above", "below")
+                                                               if b in v) + ")")
+                      for k, v in (data.get("arbitrary") or {}).items()},
         "results": _numbers(sc, res, illus),
         "verification": [{"fact": t, "basis": b} for _, t, b in getattr(sc, "verification", [])],
         "illustrative": illus_text,
@@ -418,6 +421,8 @@ def export(data):
     in_illustrate = target in (data.get("illustrate") or {})
     is_arbitrary = target.startswith("arbitrary.")
     source_value = (data["illustrate"][target] if in_illustrate else _get_path(data, target))
+    if isinstance(source_value, dict):
+        source_value = source_value.get("value")
     for p in base["panels"]:
         if p:
             for key in ("x_basis", "t_basis", "range_basis"):
@@ -429,6 +434,8 @@ def export(data):
         d2.pop("explore", None)
         if in_illustrate:
             d2["illustrate"][target] = val
+        elif is_arbitrary and isinstance(_get_path(data, target), dict):
+            _set_path(d2, target + ".value", val)        # a ranged arbitrary value keeps its range
         else:
             _set_path(d2, target, val)
         item = {"value": str(val),

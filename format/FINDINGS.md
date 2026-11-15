@@ -474,3 +474,42 @@ unknowns.
   - arbitrary speeds turn supersonic under the ×89 scaling (a ranged `arbitrary` is a
     candidate);
   - comparisons in `observe` (`step(a - b)` works but is undocumented).
+
+## Milestone 11: ranged arbitrary values and comparisons (before review)
+- **Ranged arbitrary values:** `arbitrary: {u: {value: 20 m/s, below: 340 m/s}}`. The
+  other runs are spread across the open range: 3%, 37%, 61% and 97% of the way between
+  the bounds.
+- **Comparisons in `observe`:** `a > b` and chains such as `a > b > c` are decided like
+  `given` inequalities. Combined with arbitrary values, they report True or False only
+  when the result is the same in every run.
+
+Tests: r136–r142.
+
+### Milestone 11 review (Fable 5.2, medium; eval/review11/REPORT.md)
+
+**Two silent wrong answers, both fixed with tests r143–r147:**
+1. **`==` had an absolute floor,** so 1e-14 == 0 came out True. Exact numbers now need
+   exact equality, and decimals use a relative tolerance.
+2. **A comparison that flips near a range end was reported True.** The engine now:
+   - tries a symbolic run over the whole range (each value is mapped from a positive
+     symbol), which proves the result when it decides;
+   - otherwise runs 9 more samples, including 0.1% and 99.9% of each range (unranged
+     values ×1e-3 to ×1e3), and labels the result "sampled, not proved".
+
+**Medium findings, both fixed:**
+- Ranged names four positions apart moved together. Each name now gets its own rotation
+  and offset.
+- `explore` on a ranged value dropped the range. The range is kept, and the export shows
+  it.
+
+**Low findings, all fixed:**
+- Non-real comparisons are now refused.
+- Comparisons of truth values are refused clearly.
+- Non-real range bounds are refused, instead of crashing.
+
+### Milestone 11 frozen run (eval/m11_ranges/RESULT.md)
+- **All 3 reserved problems matched,** with `engine_fit: full` and no hand steps.
+- **After the run (docs only):** a two-sided example of a ranged value was added to
+  FORMAT.md.
+- **Candidates for later:** a beat instant at which both sounds arrive, and splitting
+  the regression suite, which now takes about 3 minutes.

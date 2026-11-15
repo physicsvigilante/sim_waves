@@ -1,0 +1,5 @@
+# m11 review: == on exact numbers has no absolute floor (1e-14 is not 0)
+unknowns: {w: real}
+given: ["w == 1e-14"]
+observe: {u5: "w == 0", u6: "w > 0", e1: "1e-13[W/m^2] == 2e-13[W/m^2]"}
+expect: {u5: false, u6: true, e1: false}

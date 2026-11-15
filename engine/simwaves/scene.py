@@ -93,14 +93,44 @@ class Scene:
                     self.unknowns.append(s)
         # values the problem leaves unstated and the answer must not depend on (checked by re-running)
         self.arbitrary = {}
+        self.arbitrary_ranges = {}
         for name, value in (data.get("arbitrary") or {}).items():
             self._new_name(name)
+            rng = None
+            if isinstance(value, dict):
+                extra = set(value) - {"value", "below", "above"}
+                if extra or "value" not in value or not ({"below", "above"} & set(value)):
+                    raise SceneError(f"arbitrary.{name}: a ranged value is {{value: ..., below: ..., above: ...}} "
+                                     f"(value and at least one of below/above), e.g. {{value: 20 m/s, below: 340 m/s}}")
+                rng = value
+                value = value["value"]
             text, unit, factor, udim = split_quantity(value)
             v = self.expr(text) * factor
             if not v.is_number or not v.is_positive:
                 raise SceneError(f"arbitrary.{name}: give a positive number with its unit, e.g. 10 g/m")
+            if rng is not None:
+                bounds = {}
+                for key in ("above", "below"):
+                    if key in rng:
+                        bt, bu, bf, bd = split_quantity(rng[key])
+                        b = self.expr(bt) * bf
+                        if not b.is_number or b.is_real is not True:
+                            raise SceneError(f"arbitrary.{name}.{key}: a real number with a unit (other names "
+                                             f"cannot be used in a range)")
+                        if (bd or DIMLESS) != (udim or DIMLESS):
+                            raise SceneError(f"arbitrary.{name}.{key}: a number with the same unit dimension as "
+                                             f"the value")
+                        bounds[key] = b
+                lo, hi = bounds.get("above", sp.Integer(0)), bounds.get("below", sp.oo)
+                if lo.is_negative:
+                    raise SceneError(f"arbitrary.{name}.above: arbitrary values are positive; use above >= 0")
+                if not (lo < hi):
+                    raise SceneError(f"arbitrary.{name}: below must be greater than above")
+                if not (lo < v < hi):
+                    raise SceneError(f"arbitrary.{name}: the value {value} lies outside its own range")
+                self.arbitrary_ranges[name] = (lo, hi)
             if scale:
-                v = v * scale[name]
+                v = scale[name](v) if callable(scale[name]) else v * scale[name]
             self.names[name] = v
             self.arbitrary[name] = DIMLESS if udim is None else udim
         self._bounds_from_given(data)

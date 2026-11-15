@@ -1,0 +1,15 @@
+arbitrary: {L: {value: 2 m, above: 1 m}, M: {value: 3 m, above: 2.5 m}, f: {value: 0.5, above: 0.2, below: 0.9}, g: {value: 0.5, above: 0.2, below: 0.9}, h: {value: 0.3, below: 1}, w: 5 kg}
+observe:
+  d1: "min(L, 1[m])"
+  d2: "L > 1[m]"
+  d3: "M > 2.5[m]"
+  d4: "min(f, 0.2) + max(f, 0.9)"
+  d5: "0.2 < g < 0.9"
+  d6: "0 < h < 1"
+  d7: "f == g"
+  d8: "L < M"
+  d9: "w > 0[kg]"
+  d10: "L < 100[m]"
+  d11: "L > 1.01[m]"
+  d12: "f > 0.21"
+  d13: "f < g"

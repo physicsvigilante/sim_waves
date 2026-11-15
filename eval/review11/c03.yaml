@@ -1,0 +1,7 @@
+arbitrary: {u: {value: 10 m/s, below: 340 m/s}}
+media: {air: {type: gas, v: 340 m/s}}
+sources: {S: {on: air, at: [0 m, 0 m], velocity: [u, 0 m/s], f: 500 Hz, A: 1, phase: 0, spreading: none}}
+points: {O: [1000 m, 0 m]}
+rays: {r: {from: S, to: O}}
+observe: {above500: "frequency(r, emitted=0[s]) > 500[Hz]", inrange: "u < 340[m/s]", ratio: "u/u"}
+explore: {vary: {arbitrary.u.value: [100 m/s, 400 m/s, 339 m/s]}}

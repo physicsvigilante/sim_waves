@@ -1,0 +1,11 @@
+unknowns: {y: positive, z: real, w: real}
+given: ["y**2 == 4", "z == 3*y", "w == sqrt(2)*sqrt(3) - sqrt(6) + 1e-14"]
+observe:
+  u1: "y == 2"
+  u2: "z > 5.9999"
+  u3: "z == 6"
+  u4: "y < z < 7"
+  u5: "w == 0"
+  u6: "w > 0"
+  u7: "w <= 0"
+  u8: "z == 6.000000000001"

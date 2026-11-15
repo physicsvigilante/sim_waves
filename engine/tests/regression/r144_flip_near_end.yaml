@@ -1,0 +1,8 @@
+# m11 review: true for most of the range but false near its end: not necessarily true
+arbitrary: {u: {value: 10 m/s, below: 340 m/s}}
+media: {air: {type: gas, v: 340 m/s}}
+sources: {S: {on: air, at: [0 m, 0 m], velocity: [u, 0 m/s], f: 500 Hz, A: 1, phase: 0, spreading: none}}
+points: {O: [1000 m, 0 m]}
+rays: {r: {from: S, to: O}}
+observe: {above505: "frequency(r, emitted=0[s]) > 505[Hz]"}
+expect: {error: rejected, message: "depends on the arbitrary"}

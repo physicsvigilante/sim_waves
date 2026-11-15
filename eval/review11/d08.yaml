@@ -1,0 +1,3 @@
+symbols: {c: positive}
+arbitrary: {u: {value: 20 m/s, below: "c m/s"}}
+observe: {a: "u/u"}

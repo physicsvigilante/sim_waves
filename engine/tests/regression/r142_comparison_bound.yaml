@@ -1,0 +1,5 @@
+# m11: a comparison decided by a stated bound
+symbols: {n: positive}
+given: ["n > 1"]
+observe: {a: "n - 1 > 0", c: "2*n > n + 1"}
+expect: {a: true, c: true}

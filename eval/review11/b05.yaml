@@ -1,0 +1,2 @@
+arbitrary: {u: {value: 20 m/s, below: "340*sqrt(2) m/s", above: "sqrt(3) m/s"}, th: {value: "pi/6", below: "pi/2"}}
+observe: {a: "sqrt(3)[m/s] < u < 340*sqrt(2)[m/s]", b: "0 < th < pi/2", c: "sin(th) < 1", d: "cos(th) > 0", e: "tan(th) < 30"}

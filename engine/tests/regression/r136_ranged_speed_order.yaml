@@ -1,0 +1,11 @@
+# m11: ranged arbitrary speed and an ordering decided by the engine (24/02 asc_006 #3)
+arbitrary: {R: 2 m, u: {value: 10 m/s, below: 340 m/s}, D: 50 m}
+media: {air: {type: gas, v: 340 m/s}}
+sources: {S: {on: air, at: [0 m, "-R"], circle: {center: [0 m, 0 m], speed: u, sense: cw}, f: 500 Hz, A: 1, phase: 0, spreading: none}}
+points: {O: [D, 0 m]}
+rays: {r: {from: S, to: O}}
+observe:
+  b: "frequency(r, emitted=pi*R/u) > frequency(r, emitted=3*pi*R/(2*u)) > frequency(r, emitted=0[s])"
+  a: "frequency(r, emitted=0[s]) > frequency(r, emitted=pi*R/u)"
+  n3: "frequency(r, emitted=3*pi*R/(2*u))"
+expect: {b: true, a: false, n3: 500}

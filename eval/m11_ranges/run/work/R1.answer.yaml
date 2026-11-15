@@ -1,0 +1,9 @@
+answer: [A, B, C]
+final_scene: R1.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "nothing material; wall distance, listener distance and instant are arbitrary/assumed and do not affect A, B, C"
+missing_in_source: "u, wall distance, listener distance (none needed for A-C)"
+reasoning: "Engine proved A, B, C for every allowed u; beats (D) is NOT AVAILABLE (depends on u), so D is not necessarily true."
+friction: "Beat comparison needs a reception time t; choosing t so both direct and echo are present at every sampled u is fiddly (wall distance is an assumed number, not arbitrary). Moving listener sharing the car's velocity needs separate 'driver' point."
