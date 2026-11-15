@@ -1,0 +1,9 @@
+# m12: transverse Doppler for light: emitted at closest approach, f0/gamma
+media: {space: {type: em}}
+sources: {S: {on: space, at: [0 m, 1000 m], velocity: ["0.6*299792458[m/s]", 0 m/s], f: 1 GHz, A: 1, phase: 0, spreading: none}}
+points: {O: [0 m, 0 m]}
+rays: {r: {from: S, to: O}}
+observe:
+  f_closest_emit: "frequency(r, emitted=0[s])"
+  f_closest_seen: "frequency(r, t=1000[m]/(299792458[m/s]))"
+expect: {f_closest_emit: 800000000, f_closest_seen: 800000000}

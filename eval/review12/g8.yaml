@@ -1,0 +1,2 @@
+media: {air: {type: gas, v: 3e8 m/s, wind: [0 m/s, 0 m/s]}, r: {type: rod, v: 3e8 m/s}, s: {type: string, mu: 1e-18 kg/m, tension: 0.09 N}}
+observe: {a: "1"}

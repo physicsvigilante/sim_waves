@@ -1,0 +1,10 @@
+# m12 review: a gas speed solved to light's speed is refused (guard after solving)
+unknowns: {vv: positive}
+media: {air: {type: gas, v: vv}}
+given: [{fact: "vv == 3e8[m/s]", source: stated}]
+sources: {gun: {on: air, at: [0 m, 0 m], f: 10 GHz, A: 1, phase: 0, spreading: none}}
+points: {cop: [0 m, 0 m]}
+reflectors: {car: {point: [1000 m, 0 m], normal: [-1, 0], boundary: rigid, velocity: [-30 m/s, 0 m/s]}}
+rays: {echo: {from: gun, to: cop, via: car}}
+observe: {a: "1"}
+expect: {error: rejected, message: "type: em"}

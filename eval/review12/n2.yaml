@@ -1,0 +1,9 @@
+arbitrary: {D: 100 m}
+media: {air: {type: gas, v: 340 m/s}}
+sources: {S: {on: air, at: [0 m, 0 m], f: 1000 Hz, A: 1, phase: 0, spreading: spherical, A_at: 1 m}}
+points: {O: [D, 0 m], P: {at: [D, 0 m], velocity: [-34 m/s, 0 m/s]}}
+rays: {r: {from: S, to: O}, m: {from: S, to: P}}
+observe:
+  dep: "nearest(amplitude(r), 0.01, 0.1, 1)"
+  indep: "nearest(frequency(m, emitted=0[s]), 1000[Hz], 1100[Hz], 1200[Hz])"
+  dep2: "nearest(arrives_at(m, emitted=0[s]), 0.1[s], 0.27[s], 1[s])"

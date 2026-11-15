@@ -1,0 +1,2 @@
+media: {air: {type: gas, v: 99999 m/s}, b: {type: gas, v: 1e5 m/s}}
+observe: {a: "1"}

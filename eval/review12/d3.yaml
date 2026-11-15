@@ -1,0 +1,23 @@
+symbols: {y: positive, z: real, k: positive, n: integer, L: positive}
+given: [{fact: "y < 2", source: stated}, {fact: "z > -1", source: stated}, {fact: "1 < k", source: stated}, {fact: "n >= 2", source: stated}, {fact: "L > 0.4[m]", source: stated}]
+media: {s: {type: string, mu: 0.01 kg/m, tension: "(512[m/s])**2*0.01[kg/m]"}}
+resonators: {r: {type: string, on: s, length: L, ends: [fixed, fixed]}}
+observe:
+  t1: "abs(y - 1) <= 1"
+  t2: "max(y, 1) < 2"
+  f3: "abs(y - 1) > 1"
+  u4: "abs(y - 1) > 0.5"
+  t5: "abs(z) < 1"
+  f6: "abs(z) >= 1"
+  u7: "abs(z) > 0"
+  t8: "abs(k - 2) <= 1"
+  u9: "abs(k - 2) < 1"
+  f10: "abs(k - 2) > 1"
+  t11: "abs(n - 1) >= 1"
+  u12: "abs(n - 2.5) > 0.5"
+  f13: "abs(n - 2.5) < 0.5"
+  f13b: "abs(n - 2.5) < 0.4"
+  u14: "beat_frequency(frequency(r, harmonic=1), 256[Hz]) < 256[Hz]"
+  u15: "abs(z) < abs(z - 3)"
+  u16: "min(k, 2) > 1"
+  u17: "max(k, 2) < 3"

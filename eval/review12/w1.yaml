@@ -1,0 +1,46 @@
+media: {air: {type: gas, v: 340 m/s, wind: [0 m/s, 20 m/s]}, still: {type: gas, v: 340 m/s}, wx: {type: gas, v: 340 m/s, wind: [5 m/s, 0 m/s]}}
+sources:
+  S: {on: air, at: [0 m, 0 m], f: 500 Hz, A: 1, phase: 0, spreading: none}
+  T: {on: still, at: [0 m, 0 m], f: 500 Hz, A: 1, phase: 0, spreading: none}
+  M: {on: still, at: [0 m, 0 m], velocity: [30 m/s, 0 m/s], f: 500 Hz, A: 1, phase: 0, spreading: none}
+  X: {on: wx, at: [0 m, 0 m], velocity: [30 m/s, 0 m/s], f: 500 Hz, A: 1, phase: 0, spreading: none}
+  X0: {on: wx, at: [0 m, 0 m], f: 500 Hz, A: 1, phase: 0, spreading: none}
+points:
+  L: [100 m, 0 m]
+  ob: {at: [100 m, 0 m], velocity: [0 m/s, 10 m/s]}
+  ap: {at: [100 m, 0 m], velocity: [-10 m/s, 0 m/s]}
+  mid: {at: [50 m, 0 m], velocity: [-10 m/s, 0 m/s]}
+  car: {at: [0 m, 0 m], velocity: [30 m/s, 0 m/s]}
+reflectors:
+  wall: {point: [200 m, 0 m], normal: [-1, 0], boundary: rigid}
+  mw: {point: [200 m, 0 m], normal: [-1, 0], boundary: rigid, velocity: [-5 m/s, 0 m/s]}
+rays:
+  a: {from: S, to: L}
+  b: {from: T, to: ob}
+  c: {from: T, to: mid, via: wall}
+  d: {from: T, to: mid}
+  e: {from: M, to: ap}
+  f: {from: T, to: L, via: mw}
+  g: {from: X, to: ap}
+  g0: {from: X0, to: ap}
+  h: {from: M, to: car}
+  i: {from: M, to: car, via: wall}
+observe:
+  wind_perp_338p82: "wave_speed_seen(a, emitted=0[s])"
+  oblique_339p706: "wave_speed_seen(b, emitted=0[s])"
+  refl_330: "wave_speed_seen(c, emitted=0[s])"
+  direct_350: "wave_speed_seen(d, emitted=0[s])"
+  movsrc_350: "wave_speed_seen(e, emitted=0[s])"
+  movwall_340: "wave_speed_seen(f, emitted=0[s])"
+  wind_movsrc_355: "wave_speed_seen(g, emitted=0[s])"
+  wind_355: "wave_speed_seen(g0, emitted=0[s])"
+  carried: "wave_speed_seen(h, t=1[s])"
+  own_echo_370: "wave_speed_seen(i, emitted=0[s])"
+  notime: "wave_speed_seen(d)"
+  static: "wave_speed_seen(a)"
+  f_src_app: "frequency(e, emitted=0[s])"
+  f_wind: "frequency(g, emitted=0[s])"
+  f_own_echo: "frequency(i, emitted=0[s])"
+  f_obl: "frequency(b, emitted=0[s])"
+  f_mw: "frequency(f, emitted=0[s])"
+  wl_e: "wavelength(e, emitted=0[s])"

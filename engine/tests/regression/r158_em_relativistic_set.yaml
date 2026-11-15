@@ -1,0 +1,15 @@
+# m12 review: relativistic Doppler at 0.6c: approach 2 GHz, recession 0.5 GHz, both approaching 4 GHz; wavelength c/f
+media: {space: {type: em}}
+sources:
+  A: {on: space, at: [1000 m, 0 m], velocity: ["-0.6*299792458[m/s]", 0 m/s], f: 1 GHz, A: 1, phase: 0, spreading: none}
+  B: {on: space, at: [1000 m, 0 m], velocity: ["0.6*299792458[m/s]", 0 m/s], f: 1 GHz, A: 1, phase: 0, spreading: none}
+points:
+  O: [0 m, 0 m]
+  P: {at: [0 m, 0 m], velocity: ["0.6*299792458[m/s]", 0 m/s]}
+rays: {app: {from: A, to: O}, rec: {from: B, to: O}, both2: {from: A, to: P}}
+observe:
+  app: "frequency(app, emitted=0[s])"
+  rec: "frequency(rec, emitted=0[s])"
+  both: "frequency(both2, emitted=0[s])"
+  wl: "wavelength(app, emitted=0[s])"
+expect: {app: 2000000000, rec: 500000000, both: 4000000000, wl: "149896229/1000000000"}

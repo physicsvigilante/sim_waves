@@ -1,0 +1,8 @@
+# m12: item and spacing of a resonance list
+media: {air: {type: gas, v: 340 m/s}}
+resonators: {p: {type: pipe, on: air, length: L, ends: [closed, open], end_correction: 0 m}}
+symbols: {L: positive}
+observe:
+  first: "item(resonances(p, f=500[Hz], vary=L, lo=0.1[m], hi=1.2[m]), 1)"
+  sp: "spacing(resonances(p, f=500[Hz], vary=L, lo=0.1[m], hi=1.2[m]))"
+expect: {first: "17/100", sp: "17/50"}

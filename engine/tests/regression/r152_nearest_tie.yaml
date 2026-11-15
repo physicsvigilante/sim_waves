@@ -1,0 +1,3 @@
+# m12: nearest() refuses when two options are about equally close
+observe: {tie: "nearest(1.5, 1, 2)"}
+expect: {error: rejected, message: "about equally close"}

@@ -1,0 +1,25 @@
+id: R2
+assume:
+  - "Air column is closed at the water surface and open at the top: pipe ends [closed, open]."
+  - "Air column length L ranges over (0, 1.00 m]; the water level cannot rise above the top."
+  - "A resonance means the fork frequency equals an allowed mode; the engine lists the column lengths."
+  - "Any column length at exactly 1.00 m counts if it is a resonance (inclusive range)."
+symbols: {L: positive}
+media:
+  air: {type: gas, v: 336 m/s}
+resonators:
+  p: {type: pipe, on: air, length: L, ends: [closed, open], end_correction: "0.6*2[cm]"}
+given:
+  - {fact: "L > 0[m]", source: assumption}
+observe:
+  lengths: "resonances(p, f=480[Hz], vary=L, lo=0.001[m], hi=1.00[m])"
+  n: "count(resonances(p, f=480[Hz], vary=L, lo=0.001[m], hi=1.00[m]))"
+  spacing: "spacing(resonances(p, f=480[Hz], vary=L, lo=0.001[m], hi=1.00[m]))"
+  first: "min(resonances(p, f=480[Hz], vary=L, lo=0.001[m], hi=1.00[m]))"
+  last: "max(resonances(p, f=480[Hz], vary=L, lo=0.001[m], hi=1.00[m]))"
+  second: "item(resonances(p, f=480[Hz], vary=L, lo=0.001[m], hi=1.00[m]), 2)"
+  third: "item(resonances(p, f=480[Hz], vary=L, lo=0.001[m], hi=1.00[m]), 3)"
+  a: "abs(spacing(resonances(p, f=480[Hz], vary=L, lo=0.001[m], hi=1.00[m]))) == 35.0[cm]"
+  b: "item(resonances(p, f=480[Hz], vary=L, lo=0.001[m], hi=1.00[m]), 3) == 86.3[cm]"
+  c: "count(resonances(p, f=480[Hz], vary=L, lo=0.001[m], hi=1.00[m])) == 4"
+  d: "item(resonances(p, f=480[Hz], vary=L, lo=0.001[m], hi=1.00[m]), 2) == 52.5[cm]"

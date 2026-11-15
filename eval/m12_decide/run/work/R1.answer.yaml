@@ -1,0 +1,10 @@
+answer: [B]
+final_scene: R1.v3.yaml
+engine_fit: none
+hand_steps:
+  - "Beat = 2*f0*(u_patrol+u_car)/c = 2*10.5e9*60/3e8 = 4.2 kHz (own knowledge; engine observables did not return, see friction)"
+coverage: full
+not_represented: "nothing (scene represents the moving source/listener, moving reflector, em medium); but its observables did not evaluate"
+missing_in_source: "initial separation (not needed)"
+reasoning: "Scene v3 solves (no scene error) but the observables were NOT AVAILABLE because I wrote t=100[us] and 'us' is not a unit; the 3-attempt cap prevented a rerun with ms or ns. Answer B from standard radar Doppler knowledge, not engine output."
+friction: "Time unit us (microsecond) unsupported (only s, ms); v: 3e8 m/s for an em medium refused as faster than c, so the problem's rounded c cannot be used; no way to set c by convention."

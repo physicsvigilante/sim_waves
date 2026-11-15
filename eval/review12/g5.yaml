@@ -1,0 +1,2 @@
+media: {w: {type: fluid, bulk_modulus: 1e20 Pa, density: 1000 kg/m^3}}
+observe: {a: "1"}

@@ -63,7 +63,7 @@ Write YAML booleans only as `true`/`false`; `on`, `yes`, `no` are plain words.
   - `x` and `t` written freely in a formula count as SI numbers, so book formulas such as
     `0.2*sin(2*pi*(6*t - x/60))` are fine.
   - The `x=`, `t=`, `at=` and `r=` arguments must be lengths or times.
-- **Units:** m, cm, mm, km, s, ms, kg, g, N, Pa, kPa, J, mJ, W, mW, kW, Hz, kHz, rad, deg, K, degC.
+- **Units:** m, cm, mm, km, s, ms, us, ns, kg, g, N, Pa, kPa, J, mJ, W, mW, kW, Hz, kHz, MHz, GHz, rad, deg, K, degC.
 - **Internals:** the engine works in exact SI.
 
 ## Media
@@ -406,6 +406,29 @@ rays:
   - Put unstated distances in `arbitrary:`: the answer must not depend on them.
 - **Speeds and arbitrary values:** keep arbitrary speeds well below the speed of sound.
   The arbitrary check scales them up to x89, and every scaling must stay subsonic.
+- **Light, radar, radio:** use `media: {space: {type: em}}`. The speed is c (exact SI);
+  give `v` or a refractive index `n` for a material.
+  - When the problem says to take c = 3e8 m/s, write `c: 3e8 m/s`. It is used everywhere,
+    for travel and for time dilation; `v` may not exceed it.
+  - `speed(space)` gives the medium's light speed.
+  - A gas or fluid with v of 1e5 m/s or more is refused: it is not sound.
+  - The Doppler effect for `em` is exact special relativity:
+    f = f0 · (γ_receiver/γ_source) · dte/dt, in the frame where light has speed c.
+    Echoes from moving reflectors work as for sound.
+  - Book answers use 2u/c approximations; they agree to the digits shown. Pick the option
+    with `nearest(...)`.
+  - In a material (`n` or `v`), light travels at c/n in the medium's frame (the scene
+    frame), while time dilation uses the vacuum c.
+  - `wavelength(ray, ...)` for `em` is the wavelength in the medium's frame:
+    (c/n) / (the frequency an observer at rest there would measure).
+  - There is no wind for `em`. Sound quantities (intensity, pressure, displacement, sound
+    level) are refused.
+  - Speeds solved from facts are checked: light faster than c, or a "sound" speed of
+    1e5 m/s or more, is refused.
+- **`wave_speed_seen(ray, t= | emitted=)`:** the speed of the arriving wave relative to
+  the listener, along its direction of travel: v + (wind − listener velocity) · k̂ for
+  sound. For light it is relativistic velocity addition, which gives exactly c in
+  vacuum.
 - **A listener carrying its own source** (same motion, same place) hears the source's own
   frequency.
 - **Reflections:**
@@ -521,6 +544,15 @@ pl:   {on: air, geometry: plane, intensity: I}
   - `==` between exact numbers needs exact equality; engine decimals use a relative
     tolerance.
   - An undecidable comparison is refused. Both sides need the same dimension.
+- **Comparisons through `abs`, `max` and `min`** (e.g. a beat frequency) are split into
+  sign cases. They are decided when every possible case agrees. A case with one symbol is
+  checked on its own range. Cases with several symbols, or compound conditions, may be
+  refused ("cannot decide"); they are never guessed.
+- **Options given as rounded numbers:** `nearest(x, a, b, c, d)` gives the position (1 for
+  a) of the option nearest to x by relative distance. It is refused when the two nearest
+  options are about equally close.
+- **Lists:** `item(list, n)` (1 for the first), `spacing(list)` (the common difference of
+  an equally spaced list; otherwise refused), and `count(list)`.
 - **Bounds on a symbol:** a `given` fact comparing one symbol with a constant, e.g.
   `{fact: "n > 1", source: stated}`, `L >= 2[m]` or `2 < m`, is a stated bound.
   - It works for positive, real and integer symbols.

@@ -1,0 +1,4 @@
+# m12: radar entered as a gas is refused (run 6 single/33)
+media: {air: {type: gas, v: 3e8 m/s}}
+observe: {a: "1"}
+expect: {error: rejected, message: "type: em"}

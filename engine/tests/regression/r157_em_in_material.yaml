@@ -1,0 +1,15 @@
+# m12 review: em in a material (n = 1.5): Doppler uses c/n for travel, vacuum c for time dilation; speed seen by velocity addition
+media: {glass: {type: em, n: 1.5}}
+sources:
+  A: {on: glass, at: [1000 m, 0 m], velocity: ["-0.1*299792458[m/s]", 0 m/s], f: 1 GHz, A: 1, phase: 0, spreading: none}
+  S: {on: glass, at: [1000 m, 0 m], f: 1 GHz, A: 1, phase: 0, spreading: none}
+points:
+  O: [0 m, 0 m]
+  P: {at: [0 m, 0 m], velocity: ["0.1*299792458[m/s]", 0 m/s]}
+rays: {r: {from: A, to: O}, q: {from: S, to: P}}
+observe:
+  f: "frequency(r, emitted=0[s])"
+  fq: "frequency(q, emitted=0[s])"
+  seen: "wave_speed_seen(q, emitted=0[s])"
+  lam: "wavelength(q, emitted=0[s])"
+expect: {f: "6000000000*sqrt(11)/17", fq: "11500000000*sqrt(11)/33", seen: "3447613267/16"}

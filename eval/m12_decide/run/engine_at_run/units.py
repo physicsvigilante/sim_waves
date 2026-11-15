@@ -1,0 +1,92 @@
+"""Units: parse unit text into an exact SI factor plus a dimension vector (L, M, T, K)."""
+import ast
+import re
+
+import sympy as sp
+
+from .errors import SceneError
+
+
+def dim(L=0, M=0, T=0, K=0):
+    return (L, M, T, K)
+
+
+DIMLESS = dim()
+LENGTH, MASS, TIME, TEMP = dim(L=1), dim(M=1), dim(T=1), dim(K=1)
+FORCE = dim(1, 1, -2)
+_R = sp.Rational
+
+UNITS = {
+    "m": (1, LENGTH), "cm": (_R(1, 100), LENGTH), "mm": (_R(1, 1000), LENGTH), "km": (1000, LENGTH),
+    "s": (1, TIME), "ms": (_R(1, 1000), TIME),
+    "kg": (1, MASS), "g": (_R(1, 1000), MASS),
+    "N": (1, FORCE), "Pa": (1, dim(-1, 1, -2)), "J": (1, dim(2, 1, -2)), "mJ": (_R(1, 1000), dim(2, 1, -2)),
+    "W": (1, dim(2, 1, -3)), "mW": (_R(1, 1000), dim(2, 1, -3)), "kW": (1000, dim(2, 1, -3)),
+    "kHz": (1000, dim(T=-1)), "MHz": (10 ** 6, dim(T=-1)), "GHz": (10 ** 9, dim(T=-1)), "kPa": (1000, dim(-1, 1, -2)), "Hz": (1, dim(T=-1)),
+    "rad": (1, DIMLESS), "deg": (sp.pi / 180, DIMLESS),
+    "K": (1, TEMP), "degC": (1, TEMP),
+    "mol": (1, DIMLESS),      # amount of substance is treated as a pure count
+}
+CELSIUS_OFFSET = _R(27315, 100)
+
+
+def _mul(a, b):
+    return tuple(x + y for x, y in zip(a, b))
+
+
+def _pow(a, n):
+    return tuple(x * n for x in a)
+
+
+def unit_from_ast(node):
+    """Return (factor, dimension) for a unit expression such as kg/m**3 or 1/K."""
+    if isinstance(node, ast.Name):
+        if node.id not in UNITS:
+            raise SceneError(f"unknown unit '{node.id}'")
+        f, d = UNITS[node.id]
+        return sp.sympify(f), d
+    if isinstance(node, ast.Constant) and node.value == 1:
+        return sp.Integer(1), DIMLESS
+    if isinstance(node, ast.BinOp):
+        if isinstance(node.op, ast.Pow):
+            base = unit_from_ast(node.left)
+            n = node.right
+            sign = 1
+            if isinstance(n, ast.UnaryOp) and isinstance(n.op, ast.USub):
+                sign, n = -1, n.operand
+            if not (isinstance(n, ast.Constant) and isinstance(n.value, int)):
+                raise SceneError("unit exponents must be whole numbers")
+            e = sign * n.value
+            if abs(e) > 12:
+                raise SceneError("unit exponent too large")
+            return base[0] ** e, _pow(base[1], e)
+        a, b = unit_from_ast(node.left), unit_from_ast(node.right)
+        if isinstance(node.op, ast.Mult):
+            return a[0] * b[0], _mul(a[1], b[1])
+        if isinstance(node.op, ast.Div):
+            return a[0] / b[0], _mul(a[1], _pow(b[1], -1))
+    raise SceneError("malformed unit expression")
+
+
+def parse_unit(text):
+    try:
+        node = ast.parse(text.replace("^", "**"), mode="eval").body
+    except SyntaxError as exc:
+        raise SceneError(f"malformed unit '{text}'") from exc
+    return unit_from_ast(node)
+
+
+_UNIT_TOKEN = re.compile(r"^[A-Za-z0-9_*/^().\-]+$")
+
+
+def split_quantity(text):
+    """Split '3*pi rad/s' into ('3*pi', 'rad/s', factor, dim). No unit -> (text, None, 1, None)."""
+    text = str(text).strip()
+    m = re.match(r"^(.*\S)\s+(\S+)$", text)
+    if m and _UNIT_TOKEN.match(m.group(2)):
+        try:
+            factor, d = parse_unit(m.group(2))
+            return m.group(1), m.group(2), factor, d
+        except SceneError:
+            pass
+    return text, None, sp.Integer(1), None

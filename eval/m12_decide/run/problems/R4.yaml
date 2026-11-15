@@ -1,0 +1,12 @@
+id: R4
+type: multiple_correct
+statement: >
+  A sonometer wire of vibrating length 0.50 m and linear mass density 0.010 kg/m vibrates
+  in its fundamental mode alongside a tuning fork of frequency 210 Hz. The tension in the
+  wire can take any value in the range 400 N to 484 N. Which of the following statements
+  is/are correct?
+options:
+  A: For every tension in this range, the beat frequency heard is at most 10 Hz.
+  B: For every tension in this range, the beat frequency heard is at most 5 Hz.
+  C: For every tension in this range, the beat frequency heard is less than 12 Hz.
+  D: When the tension is 484 N, the beat frequency heard is 20 Hz.

@@ -1,0 +1,8 @@
+media: {glass: {type: em, n: 1.5}}
+sources:
+  A: {on: glass, at: [1000 m, 0 m], velocity: ["-0.8*299792458[m/s]", 0 m/s], f: 1 GHz, A: 1, phase: 0, spreading: none}
+points:
+  O: [0 m, 0 m]
+rays: {r: {from: A, to: O}}
+observe:
+  f: "frequency(r, emitted=0[s])"

@@ -1,0 +1,11 @@
+media: {space: {type: em}}
+sources:
+  S: {on: space, at: [100 m, 0 m], circle: {center: [0 m, 0 m], speed: "0.6*299792458[m/s]", sense: ccw}, f: 1 GHz, A: 1, phase: 0, spreading: none}
+  T: {on: space, at: [0 m, 0 m], f: 1 GHz, A: 1, phase: 0, spreading: none}
+  F: {on: space, at: [1000 m, 0 m], velocity: ["-299792458[m/s]", 0 m/s], f: 1 GHz, A: 1, phase: 0, spreading: none}
+points:
+  O: [0 m, 0 m]
+  R: {at: [100 m, 0 m], circle: {center: [0 m, 0 m], speed: "0.6*299792458[m/s]", sense: ccw}}
+  fast: {at: [100 m, 0 m], velocity: ["1.2*299792458[m/s]", 0 m/s]}
+rays: {r: {from: S, to: O}, q: {from: T, to: R}, xx: {from: T, to: fast}, y: {from: F, to: O}}
+observe: {f_0p8: "frequency(r, t=1e-6[s])", f_1p25: "frequency(q, t=1e-6[s])", ftl: "frequency(xx, emitted=0[s])", atc: "frequency(y, emitted=0[s])"}

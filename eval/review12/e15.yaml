@@ -1,0 +1,7 @@
+media: {space: {type: em}}
+sources:
+  A: {on: space, at: [0 m, 0 m], f: 100 MHz, A: 1, phase: 0, spreading: none}
+  B: {on: space, at: [0 m, 3 m], f: 100 MHz, A: 1, phase: 0, spreading: none}
+points: {O: [4 m, 0 m]}
+rays: {a: {from: A, to: O}, b: {from: B, to: O}}
+observe: {dphi: "phase_difference(a, b)", lam: "wavelength(a)", pd: "path_difference(a, b)"}

@@ -1,0 +1,6 @@
+media: {space: {type: em}}
+sources:
+  S: {on: space, at: [1000 m, 0 m], velocity: ["-0.6*299792458[m/s]", 0 m/s], starts: 1 s, f: 1 GHz, A: 1, phase: 0, spreading: none}
+points: {O: [0 m, 0 m]}
+rays: {r: {from: S, to: O}}
+observe: {before: "frequency(r, emitted=0.5[s])", at: "frequency(r, emitted=1[s])", after: "frequency(r, emitted=1.0000001[s])"}
