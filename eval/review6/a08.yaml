@@ -1,0 +1,3 @@
+id: a08
+media: {air: {type: gas, v: 340 m/s, gamma: 7/5, pressure: 1e5 Pa}}
+observe: {v: "speed(air)"}

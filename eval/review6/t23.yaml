@@ -1,0 +1,4 @@
+id: t23
+unknowns: {u: positive}
+given: ["exp(-u)*u**2 == 0.3"]
+observe: {u: "u"}

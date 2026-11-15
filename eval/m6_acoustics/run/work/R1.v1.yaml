@@ -1,0 +1,26 @@
+id: m6/R1
+assume:
+  - "Transducer on the floor radiates uniformly into the upper half-space: hemispherical spreading (floor absorbs, so no reflection)."
+  - "Hydrophone at 25 m and the 50 m point are both in the water above the floor; their directions are not given, and uniform radiation makes the direction irrelevant. Placed on a line for drawing only."
+  - "Bulk modulus taken as the reciprocal of the adiabatic compressibility."
+  - "Source treated as coherent single-frequency (phase 0); phase does not affect intensity of a single ray."
+symbols: {}
+unknowns: {P: positive}
+media:
+  sea: {type: fluid, density: 1025 kg/m^3, bulk_modulus: "1/(4.4e-10[1/Pa])"}
+sources:
+  T: {on: sea, at: [0 m, 0 m], f: 2000 Hz, power: P, phase: 0, spreading: hemispherical}
+points:
+  H: [25 m, 0 m]
+  Q: [50 m, 0 m]
+rays:
+  rh: {from: T, to: H}
+  rq: {from: T, to: Q}
+given:
+  - {fact: "sound_level(intensity(rh)) == 110", source: stated}
+observe:
+  v: "speed(sea)"
+  power: "P"
+  p_h: "pressure_amplitude(rh)"
+  s_q: "displacement_amplitude(rq)"
+  L_q: "sound_level(intensity(rq))"

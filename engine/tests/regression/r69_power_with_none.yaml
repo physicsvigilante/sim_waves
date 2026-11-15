@@ -1,0 +1,4 @@
+media: {air: {type: gas, v: 340 m/s}}
+sources: {S: {on: air, power: 1 W, phase: random, spreading: none}}
+observe: {f: "1"}
+expect: {error: rejected, message: "spherical or hemispherical"}

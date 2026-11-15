@@ -1,0 +1,4 @@
+id: t32
+unknowns: {u: real}
+given: ["exp(2*u) - 3*exp(u) + 2 == 0"]
+observe: {u: "u"}

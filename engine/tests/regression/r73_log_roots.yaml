@@ -1,0 +1,6 @@
+# review 6 #2: the root log(u) = 0 must not be lost
+id: L2
+unknowns: {u: positive}
+given: ["log(u)**3 == log(u)", "u > 0.5"]
+observe: {u: "u"}
+expect: {error: ambiguous, message: "u in {1, E}"}

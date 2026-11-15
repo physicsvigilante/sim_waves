@@ -1,0 +1,4 @@
+id: b14
+media: {steel: {type: rod, Y: 2e11 Pa, density: 8000 kg/m^3}}
+sources: {S: {on: steel, at: [0 m, 0 m], f: 1000 Hz, power: 1 W, phase: 0, spreading: spherical}}
+observe: {f: "frequency(S)"}

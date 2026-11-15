@@ -1,0 +1,7 @@
+id: d02
+unknowns: {fu: positive}
+media: {air: {type: gas, v: 340 m/s, density: 1.2 kg/m^3}}
+waves: {s: {harmonic: {on: air, f: fu, intensity: 1e-4 W/m^2, dir: +x, phase: 0}}}
+given: [{fact: "displacement_amplitude(s) == 1e-7[m]", source: stated}]
+observe: {fu: "fu"}
+expect: {fu: {value: 1114.3, tol: 0.001}}

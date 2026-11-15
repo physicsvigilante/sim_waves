@@ -1,0 +1,2 @@
+observe: {L: "sound_level(0[W/m^2])"}
+expect: {error: rejected, message: "positive"}

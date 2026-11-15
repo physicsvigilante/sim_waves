@@ -1,0 +1,4 @@
+id: s05
+unknowns: {u: real}
+given: ["exp(u) + exp(-u) == 4"]
+observe: {u: "u"}

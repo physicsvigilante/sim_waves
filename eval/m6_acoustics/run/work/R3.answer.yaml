@@ -1,0 +1,12 @@
+answer: {a: 75.1 dB, b: 0.163 Pa, c: 87.3 dB}
+final_scene: R3.v2.yaml
+engine_fit: partial
+hand_steps:
+  - "S1-S2 separation and directions are not given; placed collinear for drawing (does not affect result)"
+  - "part (c) modelled by a second pair of incoherent sources N1, N2 (phase random) at the same places"
+  - "pressure amplitude of the resultant taken from resultant_amplitude(r1, r2); pressure_amplitude() accepts one ray only"
+coverage: full
+not_represented: "nothing"
+missing_in_source: "S1-S2 separation and geometry (not needed)"
+reasoning: "Path difference 1.2 m = 1.5 wavelengths so the rays are in antiphase (phase difference pi); coherent addition gives 75.1 dB and resultant pressure amplitude 0.163 Pa; incoherent sources add intensities giving 87.3 dB."
+friction: "mW is not a unit (v1 failed, used 20e-3 W in v2); pressure_amplitude does not accept several rays; no way to switch coherence of the same sources, so duplicated them; relies on resultant_amplitude being a pressure amplitude for power-defined sources."

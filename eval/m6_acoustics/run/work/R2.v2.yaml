@@ -1,0 +1,24 @@
+id: m6/R2
+assume:
+  - "Young's modulus from the static test written as stress over strain, in the medium's Y field (same style as the bulk-modulus example); this relation is the author's, not an engine observable."
+  - "Cross-section area from the diameter, A = pi*d^2/4, written by the author."
+  - "Second-lowest mode of a clamped-free rod is the 3rd harmonic (odd harmonics only)."
+  - "Longitudinal waves in a thin rod: v = sqrt(Y/density) as the engine's rod medium."
+  - "Second rod is a separate medium (a medium with a stated length cannot host a resonator of another length) with the same Y and density (density = mass/volume of rod 1, author arithmetic)."
+  - "Second rod has the same Y and density (same metal), uniform cross-section."
+symbols: {}
+unknowns: {L2: positive}
+media:
+  metal: {type: rod, Y: "(2000[N]/(pi*(0.5[cm])^2)) / (0.437[mm]/1.2[m])", mass: 254.5 g, length: 1.2 m, area: "pi*(0.5[cm])^2"}
+  metal2: {type: rod, Y: "(2000[N]/(pi*(0.5[cm])^2)) / (0.437[mm]/1.2[m])", density: "254.5[g]/(1.2[m]*pi*(0.5[cm])^2)"}
+resonators:
+  r1: {type: rod, on: metal, length: 1.2 m, ends: [clamped, free]}
+  r2: {type: rod, on: metal2, length: L2, ends: [free, free]}
+given:
+  - {fact: "frequency(r2, harmonic=1) == frequency(r1, harmonic=3)", source: stated, note: "second-lowest mode of clamped-free rod is harmonic 3"}
+observe:
+  Y: "(2000[N]/(pi*(0.5[cm])^2)) / (0.437[mm]/1.2[m])"
+  v: "speed(metal)"
+  f_c: "frequency(r1, harmonic=3)"
+  L2: "L2"
+  f_1: "frequency(r1, harmonic=1)"

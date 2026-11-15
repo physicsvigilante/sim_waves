@@ -1,0 +1,4 @@
+id: s10
+unknowns: {u: positive}
+given: ["u**2 == exp(u)/2"]
+observe: {u: "u"}

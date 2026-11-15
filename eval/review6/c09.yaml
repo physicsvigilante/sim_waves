@@ -1,0 +1,12 @@
+id: c09
+# r71 style: power from level, and distance from level with two incoherent sources
+unknowns: {P: positive}
+media: {air: {type: gas, v: 340 m/s}}
+sources:
+  S1: {on: air, at: [0 m, 0 m], power: P, phase: random, spreading: hemispherical}
+  S2: {on: air, at: [0 m, 0 m], power: P, phase: random, spreading: hemispherical}
+points: {Q: [10 m, 0 m]}
+rays: {a: {from: S1, to: Q}, b: {from: S2, to: Q}}
+given: [{fact: "sound_level(intensity(a, b)) == 70", source: stated}]
+observe: {P: "P", one: "sound_level(intensity(a))"}
+expect: {P: {value: 3.1416e-3, tol: 0.001}, one: {value: 66.99, tol: 0.001}}

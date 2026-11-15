@@ -1,0 +1,4 @@
+id: t28
+unknowns: {u: real}
+given: ["sound_level(u*1[W/m^2]) == 60"]
+observe: {u: "u"}

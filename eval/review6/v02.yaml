@@ -1,0 +1,6 @@
+id: v02
+media: {air: {type: gas, v: 340 m/s, density: 1.2 kg/m^3}}
+waves: {s: {harmonic: {on: air, f: 1000 Hz, intensity: 1e-4 W/m^2, dir: +x, phase: 0}}}
+observe: {p0: "pressure_amplitude(s)", A: "amplitude(s)"}
+view: [{snapshot: s, t: 0 s}, {animate: s}]
+explore: {vary: {media.air.density: [1.2 kg/m^3, 0.6 kg/m^3]}}

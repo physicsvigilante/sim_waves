@@ -1,0 +1,4 @@
+id: s09
+unknowns: {u: real}
+given: ["asin(u) == 2"]
+observe: {u: "u"}

@@ -1,0 +1,12 @@
+id: d08
+unknowns: {ph: phase, P: positive}
+media: {air: {type: gas, v: 340 m/s}}
+sources:
+  S1: {on: air, at: [0 m, 0 m], f: 170 Hz, power: P, phase: 0, spreading: spherical}
+  S2: {on: air, at: [0 m, 0 m], f: 170 Hz, power: P, phase: ph, spreading: spherical}
+points: {A: [2 m, 0 m]}
+rays: {a: {from: S1, to: A}, b: {from: S2, to: A}}
+given:
+  - {fact: "sound_level(intensity(a)) == 80", source: stated}
+  - {fact: "sound_level(intensity(a, b)) == 83.0103", source: stated}
+observe: {ph: "ph", P: "P"}

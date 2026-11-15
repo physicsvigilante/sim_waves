@@ -1,0 +1,4 @@
+id: s11
+unknowns: {u: real}
+given: ["atan(u) + atan(2*u) == pi/2"]
+observe: {u: "u"}

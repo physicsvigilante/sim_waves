@@ -1,0 +1,4 @@
+id: s04
+unknowns: {u: real}
+given: ["log(u**2) == 0"]
+observe: {u: "u"}

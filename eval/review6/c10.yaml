@@ -1,0 +1,9 @@
+id: c10
+unknowns: {P: real}
+media: {air: {type: gas, v: 340 m/s}}
+sources:
+  S1: {on: air, at: [0 m, 0 m], power: P, phase: random, spreading: spherical}
+points: {Q: [10 m, 0 m]}
+rays: {a: {from: S1, to: Q}}
+given: [{fact: "intensity(a)**2 == 1e-8[W^2/m^4]", source: stated}]
+observe: {P: "P"}

@@ -1,0 +1,5 @@
+# review 6 #4: rod inputs outside a route
+id: b01
+media: {steel: {type: rod, v: 5000 m/s, Y: 1e11 Pa}}
+observe: {v: "speed(steel)"}
+expect: {error: rejected, message: "needs the density"}

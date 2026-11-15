@@ -1,0 +1,3 @@
+id: b12
+media: {water: {type: fluid, bulk_modulus: 2.25e9 Pa, density: 1000 kg/m^3, v: 1400 m/s}}
+observe: {v: "speed(water)"}

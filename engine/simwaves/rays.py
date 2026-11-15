@@ -16,12 +16,14 @@ import sympy as sp
 
 from .errors import SceneError, UndeterminedError
 from .expr import Ref
+from .expr import dimension_of
 from .units import split_quantity
-from .scene import (D_FREQ, DIMLESS, LENGTH, OBS_DIMS, OBSERVABLES, TWO_PI, GasMedium, T,
+from .scene import (D_FREQ, D_PRESS, DIMLESS, LENGTH, OBS_DIMS, OBSERVABLES, TWO_PI, GasMedium, T,
+                    acoustic_density, dim,
                     _keys, _obj)
 
 KEYS = ("sources", "reflectors", "points", "rays")
-SPREADING = ("none", "spherical", "cylindrical")
+SPREADING = ("none", "spherical", "hemispherical", "cylindrical")
 
 
 def _vector(sc, value, where):
@@ -45,7 +47,7 @@ def _dot(a, b):
 
 
 class Source:
-    KEYS_ = {"on", "at", "f", "A", "A_at", "phase", "spreading"}
+    KEYS_ = {"on", "at", "f", "A", "A_at", "phase", "spreading", "power"}
 
     def __init__(self, sc, name, spec):
         w = f"sources.{name}"
@@ -53,20 +55,37 @@ class Source:
         self.name = name
         m = sc.objects.get(spec.get("on"))
         if not isinstance(m, GasMedium):
-            raise SceneError(f"{w}.on: point sources need a gas medium (sound)")
+            raise SceneError(f"{w}.on: point sources need a gas or fluid medium (sound)")
         self.medium = m
         self.at = _vector(sc, spec["at"], f"{w}.at") if "at" in spec else None
-        if "f" not in spec or "A" not in spec or "spreading" not in spec or "phase" not in spec:
-            raise SceneError(f"{w}: give f, A, phase and spreading (none | spherical | cylindrical)")
-        self.f = sc.quantity(spec["f"], D_FREQ, f"{w}.f")
-        if self.f.is_positive is False or (self.f.is_number and not self.f > 0):
+        if "spreading" not in spec or "phase" not in spec or \
+                ("A" in spec) == ("power" in spec):
+            raise SceneError(f"{w}: give phase, spreading (none | spherical | hemispherical | cylindrical), "
+                             f"exactly one of A (amplitude) or power, and f unless no phase is needed")
+        self._f = sc.quantity(spec.get("f"), D_FREQ, f"{w}.f")       # optional: only phases need it
+        if self._f is not None and (self._f.is_positive is False or (self._f.is_number and not self._f > 0)):
             raise SceneError(f"{w}.f: frequency must be positive")
-        self.A = sc.quantity(spec["A"], None, f"{w}.A")     # pressure or relative amplitude
-        unit_dim = split_quantity(spec["A"])[3]
-        self.A_kind = unit_dim if unit_dim is not None else ("number" if self.A.is_number else None)
         self.spreading = spec["spreading"]
         if self.spreading not in SPREADING:
             raise SceneError(f"{w}.spreading: one of {SPREADING}")
+        self.power = None
+        if "power" in spec:
+            # a source of stated acoustic power: pressure amplitude follows from I = P/(Omega s^2)
+            if self.spreading not in ("spherical", "hemispherical") or "A_at" in spec:
+                raise SceneError(f"{w}: a source with power needs spreading spherical or hemispherical "
+                                 f"(and no A_at)")
+            self.power = sc.quantity(spec["power"], dim(2, 1, -3), f"{w}.power")
+            if self.power.is_positive is False:
+                raise SceneError(f"{w}.power must be positive")
+            self.A, self.A_kind, self.A_at = None, D_PRESS, None
+            self.random = spec["phase"] == "random"
+            self.phi = None if self.random else sc.quantity(spec["phase"], DIMLESS, f"{w}.phase")
+            return
+        self.A = sc.quantity(spec["A"], None, f"{w}.A")     # pressure or relative amplitude
+        unit_dim = split_quantity(spec["A"])[3]
+        if unit_dim is None and "[" in str(spec["A"]):
+            unit_dim = dimension_of(split_quantity(spec["A"])[0], sc)
+        self.A_kind = unit_dim if unit_dim is not None else ("number" if self.A.is_number else None)
         self.A_at = None
         if self.spreading != "none":
             if "A_at" not in spec:
@@ -79,13 +98,24 @@ class Source:
         self.phi = None if self.random else sc.quantity(spec["phase"], DIMLESS, f"{w}.phase")
 
     @property
+    def f(self):
+        if self._f is None:
+            raise UndeterminedError(f"source '{self.name}' has no frequency (f); phases, wavelengths and "
+                                    f"displacement amplitudes need it")
+        return self._f
+
+    @property
     def k(self):
         return TWO_PI * self.f / self.medium.speed()
 
     def amplitude_at(self, s):
+        if self.power is not None:
+            omega = 4 * sp.pi if self.spreading == "spherical" else 2 * sp.pi
+            rho = acoustic_density(self.medium, f"source '{self.name}' with power")
+            return sp.sqrt(2 * rho * self.medium.speed() * self.power / (omega * s ** 2))
         if self.spreading == "none":
             return self.A
-        if self.spreading == "spherical":
+        if self.spreading in ("spherical", "hemispherical"):
             return self.A * self.A_at / s
         return self.A * sp.sqrt(self.A_at / s)
 
@@ -140,6 +170,9 @@ class Ray:
             if "to" in spec or "via" in spec:
                 raise SceneError(f"{w}: give either length (a stated path) or to/via (geometry)")
             self.L = sc.quantity(spec["length"], LENGTH, f"{w}.length")
+            if src.power is not None:
+                raise SceneError(f"{w}: a stated-length path (a tube) from a source given by power: how the "
+                                 f"sound spreads along it is not modelled; give the source an amplitude A")
             if self.L.is_positive is False or (self.L.is_number and not self.L > 0):
                 raise SceneError(f"{w}.length: must be positive")
             self.to = None
@@ -188,6 +221,24 @@ class Ray:
         s = self.source
         phi = 0 if s.random else s.phi        # rays of one random source share its phase
         return TWO_PI * s.f * t - s.k * self.L + phi + self.dphi
+
+    def pressure_amplitude(self):
+        if self.source.A_kind != D_PRESS:
+            raise SceneError(f"ray '{self.name}': its source amplitude is not a pressure (give A in Pa, or power)")
+        return self.amplitude()
+
+    def sqrt_intensity(self):
+        """sqrt of this ray's own intensity (W/m^2): from power and spreading directly, or p0/sqrt(2 rho v)."""
+        src = self.source
+        if src.power is not None:
+            omega = 4 * sp.pi if src.spreading == "spherical" else 2 * sp.pi
+            return sp.sqrt(src.power / (omega * self.L ** 2))
+        rho = acoustic_density(src.medium, f"intensity of ray '{self.name}'")
+        return self.pressure_amplitude() / sp.sqrt(2 * rho * src.medium.speed())
+
+    def displacement_amplitude(self):
+        rho = acoustic_density(self.source.medium, f"displacement amplitude of ray '{self.name}'")
+        return self.pressure_amplitude() / (rho * self.source.medium.speed() * TWO_PI * self.source.f)
 
     def phasor_key(self):
         """Rays with the same key add as amplitudes; different keys add as intensities."""
@@ -254,13 +305,14 @@ def _groups(sc, rays, fname):
     return groups
 
 
-def _amp2(rs):
+def _amp2(rs, weight=None):
     """|sum of phasors|^2 for rays of one frequency, written as
     sum A_i^2 + 2 sum A_i A_j cos(phase_i - phase_j) (no trig expansion)."""
-    total = sum(r.amplitude() ** 2 for r in rs)
+    amp = weight or (lambda r: r.amplitude())
+    total = sum(amp(r) ** 2 for r in rs)
     for a, b in itertools.combinations(rs, 2):
         dphi = sp.simplify(a.total_phase(0, allow_random=True) - b.total_phase(0, allow_random=True))
-        total += 2 * a.amplitude() * b.amplitude() * sp.cos(dphi)
+        total += 2 * amp(a) * amp(b) * sp.cos(dphi)
     return sp.simplify(total)
 
 
@@ -280,6 +332,32 @@ def _relative_intensity(sc, *args):
     phasors; incoherent or different-frequency rays add as intensities."""
     rays = _rays(args, "relative_intensity")
     return sp.simplify(sum(_amp2(g) for g in _groups(sc, rays, "relative_intensity")))
+
+
+def _pressure_amplitude_rays(sc, *args):
+    """Pressure amplitude of the resultant of one or more coherent rays (sources with power or A in Pa)."""
+    rays = _rays(args, "pressure_amplitude")
+    if any(r.source.A_kind != D_PRESS for r in rays):
+        raise SceneError("pressure_amplitude(): needs sources with power or A in Pa")
+    if len(rays) == 1:
+        return rays[0].pressure_amplitude()
+    return _resultant_amplitude(sc, *args)
+
+
+def ray_intensity(sc, args):
+    """Physical time-averaged intensity (W/m^2) of superposed rays with pressure amplitudes in one
+    medium: I = <p^2>/(rho v), i.e. relative_intensity / (2 rho v)."""
+    rays = _rays(args, "intensity")
+    media = {id(r.source.medium): r.source.medium for r in rays}
+    if len(media) != 1:
+        raise SceneError("intensity(): the rays are in different media")
+    if any(r.source.A_kind != D_PRESS for r in rays):
+        raise SceneError("intensity(): needs pressure amplitudes (A in Pa, or power); use relative_intensity "
+                         "for amplitudes in other units")
+    total = 0
+    for g in _groups(sc, rays, "intensity"):
+        total += _amp2(g, weight=lambda r: r.sqrt_intensity())
+    return sp.simplify(total)
 
 
 def _path_difference(_sc, a, b):
@@ -384,6 +462,9 @@ def _ray_or_source(o):
 
 
 def _ray_amplitude(o):
+    if getattr(o if isinstance(o, Source) else o.source, "A_kind", None) == D_PRESS:
+        raise SceneError("amplitude(): this sound source carries a pressure; ask for pressure_amplitude(...) or "
+                         "displacement_amplitude(...) so the units are explicit")
     if isinstance(o, Source):
         if o.spreading != "none":
             raise SceneError(f"amplitude({o.name}): spreading source; ask for amplitude(ray)")

@@ -1,0 +1,4 @@
+id: a18
+media: {air: {type: gas, v: 340 m/s, density: 1.2 kg/m^3}}
+waves: {s: {harmonic: {on: air, lambda: 0.34 m, pressure_amplitude: 2.5635 Pa, dir: +x, phase: 0}}}
+observe: {A: "amplitude(s)", f: "frequency(s)", pmax: "pressure_amplitude(s)", P: "power(s)"}

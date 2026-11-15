@@ -1,0 +1,10 @@
+id: c15
+# power source: explore/view export
+media: {air: {type: gas, v: 340 m/s, density: 1.2 kg/m^3}}
+symbols: {d: positive}
+sources:
+  S1: {on: air, at: [0 m, 0 m], f: 170 Hz, power: 1 W, phase: 0, spreading: spherical}
+  S2: {on: air, at: [0 m, 3 m], f: 170 Hz, power: 1 W, phase: 0, spreading: spherical}
+points: {Q: [d, 0 m]}
+rays: {a: {from: S1, to: Q}, b: {from: S2, to: Q}}
+observe: {I: "at(intensity(a, b), d=4[m])", L: "at(sound_level(intensity(a, b)), d=4[m])", mn: "minima(a, b, vary=d, lo=0.1[m], hi=20[m])"}

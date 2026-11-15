@@ -1,0 +1,4 @@
+id: t35
+unknowns: {u: real}
+given: ["u**u == 2"]
+observe: {u: "u"}

@@ -1,0 +1,4 @@
+id: b03
+media: {steel: {type: rod, Y: 2e11 Pa, density: 8000 kg/m^3, length: 1 m}}
+resonators: {r: {type: rod, on: steel, length: 2 m, ends: [clamped, free]}}
+observe: {f1: "frequency(r, harmonic=1)", f3: "frequency(r, harmonic=3)", f2: "frequency(r, harmonic=2)", n: "nodes(r, harmonic=3)", an: "antinodes(r, harmonic=3)", o1: "harmonic(r, overtone=1)", ms: "mode_shape(r, harmonic=1, x=2[m])"}

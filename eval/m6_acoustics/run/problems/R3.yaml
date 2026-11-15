@@ -1,0 +1,17 @@
+id: m6/R3
+format: numerical
+statement: |
+  Two small loudspeakers S1 and S2 in open air behave as point sources radiating uniformly
+  in all directions. Both are driven from the same oscillator at 425 Hz, in phase with each
+  other. S1 radiates an acoustic power of 20 mW and S2 a power of 80 mW. A microphone M is
+  at a distance of 3.00 m from S1 and 4.20 m from S2. The speed of sound in air is 340 m/s
+  and the density of air is 1.20 kg/m^3. Take the reference intensity as
+  1.0 x 10^-12 W/m^2 and ignore reflections and absorption.
+  (a) Find the sound level at M.
+  (b) Find the pressure amplitude of the resultant sound at M.
+  (c) The speakers are now driven instead by two independent random-noise generators, each
+      speaker keeping its own power. Find the sound level at M.
+figure: |
+  Two small loudspeakers S1 and S2 and a microphone M in open air. Distance S1-M = 3.00 m,
+  distance S2-M = 4.20 m. Powers: S1 20 mW, S2 80 mW, both radiating uniformly in all
+  directions. Speakers driven in phase at 425 Hz in parts (a) and (b).

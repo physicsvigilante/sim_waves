@@ -1,0 +1,12 @@
+answer: {a: 6.99e10 Pa, b: 5089 m/s, c: 3180 Hz, d: 0.800 m}
+final_scene: R2.v3.yaml
+engine_fit: partial
+hand_steps:
+  - "Young's modulus = (F/A)/(dL/L), written as an expression in the medium Y field and in observe"
+  - "cross-section area = pi*(d/2)^2"
+  - "density of the second rod = mass/(length*area), repeated as an expression because a rod medium with a length cannot host a resonator of a different length"
+coverage: full
+not_represented: "nothing; the static tensile test is only represented through the Y expression"
+missing_in_source: "none"
+reasoning: "Engine rod medium gives v from Y and density; the second-lowest clamped-free mode is found with harmonic(r1, overtone=1) (3rd harmonic) giving 3180 Hz; the free-free rod length is solved from equal frequency, L = 0.800 m."
+friction: "No observable for Young's modulus from a static test (stress/strain); second rod needed its own medium; resonator length forced equal to the medium length."

@@ -1,0 +1,4 @@
+id: t29
+unknowns: {u: positive}
+given: ["u*exp(-u/3) + log(u) == 1"]
+observe: {u: "u"}

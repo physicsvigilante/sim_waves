@@ -1,0 +1,3 @@
+id: b16
+media: {steel: {type: rod, Y: 2e11 Pa, density: 8000 kg/m^3, area: 1e-6 m^2, diameter: 2 mm}}
+observe: {v: "speed(steel)"}

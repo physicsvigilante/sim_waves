@@ -1,0 +1,4 @@
+id: t33
+unknowns: {u: positive}
+given: ["atan(u) == u/2"]
+observe: {u: "u"}

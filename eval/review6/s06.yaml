@@ -1,0 +1,4 @@
+id: s06
+unknowns: {u: real}
+given: ["log(u) == 1"]
+observe: {u: "u"}

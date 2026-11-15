@@ -1,0 +1,4 @@
+id: L3
+unknowns: {u: positive}
+given: ["log(u)**3 == log(u)", "u < 2"]
+observe: {u: "u"}

@@ -1,0 +1,4 @@
+id: t25
+unknowns: {u: real}
+given: ["exp(u) + u**2 == 3"]
+observe: {u: "u"}

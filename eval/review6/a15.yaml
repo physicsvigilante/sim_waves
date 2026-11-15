@@ -1,0 +1,4 @@
+id: a15
+media: {rope: {type: string, mu: 10 g/m, tension: 100 N}}
+waves: {s: {harmonic: {on: rope, f: 10 Hz, A: 1 cm, dir: +x, phase: 0}}}
+observe: {I: "intensity(s)", p: "pressure_amplitude(s)", d: "displacement_amplitude(s)"}

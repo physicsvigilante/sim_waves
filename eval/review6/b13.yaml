@@ -1,0 +1,6 @@
+id: b13
+media: {water: {type: fluid, v: 1500 m/s}}
+sources: {S: {on: water, at: [0 m, 0 m], f: 1000 Hz, power: 1 W, phase: 0, spreading: spherical}}
+points: {P: [2 m, 0 m]}
+rays: {r: {from: S, to: P}}
+observe: {I: "intensity(r)", lam: "wavelength(r)", p: "pressure_amplitude(r)"}

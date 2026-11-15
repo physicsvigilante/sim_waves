@@ -1,0 +1,3 @@
+id: b08
+media: {steel: {type: rod, Y: 2e11 Pa, density: 8000 kg/m^3, diameter: 2 mm}}
+observe: {z: "impedance(steel)", mu: "mu(steel)", T: "tension(steel)"}

@@ -127,8 +127,92 @@ def _function_atoms(E):
 
 
 def _in_trig(u, E):
-    return any(f.has(u) for e in E for f in e.atoms(sp.sin, sp.cos, sp.tan, sp.asin, sp.acos,
-                                                     sp.atan, sp.exp, sp.log))
+    """u inside a periodic function (many roots, solved on the unit circle). Monotonic functions
+    such as log, exp and atan are left to the algebraic solver: they lose no roots."""
+    return any(f.has(u) for e in E for f in e.atoms(sp.sin, sp.cos, sp.tan))
+
+
+def _in_monotonic(u, E):
+    """u inside log, exp, an inverse trig function or an exponent (e.g. 2**u)."""
+    for e in E:
+        for f in e.atoms(sp.log, sp.exp, sp.atan, sp.asin, sp.acos):
+            if f.has(u):
+                return True
+        for p in e.atoms(sp.Pow):
+            if p.exp.has(u):
+                return True
+    return False
+
+
+def _solve_monotonic(E, targets):
+    """One unknown inside log/exp/inverse trig: the full real root set from solveset (sympy's
+    solve() can drop roots such as log(u) = 0 in polynomial-in-log equations). Every root is
+    checked against every equation. More unknowns: refused rather than risk a lost root."""
+    if len(targets) != 1:
+        raise SceneError(f"unknowns {sorted(map(str, targets))} appear inside log/exp/inverse-trig functions "
+                         f"together; v0 solves these with one unknown at a time. Restate the facts so the "
+                         f"other unknowns are fixed first")
+    u = targets[0]
+    roots = None
+    for e in E:
+        if not e.has(u):
+            continue
+        ss = None
+        e_log = sp.expand_log(e, force=True)
+        forms = [f for f in (_log_linear(e_log, u), e_log, e) if f is not None]
+        for form in forms:
+            num = sp.numer(sp.together(form))
+            if num.is_polynomial(u) and sp.degree(num, u) <= 4:
+                # polynomial: sympy's polynomial solver is complete up to degree 4
+                cand = sp.FiniteSet(*[r for r in sp.solve(num, u) if _real(r)])
+                if cand.is_empty and sp.degree(num, u) < 1:
+                    cand = None
+                if cand is not None:
+                    ss = cand
+                    break
+                continue
+            try:
+                cand = sp.solveset(form, u, sp.S.Reals)
+            except (NotImplementedError, ValueError, TypeError):
+                continue
+            if isinstance(cand, sp.FiniteSet):
+                ss = cand
+                break
+        if ss is None:
+            raise SceneError(f"cannot solve reliably for '{u}' inside log/exp/inverse trig in {e} = 0; "
+                             f"restate the fact")
+        good = set()
+        for v in ss:
+            try:
+                ok = all(abs(complex(sp.N(ei.xreplace({u: v}), 30))) < 1e-20 for ei in E)
+            except (TypeError, ValueError):
+                ok = False
+            if ok:
+                good.add(v)
+        roots = good if roots is None else roots & good
+    return [{u: v} for v in sorted(roots or [], key=lambda v: float(sp.N(v)))]
+
+
+def _log_linear(e, u):
+    """If e = sum c_i log(g_i(u)) + c0 with rational ratios c_i/c_1, return the algebraic
+    equivalent prod g_i^(c_i/c_1) - exp(-c0/c_1) (same real roots where every g_i > 0;
+    the caller re-checks each root against the original equation)."""
+    logs = [f for f in e.atoms(sp.log) if f.has(u)]
+    if not logs:
+        return None
+    L = {f: sp.Dummy("L") for f in logs}
+    e1 = sp.expand(e.xreplace(L))
+    if e1.has(u):
+        return None
+    coeffs = [sp.diff(e1, d) for d in L.values()]
+    if any(c.has(*L.values()) or c.has(u) for c in coeffs):
+        return None
+    c0 = sp.simplify(e1.xreplace({d: 0 for d in L.values()}))
+    ratios = [sp.nsimplify(sp.simplify(c / coeffs[0])) for c in coeffs]
+    if not all(r.is_Rational for r in ratios):
+        return None
+    prod = sp.Mul(*[f.args[0] ** r for f, r in zip(L, ratios)])
+    return sp.together(prod - sp.exp(sp.simplify(-c0 / coeffs[0])))
 
 
 def _angular_base(u, E):
@@ -193,6 +277,9 @@ def _core_solve(E, targets, kinds):
             raise SceneError(f"unknown '{u}' sits inside a sine/cosine in a way v0 cannot solve "
                              f"reliably (non-numeric or mixed coefficient); restate the facts")
         bases[u] = b
+    mono = [u for u in targets if u not in bases and _in_monotonic(u, E)]
+    if mono and not bases:
+        return _solve_monotonic(E, targets), {}
     if not bases:
         return sp.solve(E, targets, dict=True), {}
     theta = {u: sp.Dummy(f"th_{u}") for u in bases}

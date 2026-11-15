@@ -1,0 +1,4 @@
+id: a11
+media: {air: {type: gas, v: 340 m/s, density: 1.2 kg/m^3}}
+waves: {s: {harmonic: {on: air, f: 1000 Hz, A: 1e-6 m, dir: +x, phase: 0}}}
+observe: {b1: "sound_level(pressure_amplitude(s))", b2: "intensity(s) + pressure_amplitude(s)", b3: "intensity_of_level(60[m])", b4: "sound_level(-1[W/m^2])", b5: "sound_level(intensity(s)) + 1[m]", ok: "intensity_of_level(60)", b6: "sound_level(1e-6)"}

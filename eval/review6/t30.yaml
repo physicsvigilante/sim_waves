@@ -1,0 +1,4 @@
+id: t30
+unknowns: {u: positive}
+given: ["10**(u/10) + 10**(u/20) == 12"]
+observe: {u: "u"}

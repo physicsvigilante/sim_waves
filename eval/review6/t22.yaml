@@ -1,0 +1,4 @@
+id: t22
+unknowns: {u: positive}
+given: ["u*log(u) == -0.2"]
+observe: {u: "u"}

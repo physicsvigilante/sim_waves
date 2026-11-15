@@ -1,0 +1,3 @@
+id: b01
+media: {steel: {type: rod, v: 5000 m/s, Y: 1e11 Pa}}
+observe: {v: "speed(steel)"}

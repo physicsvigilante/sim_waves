@@ -1,0 +1,4 @@
+id: b06
+media: {steel: {type: rod, Y: 2e11 Pa, density: 8000 kg/m^3}}
+resonators: {p: {type: rod, on: steel, length: 1 m, ends: [fixed, free]}}
+observe: {f: "frequency(p, harmonic=1)"}

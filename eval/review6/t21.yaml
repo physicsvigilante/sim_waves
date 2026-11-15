@@ -1,0 +1,4 @@
+id: t21
+unknowns: {u: positive}
+given: ["log(u) == (u - 1)/2"]
+observe: {u: "u"}

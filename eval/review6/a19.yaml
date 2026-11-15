@@ -1,0 +1,4 @@
+id: a19
+media: {air: {type: gas, gamma: 7/5, temperature: 27 degC, molar_mass: 29 g/mol, pressure: 1e5 Pa, gas_constant: "8.3 J/(mol*K)"}}
+waves: {s: {harmonic: {on: air, f: 1000 Hz, A: 1e-6 m, dir: +x, phase: 0}}}
+observe: {v: "speed(air)", I: "intensity(s)"}

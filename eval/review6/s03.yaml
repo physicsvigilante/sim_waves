@@ -1,0 +1,4 @@
+id: s03
+unknowns: {u: real}
+given: ["atan(u) == 2"]
+observe: {u: "u"}

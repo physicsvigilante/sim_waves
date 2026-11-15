@@ -1,0 +1,6 @@
+id: a13
+unknowns: {p: positive}
+media: {air: {type: gas, v: 340 m/s, density: 1.2 kg/m^3}}
+waves: {s: {harmonic: {on: air, f: 1000 Hz, pressure_amplitude: p, dir: +x, phase: 0}}}
+given: [{fact: "displacement_amplitude(s) == 1e-6[m]", source: stated}]
+observe: {p: "p"}

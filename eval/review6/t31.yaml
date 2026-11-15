@@ -1,0 +1,4 @@
+id: t31
+unknowns: {u: positive}
+given: ["log(u + 1/u) == 1"]
+observe: {u: "u"}
