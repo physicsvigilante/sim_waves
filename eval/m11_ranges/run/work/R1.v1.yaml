@@ -1,0 +1,32 @@
+id: R1
+assume:
+  - "1-D line geometry: wall at x=1000 m (normal -x), car starts at x=0 moving +x, listener at x=-1 m behind the car. Wall and listener distances are not given; the answers must not depend on them in the frequency comparisons."
+  - "Car speed u is unstated: arbitrary, below speed of sound."
+  - "Driver is a moving point sharing the car's velocity, hearing the echo of the horn."
+  - "Beat instant t=5.95 s is chosen only so that both direct and reflected sound are present at the listener; beats compared at the same reception instant."
+arbitrary:
+  u: {value: 20 m/s, below: 340 m/s}
+media:
+  air: {type: gas, v: 340 m/s}
+sources:
+  horn: {on: air, at: [0 m, 0 m], velocity: ["u", 0 m/s], f: 500 Hz, A: 1, phase: 0, spreading: none}
+points:
+  L: [-1 m, 0 m]
+  driver: {at: [0 m, 0 m], velocity: ["u", 0 m/s]}
+reflectors:
+  wall: {point: [1000 m, 0 m], normal: [-1, 0], boundary: rigid}
+rays:
+  direct: {from: horn, to: L}
+  echoL: {from: horn, to: L, via: wall}
+  echoD: {from: horn, to: driver, via: wall}
+given:
+  - {fact: "frequency(horn) == 500[Hz]", source: stated}
+observe:
+  f1: "frequency(direct, emitted=0[s])"
+  f2: "frequency(echoL, emitted=0[s])"
+  f3: "frequency(echoD, emitted=0[s])"
+  A: "frequency(echoL, emitted=0[s]) > 500[Hz] > frequency(direct, emitted=0[s])"
+  C: "frequency(echoD, emitted=0[s]) > frequency(echoL, emitted=0[s])"
+  B: "500[Hz] == 2*frequency(direct, emitted=0[s])*frequency(echoL, emitted=0[s])/(frequency(direct, emitted=0[s])+frequency(echoL, emitted=0[s]))"
+  beats: "beat_frequency(direct, echoL, t=5.95[s])"
+  beats_gt50: "beat_frequency(direct, echoL, t=5.95[s]) > 50[Hz]"

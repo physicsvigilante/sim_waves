@@ -1,0 +1,2 @@
+arbitrary: {c: 340 m/s, u: {value: 20 m/s, below: c}}
+observe: {a: "u < c", b: "u/u"}

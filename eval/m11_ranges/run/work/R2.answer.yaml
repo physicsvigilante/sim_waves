@@ -1,0 +1,9 @@
+answer: A
+final_scene: R2.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "nothing"
+missing_in_source: "closed-pipe length (only bounded); not needed"
+reasoning: "n1=275 Hz, n2=550 Hz from the engine; option A proved True and B, C proved False for every Lc in the stated range; n3 itself depends on Lc, so D is false."
+friction: "Two-sided bound on an unstated length had to be written as a ranged arbitrary value (above+below) because a symbol allows only one bound; worked but the format text only shows one-sided examples per field."

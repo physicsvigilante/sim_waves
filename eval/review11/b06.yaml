@@ -1,0 +1,2 @@
+arbitrary: {mu: 10 g/m, L: 1 m}
+observe: {r: "L/L", l: "L", p: "L > 0[m]", q: "L > 1[cm]", s: "L < 100[m]", t2: "mu*L", v: "L == 1[m]", z: "L > 1[km]"}

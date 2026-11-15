@@ -1,0 +1,15 @@
+id: R1
+type: multiple_correct
+statement: >
+  A car moves with a constant speed u (not given; u is less than the speed of sound)
+  straight towards a large vertical wall, sounding its horn of frequency 500 Hz. A
+  stationary listener stands on the road behind the car, so that the car moves away
+  from him towards the wall. The listener hears the sound coming directly from the horn
+  with frequency f1 and the sound reflected from the wall with frequency f2. The driver
+  hears the echo from the wall with frequency f3. Speed of sound in still air is 340 m/s;
+  there is no wind. Which of the following statements is/are necessarily correct?
+options:
+  A: "f2 > 500 Hz > f1"
+  B: "500 Hz = 2 f1 f2 / (f1 + f2)"
+  C: "f3 > f2"
+  D: "The listener hears more than 50 beats per second"

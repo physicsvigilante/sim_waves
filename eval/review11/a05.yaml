@@ -1,0 +1,16 @@
+arbitrary: {L: {value: 2 m, above: 1 m}, k: {value: 0.5, below: 1}}
+unknowns: {y: positive}
+symbols: {a: positive}
+given: ["y == 3*L"]
+observe:
+  g1: "y > 3[m]"
+  g2: "y/L == 3"
+  g3: "y > 3.03[m]"
+  g4: "k + 1[m] > 0[m]"
+  g5: "k < 0.98"
+  g6: "a > L > 1[m]"
+  g7: "L > 1[m] > 5[m]"
+  g8: "a > L > 0.5[m] > 1[m]"
+  g9: "sqrt(-1) > 0"
+  g10: "step(L - 1[m]) == 1"
+  g11: "y"

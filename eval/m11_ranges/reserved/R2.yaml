@@ -1,0 +1,13 @@
+id: R2
+type: single_correct
+statement: >
+  An organ pipe open at both ends has length 60 cm. A second pipe, closed at one end,
+  has a length that is not given, but it is known to be more than one-quarter and less
+  than one-half of the length of the open pipe. Let n1 be the fundamental frequency of
+  the open pipe, n2 the frequency of its first overtone, and n3 the fundamental frequency
+  of the closed pipe. Speed of sound is 330 m/s; neglect end corrections. Then
+options:
+  A: "n2 > n3 > n1"
+  B: "n3 > n2 > n1"
+  C: "n2 > n1 > n3"
+  D: "The order cannot be determined without the length of the closed pipe"

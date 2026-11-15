@@ -1,0 +1,5 @@
+# m11: a comparison that the facts do not decide is refused, not guessed
+symbols: {n: positive}
+given: ["n > 1"]
+observe: {b: "n > 2"}
+expect: {error: rejected, message: "cannot decide"}

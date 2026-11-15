@@ -179,6 +179,21 @@ check("m9 bounded symbol can be illustrated", not m9b["missing"] or all("n" not 
       str(m9b["missing"]))
 check("m9 illustrate outside the bound rejected", raises(lambda: export(_y.load(bd % "0.5", Loader=_Loader)), ViewError))
 
+# m11 review: exploring a ranged arbitrary value keeps its range
+m11 = export(_y.load("""
+arbitrary: {u: {value: 10 m/s, below: 340 m/s}}
+media: {air: {type: gas, v: 340 m/s}}
+sources: {S: {on: air, at: [0 m, 0 m], velocity: [u, 0 m/s], f: 500 Hz, A: 1, phase: 0, spreading: none}}
+points: {O: [1000 m, 0 m]}
+rays: {r: {from: S, to: O}}
+observe: {inrange: "u < 340[m/s]"}
+explore: {vary: {arbitrary.u: [100 m/s, 400 m/s]}}
+""", Loader=_Loader))
+its = m11["variants"]["items"]
+check("m11 explore of a ranged value keeps the range", "error" not in its[0] and "outside" in its[1].get("error", ""),
+      str([i.get("error") for i in its]))
+check("m11 export shows the range", "below" in m11["arbitrary"]["u"], m11["arbitrary"]["u"])
+
 bad = [r for r in results if not r[1]]
 for name, ok, detail in results:
     print(("PASS " if ok else "FAIL ") + name + (f"  [{detail}]" if detail and not ok else ""))

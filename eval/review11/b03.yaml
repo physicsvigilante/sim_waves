@@ -1,0 +1,6 @@
+arbitrary: {u1: {value: 20 m/s, below: 340 m/s}, u2: {value: 20 m/s, below: 340 m/s}, u3: {value: 20 m/s, below: 340 m/s}, u4: {value: 20 m/s, below: 340 m/s}, u5: {value: 20 m/s, below: 340 m/s}}
+observe:
+  s1: "u1 == u5"
+  s2: "u1/u5"
+  s3: "u1 == u2"
+  s4: "u1 <= u5"

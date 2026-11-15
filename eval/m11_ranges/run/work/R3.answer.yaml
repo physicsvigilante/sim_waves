@@ -1,0 +1,9 @@
+answer: 500 ms
+final_scene: R3.v2.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "nothing"
+missing_in_source: "source speed u (not needed; result independent of u at 5 sampled values)"
+reasoning: "Solving frequency==680 Hz gave a unique emission time 0 (source at N); arrives_at gives reception 0.5 s = 500 ms, same for all u."
+friction: "None serious; the question is ambiguous (ms after the source passes N = reception time of the sound emitted there), resolved by an assumption. v1 was a probe (arbitrary u at fixed emission times) before using an unknown emission time in v2."

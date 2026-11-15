@@ -1,0 +1,19 @@
+id: R3
+assume:
+  - "Source speed u unstated: arbitrary, below 340 m/s."
+  - "Road along x; source passes N=(0,0) at emission time 0; observer at (0, 170 m). Source at x=0 at t=0 so emitted=0 is the passage through N."
+  - "Question read as: the emission time te* (after passing N) at which the heard frequency equals 680 Hz, then reception delay is not asked; ms after passing N is te*. Answer is checked for dependence on u."
+arbitrary:
+  u: {value: 100 m/s, below: 340 m/s}
+media:
+  air: {type: gas, v: 340 m/s}
+sources:
+  S: {on: air, at: [0 m, 0 m], velocity: ["u", 0 m/s], f: 680 Hz, A: 1, phase: 0, spreading: none}
+points:
+  O: [0 m, 170 m]
+rays:
+  r: {from: S, to: O}
+observe:
+  f_at_N: "frequency(r, emitted=0[s])"
+  f_late: "frequency(r, emitted=1[s])"
+  f_early: "frequency(r, emitted=-1[s])"
