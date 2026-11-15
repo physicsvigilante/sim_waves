@@ -1,0 +1,8 @@
+# review 7 #1: a symbolic pulse position gave peak 0 silently; now an error
+symbols: {a: positive}
+media: {s: {type: string, mu: 0.01 kg/m, tension: 4 N}}
+waves:
+  p: {pulse: {on: s, shape: "0.01*exp(-((x - a)/0.05)**2)", units: {x: m, y: m}, dir: +x}}
+  g: {given: "0.02/((x - 2*t)**2 + 1)", units: {x: m, t: s, y: m}}
+observe: {pk: "peak(g, t=t)"}
+expect: {error: rejected, message: "depend on a symbol"}

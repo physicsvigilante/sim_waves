@@ -1,0 +1,24 @@
+id: a
+media:
+  s1: {type: string, mu: 0.01 kg/m, tension: 100 N}
+  s2: {type: string, mu: 0.04 kg/m, tension: 100 N}
+junctions: {J: {at: 2 m, left: s1, right: s2}}
+waves:
+  p: {pulse: {on: s1, shape: "0.01*max(0, 1 - abs(x - 0.5)/0.1)", units: {x: m, y: m}, dir: +x}}
+  s: {sum: [p, p_reflected]}
+observe:
+  Ar: "amplitude(p_reflected)"
+  At: "amplitude(p_transmitted)"
+  yt_peak: "y(p_transmitted, x=2.1[m], t=0.017[s])"
+  yt_half: "y(p_transmitted, x=2.125[m], t=0.017[s])"
+  yr: "y(p_reflected, x=1.9[m], t=0.016[s])"
+  yr0: "y(p_reflected, x=1.5[m], t=0[s])"
+  yp_late: "y(p, x=1.9[m], t=0.03[s])"
+  pk_sum: "peak(s, t=0.015[s])"
+  pk_p: "peak(p, t=0.015[s])"
+  pk_p_late: "peak(p, t=0.03[s])"
+  pk_t0: "peak(p_transmitted, t=0[s])"
+  pk_t: "peak(p_transmitted, t=0.02[s])"
+  vr: "velocity(p_reflected)"
+  vt: "velocity(p_transmitted)"
+  vy: "vy(p, x=0.45[m], t=0[s])"

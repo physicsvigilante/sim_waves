@@ -1,0 +1,12 @@
+answer: {a: "0.20 m", b: "x = 0.70 m", c: "1.78 mJ"}
+final_scene: R2.v2.yaml
+engine_fit: partial
+hand_steps:
+  - "(a) extent read from probes: transmitted pulse zero at x=0.60 and 0.80, nonzero between, so 0.20 m (no extent observable)."
+  - "(b) peak position: probe y at 0.69, 0.70, 0.71 at t=0.1 s; max (= peak, 2.0 mm) at 0.70 m."
+  - "(c) energy: engine has no pulse-energy observable (power(p_transmitted) not available). Worked by hand: E = T * integral(y'^2 dx) for half-sine of height 2 mm, width 0.2 m = 18*(2e-3)^2*pi^2/0.4 = 1.776e-3 J."
+coverage: full
+not_represented: "nothing"
+missing_in_source: none
+reasoning: "Engine: v 30 and 10 m/s, transmitted amplitude 2.0 mm, peak at 0.1 s at x=0.70 m, width 0.2 m (one third of 0.6 m is v2/v1 scaling). Energy done by hand."
+friction: "No energy/length/position-of-peak observables for shaped pulses; power() fails on a pulse (not a sum of sinusoids)."

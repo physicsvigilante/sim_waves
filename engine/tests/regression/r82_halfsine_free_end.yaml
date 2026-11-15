@@ -1,0 +1,12 @@
+# m7: a half-sine pulse (built with step) doubles at a free end when its peak arrives
+media:
+  a: {type: string, mu: 0.01 kg/m, tension: 4 N}
+junctions: {E: {at: 3 m, left: a, right: free}}
+waves:
+  p: {pulse: {on: a, shape: "0.02*sin(pi*(x - 1)/0.4)*(step(x - 1) - step(x - 1.4))", units: {x: m, y: m}, dir: +x}}
+  tot: {sum: [p, p_reflected]}
+observe:
+  A: "amplitude(p)"
+  Ar: "amplitude(p_reflected)"
+  pk_wall: "peak(tot, t=0.09[s])"
+expect: {A: "1/50", Ar: "1/50", pk_wall: "1/25"}

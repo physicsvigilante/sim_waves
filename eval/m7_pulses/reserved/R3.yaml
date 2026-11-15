@@ -1,0 +1,15 @@
+id: m7/R3
+format: numerical
+statement: |
+  A horizontal rope of length 3.0 m is stretched between two supports with a tension of
+  16 N. Its linear mass density increases uniformly (linearly) along its length, from
+  10 g/m at the end A to 40 g/m at the end B. A short transverse pulse is created at A and
+  travels towards B. Neglect gravity, damping and any partial reflection caused by the
+  varying density; treat the tension as the same everywhere.
+  (a) Find the time taken by the pulse to travel from A to B.
+  (b) Find the distance of the pulse from A at the instant equal to half of the time found
+      in (a).
+figure: |
+  Horizontal rope from end A (x = 0) to end B (x = 3.0 m); linear mass density
+  mu(x) = 10 g/m + (10 g/m per m) x, i.e. 10 g/m at A and 40 g/m at B. Tension 16 N
+  throughout. Pulse at A moving towards B.

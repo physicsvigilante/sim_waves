@@ -1,0 +1,9 @@
+# m7 qualification: a pulse that already extends past the junction at t = 0 is refused
+media:
+  a: {type: string, mu: 0.01 kg/m, tension: 4 N}
+  b: {type: string, mu: 0.04 kg/m, tension: 4 N}
+junctions: {J: {at: 1 m, left: a, right: b}}
+waves:
+  p: {pulse: {on: a, shape: "0.01*exp(-((x - 0.9)/0.2)**2)", units: {x: m, y: m}, dir: +x}}
+observe: {A: "amplitude(p)"}
+expect: {error: rejected, message: "extends past junction"}

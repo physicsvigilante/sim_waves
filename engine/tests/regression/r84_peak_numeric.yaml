@@ -1,0 +1,12 @@
+# review 7 #4: peak of a sum of Gaussians (used to time out): numeric value
+media:
+  PQ: {type: string, mass: 0.06 kg, length: 4.8 m, tension: 80 N}
+  QR: {type: string, mass: 0.2 kg, length: 2.56 m, tension: 80 N}
+junctions: {Q: {at: 4.8 m, left: PQ, right: QR}}
+waves:
+  p: {pulse: {on: PQ, shape: "0.035*exp(-((x - 0.5)/0.05)**2)", units: {x: m, y: m}, dir: +x}}
+  s: {sum: [p, p_reflected]}
+observe:
+  before: "peak(s, t=0.01[s])"
+  overlap: "peak(s, t=0.05375[s])"
+expect: {before: {value: 0.035, tol: 0.0001}, overlap: "1/50"}

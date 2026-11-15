@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>sim_waves viewer</title>
+<style>
+  :root { --ink:#1d2430; --muted:#5d6775; --line:#d9dee5; --bg:#f7f8fa; --card:#fff;
+          --accent:#2457c5; --warn:#a15c00; --warnbg:#fff4e0; --ok:#1d7a46; --faint:#b8c2d1; }
+  * { box-sizing:border-box; }
+  body { margin:0; font:14px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif; color:var(--ink); background:var(--bg); }
+  header { padding:14px 20px; border-bottom:1px solid var(--line); background:var(--card); display:flex; gap:16px; align-items:baseline; flex-wrap:wrap; }
+  header h1 { font-size:16px; margin:0; }
+  header .note { color:var(--muted); font-size:12px; }
+  nav { display:flex; gap:6px; flex-wrap:wrap; padding:10px 20px; }
+  nav button { border:1px solid var(--line); background:var(--card); padding:6px 12px; border-radius:6px; cursor:pointer; font:inherit; }
+  nav button.on { border-color:var(--accent); color:var(--accent); font-weight:600; }
+  main { display:grid; grid-template-columns: minmax(0,1.6fr) minmax(300px,1fr); gap:16px; padding:0 20px 24px; }
+  @media (max-width: 900px) { main { grid-template-columns: 1fr; } }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:8px; padding:12px 14px; margin-bottom:12px; }
+  .card h2 { font-size:13px; margin:0 0 8px; text-transform:uppercase; letter-spacing:.04em; color:var(--muted); }
+  canvas { width:100%; height:240px; display:block; }
+  .basis { font-size:12px; color:var(--muted); margin-top:4px; }
+  .controls { display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-top:6px; font-size:13px; }
+  .controls input[type=range] { flex:1; min-width:140px; }
+  .banner { background:var(--warnbg); color:var(--warn); border:1px solid #f0d2a0; border-radius:6px; padding:8px 10px; font-size:13px; margin-bottom:12px; }
+  table { width:100%; border-collapse:collapse; font-size:13px; }
+  td { padding:4px 6px; border-top:1px solid var(--line); vertical-align:top; }
+  td:first-child { color:var(--muted); white-space:nowrap; }
+  code { font-family:ui-monospace,Consolas,monospace; font-size:12px; word-break:break-word; }
+  .tag { display:inline-block; font-size:11px; padding:1px 6px; border-radius:10px; border:1px solid var(--line); color:var(--muted); margin-left:4px; white-space:nowrap; }
+  .tag.proved,.tag.exact { color:var(--ok); border-color:#b5dcc4; }
+  .tag.sampled,.tag.illustrative,.tag.undecided { color:var(--warn); border-color:#f0d2a0; }
+  .tag.stated { color:var(--ok); border-color:#b5dcc4; }
+  .tag.figure,.tag.assumption,.tag.convention,.tag.untagged { color:var(--accent); border-color:#c6d4f2; }
+  ul { margin:0; padding-left:18px; } li { margin:2px 0; }
+  .err { color:#a3261b; font-size:13px; }
+  .legend { font-size:12px; color:var(--muted); }
+  .legend b { color:var(--ink); }
+</style>
+</head>
+<body>
+<header>
+  <h1>sim_waves viewer</h1>
+  <span class="note">Every curve is sampled by the engine; this page only draws. Grey curves are the other values of the varied parameter.</span>
+</header>
+<nav id="tabs"></nav>
+<main>
+  <section id="panels"></section>
+  <aside id="info"></aside>
+</main>
+<script id="data" type="application/json">[{"id": "c", "assume": [], "facts": [], "solved": {}, "results": {"yr": {"text": "-1/100  (= -0.0100000)", "basis": "exact", "value": -0.01, "uses_illustrative": false}, "qr": {"text": "1/100  (= 0.0100000)", "basis": "exact", "value": 0.01, "uses_illustrative": false}, "wall": {"text": "0", "basis": "exact", "value": 0.0, "uses_illustrative": false}, "wallq": {"text": "1/50  (= 0.0200000)", "basis": "exact", "value": 0.02, "uses_illustrative": false}, "twice": {"text": "0", "basis": "exact", "value": 0.0, "uses_illustrative": false}, "pk_twice": {"text": "0", "basis": "exact", "value": 0.0, "uses_illustrative": false}}, "verification": [], "illustrative": {}, "panels": [null, null, null, null, null], "missing": ["view: no natural x-scale for this panel; give `x: [lo, hi]`", "view: no natural t-scale for this panel; give `t: [lo, hi]`", "view: no natural x-scale for this panel; give `x: [lo, hi]`", "view: no natural t-scale for this panel; give `t: [lo, hi]`", "view: no natural x-scale for this panel; give `x: [lo, hi]`", "view: no natural t-scale for this panel; give `t: [lo, hi]`", "view: no natural x-scale for this panel; give `x: [lo, hi]`", "view: no natural t-scale for this panel; give `t: [lo, hi]`", "view: no natural x-scale for this panel; give `x: [lo, hi]`", "view: no natural t-scale for this panel; give `t: [lo, hi]`", "no `explore` block: nothing declared to vary"], "variants": null}, {"id": "b", "assume": [], "facts": [], "solved": {}, "results": {"Ar": {"text": "1/300  (= 0.00333333)", "basis": "exact", "value": 0.0033333, "uses_illustrative": false}, "At": {"text": "1/150  (= 0.00666667)", "basis": "exact", "value": 0.0066667, "uses_illustrative": false}, "yr": {"text": "-1/300  (= -0.00333333)", "basis": "exact", "value": -0.0033333, "uses_illustrative": false}, "yt_peak": {"text": "1/150  (= 0.00666667)", "basis": "exact", "value": 0.0066667, "uses_illustrative": false}, "yt_half": {"text": "1/300  (= 0.00333333)", "basis": "exact", "value": 0.0033333, "uses_illustrative": false}, "vr": {"text": "100", "basis": "exact", "value": 100.0, "uses_illustrative": false}, "vt": {"text": "-50", "basis": "exact", "value": -50.0, "uses_illustrative": false}}, "verification": [{"fact": "[implicit] junction J: energy conservation", "basis": "proved"}], "illustrative": {}, "panels": [null, null, null], "missing": ["view: no natural x-scale for this panel; give `x: [lo, hi]`", "view: no natural t-scale for this panel; give `t: [lo, hi]`", "view: no natural x-scale for this panel; give `x: [lo, hi]`", "view: no natural t-scale for this panel; give `t: [lo, hi]`", "view: no natural x-scale for this panel; give `x: [lo, hi]`", "view: no natural t-scale for this panel; give `t: [lo, hi]`", "no `explore` block: nothing declared to vary"], "variants": null}]</script>
+<script>
+const SCENES = JSON.parse(document.getElementById('data').textContent);
+let cur = 0, variant = null, timers = [];
+
+function el(tag, attrs={}, html='') { const e=document.createElement(tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (html) e.innerHTML=html; return e; }
+function esc(s) { return String(s).replace(/[&<>]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
+function fmt(v) { if (v===null||v===undefined||!isFinite(v)) return '–'; const a=Math.abs(v); if (a!==0 && (a<1e-3||a>=1e5)) return v.toExponential(2); return +v.toPrecision(4)+''; }
+function niceTicks(lo, hi, n=5) { if (hi===lo) { hi=lo+1; } const span=hi-lo, step0=span/n, mag=Math.pow(10,Math.floor(Math.log10(step0))); const step=[1,2,5,10].map(m=>m*mag).find(s=>span/s<=n)||mag*10; const t=[]; for (let v=Math.ceil(lo/step)*step; v<=hi+1e-12*span; v+=step) t.push(+v.toPrecision(12)); return t; }
+
+function drawAxes(canvas, xs, series, xlabel, ylabel, yr) {
+  const dpr = window.devicePixelRatio||1, W=canvas.clientWidth, H=canvas.clientHeight;
+  canvas.width=W*dpr; canvas.height=H*dpr; const g=canvas.getContext('2d'); g.scale(dpr,dpr);
+  const L=58,R=12,Tp=10,B=34;
+  let ymin=Infinity, ymax=-Infinity;
+  for (const s of series) for (const y of s.y) if (y!==null && isFinite(y)) { ymin=Math.min(ymin,y); ymax=Math.max(ymax,y); }
+  if (yr) { ymin=yr[0]; ymax=yr[1]; }   // engine-supplied range, fixed across frames and varied values
+  if (!isFinite(ymin)) { ymin=-1; ymax=1; }
+  if (ymin===ymax) { const d=Math.abs(ymin)||1; ymin-=d*0.5; ymax+=d*0.5; }
+  const pad=(ymax-ymin)*0.08; ymin-=pad; ymax+=pad;
+  const xmin=xs[0], xmax=xs[xs.length-1];
+  const X=v=>L+(v-xmin)/(xmax-xmin||1)*(W-L-R), Y=v=>Tp+(ymax-v)/(ymax-ymin)*(H-Tp-B);
+  g.font='11px system-ui'; g.fillStyle='#5d6775'; g.strokeStyle='#e6e9ee'; g.lineWidth=1;
+  for (const t of niceTicks(ymin,ymax)) { g.beginPath(); g.moveTo(L,Y(t)); g.lineTo(W-R,Y(t)); g.stroke(); g.textAlign='right'; g.fillText(fmt(t),L-6,Y(t)+4); }
+  for (const t of niceTicks(xmin,xmax,6)) { g.beginPath(); g.moveTo(X(t),Tp); g.lineTo(X(t),H-B); g.stroke(); g.textAlign='center'; g.fillText(fmt(t),X(t),H-B+14); }
+  if (ymin<0 && ymax>0) { g.strokeStyle='#9aa4b2'; g.beginPath(); g.moveTo(L,Y(0)); g.lineTo(W-R,Y(0)); g.stroke(); }
+  g.fillStyle='#1d2430'; g.textAlign='center'; g.fillText(xlabel,(L+W-R)/2,H-6);
+  g.save(); g.translate(12,(Tp+H-B)/2); g.rotate(-Math.PI/2); g.fillText(ylabel,0,0); g.restore();
+  for (const s of series) {
+    g.strokeStyle=s.color; g.lineWidth=s.width; g.beginPath(); let pen=false;
+    s.y.forEach((y,i)=>{ if (y===null||!isFinite(y)) { pen=false; return; } const px=X(xs[i]), py=Y(y); if (!pen) { g.moveTo(px,py); pen=true; } else g.lineTo(px,py); });
+    g.stroke();
+  }
+}
+
+function itemFor(scene) { return (scene.variants && variant!==null) ? scene.variants.items[variant] : scene; }
+function panelsFor(scene) { const it=itemFor(scene); return it.error ? [] : (it.panels||[]); }
+function otherVariantPanels(scene, idx) {
+  if (!scene.variants) return [];
+  return scene.variants.items.map((it,i)=>i===variant?null:(it.panels?it.panels[idx]:null)).filter(Boolean);
+}
+
+function render() {
+  timers.forEach(clearInterval); timers=[];
+  const sc = SCENES[cur];
+  document.querySelectorAll('nav button').forEach((b,i)=>b.classList.toggle('on', i===cur));
+  const P=document.getElementById('panels'), I=document.getElementById('info'); P.innerHTML=''; I.innerHTML='';
+  if (sc.variants) {
+    const v=sc.variants, card=el('div',{class:'card'});
+    card.appendChild(el('h2',{}, v.target_kind==='physical input' ? 'Vary a physical input (each value re-solved by the engine)' : 'Vary an illustrative value (not from the source)'));
+    const row=el('div',{class:'controls'});
+    row.innerHTML = `<span><code>${esc(v.target)}</code></span>`;
+    const r=el('input',{type:'range',min:0,max:v.items.length-1,step:1,value:variant});
+    const phys = v.target_kind==='physical input';
+    const lab=el('b',{},esc(v.items[variant].value) + (v.items[variant].is_source
+        ? (phys ? ' <span class="tag stated">source value</span>' : ' <span class="tag illustrative">scene\'s illustrative value</span>')
+        : (phys ? ' <span class="tag illustrative">not the source value</span>' : ' <span class="tag illustrative">other illustrative value</span>')));
+    r.oninput=()=>{ variant=+r.value; render(); };
+    row.appendChild(r); row.appendChild(lab); card.appendChild(row);
+    card.appendChild(el('div',{class:'legend'}, (phys ? 'Source value: ' : 'The source gives no value; the scene illustrates with ') + `<code>${esc(v.source_value)}</code>. Grey curves: the other values.`));
+    if (v.items[variant].error) card.appendChild(el('div',{class:'err'},'The engine rejected this value, so nothing is shown for it: '+esc(v.items[variant].error)));
+    P.appendChild(card);
+  }
+  const panels = panelsFor(sc) || [];
+  panels.forEach((p, idx)=>{
+    if (!p) { P.appendChild(el('div',{class:'card err'},`Panel ${idx+1} could not be drawn (see "Not drawn" on the right).`)); return; }
+    const card=el('div',{class:'card'}), c=el('canvas');
+    const title = p.kind==='plot' ? `${esc(p.name)} vs ${esc(p.vs)}` : `${p.kind}: wave ${esc(p.wave)}` + (p.kind==='snapshot'?` at t = ${fmt(p.t)} s`:'');
+    card.appendChild(el('h2',{},title)); card.appendChild(c);
+    const others = otherVariantPanels(sc, idx);
+    const basis = el('div',{class:'basis'});
+    if (p.kind==='snapshot' || p.kind==='plot') {
+      const ghosts = others.filter(o=>o.kind===p.kind).map(o=>({y:o.y, x:o.x||o.v}));
+      const xs = p.kind==='plot'?p.v:p.x;
+      const draw=()=>drawAxes(c, xs, [...ghosts.filter(g=>g.x.length===xs.length && g.x[0]===xs[0] && g.x[g.x.length-1]===xs[xs.length-1]).map(g=>({y:g.y,color:'#c9d1dd',width:1.2})), {y:p.y,color:'#2457c5',width:2}], p.x_label, p.y_label, p.y_range);
+      requestAnimationFrame(draw);
+      basis.textContent = p.kind==='plot' ? `Range: ${p.range_basis}. Expression: ${p.expr}` : `x window: ${p.x_basis}`;
+    } else if (p.kind==='animate') {
+      let k=0, playing=true;
+      const ctl=el('div',{class:'controls'}); const btn=el('button',{},'Pause'); const tr=el('input',{type:'range',min:0,max:p.t.length-1,value:0}); const tl=el('span',{class:'legend'});
+      const ghosts = others.filter(o=>o.kind==='animate' && o.frames.length===p.frames.length && o.x.length===p.x.length && o.x[o.x.length-1]===p.x[p.x.length-1]);
+      const draw=()=>{ drawAxes(c, p.x, [...ghosts.map(g=>({y:g.frames[k],color:'#c9d1dd',width:1.2})), {y:p.frames[k],color:'#2457c5',width:2}], p.x_label, p.y_label, p.y_range); tr.value=k; tl.textContent=`t = ${fmt(p.t[k])} s`; };
+      btn.onclick=()=>{ playing=!playing; btn.textContent=playing?'Pause':'Play'; };
+      tr.oninput=()=>{ k=+tr.value; playing=false; btn.textContent='Play'; draw(); };
+      ctl.append(btn,tr,tl); card.appendChild(ctl);
+      timers.push(setInterval(()=>{ if (playing) { k=(k+1)%p.t.length; draw(); } }, 70));
+      requestAnimationFrame(draw);
+      basis.textContent = `x window: ${p.x_basis}. Time window: ${p.t_basis}. Playback is slowed: one frame every 70 ms covers ${fmt(p.t[1]-p.t[0])} s.`;
+    }
+    if (p.uses_illustrative) basis.textContent += ' Drawn with illustrative values.';
+    card.appendChild(basis); P.appendChild(card);
+  });
+  if (!panels.length) P.appendChild(el('div',{class:'card err'},'Nothing is drawn for this value.'));
+
+  // info column: everything below belongs to the selected value
+  const it = itemFor(sc);
+  const card=(title, body)=>{ const c=el('div',{class:'card'}); c.appendChild(el('h2',{},title)); c.appendChild(body); I.appendChild(c); };
+  card('Scene', el('div',{},`<code>${esc(sc.id||'')}</code>`));
+  if (it.error) { card('Engine', el('div',{class:'err'}, esc(it.error))); return; }
+  const results = it.results, solved = it.solved;
+  if (Object.keys(it.illustrative||{}).length) {
+    I.appendChild(el('div',{class:'banner'}, '<b>Illustrative values</b> (not from the source; used only for drawing): ' +
+      Object.entries(it.illustrative).map(([k,v])=>`<code>${esc(k)} = ${esc(v)}</code>`).join(', ')));
+  }
+  if ((it.missing||[]).length) { const u=el('ul'); it.missing.forEach(m=>u.appendChild(el('li',{},esc(m)))); card('Not drawn', u); }
+  if (sc.assume.length) { const u=el('ul'); sc.assume.forEach(a=>u.appendChild(el('li',{},esc(a)))); card('Assumptions (author)', u); }
+  if ((it.facts||[]).length) { const u=el('ul'); it.facts.forEach(f=>u.appendChild(el('li',{},`<code>${esc(f.text)}</code><span class="tag ${f.source}">${f.source}</span>`))); card('Facts given to the engine', u); }
+  if (Object.keys(solved).length) { const t=el('table'); Object.entries(solved).forEach(([k,v])=>t.appendChild(el('tr',{},`<td>${esc(k)}</td><td><code>${esc(v)}</code></td>`))); card('Solved by the engine', t); }
+  const rt=el('table');
+  Object.entries(results).forEach(([k,r])=>{
+    const num = (r.value!==null && r.value!==undefined && r.uses_illustrative) ? ` = ${fmt(r.value)} <span class="tag illustrative">with illustrative values</span>` : '';
+    rt.appendChild(el('tr',{},`<td>${esc(k)}</td><td><code>${esc(r.text)}</code>${num}<span class="tag ${r.basis}">${r.basis}</span></td>`));
+  });
+  card('Engine results', rt);
+  if ((it.verification||[]).length) { const u=el('ul'); it.verification.forEach(v=>u.appendChild(el('li',{},`<code>${esc(v.fact)}</code><span class="tag ${v.basis}">${v.basis}</span>`))); card('Facts re-checked against the solution', u); }
+}
+
+function startVariant(s) { if (!s.variants) return null; const i=s.variants.items.findIndex(x=>x.is_source); return i>=0 ? i : 0; }
+SCENES.forEach((s,i)=>{ const b=el('button',{},esc(s.id||('scene '+(i+1)))); b.onclick=()=>{ cur=i; variant=startVariant(s); render(); }; document.getElementById('tabs').appendChild(b); });
+variant = startVariant(SCENES[0]);
+window.addEventListener('resize', render);
+render();
+</script>
+</body>
+</html>

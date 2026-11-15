@@ -1,0 +1,21 @@
+id: h1
+media:
+  s1: {type: string, mu: 0.01 kg/m, tension: 100 N}
+waves:
+  p: {pulse: {on: s1, shape: "0.01*max(0, 1 - abs(x - 0.5)/0.1)", units: {x: m, y: m}, dir: +x}}
+  q: {pulse: {on: s1, shape: "-0.01*max(0, 1 - abs(x - 1.5)/0.1)", units: {x: m, y: m}, dir: -x}}
+  r: {pulse: {on: s1, shape: "0.02*step(x)*step(1-x)*x + 0.005*step(x-1)*step(2-x)", units: {x: m, y: m}, dir: +x}}
+  m: {pulse: {on: s1, shape: "min(0.01, 0.02*exp(-x**2))", units: {x: m, y: m}, dir: +x}}
+  k: {pulse: {on: s1, shape: "0.01*x*exp(-x**2)", units: {x: m, y: m}, dir: +x}}
+  d: {pulse: {on: s1, shape: "0.01*abs(sin(x))*step(x)*step(7-x)", units: {x: m, y: m}, dir: +x}}
+  s: {sum: [p, q]}
+observe:
+  cancel: "peak(s, t=0.005[s])"
+  apart: "peak(s, t=0.0025[s])"
+  partial: "peak(s, t=0.0045[s])"
+  saw: "peak(r)"
+  saw_t: "peak(r, t=0.01[s])"
+  clip: "peak(m)"
+  odd: "peak(k)"
+  absin: "peak(d)"
+  vys: "vy(s, x=1[m], t=0.005[s])"

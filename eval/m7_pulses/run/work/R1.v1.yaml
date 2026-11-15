@@ -1,0 +1,18 @@
+id: m7/R1
+assume:
+  - "String is long to the left; only the clamp at x = 0.80 m bounds it."
+  - "Triangular pulse written as a shape built from max/abs; y(x,0) as stated, moving +x."
+media:
+  s: {type: string, mu: 25 g/m, tension: 10 N}
+junctions:
+  wall: {at: 0.80 m, left: s, right: fixed}
+waves:
+  p: {pulse: {on: s, shape: "0.006*(max(0, 1 - abs(x - 0.6)/0.2)*step(0.6 - x) + max(0, 1 - abs(x - 0.6)/0.1)*step(x - 0.6))", units: {x: m, y: m}, dir: +x}}
+  tot: {sum: [p, p_reflected]}
+observe:
+  v: "speed(s)"
+  y_a: "y(tot, x=0.76[m], t=10[ms])"
+  peak_b: "peak(tot, t=10[ms])"
+  y_at_0_7: "y(tot, x=0.70[m], t=10[ms])"
+  y_at_0_6: "y(tot, x=0.60[m], t=10[ms])"
+  y_at_0_5: "y(tot, x=0.50[m], t=10[ms])"

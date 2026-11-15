@@ -1,0 +1,17 @@
+id: m7/R1
+format: numerical
+statement: |
+  A long horizontal string of linear mass density 25 g/m is held under a tension of 10 N.
+  Its right end, at x = 0.80 m, is rigidly clamped. At t = 0 a single triangular pulse
+  travels on the string towards the clamped end (in the +x direction). At t = 0 the
+  transverse displacement is zero everywhere except between x = 0.40 m and x = 0.70 m:
+  it rises linearly from 0 at x = 0.40 m to 6.0 mm at x = 0.60 m and then falls linearly
+  back to 0 at x = 0.70 m. Ignore gravity and damping.
+  (a) Find the transverse displacement of the string at x = 0.76 m at t = 10 ms.
+  (b) At t = 10 ms, find the largest transverse displacement anywhere on the string and
+      the position x at which it occurs.
+figure: |
+  String along the x-axis, clamped (fixed end) at x = 0.80 m on the right. Pulse at t = 0:
+  y = 0 for x < 0.40 m; linear rise from y = 0 at x = 0.40 m to y = 6.0 mm at x = 0.60 m;
+  linear fall to y = 0 at x = 0.70 m; y = 0 for 0.70 m < x <= 0.80 m. Arrow on the pulse
+  pointing in +x (towards the clamp). Tension 10 N, linear mass density 25 g/m.

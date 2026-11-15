@@ -8,7 +8,7 @@ import sympy as sp
 from sympy.core.function import AppliedUndef
 from sympy.simplify.fu import TR8
 
-from .errors import SceneError, UndeterminedError
+from .errors import AmbiguousError, SceneError, UndeterminedError
 import ast
 
 from .expr import Ref, dimension_of, show_dim, translate
@@ -162,6 +162,7 @@ class Scene:
         if fname in self.functions:
             return None
         for key, want in (("x", LENGTH), ("t", TIME), ("at", LENGTH), ("r", LENGTH), ("node_at", LENGTH),
+                          ("start", LENGTH), ("end", LENGTH),
                           ("antinode_at", LENGTH), ("no_node_at", LENGTH)):
             if key in kwargs:
                 chk.same(kwargs[key], want, f"argument {key}=")
@@ -544,6 +545,8 @@ def make_wave(sc, name, spec):
         return GivenWave(sc, name, spec)
     if "pulse" in spec:
         _keys(spec, {"pulse"}, f"waves.{name}")
+        if isinstance(spec["pulse"], dict) and "shape" in spec["pulse"]:
+            return ShapedPulse(sc, name, spec["pulse"])
         return Pulse(sc, name, spec["pulse"])
     if "sum" in spec:
         return SumWave(sc, name, spec)
@@ -852,9 +855,8 @@ class Pulse:
         if _direction(sc, spec, self.medium, w) != 1:
             raise SceneError(f"{w}: v0 supports pulses launched from the coordinate origin forward")
         if any(self.medium in J.side.values() for J in getattr(sc, "junctions", [])):
-            raise SceneError(f"{w}: pulses are not yet reflected or transmitted at junctions (a pulse has "
-                             f"no shape in v0). On uniform strings the junction coefficients would apply to "
-                             f"any pulse shape; for now use a harmonic wave to get r and t")
+            raise SceneError(f"{w}: a pulse without a shape cannot meet a junction; give it a `shape` "
+                             f"(y at t = 0) so it can be reflected and transmitted")
 
     def front(self, t):
         S, tau = sp.Dummy("S", positive=True), sp.Dummy("tau", positive=True)
@@ -864,6 +866,248 @@ class Pulse:
         if len(sols) != 1:
             raise SceneError(f"pulse '{self.name}': cannot invert travel time")
         return sp.simplify(sols[0].subs(tau, t))
+
+
+class ShapedPulse(GivenWave):
+    """A pulse of stated shape y(x, 0) moving at the medium speed: y = shape(x - s v t).
+    Valid on uniform, non-dispersive strings (d'Alembert)."""
+    KEYS = {"on", "shape", "units", "dir"}
+
+    def __init__(self, sc, name, spec):
+        w = f"waves.{name}"
+        _keys(spec, self.KEYS, w)
+        self.name, self._sin = name, None
+        self.medium = sc.objects.get(spec.get("on"))
+        if not isinstance(self.medium, StringMedium):
+            raise SceneError(f"{w}.on: a shaped pulse needs a string medium")
+        if not self.medium.uniform or self.medium.kind == "free":
+            raise SceneError(f"{w}: a shaped pulse needs a uniform string with a known speed. On a "
+                             f"non-uniform string the pulse reflects continuously and does not keep its "
+                             f"shape; use a pulse without a shape and front(...) there")
+        units = spec.get("units") or {}
+        _keys(units, {"x", "y"}, f"{w}.units")
+        if set(units) != {"x", "y"}:
+            raise SceneError(f"{w}: give units for the shape, e.g. units: {{x: m, y: m}}")
+        fac = {}
+        for var, d in (("x", LENGTH), ("y", LENGTH)):
+            _, _, factor, udim = split_quantity("1 " + units[var])
+            if udim != d:
+                raise SceneError(f"{w}.units.{var}: wrong dimension")
+            fac[var] = factor
+        raw = sc.expr(spec["shape"])
+        if raw.has(T):
+            raise SceneError(f"{w}.shape: the shape is y at t = 0 and must not contain t")
+        if raw.free_symbols - set(sc.names.values()):
+            raise SceneError(f"{w}: shape uses undeclared symbols")
+        d = spec.get("dir")
+        if d not in ("+x", "-x"):
+            raise SceneError(f"{w}.dir: +x or -x")
+        self.sign = 1 if d == "+x" else -1
+        self.g = fac["y"] * raw.xreplace({X: X / fac["x"]})
+        self.v = self.medium.speed()
+        self.f = self.g.xreplace({X: X - self.sign * self.v * T})
+        self.derived_from = None
+
+    @classmethod
+    def derived(cls, name, medium, g, sign, v, origin, coef=None, parent=None):
+        p = cls.__new__(cls)
+        p.name, p._sin, p.medium, p.g, p.sign, p.v = name, None, medium, g, sign, v
+        p.f = g.xreplace({X: X - sign * v * T})
+        p.derived_from, p.coef, p.parent = origin, coef, parent
+        return p
+
+    def peak(self):
+        if getattr(self, "parent", None) is not None:      # reflection/transmission: |coef| x incident peak
+            return sp.Abs(self.coef) * self.parent.peak()
+        # the pulse's own amplitude: largest |shape| (for a reflected pulse this is |r| times the
+        # incident peak, wherever the image happens to be at t = 0)
+        return _peak_of(self.g, X, None, f"pulse '{self.name}'")
+
+    def velocity(self):
+        return self.sign * self.v
+
+
+def _extreme_values(e, var, dom, points=False):
+    """Candidate values of e over the interval dom: interval ends (or limits at infinity),
+    breakpoints of piecewise parts (both sides), and interior critical points of each piece.
+    Works for shapes built from max/min/abs/step as well as smooth formulas."""
+    pw = sp.piecewise_fold(sp.sympify(e).rewrite(sp.Piecewise))
+    pieces = [a for a, _ in pw.args] if isinstance(pw, sp.Piecewise) else [pw]
+    conds = [c for _, c in pw.args] if isinstance(pw, sp.Piecewise) else []
+    pts = set()
+    for c in conds:
+        for rel in ([c] if isinstance(c, sp.Rel) else list(c.atoms(sp.Rel))):
+            roots = sp.solveset(rel.lhs - rel.rhs, var, sp.S.Reals)
+            if isinstance(roots, sp.FiniteSet):
+                pts.update(roots)
+    regions = [c for _, c in pw.args] if isinstance(pw, sp.Piecewise) else [sp.true]
+    taken = sp.S.EmptySet                  # Piecewise: a piece applies where no earlier one did
+    for p, c in zip(pieces, regions):
+        try:
+            cset = c.as_set() if c is not sp.true else sp.S.Reals
+            region = cset.intersect(dom) - taken
+            taken = taken.union(cset)
+        except Exception:
+            region = dom
+        if not p.has(var):
+            continue
+        if region is sp.S.EmptySet:
+            continue
+        crit = sp.solveset(sp.diff(p, var), var, region)
+        if crit is sp.S.EmptySet:
+            continue
+        if not isinstance(crit, sp.FiniteSet):
+            raise SceneError(f"cannot locate the extremes of {p}")
+        pts.update(crit)
+    if any(not q.is_number for q in pts):
+        raise SceneError("the extremes depend on a symbol (a symbolic position or instant); give numbers")
+    pts = {q for q in pts if dom.contains(q) is sp.true}
+    vals, where = [], []
+    eps = sp.Rational(1, 10 ** 9)
+    for q in pts:
+        for qq in (q, q - eps, q + eps):
+            if dom.contains(qq) is sp.true:
+                vals.append(sp.sympify(e).xreplace({var: qq}))
+                where.append(q)
+    for end_, side in ((dom.inf, "+"), (dom.sup, "-")):
+        if end_.is_infinite:
+            try:
+                vals.append(sp.limit(pw, var, end_))
+            except Exception:
+                # the far tail of a piecewise shape: its value well beyond every breakpoint
+                far = max([abs(float(sp.N(q))) for q in pts] + [1]) * 10 ** 6
+                vals.append(pw.xreplace({var: far if end_ is sp.oo else -far}))
+        else:
+            vals.append(sp.sympify(e).xreplace({var: end_}))
+        where.append(None if end_.is_infinite else end_)
+    if points:
+        return [(w_, v) for w_, v in zip(where, vals) if v.is_finite is not False]
+    return [v for v in vals if v.is_finite is not False]
+
+
+class _Budget(Exception):
+    pass
+
+
+def _within(seconds, fn):
+    """Run fn with a time budget (POSIX); raises _Budget when it runs out. The outer evaluation
+    alarm is restored afterwards with its remaining time."""
+    import signal
+    import time
+    if not hasattr(signal, "SIGALRM"):
+        return fn()
+    remaining = signal.alarm(0)
+    old = signal.getsignal(signal.SIGALRM)
+    t0 = time.time()
+
+    def stop(*_):
+        raise _Budget()
+    signal.signal(signal.SIGALRM, stop)
+    signal.alarm(seconds if not remaining else min(seconds, remaining))
+    try:
+        return fn()
+    finally:
+        signal.alarm(0)
+        signal.signal(signal.SIGALRM, old)
+        if remaining:
+            signal.alarm(max(1, int(remaining - (time.time() - t0))))
+
+
+def _numeric_peak(e, var, dom):
+    """Largest |e| for a purely numeric e: dense log-spaced scan, then golden-section refinement.
+    The result is a decimal (a numerical value, not a symbolic one)."""
+    import mpmath
+    import numpy as np
+    f = sp.lambdify(var, e, modules=["numpy"])
+    lo = float(dom.inf) if dom.inf.is_finite else None
+    hi = float(dom.sup) if dom.sup.is_finite else None
+    grid = np.concatenate([-np.logspace(-6, 6, 4000)[::-1], [0.0], np.logspace(-6, 6, 4000)])
+    grid = np.unique(np.concatenate([grid, np.linspace(-50, 50, 20001)]))
+    if lo is not None:
+        grid = grid[grid >= lo]
+    if hi is not None:
+        grid = grid[grid <= hi]
+    with np.errstate(all="ignore"):
+        vals = np.abs(np.asarray(f(grid), dtype=float) * np.ones_like(grid))
+    vals[~np.isfinite(vals)] = 0
+    i = int(np.argmax(vals))
+    a, b = grid[max(i - 1, 0)], grid[min(i + 1, len(grid) - 1)]
+    g = lambda u: -abs(float(f(u)))
+    for _ in range(80):                                   # golden-section refinement
+        c, d = b - (b - a) / 1.618033988749895, a + (b - a) / 1.618033988749895
+        if g(c) < g(d):
+            b = d
+        else:
+            a = c
+    return sp.Float(max(-g((a + b) / 2), float(vals[i])), 12)
+
+
+def _peak_of(e, var, extent, what):
+    """Largest |e| over var (on the extent, if given)."""
+    lo, hi = (extent or (None, None))
+    dom = sp.Interval(-sp.oo if lo is None else lo, sp.oo if hi is None else hi)
+    try:
+        vals = _within(15, lambda: _extreme_values(e, var, dom))
+        nums = [abs(float(sp.N(v))) for v in vals]
+    except _Budget:
+        if sp.sympify(e).free_symbols - {var}:
+            raise SceneError(f"peak(): the extremes of {what} take too long to find symbolically; give numbers")
+        return _numeric_peak(e, var, dom)
+    except SceneError:
+        raise
+    except Exception as exc:          # symbolic shapes the candidate search cannot handle
+        raise SceneError(f"peak(): cannot find the extremes of {what} ({type(exc).__name__}); give "
+                         f"its shape with numbers") from exc
+    if not nums:
+        raise SceneError(f"peak(): no value found for {what}")
+    best = max(range(len(nums)), key=lambda i: nums[i])
+    return sp.Abs(sp.nsimplify(vals[best])) if vals[best].is_number else sp.Abs(vals[best])
+
+
+def _shaped_pulse_derived(sc, wave, J, toward, far, near, r, t):
+    """Image-method reflection and transmission of a shaped pulse at junction J."""
+    s, xJ = toward, J.at
+    # qualification: the pulse must start entirely on its own string (checked past both ends)
+    beyond = sp.Interval(xJ, sp.oo) if s == 1 else sp.Interval(-sp.oo, xJ)
+    lo_, hi_ = near.extent or (None, None)
+    other = hi_ if s == -1 else lo_
+    if other is not None:
+        behind = sp.Interval(other, sp.oo) if s == -1 else sp.Interval(-sp.oo, other)
+        try:
+            back = max(abs(float(sp.N(v))) for v in _extreme_values(wave.g, X, behind))
+        except Exception:
+            back = None
+        pk0 = float(sp.N(_peak_of(wave.g, X, None, f"pulse '{wave.name}'")))
+        if back is not None and back > 1e-3 * pk0:
+            raise SceneError(f"pulse '{wave.name}' extends past the other end of '{near.name}' (x = {other} m) at "
+                             f"t = 0: it must start entirely on its own string")
+    try:
+        far_max = max(abs(float(sp.N(v))) for v in _extreme_values(wave.g, X, beyond))
+        pk = float(sp.N(_peak_of(wave.g, X, None, f"pulse '{wave.name}'")))
+    except Exception:
+        raise SceneError(f"pulse '{wave.name}': cannot check that it starts on its own string before junction "
+                         f"'{J.name}'; give its shape and the junction position as numbers")
+    if far_max > 1e-3 * pk:
+        raise SceneError(f"pulse '{wave.name}' already extends past junction '{J.name}' at t = 0 "
+                         f"({far_max / pk:.3%} of its peak): it must start entirely on its own string")
+    v1 = wave.v
+    out = [(f"{wave.name}_reflected",
+            ShapedPulse.derived(f"{wave.name}_reflected", near, r * wave.g.xreplace({X: 2 * xJ - X}), -s, v1,
+                                (wave.name, J.name), coef=r, parent=wave))]
+    if t is not None:
+        v2 = far.speed()
+        g_t = t * wave.g.xreplace({X: xJ + (v1 / v2) * (X - xJ)})
+        out.append((f"{wave.name}_transmitted",
+                    ShapedPulse.derived(f"{wave.name}_transmitted", far, g_t, s, v2, (wave.name, J.name),
+                                        coef=t, parent=wave)))
+    # a derived pulse heading for another junction or end would be reflected again: not modelled
+    for dname, d in out:
+        nxt = d.medium.extent[1] if d.sign == 1 else d.medium.extent[0]
+        if nxt is not None:
+            raise SceneError(f"pulse '{dname}' runs into another junction or end of '{d.medium.name}' "
+                             f"(x = {nxt} m), where it would be reflected again; multiple reflections are not "
+                             f"modelled in v0. Ask about one reflection at a time (one junction per scene)")
+    return out
 
 
 class Emitter:
@@ -978,12 +1222,12 @@ class Junction:
 
 
 def derived_waves(sc, wave):
-    """Reflected and transmitted waves created when a harmonic wave meets a junction."""
-    if (isinstance(wave, GivenWave) and not isinstance(wave, SumWave) and wave.medium is not None
+    """Reflected and transmitted waves created when a harmonic wave or a shaped pulse meets a junction."""
+    if (isinstance(wave, GivenWave) and not isinstance(wave, (SumWave, ShapedPulse)) and wave.medium is not None
             and any(wave.medium in J.side.values() for J in sc.junctions)):
-        raise SceneError(f"waves.{wave.name}: its string has a junction, and only waves written as "
-                         f"`harmonic:` are reflected and transmitted there; write it as a harmonic wave")
-    if not isinstance(wave, Harmonic) or wave.medium is None or not sc.junctions:
+        raise SceneError(f"waves.{wave.name}: its string has a junction, and only `harmonic:` waves and "
+                         f"`pulse:` waves with a `shape` are reflected and transmitted there")
+    if not isinstance(wave, (Harmonic, ShapedPulse)) or wave.medium is None or not sc.junctions:
         return []
     out = []
     for J in sc.junctions:
@@ -1008,6 +1252,10 @@ def derived_waves(sc, wave):
             t = sp.simplify(2 * Z1 / (Z1 + Z2))
             # energy flux is conserved at the junction: r^2 + (Z2/Z1) t^2 = 1 (checked as a fact)
             sc.implicit.append((f"junction {J.name}: energy conservation", sp.simplify(r ** 2 + Z2 / Z1 * t ** 2 - 1)))
+        if isinstance(wave, ShapedPulse):
+            if wave.derived_from is None:
+                out += _shaped_pulse_derived(sc, wave, J, toward, far, near, r, t)
+            continue
         s, xJ = toward, J.at
 
         def make(name, medium, A, k, v, sign, phi):
@@ -1541,6 +1789,7 @@ OBS_DIMS = {
     "intensity_of_level": dim(0, 1, -3),
     "is_travelling": None, "wrap": DIMLESS,
     "harmonic": DIMLESS, "node_spacing": LENGTH, "beat_frequency": D_FREQ, "resonances": None,
+    "peak": LENGTH, "travel_time": TIME, "peak_position": LENGTH,
     "count": DIMLESS, "frequency_of": None,
 }
 
@@ -1584,13 +1833,76 @@ def _at(sc, e, **values):
     return sp.sympify(e).xreplace(rep)
 
 
+def _peak(sc, w, t=None):
+    """Largest |y| over x of a wave at an instant (a shaped pulse alone: its amplitude, no t needed)."""
+    wave = _obj(w, WAVES, "peak")
+    if isinstance(wave, ShapedPulse) and (t is None or wave.derived_from is None):
+        return wave.peak()          # a lone pulse keeps its shape: the same height at every instant
+    if t is None:
+        raise SceneError("peak(wave, t=...): give the instant")
+    ext = None
+    meds = [getattr(p, "medium", None) for p in getattr(wave, "parts", [wave])]
+    if meds and meds[0] is not None and all(m is meds[0] for m in meds):
+        ext = getattr(meds[0], "extent", None)
+    e = wave.field().xreplace({T: sp.sympify(t)})
+    return _peak_of(e, X, ext, f"wave '{wave.name}'")
+
+
+def _peak_position(sc, w, t=None):
+    """x where |y| is largest at an instant (one place only; a tie is an error)."""
+    wave = _obj(w, WAVES, "peak_position")
+    if t is None:
+        raise SceneError("peak_position(wave, t=...): give the instant")
+    meds = [getattr(p, "medium", None) for p in getattr(wave, "parts", [wave])]
+    ext = getattr(meds[0], "extent", None) if meds and meds[0] is not None and all(m is meds[0] for m in meds) else None
+    lo, hi = ext or (None, None)
+    dom = sp.Interval(-sp.oo if lo is None else lo, sp.oo if hi is None else hi)
+    e = wave.field().xreplace({T: sp.sympify(t)})
+    try:
+        cands = _within(15, lambda: _extreme_values(e, X, dom, points=True))
+    except _Budget:
+        raise SceneError("peak_position(): the extremes take too long to find; give a simpler shape")
+    cands = [(q, abs(float(sp.N(v)))) for q, v in cands if q is not None]
+    if not cands:
+        raise SceneError("peak_position(): no maximum found")
+    best = max(v for _, v in cands)
+    at = sorted({q for q, v in cands if abs(v - best) <= 1e-12 * max(1.0, best)}, key=lambda q: float(sp.N(q)))
+    if len(at) != 1:
+        raise AmbiguousError(f"peak_position(): |y| is largest at several places: {at[:6]}")
+    return at[0]
+
+
+def _travel_time(sc, m, start=None, end=None):
+    """Time for a disturbance to run along a string from start to end: the integral of ds/v."""
+    med = _obj(m, (StringMedium, GasMedium), "travel_time")
+    if start is None or end is None:
+        raise SceneError("travel_time(medium, start=..., end=...): give both positions")
+    a, b = sp.sympify(start), sp.sympify(end)
+    lo_, hi_ = getattr(med, "extent", None) or (None, None)
+    for pos in (a, b):
+        if pos.is_number and ((lo_ is not None and pos < lo_) or (hi_ is not None and pos > hi_)):
+            raise SceneError(f"travel_time(): x = {pos} m is outside '{med.name}' (it ends at a junction); "
+                             f"add the times on each string")
+    order = sp.simplify(b - a)
+    if order.is_negative:
+        a, b = b, a
+    elif not order.is_nonnegative:
+        raise SceneError("travel_time(): cannot tell whether start < end; give start before end")
+    if getattr(med, "uniform", True):
+        return (b - a) / med.speed()
+    u = sp.Dummy("u", real=True)
+    return sp.simplify(sp.integrate(1 / med.speed(u), (u, a, b)))
+
+
 def _wrap(_sc, a):
     """Reduce an angle to the interval (-pi, pi]."""
     return a - 2 * sp.pi * sp.ceiling((a - sp.pi) / (2 * sp.pi))
 
 
 OBSERVABLES = {
-    "is_travelling": _is_travelling, "at": _at,
+    "step": lambda sc, u: sp.Heaviside(u, 1),
+    "is_travelling": _is_travelling, "at": _at, "peak": _peak, "travel_time": _travel_time,
+    "peak_position": _peak_position,
     "wrap": _wrap,
     "harmonic": _harmonic, "node_spacing": _node_spacing, "beat_frequency": _beat_frequency,
     "resonances": _resonances, "count": _count,
@@ -1599,7 +1911,9 @@ OBSERVABLES = {
     # waves
     "velocity": lambda sc, w: _obj(w, WAVES, "velocity").velocity(),
     "speed": _speed,
-    "amplitude": lambda sc, w: _obj(w, WAVES, "amplitude").amplitude(),
+    "amplitude": lambda sc, w: (_obj(w, WAVES, "amplitude").peak() if isinstance(_obj(w, WAVES, "amplitude"),
+                                                                              ShapedPulse)
+                                else _obj(w, WAVES, "amplitude").amplitude()),
     "offset": lambda sc, w: _obj(w, WAVES, "offset").offset(),
     "frequency": _frequency,
     "omega": lambda sc, w: _obj(w, WAVES, "omega").ang_freq(),

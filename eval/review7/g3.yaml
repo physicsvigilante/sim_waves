@@ -1,0 +1,10 @@
+id: g3
+symbols: {g: positive, s: positive}
+media:
+  s1: {type: string, mu: 0.01 kg/m, tension: 100 N}
+  s2: {type: string, mu: 0.04 kg/m, tension: 100 N}
+junctions: {J: {at: 2 m, left: s1, right: s2}}
+waves:
+  lp: {pulse: {on: s1, from: left, toward: right}}
+observe:
+  f: "front(lp, t=0.01[s])"

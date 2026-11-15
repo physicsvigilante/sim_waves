@@ -1,0 +1,11 @@
+id: f3
+media:
+  s1: {type: string, mu: 0.01 kg/m, tension: 100 N}
+  s2: {type: string, mu: 0.04 kg/m, tension: 100 N}
+junctions: {J: {at: 2 m, left: s1, right: s2}}
+waves:
+  p: {pulse: {on: s1, shape: "0.01*exp(-((x - 1.87)/0.05)**2)", units: {x: m, y: m}, dir: +x}}
+  q: {pulse: {on: s1, shape: "0.01*exp(-((x - 1.86)/0.05)**2)", units: {x: m, y: m}, dir: +x}}
+observe:
+  Ar: "amplitude(p_reflected)"
+  Aq: "amplitude(q_reflected)"

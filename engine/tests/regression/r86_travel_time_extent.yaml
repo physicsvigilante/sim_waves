@@ -1,0 +1,11 @@
+# review 7 #3: travel_time past a junction, and a reversed hanging rope
+symbols: {L: positive, g: positive, mu: positive, s: positive}
+media:
+  s1: {type: string, mu: 0.01 kg/m, tension: 4 N}
+  s2: {type: string, mu: 0.04 kg/m, tension: 4 N}
+  rope: {type: string, mu: mu, coordinate: {origin: lower_end, direction: up, variable: s}, tension: {hanging: {load: 0 kg, g: g}}}
+junctions: {J: {at: 2 m, left: s1, right: s2}}
+observe:
+  back: "travel_time(rope, start=L, end=0[m])"
+  across: "travel_time(s1, start=0[m], end=5[m])"
+expect: {back: "2*sqrt(L/g)"}

@@ -92,10 +92,12 @@ w: {harmonic: {on: rope, A: 1 cm, f | omega | period, lambda | k, v,
                phase: 0}}
 # 2. given: an explicit y(x,t); units for x, t AND y are required
 p: {given: "3/(2 + (x - 4*t)**2)", units: {x: m, t: s, y: m}, on: rope}
-# 3. pulse on a string, launched from the coordinate origin
+# 3. pulse on a string, launched from the coordinate origin (any origin, e.g. a horizontal rope:
+#    coordinate: {origin: left_end, direction: right, variable: s} and from: left_end, toward: right)
 p: {pulse: {on: rope, from: lower_end, toward: up}}
-# v0: a pulse has only a front position (no shape), so it cannot meet a junction; a pulse on a
-# string with a junction is refused. Use a harmonic wave to get reflection and transmission.
+# 4. pulse with a shape: y(x, 0) as a formula in x; it moves at the string's speed
+p: {pulse: {on: a, shape: "0.01*max(0, 1 - abs(x - 0.5)/0.1)", units: {x: m, y: m}, dir: +x}}
+# a pulse without a shape has only a front position (front(p, t=...)) and cannot meet a junction
 ```
 
 - **Phase convention:** `y = A sin(omega*t - d*k*x + phase)`, where `d = +1` for +x and
@@ -148,6 +150,22 @@ waves:
   - displacement is continuous at the junction;
   - a fixed end reflects with r = -1, a free end with r = +1;
   - energy conservation at each junction is checked as a fact.
+- **Shaped pulses** also create `p_reflected` and `p_transmitted` at a junction or a
+  fixed/free end, by the image method:
+  - same coefficients as harmonic waves;
+  - the transmitted pulse is v2/v1 as wide;
+  - a fixed end inverts.
+
+  Two conditions apply:
+  - The pulse must start entirely on its own string. If more than 0.1% of its peak lies
+    past the junction at t = 0, it is refused.
+  - Shaped pulses need uniform strings (on a non-uniform string the pulse does not keep
+    its shape).
+
+  `sum: [p, p_reflected]` gives the string while incident and reflected pulses overlap.
+  - Only one reflection is modelled. If a reflected or transmitted pulse would run into a
+    further junction or end on its string, the scene is refused: model one junction per
+    scene.
 - **Extents:** a string is limited by its junctions. Evaluating a wave outside its string
   is an error. A junction's `at` must be a number with a unit, and a string has at most one
   junction on each side.
@@ -395,6 +413,24 @@ never `omega(w)`: both are 1/s, so the dimension check cannot catch it.
 
 - `frequency_of(var, expr)` gives the oscillation frequency of a sinusoidal expression
   in var.
+- **Pulse tools:**
+  - `peak(w, t=...)` is the largest |y| over x at an instant, for any wave with a field.
+    For a shaped pulse alone, `amplitude(p)` and `peak(p)` give its height.
+    `peak_position(w, t=...)` is where it occurs; a tie is reported as ambiguous.
+  - Observables can be nested, e.g.
+    `front(p, t=travel_time(rope, start=0[m], end=3[m])/2)`.
+  - `step(u)` is 1 for u >= 0, else 0. Shapes can be built from `max`, `abs` and `step`.
+    - Write a window from a to b as `(step(x - a) - step(x - b))`. It is half-open, so
+      adjacent windows do not double up at the joint. Example, a half-sine:
+      `0.02*sin(pi*(x - 1)/0.4)*(step(x - 1) - step(x - 1.4))`.
+    - `peak` is exact where it can be. For shapes whose extremes have no closed form (e.g.
+      overlapping Gaussians) it is a numerical value, shown as a decimal.
+    - Positions and instants must be numbers. A symbolic peak position is an error,
+      except that a lone pulse has the same height at every instant.
+- `travel_time(m, start=..., end=...)` is the time to run along a string (or a sound medium)
+  from start to end: the integral of ds/v, which also works with a coordinate variable.
+  - It is never negative.
+  - Both ends must lie on that string. Across a junction, add the times on each string.
 - `envelope(var, expr)` gives the beat envelope of a sum of two sinusoids with different
   frequencies: sqrt(A1^2 + A2^2 + 2*A1*A2*cos(dw*var + dc)).
   - Its maximum and minimum are `max_over(t, envelope(t, ...))` (A1 + A2) and

@@ -1,0 +1,25 @@
+id: m7/R1
+assume:
+  - "String is long to the left; only the clamp at x = 0.80 m bounds it."
+  - "Triangular pulse written as a shape built from max/abs; y(x,0) as stated, moving +x."
+media:
+  s: {type: string, mu: 25 g/m, tension: 10 N}
+junctions:
+  wall: {at: 0.80 m, left: s, right: fixed}
+waves:
+  p: {pulse: {on: s, shape: "0.006*(max(0, 1 - abs(x - 0.6)/0.2)*step(0.6 - x) + max(0, 1 - abs(x - 0.6)/0.1)*step(x - 0.6))", units: {x: m, y: m}, dir: +x}}
+  tot: {sum: [p, p_reflected]}
+observe:
+  y_a: "y(tot, x=0.76[m], t=10[ms])"
+  peak_b: "peak(tot, t=10[ms])"
+  y_62: "y(tot, x=0.62[m], t=10[ms])"
+  y_64: "y(tot, x=0.64[m], t=10[ms])"
+  y_66: "y(tot, x=0.66[m], t=10[ms])"
+  y_68: "y(tot, x=0.68[m], t=10[ms])"
+  y_69: "y(tot, x=0.69[m], t=10[ms])"
+  y_70: "y(tot, x=0.7[m], t=10[ms])"
+  y_71: "y(tot, x=0.71[m], t=10[ms])"
+  y_72: "y(tot, x=0.72[m], t=10[ms])"
+  y_74: "y(tot, x=0.74[m], t=10[ms])"
+  y_78: "y(tot, x=0.78[m], t=10[ms])"
+  y_80: "y(tot, x=0.8[m], t=10[ms])"

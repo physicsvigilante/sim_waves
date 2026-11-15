@@ -1,0 +1,15 @@
+id: b
+media:
+  s1: {type: string, mu: 0.01 kg/m, tension: 100 N}
+  s2: {type: string, mu: 0.04 kg/m, tension: 100 N}
+junctions: {J: {at: 0 m, left: s2, right: s1}}
+waves:
+  p: {pulse: {on: s1, shape: "0.01*max(0, 1 - abs(x - 1.5)/0.1)", units: {x: m, y: m}, dir: -x}}
+observe:
+  Ar: "amplitude(p_reflected)"
+  At: "amplitude(p_transmitted)"
+  yr: "y(p_reflected, x=0.1[m], t=0.016[s])"
+  yt_peak: "y(p_transmitted, x=-0.1[m], t=0.017[s])"
+  yt_half: "y(p_transmitted, x=-0.125[m], t=0.017[s])"
+  vr: "velocity(p_reflected)"
+  vt: "velocity(p_transmitted)"
