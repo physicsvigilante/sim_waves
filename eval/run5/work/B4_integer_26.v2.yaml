@@ -1,0 +1,15 @@
+id: B4/integer/26
+assume:
+  - "Point at L/4 from one end; string length not given, taken as 1 m (harmonic list is scale free)."
+  - "Tension is the unknown that makes the stated mode 100 Hz (mass per length assumed 10 g/m; irrelevant to the ratio)."
+unknowns: {T: positive}
+media:
+  s: {type: string, mu: 10 g/m, tension: T}
+resonators:
+  r: {type: string, on: s, length: 1 m, ends: [fixed, fixed]}
+given:
+  - {fact: "frequency(r, harmonic=min(harmonics(r, upto=12, antinode_at=0.25[m]))) == 100[Hz]", source: stated}
+observe:
+  modes: "harmonics(r, upto=12, antinode_at=0.25[m])"
+  f_next: "frequency(r, harmonic=6)"
+  f_lowest: "frequency(r, harmonic=2)"

@@ -341,3 +341,30 @@ The full report is in `eval/review8/REPORT.md`.
 **Reserved transfer (m8):** 3 of 3 reserved problems matched in every part, with no
 production change needed (`eval/m8_energy/RESULT.md`). After the run, `max_in`/`min_in`
 were added.
+
+## Run 5 (broad blind test on the book chapter) and the fixes that followed
+
+See `eval/run5/SCORECARD.md`.
+- **Results:** 80 new problems; 62 match the book; 68 are proved by the engine; 0 are
+  misrepresented.
+- **Compared with run 4:** engine-verified rose from 69% to 86%, and full coverage from
+  55% to 70% (indicative only: a different source and a different mix of types).
+
+**Fixed after the run:**
+- **`vy`/`slope` at a corner** printed 0 (silent wrong). Now refused; beside the corner
+  is fine (r99).
+- **`max_in` with symbols:** the doc and the error now say to put `at(...)` inside.
+- **`nodes`:** the doc now says the ends are included.
+- **Declared-twice names** get their own message instead of "reserved".
+- **The doc now converts textbook phase forms** (`sin(kx - wt + phi)` gives
+  `phase: pi - phi`). This was the most common authoring slip in runs 4 and 5.
+
+**Process defect:** the developer's problem-file builder dropped top-level `column_ii` of
+matrix records. Future builders must copy every field the transcriber writes except
+`answer`, `answer_value`, `verified`, `notes`.
+
+**Next gaps by demand:**
+- symbolic scale for ratio questions (maths, 13);
+- composite and driven resonators (5);
+- sound at boundaries between media (5);
+- tension from mechanics (5).

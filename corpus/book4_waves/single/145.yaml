@@ -1,0 +1,21 @@
+id: B4/single/145
+number: 145
+source: wanes_full.pdf book p.4.92 (page image p-092); key p.4.122 (p-122)
+format: single_correct
+statement: A sound has an intensity of 2 x 10^-8 W m^-2. Its intensity level in decibels is (log10 2 = 0.3)
+figure: null
+options:
+  a: '23'
+  b: '3'
+  c: '43'
+  d: '4.3'
+answer: c
+answer_value: 43
+units: dB
+verified: L = 10 log(2e-8/1e-12) = 10 (4.3) = 43 dB. Matches key.
+kinds:
+- inverse_condition
+physics:
+- intensity_level
+- decibel
+notes: Reference intensity 1e-12 W/m^2 assumed.

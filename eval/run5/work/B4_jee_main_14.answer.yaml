@@ -1,0 +1,9 @@
+answer: [a]
+final_scene: B4_jee_main_14.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "nothing"
+missing_in_source: "Equal intensity taken as equal amplitude at the point"
+reasoning: "Engine I = I0(3 + 2 sqrt2) = 5.83 I0."
+friction: "Intensity from phases only via rays of equal length; no direct phasor observable for waves of arbitrary phase"

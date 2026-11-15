@@ -1,0 +1,20 @@
+id: B4/integer/20
+number: 20
+source: book p.107 (answer key p.123)
+format: numerical
+statement: A string of mass m is fixed at both ends. The fundamental tone oscillation are excited in the
+  string with angular frequency ω and maximum displacement amplitude A. The total energy contained in
+  the string is mω^2A^2/x, where x is an integer from zero to 9. Find x.
+figure: null
+options: null
+answer: '4'
+answer_value: 4
+units: ''
+verified: 'y = A sin(pi x/L) cos(wt): total energy = max KE = (1/2) integral mu w^2 A^2 sin^2(pi x/L)
+  dx = m w^2 A^2/4 -> x = 4. Matches key.'
+kinds:
+- symbolic
+physics:
+- string_energy
+- fundamental_mode
+notes: Consistent.

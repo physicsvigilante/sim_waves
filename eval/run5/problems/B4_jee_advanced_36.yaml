@@ -1,0 +1,10 @@
+id: B4/jee_advanced/36
+format: multiple_correct
+statement: One end of a taut string of length 3 m along X-axis is fixed at x = 0. The speed of the waves
+  in the string is 100 m s^-1. The other end of the string is vibrating in the y-direction so that stationary
+  waves are set up in the string. The possible waveform(s) of these stationary wave is (are)
+options:
+  A: y(t) = A sin(pi x/6) cos(50 pi t/3)
+  B: y(t) = A sin(pi x/3) cos(100 pi t/3)
+  C: y(t) = A sin(5 pi x/6) cos(250 pi t/3)
+  D: y(t) = A sin(5 pi x/2) cos(250 pi t)

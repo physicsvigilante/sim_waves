@@ -1,0 +1,9 @@
+answer: [d]
+final_scene: B4_single_118.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "nothing"
+missing_in_source: "Heights of pulse stated but figure scale in cm assumed"
+reasoning: "Engine at t=3 s: y(O)=2 cm, 0.5 cm from O 1 cm, rising linearly from 0 at 1 cm from O to 2 cm at O."
+friction: "Free end as junction on the right needed a mu and T chosen to give speed 1 cm/s."

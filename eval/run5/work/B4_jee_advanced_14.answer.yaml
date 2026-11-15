@@ -1,0 +1,10 @@
+answer: [b]
+final_scene: B4_jee_advanced_14.v2.yaml
+engine_fit: partial
+hand_steps:
+  - "Pulse centre positions x = 0.02 t and x = 0.08 - 0.02 t written into the given-wave formulas from speed 2 cm/s and the 8 cm separation (v1 using pulse: refused, see friction)."
+coverage: partial
+not_represented: "Pulse widths and heights are not in the source; identical triangles of height 0.5 cm and half-width 1 cm are assumed."
+missing_in_source: "pulse shapes/widths (answer independent of them)"
+reasoning: "Engine at t = 2 s: displacement 0 at the meeting point, PE = 0, KE = 4e-8 J (all the energy); at t = 1 s KE = PE as a check. So purely kinetic."
+friction: "Sum of two shaped pulse objects with corners was refused ('corner at a symbolic position'), so I had to use given travelling-wave formulas, losing the pulse-launch syntax."

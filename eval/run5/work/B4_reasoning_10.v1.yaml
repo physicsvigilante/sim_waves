@@ -1,0 +1,24 @@
+id: B4/reasoning/10
+assume:
+  - "Stationary wave on a string of length 1 m fixed at x = 0 (left, fixed wall) ... built as incident wave + its reflection from a fixed end at x = 2 m; frequency, amplitude are scale choices."
+  - "Nodes are at 2 m - n*lambda/2 and antinodes midway; with lambda = 40 cm (v = 40 m/s, f = 100 Hz?), the points x = 1.9 m (node, 10 cm from the wall? see observe) are read from the engine, not assumed."
+  - "Two points in one loop: x = 1.85 m and 1.95 m (between the nodes at 1.8 m and 2.0 m)? Chosen only as a test of 'cross the mean position together'."
+media:
+  s: {type: string, mu: 10 g/m, tension: 16 N}
+junctions:
+  wall: {at: 2 m, left: s, right: fixed}
+waves:
+  w: {harmonic: {on: s, A: 1 cm, f: 100 Hz, dir: +x, phase: 0}}
+  st: {sum: [w, w_reflected]}
+observe:
+  lam: "wavelength(w)"
+  v_wall: "max_over(t, abs(vy(st, x=2[m], t=t)))"
+  v_anti: "max_over(t, abs(vy(st, x=1.9[m], t=t)))"
+  v_anti2: "max_over(t, abs(vy(st, x=1.7[m], t=t)))"
+  amp_anti: "max_over(t, abs(y(st, x=1.9[m], t=t)))"
+  amp_p2: "max_over(t, abs(y(st, x=1.85[m], t=t)))"
+  same_loop_in_phase: "equivalent(y(st, x=1.85[m], t=t)/y(st, x=1.9[m], t=t), max_over(t, abs(y(st, x=1.85[m], t=t)))/max_over(t, abs(y(st, x=1.9[m], t=t))))"
+  neighbouring_loop_opposite: "equivalent(y(st, x=1.7[m], t=t)/y(st, x=1.9[m], t=t), -max_over(t, abs(y(st, x=1.7[m], t=t)))/max_over(t, abs(y(st, x=1.9[m], t=t))))"
+  v_over_amp_p2: "max_over(t, abs(vy(st, x=1.85[m], t=t)))/max_over(t, abs(y(st, x=1.85[m], t=t)))"
+  v_over_amp_p1: "max_over(t, abs(vy(st, x=1.9[m], t=t)))/max_over(t, abs(y(st, x=1.9[m], t=t)))"
+  omega: "omega(w)"

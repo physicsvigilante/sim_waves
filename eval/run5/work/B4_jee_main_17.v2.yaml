@@ -1,0 +1,16 @@
+id: B4/jee_main/17
+assume:
+  - "Air treated as ideal gas, gamma = 7/5 (assumption), same molar mass on both days."
+  - "Density 1.29 kg/m^3 is assumed only because the engine needs it to state a pressure amplitude; speed does not depend on it."
+  - "0 degC = 273.15 K (convention). The pressure amplitude 0.01 Pa is irrelevant to speed."
+unknowns: {M0: positive, Tx: positive}
+media:
+  day1: {type: gas, gamma: 7/5, temperature: 273.15 K, molar_mass: M0, density: 1.29 kg/m^3}
+  day2: {type: gas, gamma: 7/5, temperature: Tx, molar_mass: M0, density: 1.29 kg/m^3}
+waves:
+  p: {harmonic: {on: day1, pressure_amplitude: 0.01 Pa, omega: 1000 rad/s, k: 3 rad/m, dir: +x, phase: 0}}
+given:
+  - {fact: "speed(day2) == 336[m/s]", source: stated}
+observe:
+  v_day1: "speed(day1)"
+  T_day2_K: "Tx"

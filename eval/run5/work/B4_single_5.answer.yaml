@@ -1,0 +1,9 @@
+answer: [b]
+final_scene: B4_single_5.v1.yaml
+engine_fit: partial
+hand_steps: ["Buoyancy: tension in a fluid = W(1 - rho_fluid/rho_weight), written into the tension expressions by me"]
+coverage: partial
+not_represented: "Buoyancy and immersion are not modelled"
+missing_in_source: "none"
+reasoning: "Engine solved sl = 16/9 = 1.78 (option 1.77)."
+friction: "No buoyancy or sonometer weights in the format; I wrote the Archimedes relation as a tension expression."

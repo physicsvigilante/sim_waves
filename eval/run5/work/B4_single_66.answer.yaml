@@ -1,0 +1,10 @@
+answer: [b]
+final_scene: B4_single_66.v1.yaml
+engine_fit: partial
+hand_steps:
+  - "r.m.s. molecular speed is proportional to sqrt(T) (kinetic theory), not an engine observable; so v2/v1 = sqrt(T2/T1)."
+coverage: partial
+not_represented: "Molecular r.m.s. speed."
+missing_in_source: "none"
+reasoning: "Engine: V2/V1 = sqrt(T2/T1) (same gas); with v2/v1 = sqrt(T2/T1) by hand, v2 = v1 (V2/V1)."
+friction: "No kinetic-theory observable (rms speed, mean energy)."

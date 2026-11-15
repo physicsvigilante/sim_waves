@@ -1,0 +1,19 @@
+id: B4/jee_advanced/30
+number: 30
+source: "book p.115, JEE Advanced archive, single correct Q30 [IIT-JEE 1986]"
+format: single_correct
+statement: >-
+  A tube, closed at one end and containing air, produces, when excited, the fundamental note of frequency 512 Hz. If the tube is opened at both ends the fundamental frequency that can be excited is (in Hz)
+figure: null
+options:
+  A: "1024"
+  B: "512"
+  C: "256"
+  D: "128"
+answer: A
+answer_value: 1024
+units: Hz
+verified: "Matches key. Closed: v/4L = 512; open: v/2L = 1024 Hz."
+kinds: [comparison, ratio]
+physics: [closed pipe, open pipe, fundamental frequency]
+notes: null

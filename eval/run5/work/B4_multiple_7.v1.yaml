@@ -1,0 +1,18 @@
+id: B4/multiple/7
+assume:
+  - "Tension increases by 2% (second wire tension = 1.02 T); fundamental frequency rises by 15 Hz."
+  - "Same wire and length; fundamental mode."
+symbols: {mu: positive, L: positive}
+unknowns: {T: positive}
+media:
+  w1: {type: string, mu: mu, tension: T}
+  w2: {type: string, mu: mu, tension: 1.02*T}
+resonators:
+  r1: {type: string, on: w1, length: L, ends: [fixed, fixed]}
+  r2: {type: string, on: w2, length: L, ends: [fixed, fixed]}
+given:
+  - {fact: "frequency(r2, harmonic=1) - frequency(r1, harmonic=1) == 15[Hz]", source: stated}
+observe:
+  f1: "frequency(r1, harmonic=1)"
+  lam_ratio: "wavelength(r2, harmonic=1)/wavelength(r1, harmonic=1)"
+  v_ratio: "speed(r2)/speed(r1)"

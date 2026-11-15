@@ -1,0 +1,10 @@
+answer: [C]
+final_scene: B4_reasoning_20.v1.yaml
+engine_fit: partial
+hand_steps:
+  - "Newton's formula is isothermal, i.e. gamma = 1 (framing); Statement 2 (experiment not accurate) is judged false from knowledge, not from the engine."
+coverage: partial
+not_represented: "the history of the experimental value; whether the experiment was accurate"
+missing_in_source: none
+reasoning: "Engine: gamma = 1 speed is 0.845 of the gamma = 7/5 speed, an error of 15.5 percent, about 16 percent: statement 1 true. Statement 2 is false because experimental value was accurate."
+friction: "Statement 2 is a historical claim; the engine cannot check it. 'Newton's formula' is a framing choice (gamma = 1)."

@@ -1,0 +1,37 @@
+id: B4/matrix/10
+number: 10
+source: book p.105 (answer key p.123)
+format: matrix_match
+statement: Regarding speed of sound in gas match the following
+figure: null
+options:
+  column_i:
+    A: Temperature of gas is made 4 times and pressure 2 times
+    B: Only pressure is made 4 time without change in temperature
+    C: Only temperature is changed to 4 times
+    D: Molecular mass of the gas is made 4 times
+  column_ii:
+    p: Speed becomes 2√2 times
+    q: Speed becomes 2 times
+    r: Speed remains unchanged
+    s: Speed remains half
+answer:
+  A:
+  - q
+  B:
+  - r
+  C:
+  - q
+  D:
+  - s
+answer_value: null
+units: null
+verified: 'v = sqrt(gamma R T/M), independent of P at fixed T: A sqrt4 = 2 (q); B unchanged (r); C 2 (q);
+  D 1/2 (s). Matches key.'
+kinds:
+- comparison
+- ratio
+physics:
+- speed_of_sound
+- ideal_gas
+notes: Consistent.

@@ -1,0 +1,17 @@
+id: B4/jee_main/14
+assume:
+  - "Same medium and amplitude at the point for all three (equal intensities); spreading none; rays of equal length 1 m so only the stated source phases differ."
+symbols: {I0: positive}
+media:
+  air: {type: gas, v: 340 m/s}
+sources:
+  S1: {on: air, f: 100 Hz, A: 1, phase: 0, spreading: none}
+  S2: {on: air, f: 100 Hz, A: 1, phase: pi/4, spreading: none}
+  S3: {on: air, f: 100 Hz, A: 1, phase: -pi/4, spreading: none}
+rays:
+  r1: {from: S1, length: 1 m}
+  r2: {from: S2, length: 1 m}
+  r3: {from: S3, length: 1 m}
+given: []
+observe:
+  I: "I0*relative_intensity(r1, r2, r3)/relative_intensity(r1)"

@@ -1,0 +1,10 @@
+answer: [b]
+final_scene: B4_single_37.v1.yaml
+engine_fit: partial
+hand_steps: 
+  - "Compared engine value 0.256 kgf with the options 0.4*(4/5)^2 = 0.256 by hand"
+coverage: full
+not_represented: "nothing"
+missing_in_source: "none"
+reasoning: "Same fork: harmonic 4 at 0.4 kgf and harmonic 5 at T2 gives T2/T1 = 16/25, so 0.256 kgf = 0.4(4/5)^2."
+friction: "Segments->harmonic mapping done by me; kgf not a unit so 9.8 convention used."

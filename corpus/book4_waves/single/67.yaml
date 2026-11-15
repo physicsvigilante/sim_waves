@@ -1,0 +1,22 @@
+id: B4/single/67
+number: 67
+source: wanes_full.pdf book p.4.87 (page image p-087); key p.4.122 (p-122)
+format: single_correct
+statement: The maximum pressure variation that the human ear can tolerate in loud sound is about 30 N m^-2. The corresponding maximum displacement for a sound wave in air having a frequency of 10^3 Hz is (take velocity of sound in air as 300 m s^-1 and density of air 1.5 kg m^-3)
+figure: null
+options:
+  a: (2 pi/3) x 10^-2 m
+  b: (2 x 10^-4 / pi) m
+  c: (pi/3) x 10^-2 m
+  d: (10^-4 / (3 pi)) m
+answer: d
+answer_value: 1e-4/(3*pi) = 1.06e-5
+units: m
+verified: dP = rho v omega s -> s = 30/(1.5*300*2*pi*1000) = 1/(3e4 pi)... = 1e-4/(3 pi) = 1.06e-5 m. Matches key.
+kinds:
+- inverse_condition
+physics:
+- sound_wave
+- pressure_amplitude
+- displacement_amplitude
+notes: Consistent.

@@ -1,0 +1,7 @@
+id: B4/single/69
+assume: ["Same particle: same x; phase read at t and t + 0.4 s."]
+waves:
+  w: {given: "4*sin((pi/2)*(2*t + x/8))", units: {x: cm, t: s, y: cm}}
+observe:
+  dphi: "phase(w, x=0[cm], t=0.4[s]) - phase(w, x=0[cm], t=0[s])"
+  dir: "velocity(w)"

@@ -1,0 +1,31 @@
+id: B4/multiple/23
+number: 23
+source: book p.96 (answer key p.122)
+format: multiple_correct
+statement: The figure shows an instantaneous profile of a rope carrying a progressive wave moving from
+  left to right, then
+figure: Axes x and y. A sinusoidal profile starts at the origin, labelled A (on the axis at the y-axis,
+  curve rising to the right), rises to a crest, returns to the x-axis at the point labelled B, then dips
+  to a trough below the axis and ends back on the axis at the right. No numerical values given.
+options:
+  A: the phase of A is greater than the phase of B
+  B: the phase of B is greater than the phase of A
+  C: A is moving upwards
+  D: B is moving upwards
+answer: A, D
+answer_value:
+- A
+- D
+units: null
+verified: 'For a wave moving right, y = f(x - vt), phase omega t - kx falls with x, so the point to the
+  left (A) has larger phase: A true, B false. B lies at a zero crossing with the crest on its left; the
+  profile shifts right, so B moves up (D true). A has the (continued) trough on its left so moves down:
+  C false. Matches key.'
+kinds:
+- graph_read
+- conceptual
+physics:
+- phase
+- particle_velocity
+- travelling_wave
+notes: Reading of A relies on the sinusoid continuing to the left of A.

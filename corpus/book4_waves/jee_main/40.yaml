@@ -1,0 +1,19 @@
+id: B4/jee_main/40
+number: 40
+source: "book p.111, JEE Main archive Q40 [Online 2018]"
+format: single_correct
+statement: >-
+  Two sitar strings, A and B, playing the note Dha are slightly out of tune and produce beats of frequency 5 Hz. The tension of the string B is slightly increased and the beat frequency is found to decrease by 3 Hz. If the frequency of A is 425 Hz, the original frequency of B is
+figure: null
+options:
+  A: "428 Hz"
+  B: "430 Hz"
+  C: "420 Hz"
+  D: "422 Hz"
+answer: C
+answer_value: 420
+units: Hz
+verified: "Matches key. Raising tension raises f_B; beats fall 5 -> 2, so f_B started below 425 at 420 (rising to 423)."
+kinds: [inverse_condition]
+physics: [beats, string tension and frequency]
+notes: null

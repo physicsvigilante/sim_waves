@@ -1,0 +1,15 @@
+id: B4/comprehension/28
+assume:
+  - "Fundamental mode of a fixed-fixed wire; KE of a particle is zero at all times only where the mode shape is identically zero (nodes)."
+media:
+  wire: {type: string, mass: 0.1 kg, length: 2 m, tension: 40 N}
+resonators:
+  r: {type: string, on: wire, length: 2 m, ends: [fixed, fixed]}
+observe:
+  shape_end0: "mode_shape(r, harmonic=1, x=0[m])"
+  shape_end2: "mode_shape(r, harmonic=1, x=2[m])"
+  shape_centre: "mode_shape(r, harmonic=1, x=1[m])"
+  shape_1_5: "mode_shape(r, harmonic=1, x=1.5[m])"
+  shape_0_5: "mode_shape(r, harmonic=1, x=0.5[m])"
+  inner_nodes: "count(nodes(r, harmonic=1))"
+  f1: "frequency(r, harmonic=1)"

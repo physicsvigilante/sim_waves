@@ -1,0 +1,14 @@
+id: B4/integer/10
+assume:
+  - "Point source radiating in all directions in a uniform medium, so intensity = P/(4 pi r^2) (the engine's point emitter); the statement itself gives inverse-square law."
+  - "Source power P is not given; it is kept as a symbol and cancels in the level difference."
+  - "r1 is the (unspecified) distance of P1; P2 is at 2*r1."
+symbols: {P: positive, r1: positive}
+media:
+  air: {type: open3d}
+emitters:
+  pt: {on: air, geometry: point, power: P}
+observe:
+  I1: "intensity(pt, r=r1)"
+  I2: "intensity(pt, r=2*r1)"
+  drop: "sound_level(intensity(pt, r=r1)) - sound_level(intensity(pt, r=2*r1))"

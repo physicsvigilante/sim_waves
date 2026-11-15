@@ -1,0 +1,14 @@
+id: B4/single/152
+assume:
+  - "The string has density rho and cross-section area s (the problem's 'a' for area clashes with amplitude a; area written s as in the options)."
+  - "Both waves are on the same string; tension is fixed by the wave speed omega/k (cross-check)."
+  - "The wave is the sum y1 + y2 as written (unequal amplitudes: not a pure standing wave). 'Between adjacent antinodes' is taken as a stretch of length pi/k = half a wavelength starting at x = 0; the energy is averaged over one period."
+symbols: {a: positive, omega: positive, k: positive, rho: positive, s: positive}
+media:
+  str: {type: string, density: rho, area: s, tension: free}
+waves:
+  y1: {given: "a*sin(omega*t - k*x)", units: {x: m, t: s, y: m}, on: str}
+  y2: {given: "2*a*sin(omega*t + k*x)", units: {x: m, t: s, y: m}, on: str}
+  tot: {sum: [y1, y2]}
+observe:
+  E_avg: "mean_over(t, energy(tot, start=0[m], end=pi/k, t=t), 0[s], 2*pi/omega)"

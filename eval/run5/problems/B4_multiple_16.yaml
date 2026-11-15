@@ -1,0 +1,10 @@
+id: B4/multiple/16
+format: multiple_correct
+statement: As a wave propagates
+options:
+  A: the wave intensity remains constant for a plane wave
+  B: the wave intensity decreases as the inverse of the distance from the source for a spherical wave
+  C: the wave intensity decreases as the inverse square of the distance from the source for a spherical
+    wave
+  D: total intensity of the spherical wave over the spherical surface centered at the source remains constant
+    at all times

@@ -1,0 +1,9 @@
+answer: 4.08 N
+final_scene: B4_integer_12.v2.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "nothing"
+missing_in_source: "none"
+reasoning: "Unknown mu and tension Tb solved from the two speeds; Tb = 54.08 N, dT = 4.08 N."
+friction: "symbol named mu is reserved (v1 error); needed an unknown mass-per-length to say 'same wire'."

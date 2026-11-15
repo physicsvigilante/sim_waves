@@ -1,0 +1,20 @@
+id: B4/single/95
+assume:
+  - "Two coherent sources at the same place, spreading none, amplitudes (pressure units, plain numbers) 1 and 3. Minimum = the two arrive in antiphase (S2 phase pi), the definition of destructive interference; the maximum case (phase 0) is shown too."
+  - "Intensity ratios use relative_intensity, which is proportional to intensity for pressure amplitudes in one medium."
+media:
+  air: {type: gas, v: 340 m/s}
+sources:
+  S1: {on: air, at: [0 m, 0 m], f: 500 Hz, A: 1, phase: 0, spreading: none}
+  S2min: {on: air, at: [0 m, 0 m], f: 500 Hz, A: 3, phase: pi, spreading: none}
+  S2max: {on: air, at: [0 m, 0 m], f: 500 Hz, A: 3, phase: 0, spreading: none}
+points:
+  P: [5 m, 0 m]
+rays:
+  d1: {from: S1, to: P}
+  dmin: {from: S2min, to: P}
+  dmax: {from: S2max, to: P}
+observe:
+  Imin_over_I: "relative_intensity(d1, dmin)/relative_intensity(d1)"
+  Imax_over_I: "relative_intensity(d1, dmax)/relative_intensity(d1)"
+  I2_over_I1: "relative_intensity(dmax)/relative_intensity(d1)"

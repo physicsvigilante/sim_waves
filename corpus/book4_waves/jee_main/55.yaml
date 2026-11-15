@@ -1,0 +1,19 @@
+id: B4/jee_main/55
+number: 55
+source: "book p.112, JEE Main archive Q55 [2009]"
+format: single_correct
+statement: >-
+  Three sound waves of equal amplitudes have frequencies (v - 1), v, (v + 1). They superpose to give beats. The number of beats produced per second will be
+figure: null
+options:
+  A: "4"
+  B: "3"
+  C: "2"
+  D: "1"
+answer: C
+answer_value: 2
+units: beats per second
+verified: "Matches key. Resultant = A cos(2 pi v t)[1 + 2cos(2 pi t)]; intensity envelope has two maxima per second (one of height 9, one of height 1), so 2 beats/s."
+kinds: [build_wavefunction, conceptual]
+physics: [beats, superposition of three frequencies]
+notes: "Counting depends on treating the two unequal maxima per second as separate beats; key follows the standard JEE answer."

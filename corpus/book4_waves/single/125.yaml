@@ -1,0 +1,21 @@
+id: B4/single/125
+number: 125
+source: wanes_full.pdf book p.4.91 (page image p-091); key p.4.122 (p-122)
+format: single_correct
+statement: Waves from three sources of the same intensity and frequencies (n - 1), n, (n + 1) Hz superpose. The number of beats per second is
+figure: null
+options:
+  a: '0'
+  b: '1'
+  c: '2'
+  d: '3'
+answer: c
+answer_value: 2
+units: per second
+verified: Resultant intensity proportional to (1 + 2 cos(2 pi t))^2, period 1 s with two maxima per period (9 and 1) -> 2 maxima per second. Matches key under this reading.
+kinds:
+- conceptual
+physics:
+- beats
+- superposition
+notes: Beat counting is ambiguous (period is 1 s, but two maxima per period).

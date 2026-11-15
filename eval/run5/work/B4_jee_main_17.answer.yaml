@@ -1,0 +1,10 @@
+answer: [a]
+final_scene: B4_jee_main_17.v2.yaml
+engine_fit: partial
+hand_steps: 
+  - "Converted Tx = 277.538 K to degC by subtracting 273.15 (4.39 degC)"
+coverage: partial
+not_represented: "Pressure amplitude 0.01 Pa is carried but irrelevant; density 1.29 kg/m^3 and gamma 7/5 are assumptions"
+missing_in_source: "Air density, gamma, molar mass"
+reasoning: "Wave omega=1000, k=3 gives v=333.3 m/s at 273.15 K and fixes molar mass; the same gas at Tx gives 336 m/s at Tx = 277.54 K = 4.39 degC, nearest option 4 degC."
+friction: "Pressure-amplitude wave required a density the problem does not give (v1 undetermined); no degC output so subtraction done by hand."

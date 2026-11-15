@@ -1,0 +1,11 @@
+id: B4/reasoning/5
+format: single_correct
+statement: 'Statement-1: Coefficient of adiabatic elasticity of air is greater than the coefficient of
+  isothermal elasticity.
+
+  Statement-2: Heat is exchanged freely in an isothermal change, but not in an adiabatic change.'
+options:
+  A: Both statements are TRUE and STATEMENT 2 is the correct explanation of STATEMENT 1.
+  B: Both statements are TRUE but STATEMENT 2 is not the correct explanation of STATEMENT 1.
+  C: STATEMENT 1 is TRUE and STATEMENT 2 is FALSE.
+  D: STATEMENT 1 is FALSE but STATEMENT 2 is TRUE.

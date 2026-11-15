@@ -1,0 +1,9 @@
+answer: [a, c, d]
+final_scene: B4_jee_advanced_36.v1.yaml
+engine_fit: partial
+hand_steps: ["Modelled the driven end as a free (antinode) end and read each option frequency omega/(2 pi) off the waveform myself (25/3, 50/3, 125/3, 125 Hz); speed check v = omega/k = 100 for every option also done by hand"]
+coverage: partial
+not_represented: "Time dependence and exact spatial form of each option; the engine only checks that a mode exists at that frequency"
+missing_in_source: "Which boundary condition the vibrating end imposes is not stated"
+reasoning: "Engine counts of modes in a window around each frequency: A 1, B 0, C 1, D 1 for fixed-free; B (sin(pi x/3)) would need a node at x=3, i.e. fixed-fixed, so the end would not vibrate."
+friction: "No way to check a given standing-wave formula against a resonator (a given wave has no boundary check); had to compare frequencies manually. Driven end has no resonator end type."

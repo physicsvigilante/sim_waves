@@ -1,0 +1,8 @@
+id: B4/jee_advanced/58
+assume: ["Amplitude A = 1 (scale; speed does not depend on it)."]
+waves:
+  y1: {given: "cos(0.5*pi*x - 100*pi*t)", units: {x: m, t: s, y: m}}
+  y2: {given: "cos(0.46*pi*x - 92*pi*t)", units: {x: m, t: s, y: m}}
+observe:
+  v1: "velocity(y1)"
+  v2: "velocity(y2)"

@@ -1,0 +1,10 @@
+id: B4/single/5
+format: single_correct
+statement: The frequency of a sonometer wire is 100 Hz. When the weights producing the tensions are completely
+  immersed in water the frequency becomes 80 Hz and on immersing the weights in a certain liquid the frequency
+  becomes 60 Hz. The specific gravity of the liquid is
+options:
+  a: '1.42'
+  b: '1.77'
+  c: '1.82'
+  d: '1.21'

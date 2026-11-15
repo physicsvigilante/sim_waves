@@ -1,0 +1,8 @@
+id: B4/multiple/14
+assume: ["A = 1 m (scale)."]
+waves:
+  w: {given: "sin(10*pi*x + 15*pi*t + pi/3)", units: {x: m, t: s, y: m}}
+observe:
+  v: "velocity(w)"
+  lam: "wavelength(w)"
+  f: "frequency(w)"

@@ -1,0 +1,23 @@
+id: B4/single/112
+number: 112
+source: wanes_full.pdf book p.4.90 (page image p-090); key p.4.122 (p-122)
+format: single_correct
+statement: In the figure the intensity of waves arriving at D from two coherent sources s1 and s2 is I0. The wavelength of the wave is lambda = 4 m. Resultant intensity at D will be
+figure: Right triangle. s1 at top-left, D at top-right, s2 directly below s1. s1-D = 4 m (horizontal), s1-s2 = 3 m (vertical). Hypotenuse s2-D unlabelled.
+options:
+  a: 4 I0
+  b: I0
+  c: 2 I0
+  d: zero
+answer: c
+answer_value: 2 I0
+units: null
+verified: s1D = 4 m, s2D = 5 m, path difference 1 m = lambda/4 -> phase pi/2. I = I0 + I0 + 2 I0 cos(pi/2) = 2 I0. Matches key.
+kinds:
+- graph_read
+- inverse_condition
+physics:
+- interference
+- path_difference
+- intensity
+notes: I0 is read as the intensity at D from each source alone.

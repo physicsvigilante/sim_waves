@@ -1,0 +1,9 @@
+answer: [c]
+final_scene: B4_jee_advanced_7.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "nothing"
+missing_in_source: "none"
+reasoning: "Engine ratios closed/open(2nd): n=3 gives 3/4, n=5 gives 5/4; f2 > f1 requires n=5, f2 = 5/4 f1."
+friction: "none"

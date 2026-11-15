@@ -1,0 +1,13 @@
+id: B4/jee_main/41
+assume: ["Resonance column = pipe closed at one end, open at the other, same fork, so same frequency."]
+symbols: {v: positive}
+unknowns: {L2: positive}
+media:
+  air: {type: gas, v: v}
+resonators:
+  p1: {type: pipe, on: air, length: 10 cm, ends: [closed, open], end_correction: 1 cm}
+  p2: {type: pipe, on: air, length: L2, ends: [closed, open], end_correction: 1 cm}
+given:
+  - {fact: "frequency(p1, harmonic=1) == frequency(p2, harmonic=3)", source: stated, note: "shortest length = fundamental; next resonance = 3rd harmonic"}
+observe:
+  L2: "L2"

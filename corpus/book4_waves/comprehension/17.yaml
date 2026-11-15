@@ -1,0 +1,42 @@
+id: B4/comprehension/17
+number: 17
+source: book p.100 (answer key p.123)
+format: single_correct
+statement: 'Passage (Comprehension 5): When two pulses are allowed to pass through a string in opposite
+  direction with same speed, the shape of string varies. Each pulse passes the overlap region as if the
+  other pulse were not present there. The superposition principle can be applied to deal with the two
+  waves in opposite direction. If two wave pulses are identical in shape, except that one is inverted
+  with respect to another, at some instant displacement will be zero, but not their velocities. When reflection
+  takes place from denser medium''s surface or a rigid body, there will be phase difference of π. The
+  corresponding path difference and time difference can be analysed. Based on above information, answer
+  the following question.
+
+
+  Q17. As the two waves are moving in opposite direction in a string, which of the following is not possible'
+figure: 'Four sketches (A)-(D) of a string with pulses, no numerical values. (A): two identical upright
+  semicircular-type humps separated by a flat gap, upper arrow pointing right over the left hump and arrow
+  pointing left over the right hump. (B): an upright hump on the left with an arrow pointing right above
+  it, and a downward (inverted) pulse to its right with an arrow pointing left below it. (C): a single
+  upright hump with one arrow pointing right above it and a second arrow pointing left drawn at the right
+  side of the hump base. (D): two identical upright humps touching side by side with a small notch between
+  them at the baseline, arrows pointing toward each other above them.'
+options:
+  A: (sketch A)
+  B: (sketch B)
+  C: (sketch C)
+  D: (sketch D)
+answer: D
+answer_value: D
+units: ''
+verified: DISPUTED (low confidence). Superposition allows the touching configuration in D (pulses just
+  meeting, no overlap) and A, B. In C two opposite-moving pulses are indicated but only one hump is shown,
+  which cannot be a sum of two identical upright pulses unless they are not yet overlapping; so C is the
+  candidate for 'not possible'. Book key says D.
+kinds:
+- conceptual
+- graph_match
+physics:
+- superposition
+- pulses
+notes: Options are drawings; the transcription of the figure is a description. Answer-key printed row
+  17 read as D.

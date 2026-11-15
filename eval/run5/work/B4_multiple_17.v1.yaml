@@ -1,0 +1,13 @@
+id: B4/multiple/17
+assume:
+  - "Ideal gas; moisture or composition changes molar mass M and possibly gamma; temperature T; pressure P with T held fixed."
+symbols: {P: positive, T: positive, M: positive, gamma: positive}
+media:
+  air: {type: gas, gamma: gamma, pressure: P, temperature: T, molar_mass: M}
+given: []
+observe:
+  v: "speed(air)"
+  dP: "diff(speed(air), P)"
+  dT: "diff(speed(air), T)"
+  dM: "diff(speed(air), M)"
+  dgamma: "diff(speed(air), gamma)"

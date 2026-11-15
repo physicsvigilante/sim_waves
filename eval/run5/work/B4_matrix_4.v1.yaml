@@ -1,0 +1,17 @@
+id: B4/matrix/4
+assume:
+  - "Denser = larger mass per length on a string (heavier string); transmitted into the lighter string. The source is ambiguous about the kind of wave."
+  - "mu1 = 4*mu2 as an illustrative ratio; any mu1 > mu2 gives the same ordering."
+symbols: {T: positive, A: positive, f: positive, mu2: positive}
+media:
+  dense: {type: string, mu: 4*mu2, tension: T}
+  rare: {type: string, mu: mu2, tension: T}
+junctions:
+  J: {at: 0 m, left: dense, right: rare}
+waves:
+  w: {harmonic: {on: dense, A: A, f: f, dir: +x, phase: 0}}
+observe:
+  f_ratio: "frequency(w_transmitted)/frequency(w)"
+  v_ratio: "speed(w_transmitted)/speed(w)"
+  lam_ratio: "wavelength(w_transmitted)/wavelength(w)"
+  A_ratio: "amplitude(w_transmitted)/amplitude(w)"

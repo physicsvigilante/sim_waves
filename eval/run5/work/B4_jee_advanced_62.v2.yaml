@@ -1,0 +1,20 @@
+id: B4/jee_advanced/62
+assume:
+  - "Column II is not in the source; only the fundamental wavelength of each system in terms of L is computed."
+  - "A wire is transverse, a pipe is longitudinal (medium type)."
+  - "L = 1 m fixed as a scale (answers are ratios to L, scale-free). mu, T of the wire arbitrary."
+  - "System D: one wire of length L with an extra clamp at L/2; the allowed modes are those with a node at L/2."
+media:
+  air: {type: gas, v: 340 m/s}
+  wire: {type: string, mu: 1 g/m, tension: 1 N}
+resonators:
+  A: {type: pipe, on: air, length: 1 m, ends: [closed, open], end_correction: 0 m}
+  B: {type: pipe, on: air, length: 1 m, ends: [open, open], end_correction: 0 m}
+  C: {type: string, on: wire, length: 1 m, ends: [fixed, fixed]}
+  D: {type: string, on: wire, length: 1 m, ends: [fixed, fixed]}
+observe:
+  lamA: "wavelength(A, harmonic=1)"
+  lamB: "wavelength(B, harmonic=1)"
+  lamC: "wavelength(C, harmonic=1)"
+  Dharm: "min(harmonics(D, upto=10, node_at=0.5[m]))"
+  lamD: "wavelength(D, harmonic=min(harmonics(D, upto=10, node_at=0.5[m])))"

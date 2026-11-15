@@ -1,0 +1,30 @@
+id: B4/multiple/13
+number: 13
+source: book p.95 (answer key p.122)
+format: multiple_correct
+statement: A metallic wire of length ℓ is held between two rigid supports. If the wire is cooled through
+  a temperature t, Y is the Young's modulus of elasticity, ρ is the density and α is the thermal coefficient
+  of linear expansion of the wire, then the frequency of oscillation is proportional to
+figure: null
+options:
+  A: 1/ℓ
+  B: √Y
+  C: √(α/ρ)
+  D: √t
+answer: A, B, C, D
+answer_value:
+- A
+- B
+- C
+- D
+units: null
+verified: Thermal stress = Y alpha t, tension T = Y A alpha t, mu = rho A; f = (1/2l) sqrt(T/mu) = (1/2l)
+  sqrt(Y alpha t/rho). All four proportionalities hold. Matches key.
+kinds:
+- symbolic
+- derived_medium
+physics:
+- thermal_stress
+- fundamental_frequency
+- string_tension
+notes: Assumes fundamental mode of the string.

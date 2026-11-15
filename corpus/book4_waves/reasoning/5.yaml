@@ -1,0 +1,27 @@
+id: B4/reasoning/5
+number: 5
+source: book p.98 (answer key p.123)
+format: single_correct
+statement: 'Statement-1: Coefficient of adiabatic elasticity of air is greater than the coefficient of
+  isothermal elasticity.
+
+  Statement-2: Heat is exchanged freely in an isothermal change, but not in an adiabatic change.'
+figure: null
+options:
+  A: Both statements are TRUE and STATEMENT 2 is the correct explanation of STATEMENT 1.
+  B: Both statements are TRUE but STATEMENT 2 is not the correct explanation of STATEMENT 1.
+  C: STATEMENT 1 is TRUE and STATEMENT 2 is FALSE.
+  D: STATEMENT 1 is FALSE but STATEMENT 2 is TRUE.
+answer: B
+answer_value: B
+units: null
+verified: DISPUTED (judgement). E_adiabatic = gamma P > E_isothermal = P, so S1 true; S2 true. The difference
+  between the two elasticities arises precisely from heat exchange (T held constant vs. not), so S2 is
+  arguably the correct explanation (answer A). Book key says B.
+kinds:
+- conceptual
+physics:
+- bulk_modulus
+- adiabatic
+- isothermal
+notes: Explanation-link is a matter of interpretation; key B.

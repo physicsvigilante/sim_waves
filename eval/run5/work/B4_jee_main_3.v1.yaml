@@ -1,0 +1,19 @@
+id: B4/jee_main/3
+assume:
+  - "g = 9.8 m/s^2 (cancels in the ratio); only the lower end carries the wave source, wave frequency stays constant."
+  - "Block is at the lower end s=0, the wave starts there."
+symbols: {s: positive, g: positive}
+unknowns: {f0: positive}
+media:
+  rope:
+    type: string
+    mass: 6 kg
+    length: 12 m
+    coordinate: {origin: lower_end, direction: up, variable: s}
+    tension: {hanging: {load: 2 kg, g: g}}
+waves:
+  w: {harmonic: {on: rope, f: f0, from: lower_end, toward: up}}
+given:
+  - {fact: "wavelength(w, at=0[m]) == 6[cm]", source: stated}
+observe:
+  lam_top: "wavelength(w, at=12[m])"

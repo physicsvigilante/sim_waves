@@ -1,0 +1,15 @@
+id: B4/multiple/16
+assume: ["Ideal lossless homogeneous medium; plane, point (spherical) emitters; one run checks all options."]
+symbols: {P: positive, I0: positive, r: positive}
+media:
+  air: {type: open3d}
+emitters:
+  pt: {on: air, geometry: point, power: P}
+  pl: {on: air, geometry: plane, intensity: I0}
+observe:
+  I_plane: "intensity(pl, r=r)"
+  I_point: "intensity(pt, r=r)"
+  I_point_2r_over_r: "intensity(pt, r=2*r)/intensity(pt, r=r)"
+  I_point_3r_over_r: "intensity(pt, r=3*r)/intensity(pt, r=r)"
+  total_over_sphere: "flux(pt, sphere(r))"
+  total_over_sphere_2r: "flux(pt, sphere(2*r))"

@@ -1,0 +1,10 @@
+answer: "60 cm"
+final_scene: B4_integer_8.v2.yaml
+engine_fit: partial
+hand_steps:
+  - "Lother = 90 cm - Lx = 30 cm (the other side of the press point) is computed in an observe expression; the answer '60 cm from one end' relies on Lx itself, the 30 cm from the other end is the same point."
+coverage: full
+not_represented: "nothing (pressed string modelled as a shorter string of the same medium)"
+missing_in_source: "which end the distance is measured from: 60 cm from one end equals 30 cm from the other"
+reasoning: "Engine solved the vibrating length Lx = 0.6 m for 186 Hz given 124 Hz at 90 cm. Pressing at 60 cm from the end leaves that length."
+friction: "Over-specification error when mu and T both symbols: had to make T an unknown. Pressing a string at a point (splitting it) has no direct object; modelled as a second resonator."

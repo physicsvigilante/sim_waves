@@ -1,0 +1,17 @@
+id: B4/jee_advanced/8
+assume:
+  - "The wave in air is the transmitted wave of the water wave; the frequency is the same on both sides of the water-air surface (phase continuity at the surface). The engine has no interface between fluids, so this equality is written as an assumption, not derived."
+  - "Both media are taken as plane waves; amplitude not needed."
+unknowns: {fa: positive}
+media:
+  water: {type: fluid, v: 1500 m/s, density: 1000 kg/m^3}
+  air: {type: gas, v: 300 m/s, density: 1.2 kg/m^3}
+waves:
+  ww: {harmonic: {on: water, f: 600 Hz, pressure_amplitude: 1 Pa, dir: +x, phase: 0}}
+  wa: {harmonic: {on: air, f: fa, pressure_amplitude: 1 Pa, dir: +x, phase: 0}}
+given:
+  - {fact: "frequency(wa) == frequency(ww)", source: assumption, note: "frequency is unchanged on crossing a boundary"}
+observe:
+  f_air: "frequency(wa)"
+  lam_water: "wavelength(ww)"
+  lam_air: "wavelength(wa)"

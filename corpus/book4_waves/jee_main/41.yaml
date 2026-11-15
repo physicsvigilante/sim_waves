@@ -1,0 +1,19 @@
+id: B4/jee_main/41
+number: 41
+source: "book p.111, JEE Main archive Q41 [Online 2018]"
+format: single_correct
+statement: >-
+  The end correction of a resonance column is 1 cm. If the shortest length resonating with the tuning fork is 10 cm, the next resonating length should be
+figure: null
+options:
+  A: "36 cm"
+  B: "40 cm"
+  C: "28 cm"
+  D: "32 cm"
+answer: D
+answer_value: 32
+units: cm
+verified: "Matches key. (10+1) = lambda/4, so lambda = 44 cm; next: L + 1 = 3*11 = 33, L = 32 cm."
+kinds: [inverse_condition]
+physics: [resonance column, end correction, closed pipe harmonics]
+notes: null

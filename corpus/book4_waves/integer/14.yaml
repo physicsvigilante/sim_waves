@@ -1,0 +1,24 @@
+id: B4/integer/14
+number: 14
+source: book p.107 (answer key p.123)
+format: numerical
+statement: 'At a distance 20 m from a point source of sound the loudness level is 30 dB. Neglecting the
+  damping, find
+
+  (a) the loudness at 10 m from the source, in decibel.
+
+  (b) the distance from the source (in metre) at which sound is not heard.'
+figure: null
+options: null
+answer: (a) 36, (b) 632
+answer_value: (a) 36, (b) 632
+units: (a) dB, (b) m
+verified: '(a) I x4 -> +6 dB = 36 dB. (b) not heard at 0 dB: 30 dB drop = factor 1000 in I, r = 20 x sqrt(1000)
+  = 632 m. Matches key.'
+kinds:
+- ratio
+- inverse_condition
+physics:
+- sound_intensity_level
+- inverse_square
+notes: Two-part answer; threshold of hearing taken as 0 dB.

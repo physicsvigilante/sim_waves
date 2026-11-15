@@ -1,0 +1,21 @@
+id: B4/single/63
+number: 63
+source: wanes_full.pdf book p.4.86 (page image p-086); key p.4.122 (p-122)
+format: single_correct
+statement: Two waves of the same frequency and amplitude superpose to produce a resultant disturbance of the same amplitude. The phase difference between the waves is
+figure: null
+options:
+  a: zero
+  b: pi/3
+  c: pi/2
+  d: 2 pi/3
+answer: d
+answer_value: 2 pi/3
+units: rad
+verified: Resultant amplitude 2A cos(phi/2) = A -> phi = 2 pi/3. Matches key.
+kinds:
+- inverse_condition
+physics:
+- superposition
+- phase_difference
+notes: Consistent.

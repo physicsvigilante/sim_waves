@@ -1,0 +1,11 @@
+id: B4/single/152
+format: single_correct
+statement: A standing wave is maintained in a homogeneous string of cross-sectional area a and density
+  rho. It is formed by the superposition of two waves travelling in opposite directions given by the equation
+  y1 = a sin(omega t - k x) and y2 = 2a sin(omega t + k x). The total mechanical energy confined between
+  the sections corresponding to the adjacent antinodes is
+options:
+  a: 3 pi s rho omega^2 a^2 / (2k)
+  b: pi s rho omega^2 a^2 / (2k)
+  c: 5 pi s rho omega^2 a^2 / (2k)
+  d: 2 pi s rho omega^2 a^2 / (2k)

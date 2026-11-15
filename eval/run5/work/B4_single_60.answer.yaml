@@ -1,0 +1,9 @@
+answer: [c]
+final_scene: B4_single_60.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "the bridges' position and the joint as an actual joint (two separate fixed-fixed halves)"
+missing_in_source: none
+reasoning: "Engine: equal frequency requires m = 2n, so loops in the thin wire to loops in the thick wire = 1/2."
+friction: "Welded joint as a node had to be modelled as two resonators with fixed ends; the junction cannot be used with a resonator."

@@ -103,6 +103,12 @@ p: {pulse: {on: a, shape: "0.01*max(0, 1 - abs(x - 0.5)/0.1)", units: {x: m, y: 
 - **Phase convention:** `y = A sin(omega*t - d*k*x + phase)`, where `d = +1` for +x and
   `-1` for -x. `phase(w,x,t)` returns the argument of the sine, which always increases
   with time.
+  - Converting textbook forms:
+    - `A sin(kx - wt + phi)` = `A sin(wt - kx - phi + pi)`, so use `phase: pi - phi`;
+    - `A sin(kx + wt + phi)` is dir -x with `phase: phi`;
+    - `A cos(...)` adds pi/2.
+  - If in doubt, give the wave as `given:` with the book's own formula and `on:` its
+    string.
 - **Direction:** if it is unknown, declare `unknowns: {d: direction}` and use `dir: d`.
   The solver tries both directions.
 - **Cross-checks:** `omega = k*v`, the medium's speed, and a `given` formula's speed
@@ -247,7 +253,7 @@ resonators:
 - **Standing-wave patterns:**
   - Positions run from the first end in `ends` (x = 0) to the second (x = length).
   - `nodes(r, harmonic=n)` and `antinodes(r, harmonic=n)` give displacement nodes and
-    antinodes inside the resonator. For pipes, `pressure_nodes` and
+    antinodes on the resonator, ends included. For pipes, `pressure_nodes` and
     `pressure_antinodes` are also available.
     - With a non-zero end_correction, the displacement antinode at an open end lies
       beyond the pipe, so it is not listed. Counts are then one below the textbook count
@@ -368,7 +374,8 @@ or transmitted parts):
     for a reflected or transmitted pulse that is the energy it carries.
 - **Largest or smallest value over a range:** `max_in(var, expr, lo, hi)` and
   `min_in(...)`, e.g. `max_in(x, kinetic_density(p, x=x, t=0.05[s]), 1[m], 2[m])`. They work
-  for any expression in one variable, including piecewise ones.
+  for any expression in one variable, including piecewise ones. Other symbols must have
+  values before the search, so put `at(...)` inside: `max_in(x, at(expr, A=1[m]), lo, hi)`.
 - **Averages over a period:** `mean_over(t, kinetic_energy(w, start=0[m], end=wavelength(w)/2, t=t), 0[s], period(w))`.
 - **Pulse width:** `width(p)` is the length over which a shaped pulse is non-zero; for a
   transmitted pulse it is v2/v1 times the incident width. A shape that never reaches zero
@@ -454,6 +461,7 @@ never `omega(w)`: both are 1/s, so the dimension check cannot catch it.
   - `peak(w, t=...)` is the largest |y| over x at an instant, for any wave with a field.
     For a shaped pulse alone, `amplitude(p)` and `peak(p)` give its height.
     `peak_position(w, t=...)` is where it occurs; a tie is reported as ambiguous.
+  - At a corner of a shape, `vy` and `slope` are undefined and refused; ask just beside it.
   - Observables can be nested, e.g.
     `front(p, t=travel_time(rope, start=0[m], end=3[m])/2)`.
   - `step(u)` is 1 for u >= 0, else 0. Shapes can be built from `max`, `abs` and `step`.

@@ -1,0 +1,8 @@
+id: B4/reasoning/11
+assume:
+  - "The statement is about damping/ring-down of bells; the engine has no damping or material loss model. Only a placeholder rod medium is set up so the scene is valid."
+  - "Rod properties (steel) are placeholders, not from the problem."
+media:
+  steel: {type: rod, Y: 2e11 Pa, density: 7800 kg/m^3}
+observe:
+  v_placeholder: "speed(steel)"

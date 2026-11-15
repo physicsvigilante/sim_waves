@@ -1,0 +1,9 @@
+answer: [C]
+final_scene: B4_comprehension_1.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "nothing (string mu and T are free symbols; only the profile is given)"
+missing_in_source: none
+reasoning: "Engine gives max |y| at x=5 cm = sqrt(3)/50 m = 2*sqrt(3) cm, option C."
+friction: "Result printed in SI (m), unit conversion to cm by reader; string needed dummy mu, T."

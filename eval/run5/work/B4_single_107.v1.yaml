@@ -1,0 +1,10 @@
+id: B4/single/107
+assume:
+  - "Hooke's law: tension proportional to extension (stated). k_L = k*L is the string's force constant times its natural length, a free positive symbol in newtons."
+  - "Mass per length taken the same in both cases (the small change of length is neglected, as in the textbook treatment)."
+symbols: {kL: positive, m0: positive}
+media:
+  s1: {type: string, mu: m0, tension: "kL*1[N]/20"}
+  s2: {type: string, mu: m0, tension: "kL*1[N]/10"}
+observe:
+  ratio: "speed(s2)/speed(s1)"

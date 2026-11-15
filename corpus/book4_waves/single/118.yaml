@@ -1,0 +1,23 @@
+id: B4/single/118
+number: 118
+source: wanes_full.pdf book p.4.90 (page image p-090); key p.4.122 (p-122)
+format: single_correct
+statement: A wave pulse on a string has the dimension shown in figure. The wave speed is v = 1 cm s^-1. If point O is a free end. The shape of wave at time t = 3 s is
+figure: 'String along horizontal line, O (free end, black dot) at right end. Pulse moving right with v = 1 cm/s (arrow above). Triangular pulse: height 1 cm; rises over 1 cm horizontal, falls over 1 cm horizontal; then flat 2 cm to O. Labelled dimensions: 1 cm (height), 1 cm, 1 cm, 2 cm.'
+options:
+  a: Flat line ending at O (no pulse visible).
+  b: Flat line, then a straight rise over a horizontal distance of 1 cm up to O, which is 1 cm above the baseline.
+  c: Flat line, then a straight descent over a horizontal distance of 1 cm down to O, which is 1 cm below the baseline.
+  d: Flat line, then a straight rise over a horizontal distance of 1 cm up to O, which is 2 cm above the baseline.
+answer: d
+answer_value: triangle ending at O, height 2 cm, base 1 cm
+units: null
+verified: 'Free end: reflected pulse has same sign. Pulse base is 4 cm from O at its leading edge... leading edge 2 cm from O, peak 3 cm from O. At t=3 s the incident pulse''s peak is exactly at O; incident and image rise from 0 to 1 cm over the last 1 cm, summing to 2 cm at O. Option d. Matches key.'
+kinds:
+- graph_match
+- given_wavefunction
+physics:
+- reflection
+- free_end
+- pulse
+notes: 'Option shapes are drawings; described in words. Dimension labels for options: (b) 1 cm tall, 1 cm base; (c) 1 cm, 1 cm; (d) 2 cm tall, 1 cm base.'

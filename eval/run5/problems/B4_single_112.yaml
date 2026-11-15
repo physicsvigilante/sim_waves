@@ -1,0 +1,11 @@
+id: B4/single/112
+format: single_correct
+statement: In the figure the intensity of waves arriving at D from two coherent sources s1 and s2 is I0.
+  The wavelength of the wave is lambda = 4 m. Resultant intensity at D will be
+figure: Right triangle. s1 at top-left, D at top-right, s2 directly below s1. s1-D = 4 m (horizontal),
+  s1-s2 = 3 m (vertical). Hypotenuse s2-D unlabelled.
+options:
+  a: 4 I0
+  b: I0
+  c: 2 I0
+  d: zero

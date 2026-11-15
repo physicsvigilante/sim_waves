@@ -1,0 +1,9 @@
+answer: {A: q, B: r, C: q, D: s}
+final_scene: B4_matrix_10.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "nothing"
+missing_in_source: "Gas is not stated to be ideal/same gamma (assumed)"
+reasoning: "Speed ratios from the engine gas model: A 2, B 1, C 2, D 1/2."
+friction: "none"

@@ -1,0 +1,23 @@
+id: B4/reasoning/11
+number: 11
+source: book p.98 (answer key p.123)
+format: single_correct
+statement: 'Statement-1: The bells are made of metals and not of wood.
+
+  Statement-2: Wood offers high damping on the sound waves.'
+figure: null
+options:
+  A: Both statements are TRUE and STATEMENT 2 is the correct explanation of STATEMENT 1.
+  B: Both statements are TRUE but STATEMENT 2 is not the correct explanation of STATEMENT 1.
+  C: STATEMENT 1 is TRUE and STATEMENT 2 is FALSE.
+  D: STATEMENT 1 is FALSE but STATEMENT 2 is TRUE.
+answer: A
+answer_value: A
+units: null
+verified: Both true; high damping in wood kills the sound, which is why bells are metal. Matches key.
+kinds:
+- conceptual
+physics:
+- damping
+- sound
+notes: Reasoning-type; options are the standard bubbles.

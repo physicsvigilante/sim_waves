@@ -1,0 +1,12 @@
+id: B4/reasoning/5
+assume:
+  - "Isothermal sound speed is modelled as a gas with gamma = 1 (convention: Newton); adiabatic gamma = 7/5 for air."
+  - "Elasticity (bulk modulus) is not an engine observable; speed ratio only compares ad vs iso (same P, density)."
+media:
+  ad: {type: gas, gamma: 7/5, pressure: 1e5 Pa, density: 1.29 kg/m^3}
+  iso: {type: gas, gamma: 1, pressure: 1e5 Pa, density: 1.29 kg/m^3}
+given: []
+observe:
+  vad: "speed(ad)"
+  viso: "speed(iso)"
+  ratio: "speed(ad)/speed(iso)"

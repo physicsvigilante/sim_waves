@@ -1,0 +1,13 @@
+id: B4/jee_main/25
+assume: ["Scale is not given and the answer does not depend on it; lambda = 1 m fixed arbitrarily is avoided by using symbols."]
+symbols: {A: positive, f: positive, lam: positive}
+unknowns: {phi: phase}
+media:
+  s: {type: string, mu: 1 g/m, tension: 1 N}
+waves:
+  w: {harmonic: {on: s, A: A, f: f, lambda: lam, dir: +x, phase: phi}}
+given:
+  - {fact: "y(w, x=0[m], t=0[s]) == 0[m]", source: figure, note: "curve crosses the origin"}
+  - {fact: "slope(w, x=0[m], t=0[s]) < 0", source: figure, note: "positive just left, negative just right"}
+observe:
+  phi: "phi"

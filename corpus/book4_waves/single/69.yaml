@@ -1,0 +1,21 @@
+id: B4/single/69
+number: 69
+source: wanes_full.pdf book p.4.87 (page image p-087); key p.4.122 (p-122)
+format: single_correct
+statement: The equation of a wave is y = 4 sin{(pi/2)(2t + x/8)} where y, x are in cm and time in second. The phase difference between two positions of the same particle which are occupied at time interval of 0.4 s is
+figure: null
+options:
+  a: 0.2 pi
+  b: 0.4 pi
+  c: 0.6 pi
+  d: 0.8 pi
+answer: b
+answer_value: 0.4 pi
+units: rad
+verified: omega = pi rad/s -> phase difference = 0.4 pi. Matches key.
+kinds:
+- given_wavefunction
+physics:
+- phase_difference
+- wave_equation
+notes: Book problem 69 reads 'In PROBLEM 68'; the wave equation of 68 is inlined.

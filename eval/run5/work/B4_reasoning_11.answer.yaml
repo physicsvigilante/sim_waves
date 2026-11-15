@@ -1,0 +1,10 @@
+answer: [a]
+final_scene: B4_reasoning_11.v1.yaml
+engine_fit: none
+hand_steps: 
+  - "Entire reasoning from own knowledge: bells ring because metals have low internal damping; wood is highly damped"
+coverage: unsupported
+not_represented: "Damping, bells, material loss, sound sustain"
+missing_in_source: "none"
+reasoning: "Not checkable with the engine; answered from knowledge: both statements true and 2 explains 1."
+friction: "No damping/attenuation/loss model; placeholder scene only."

@@ -1,0 +1,22 @@
+id: B4/single/6
+number: 6
+source: wanes_full.pdf book p.4.82 (page image p-082); key p.4.122 (p-122)
+format: single_correct
+statement: An organ pipe P1, closed at one end and vibrating in its first overtone, and another pipe P2 open at both ends and vibrating in its third overtone, are in resonance with a given tuning fork. The ratio of the length of P1 to that of P2 is
+figure: null
+options:
+  a: 8/3
+  b: 3/8
+  c: 1/2
+  d: 1/3
+answer: b
+answer_value: 3/8
+units: null
+verified: 'Closed first overtone: f = 3v/(4 L1). Open third overtone: f = 4v/(2 L2) = 2v/L2. Equal -> L1/L2 = 3/8. Matches key.'
+kinds:
+- ratio
+- comparison
+physics:
+- organ_pipe
+- overtones
+notes: Consistent.

@@ -1,0 +1,19 @@
+id: B4/jee_main/16
+assume:
+  - "Same material so same density; radii r and 2r so diameter d and 2d; wire A length L, wire B length L (figure)."
+  - "The two wires carry the same tension T (they are joined end to end and stretched)."
+  - "Joint is a node, so each wire is an independent fixed-fixed resonator at the same frequency; p antinodes = harmonic p of wire A, q antinodes = harmonic q of B."
+  - "q is kept symbolic and p solved from the equal frequency; only the ratio p/q is wanted."
+symbols: {rho: positive, d: positive, T: positive, L: positive, q: integer}
+unknowns: {p: integer}
+media:
+  A: {type: string, density: rho, diameter: d, tension: T}
+  B: {type: string, density: rho, diameter: 2*d, tension: T}
+resonators:
+  rA: {type: string, on: A, length: L, ends: [fixed, fixed]}
+  rB: {type: string, on: B, length: L, ends: [fixed, fixed]}
+given:
+  - {fact: "frequency(rA, harmonic=p) == frequency(rB, harmonic=q)", source: stated, note: "joint is a node, whole wire vibrates at one frequency"}
+observe:
+  p_over_q: "p/q"
+  speed_ratio: "speed(rA)/speed(rB)"

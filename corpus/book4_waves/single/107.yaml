@@ -1,0 +1,23 @@
+id: B4/single/107
+number: 107
+source: wanes_full.pdf book p.4.89 (page image p-089); key p.4.122 (p-122)
+format: single_correct
+statement: A string of length L is stretched by L/20 and speed of transverse wave along it is v. The speed of wave when it is stretched by L/10 will be (assume that Hooke's Law is applicable)
+figure: null
+options:
+  a: 2v
+  b: v/sqrt(2)
+  c: sqrt(2) v
+  d: 4v
+answer: c
+answer_value: sqrt(2) v
+units: null
+verified: 'Hooke''s law: T proportional to extension; v proportional to sqrt(T) -> sqrt(2) v. Matches key (ignoring change of mass per unit length, which would give about 1.45 v).'
+kinds:
+- ratio
+- derived_medium
+physics:
+- wave_speed
+- tension
+- hookes_law
+notes: Key relies on neglecting the change in linear density.

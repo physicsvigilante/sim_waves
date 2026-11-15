@@ -1,0 +1,83 @@
+id               att fit      ok   answer -> key
+B4/comprehension/1   1 full     Y    ['C'] -> C
+B4/comprehension/17   1 partial  n    ['c'] -> D
+B4/comprehension/22   1 partial  Y    ['b'] -> B
+B4/comprehension/28   1 partial  Y    ['a'] -> A
+B4/comprehension/35   3 partial  n    ['C'] -> D
+B4/comprehension/9   1 partial  Y    ['c'] -> C
+B4/integer/10      1 full     Y    6 dB -> 6
+B4/integer/12      2 full     n    4.08 N -> 4
+B4/integer/14      3 full     ?    {'a': '36.02 dB (about 36)', 'b': '632.456 m (200*sqrt(10), about 632 m)'} -> (a) 36, (b) 632
+B4/integer/15      1 full     n    138 W -> 43, 7 (as printed)
+B4/integer/20      1 full     Y    x = 4 -> 4
+B4/integer/26      2 partial  Y    300 Hz -> 300
+B4/integer/8       2 partial  Y    60 cm -> 60
+B4/jee_advanced/10   1 full     Y    ['b'] -> B
+B4/jee_advanced/14   2 partial  Y    ['b'] -> B
+B4/jee_advanced/28   2 full     Y    ['b'] -> B
+B4/jee_advanced/30   1 full     Y    ['A'] -> A
+B4/jee_advanced/36   1 partial  Y    ['a', 'c', 'd'] -> A, C, D
+B4/jee_advanced/38   1 partial  n    ['b', 'd'] -> A, B, D
+B4/jee_advanced/58   1 full     Y    ['a'] -> A
+B4/jee_advanced/62   2 partial  Y    {'A': ['p', 't'], 'B': ['p', 's'], 'C': ['q', 's'], 'D': ['q', 'r']} -> {'A': ['p', 't'], 'B': ['p', 's'], 'C': ['q', 's'], 'D': ['q', 'r']}
+B4/jee_advanced/7   1 full     Y    ['c'] -> C
+B4/jee_advanced/8   1 partial  Y    ['d'] -> D
+B4/jee_main/1      1 full     Y    ['c'] -> C
+B4/jee_main/10     3 partial  Y    ['C'] -> C
+B4/jee_main/14     1 full     Y    ['a'] -> A
+B4/jee_main/16     1 full     Y    ['b'] -> B
+B4/jee_main/17     2 partial  Y    ['a'] -> A
+B4/jee_main/25     3 full     Y    ['A'] -> A
+B4/jee_main/3      1 full     Y    ['b'] -> B
+B4/jee_main/33     2 full     Y    ['d'] -> D
+B4/jee_main/40     2 full     Y    ['c'] -> C
+B4/jee_main/41     1 full     Y    ['D'] -> D
+B4/jee_main/45     1 full     Y    ['a'] -> A
+B4/jee_main/55     3 partial  Y    ['c'] -> C
+B4/matrix/10       1 full     Y    {'A': 'q', 'B': 'r', 'C': 'q', 'D': 's'} -> {'A': ['q'], 'B': ['r'], 'C': ['q'], 'D': ['s']}
+B4/matrix/4        1 partial  Y    {'A': ['r'], 'B': ['p'], 'C': ['p'], 'D': ['p']} -> {'A': ['r'], 'B': ['p'], 'C': ['p'], 'D': ['p']}
+B4/matrix/9        1 partial  Y    {'A': ['r'], 'B': ['p', 'r'], 'C': ['q', 'r'], 'D': ['p', 'r', 's']} -> {'A': ['r'], 'B': ['p', 'r'], 'C': ['q', 'r'], 'D': ['p', 'r', 's']}
+B4/multiple/13     2 full     Y    ['a', 'b', 'c', 'd'] -> A, B, C, D
+B4/multiple/14     1 full     Y    ['b', 'c'] -> B, C
+B4/multiple/16     1 full     Y    ['A', 'C', 'D'] -> A, C, D
+B4/multiple/17     1 partial  Y    ['b', 'c', 'd'] -> B, C, D
+B4/multiple/23     1 full     Y    ['a', 'd'] -> A, D
+B4/multiple/3      1 full     Y    ['b', 'c', 'd'] -> B, C, D
+B4/multiple/6      1 full     Y    ['A', 'C'] -> A, C
+B4/multiple/7      1 partial  n    ['a', 'c', 'd'] -> B, C, D
+B4/reasoning/10    1 partial  Y    ['a'] -> A
+B4/reasoning/11    1 none     Y    ['a'] -> A
+B4/reasoning/20    1 partial  Y    ['C'] -> C
+B4/reasoning/5     1 partial  n    ['a'] -> B
+B4/single/100      1 full     Y    ['c'] -> c
+B4/single/107      1 full     Y    ['c'] -> c
+B4/single/112      1 full     Y    ['c'] -> c
+B4/single/118      1 full     Y    ['d'] -> d
+B4/single/123      1 full     Y    ['b'] -> b
+B4/single/125      2 partial  n    ['b'] -> c
+B4/single/129      1 full     Y    ['a'] -> a
+B4/single/13       1 full     n    ['a'] -> b
+B4/single/136      1 full     Y    ['a'] -> a
+B4/single/138      3 partial  Y    ['c'] -> c
+B4/single/145      1 full     Y    ['c'] -> c
+B4/single/149      2 partial  Y    ['c'] -> c
+B4/single/152      2 full     Y    ['c'] -> c
+B4/single/165      1 full     n    ['a'] -> b
+B4/single/173      1 full     Y    ['c'] -> c
+B4/single/27       1 full     Y    ['c'] -> c
+B4/single/30       3 full     Y    ['d'] -> d
+B4/single/37       1 partial  Y    ['b'] -> b
+B4/single/47       1 partial  Y    ['a'] -> a
+B4/single/5        1 partial  Y    ['b'] -> b
+B4/single/58       1 full     Y    ['c'] -> c
+B4/single/6        1 full     Y    ['b'] -> b
+B4/single/60       1 full     Y    ['c'] -> c
+B4/single/63       1 full     Y    ['d'] -> d
+B4/single/66       1 partial  Y    ['b'] -> b
+B4/single/67       1 full     Y    ['d'] -> d
+B4/single/69       1 full     Y    ['b'] -> b
+B4/single/71       1 full     Y    ['d'] -> d
+B4/single/92       2 full     Y    ['c'] -> c
+B4/single/95       2 full     Y    ['c'] -> c
+
+correct 69/80; correct on first attempt 51/80

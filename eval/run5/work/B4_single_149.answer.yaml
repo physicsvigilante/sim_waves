@@ -1,0 +1,9 @@
+answer: [c]
+final_scene: B4_single_149.v2.yaml
+engine_fit: partial
+hand_steps: ["Compression max to rarefaction max at one point is half a period: T/2 = 1/1000 s"]
+coverage: partial
+not_represented: "Pressure phase at a point"
+missing_in_source: "none"
+reasoning: "Engine period = 1/500 s; half is 1/1000 s."
+friction: "No point observable for pressure/compression of a wave on a gas; v1 rejected for unit um."

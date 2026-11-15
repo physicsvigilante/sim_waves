@@ -1,0 +1,6 @@
+id: B4/integer/10
+format: numerical
+statement: A point source of sound emits a constant power with intensity inversely proportional to the
+  square of the distance from the source. By how many decibels does the sound intensity level drop when
+  you move from point P1 to P2. Distance of P2 from the source is two times the distance of source from
+  P1.

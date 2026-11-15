@@ -1,0 +1,9 @@
+id: B4/integer/15
+media:
+  s: {type: string, mu: 625 g/m, tension: 49 N}
+waves:
+  w: {harmonic: {on: s, A: 9 mm, f: 125 Hz, dir: +x, phase: 0}}
+given: []
+observe:
+  P: "power(w)"
+  v: "speed(w)"

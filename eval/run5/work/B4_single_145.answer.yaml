@@ -1,0 +1,9 @@
+answer: [c]
+final_scene: B4_single_145.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "nothing"
+missing_in_source: "reference intensity 1e-12 W/m^2 not stated (convention)"
+reasoning: "Engine: level = 43.01 dB, option 43."
+friction: "Result printed as log(20000**(10/log(10))) before the decimal."

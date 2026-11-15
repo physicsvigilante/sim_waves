@@ -1,0 +1,9 @@
+answer: [c]
+final_scene: B4_single_95.v2.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "nothing"
+missing_in_source: "none"
+reasoning: "Engine: intensity ratio 9; antiphase sum gives 4 I, in-phase 16 I. Minimum = 4 I."
+friction: "intensity() of a sum of waves refused (v1), had to use sources/rays and relative_intensity."

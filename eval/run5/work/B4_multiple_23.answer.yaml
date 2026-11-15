@@ -1,0 +1,9 @@
+answer: [a, d]
+final_scene: B4_multiple_23.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "nothing (point B taken as the next axis crossing, x = lambda/2)"
+missing_in_source: "scale (wavelength, amplitude kept symbolic)"
+reasoning: "Engine: phase(A) = pi, phase(B) = 0 so A's phase is greater; vy(A) = -2 pi a f (down), vy(B) = +2 pi a f (up)."
+friction: "none"

@@ -1,0 +1,11 @@
+id: B4/integer/12
+assume: ["Same wire (same mass per length m0, unknown); only the tension changes."]
+unknowns: {m0: positive, Tb: positive}
+media:
+  a: {type: string, mu: m0, tension: 50 N}
+  b: {type: string, mu: m0, tension: Tb}
+given:
+  - {fact: "speed(a) == 300[m/s]", source: stated}
+  - {fact: "speed(b) == 312[m/s]", source: stated}
+observe:
+  dT: "tension(b) - tension(a)"

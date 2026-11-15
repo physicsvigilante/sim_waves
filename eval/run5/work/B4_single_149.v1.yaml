@@ -1,0 +1,11 @@
+id: B4/single/149
+assume:
+  - "Compression maximum at a point to rarefaction maximum: half a period. Medium is air; density not needed."
+media:
+  air: {type: gas, v: 350 m/s}
+waves:
+  w: {harmonic: {on: air, A: 1 um, f: 500 Hz, dir: +x, phase: 0}}
+given: []
+observe:
+  T: "period(w)"
+  lam: "wavelength(w)"

@@ -1,0 +1,13 @@
+id: B4/jee_advanced/30
+assume: ["End correction neglected.", "Same tube length L opened at the other end too."]
+symbols: {v: positive}
+unknowns: {L: positive}
+media:
+  air: {type: gas, v: v}
+resonators:
+  closed: {type: pipe, on: air, length: L, ends: [closed, open], end_correction: 0 m}
+  opened: {type: pipe, on: air, length: L, ends: [open, open], end_correction: 0 m}
+given:
+  - {fact: "frequency(closed, harmonic=1) == 512[Hz]", source: stated}
+observe:
+  f_open: "frequency(opened, harmonic=1)"

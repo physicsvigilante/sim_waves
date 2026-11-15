@@ -1,0 +1,10 @@
+id: B4/single/13
+format: single_correct
+statement: Two strings A and B, made of the same material, have same thickness. The length of A is half
+  that of B while the tension on A is twice that on B. The ratio of the velocities of transverse waves
+  in A and B is
+options:
+  a: 'sqrt(2) : 1'
+  b: '2 : 1'
+  c: '1 : sqrt(2)'
+  d: '1 : 2'

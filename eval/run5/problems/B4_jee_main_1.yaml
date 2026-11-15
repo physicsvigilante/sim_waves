@@ -1,0 +1,9 @@
+id: B4/jee_main/1
+format: single_correct
+statement: Two identical strings X and Z made of same material have tension T_X and T_Z in them. Their
+  fundamental frequencies are 450 Hz and 300 Hz, respectively, then the ratio T_X / T_Z is
+options:
+  A: '0.44'
+  B: '1.5'
+  C: '2.25'
+  D: '1.25'

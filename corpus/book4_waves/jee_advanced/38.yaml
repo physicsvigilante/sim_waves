@@ -1,0 +1,19 @@
+id: B4/jee_advanced/38
+number: 38
+source: "book p.116, JEE Advanced archive, multiple correct Q6 (overall no. 38) [IIT-JEE 2012]"
+format: multiple_correct
+statement: >-
+  A person blows into open-end of a long pipe. As a result, a high-pressure pulse of air travels down the pipe. When this pulse reaches the other end of the pipe,
+figure: null
+options:
+  A: "a high-pressure pulse starts travelling up the pipe, if the other end of the pipe is open"
+  B: "a low-pressure pulse starts travelling up the pipe, if the other end of the pipe is open"
+  C: "a low-pressure pulse starts travelling up the pipe, if the other end of the pipe is closed"
+  D: "a high-pressure pulse starts travelling up the pipe, if the other end of the pipe is closed"
+answer: "A, B, D"
+answer_value: "A, B, D"
+units: null
+verified: "DISPUTED. Open end is a pressure node: the pulse reflects with inverted pressure (low-pressure), so B true and A false. Closed end reflects with same sign (high-pressure), so D true and C false. My result: B, D. Book key A, B, D; A as stated contradicts B and is physically wrong on its face (unless partial-reflection transmitted component is intended)."
+kinds: [conceptual]
+physics: [reflection of sound pulse, open and closed pipe ends, pressure phase change]
+notes: "Numbering: multiple-correct Q6; overall index 32+6 = 38. DISPUTED: key says A, B, D; independent answer B, D. Option A and option B cannot both describe the same single reflected pulse."

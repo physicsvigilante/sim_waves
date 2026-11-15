@@ -1,0 +1,22 @@
+id: B4/matrix/9
+assume:
+  - "Wave on a string passing from light string s1 to heavier string s2 stands for refraction into a denser medium; reflection at the same junction (denser side beyond) stands for reflection from a denser medium."
+media:
+  s1: {type: string, mu: 1 g/m, tension: 10 N}
+  s2: {type: string, mu: 4 g/m, tension: 10 N}
+junctions:
+  J: {at: 0 m, left: s1, right: s2}
+waves:
+  w: {harmonic: {on: s1, A: 1 cm, f: 50 Hz, dir: +x, phase: 0}}
+given: []
+observe:
+  f_in: "frequency(w)"
+  f_tr: "frequency(w_transmitted)"
+  f_re: "frequency(w_reflected)"
+  v_in: "speed(w)"
+  v_tr: "speed(w_transmitted)"
+  v_re: "speed(w_reflected)"
+  lam_in: "wavelength(w)"
+  lam_tr: "wavelength(w_transmitted)"
+  dphi_refl: "wrap(phase(w_reflected, x=0[m], t=0[s]) - phase(w, x=0[m], t=0[s]))"
+  dphi_tr: "wrap(phase(w_transmitted, x=0[m], t=0[s]) - phase(w, x=0[m], t=0[s]))"

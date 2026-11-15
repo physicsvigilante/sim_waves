@@ -1,0 +1,9 @@
+answer: [b]
+final_scene: B4_single_6.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "nothing"
+missing_in_source: "none"
+reasoning: "Overtone mapping from engine: closed pipe harmonic 3, open pipe harmonic 4; L1/L2 = 3/8."
+friction: "none"

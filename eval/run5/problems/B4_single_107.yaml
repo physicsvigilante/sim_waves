@@ -1,0 +1,9 @@
+id: B4/single/107
+format: single_correct
+statement: A string of length L is stretched by L/20 and speed of transverse wave along it is v. The speed
+  of wave when it is stretched by L/10 will be (assume that Hooke's Law is applicable)
+options:
+  a: 2v
+  b: v/sqrt(2)
+  c: sqrt(2) v
+  d: 4v

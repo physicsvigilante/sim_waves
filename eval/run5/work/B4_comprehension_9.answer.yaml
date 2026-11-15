@@ -1,0 +1,9 @@
+answer: [c]
+final_scene: B4_comprehension_9.v1.yaml
+engine_fit: partial
+hand_steps: ["Pressure amplitude profile is the complement of the displacement mode_shape: |dP|/dP0 = sqrt(1 - shape^2) is not an engine observable; used pressure antinode at closed end x=0 and node/antinode pattern by hand: cos(5 pi x/2L) at L/2 gives 1/sqrt2"]
+coverage: full
+not_represented: "pressure amplitude profile as a function of position"
+missing_in_source: "none"
+reasoning: "Engine gives L=15/16 m, harmonic 5, displacement shape at middle -sqrt2/2 (magnitude 1/sqrt2 of max); pressure nodes at 3/16,9/16,15/16 and antinodes 0,3/8,3/4 are 1/8-spaced consistent with cos(5 pi x/2L) = 1/sqrt2 at the middle. DeltaP = DeltaP0/sqrt2."
+friction: "No pressure mode_shape observable; only displacement mode_shape."

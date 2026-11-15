@@ -1,0 +1,9 @@
+answer: [a, c, d]
+final_scene: B4_multiple_7.v1.yaml
+engine_fit: partial
+hand_steps: ["Taking the stated 2% as an exact 1.02 factor; book rounding (1% speed change, f = 1500 Hz) differs from engine 0.995% and 1507 Hz"]
+coverage: full
+not_represented: "Approximation sqrt(1.02) ~ 1.01 used by the book"
+missing_in_source: "none"
+reasoning: "Engine: wavelength ratio 1 (A true); speed ratio 1.00995 (about 1%, C); original f = 1507 Hz (about 1500, D)."
+friction: "Exact solution disagrees slightly with the book approximations; had to judge closeness."

@@ -1,0 +1,22 @@
+id: B4/single/123
+number: 123
+source: wanes_full.pdf book p.4.91 (page image p-091); key p.4.122 (p-122)
+format: single_correct
+statement: Two sound waves have intensities of 10 and 500 microW cm^-2. How many decibels is the sound louder than the other?
+figure: null
+options:
+  a: 7 dB
+  b: 1.7 dB
+  c: 2.7 dB
+  d: 3.7 dB
+answer: b
+answer_value: 1.7 dB (printed key)
+units: dB
+verified: DISPUTED. Level difference = 10 log10(500/10) = 10 log10(50) = 17 dB, which is not among the options; 1.7 is log10(50) in bels, so key (b) 1.7 dB mislabels units.
+kinds:
+- ratio
+- inverse_condition
+physics:
+- intensity_level
+- decibel
+notes: Printed key B = 1.7 dB; the correct level difference is about 17 dB (1.7 bel).

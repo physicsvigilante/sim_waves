@@ -1,0 +1,11 @@
+answer: [C]
+final_scene: B4_comprehension_35.v3.yaml
+engine_fit: partial
+hand_steps:
+  - "v_max = (A + Ar)*b = 1.8*A*b and v_min = (A - Ar)*b = 0.2*A*b, with Ar = 0.8A from the engine; the engine could not evaluate the max/min over x of the local speed amplitude"
+  - "Choosing C over D: option C's v_min = 0.2Ab matches; its v_max = -1.8Ab has a meaningless sign (speed magnitude). D (v_min = 0) is wrong because the reflected amplitude is only 0.8A, so no node."
+coverage: partial
+not_represented: "Sound modelled as a gas wave pair; the obstacle itself (reflection phase, partial absorption) is not modelled, the reflected wave is given by hand-fixed amplitude from the intensity ratio."
+missing_in_source: "Reflection phase at the obstacle (does not affect v_max, v_min). Option C prints a negative v_max, a likely typo in the source."
+reasoning: "Engine solved reflected amplitude Ar = 4A/5 from intensity ratio 0.64. Extremes of particle speed are (A+-Ar)*b by hand."
+friction: "max_in / min_in refuse expressions with free symbols even inside at(); could not take the max over x of a standing-plus-travelling field. No way to model a partially reflecting obstacle for sound."

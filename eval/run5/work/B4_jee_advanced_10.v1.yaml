@@ -1,0 +1,16 @@
+id: B4/jee_advanced/10
+assume:
+  - "Same closed-open air column, same fork; fundamental at 0.1 m, then first overtone (3rd harmonic) at 0.35 m."
+  - "End correction e is the same at both lengths (one open end)."
+symbols: {v: positive}
+unknowns: {e: positive, f: positive}
+media:
+  air: {type: gas, v: v}
+resonators:
+  p1: {type: pipe, on: air, length: 0.1 m, ends: [closed, open], end_correction: e}
+  p2: {type: pipe, on: air, length: 0.35 m, ends: [closed, open], end_correction: e}
+given:
+  - {fact: "frequency(p1, harmonic=1) == f", source: stated}
+  - {fact: "frequency(p2, harmonic=harmonic(p2, overtone=1)) == f", source: stated}
+observe:
+  e: "e"

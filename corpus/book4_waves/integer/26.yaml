@@ -1,0 +1,22 @@
+id: B4/integer/26
+number: 26
+source: book p.107 (answer key p.123)
+format: numerical
+statement: A string fixed at both ends is vibrating in the lowest possible mode of vibration for which
+  a point at quarter of its length from one end is a point of maximum displacement. The frequency of vibration
+  in this mode is 100 Hz. What will be the frequency emitted, in Hz, when it vibrates in the next mode
+  such that this point is again a point of maximum displacement?
+figure: null
+options: null
+answer: '300'
+answer_value: 300
+units: Hz
+verified: 'Antinode at L/4 needs sin(n pi/4) = +-1: n = 2, 6, 10... Lowest n = 2 at 100 Hz (f1 = 50 Hz);
+  next n = 6 -> 300 Hz. Matches key.'
+kinds:
+- inverse_condition
+physics:
+- standing_waves
+- harmonics
+- antinode
+notes: Consistent.

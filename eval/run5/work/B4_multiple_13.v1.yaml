@@ -1,0 +1,16 @@
+id: B4/multiple/13
+assume:
+  - "Wire is slack (zero tension) at the starting temperature and is then cooled by t = 20 K while held between rigid supports; tension appears from the prevented contraction (engine 'thermal' tension). Numerical values are scale choices; the question is only about dependence, which is read by changing one input at a time with at(...)."
+  - "Cross-section area a is a free symbol; it cancels in the frequency."
+  - "Frequency of oscillation = fundamental of the wire (fixed-fixed)."
+symbols: {l: positive, Y: positive, rho: positive, alpha: positive, a: positive}
+media:
+  wire: {type: string, density: rho, area: a, tension: {thermal: {slack_at: 30 degC, now: 10 degC}}, Y: Y, alpha: alpha}
+resonators:
+  r: {type: string, on: wire, length: l, ends: [fixed, fixed]}
+observe:
+  f1: "frequency(r, harmonic=1)"
+  l_dep: "at(frequency(r, harmonic=1), l=2*l)/frequency(r, harmonic=1)"
+  Y_dep: "at(frequency(r, harmonic=1), Y=4*Y)/frequency(r, harmonic=1)"
+  alpha_dep: "at(frequency(r, harmonic=1), alpha=4*alpha)/frequency(r, harmonic=1)"
+  rho_dep: "at(frequency(r, harmonic=1), rho=4*rho)/frequency(r, harmonic=1)"

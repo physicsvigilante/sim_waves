@@ -1,0 +1,9 @@
+answer: [A, C, D]
+final_scene: B4_multiple_16.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "lossless, homogeneous medium assumed; no absorption"
+missing_in_source: none
+reasoning: "Engine: plane intensity = I0 at any r; point-source intensity P/(4 pi r^2) (ratio 1/4 at 2r), so not 1/r; flux through a sphere = P at every radius."
+friction: "Option D says 'total intensity over the surface', read as total power; judged by flux()."

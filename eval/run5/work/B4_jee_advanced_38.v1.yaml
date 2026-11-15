@@ -1,0 +1,22 @@
+id: B4/jee_advanced/38
+assume:
+  - "The pressure pulse is represented by a harmonic pressure wave of one frequency; the reflection phase of pressure at an end does not depend on the waveform."
+  - "Pipe taken along x. Source S at x = 0; open end and closed end are tested as two separate walls at x = 5 m (open) and x = 5 m (closed) on the same line, with the detector point P near the source."
+  - "A closed end is a rigid boundary (pressure doubles, no phase change); an open end is a pressure-release boundary (phase pi). Both come from the engine's boundary types, not from me."
+  - "A reference ray of the same length with no reflection is used to read the phase change; frequency 170 Hz, v 340 m/s are arbitrary scale choices."
+media: {air: {type: gas, v: 340 m/s}}
+sources:
+  S: {on: air, at: [0 m, 0 m], f: 170 Hz, A: 1, phase: 0, spreading: none}
+reflectors:
+  open_end:   {point: [5 m, 0 m], normal: [-1, 0], boundary: open}
+  closed_end: {point: [5 m, 0 m], normal: [-1, 0], boundary: rigid}
+points: {P: [1 m, 0 m]}
+rays:
+  via_open:   {from: S, to: P, via: open_end}
+  via_closed: {from: S, to: P, via: closed_end}
+  ref:        {from: S, length: 9 m}
+observe:
+  len_open: "length(via_open)"
+  len_closed: "length(via_closed)"
+  dphi_open: "wrap(phase_difference(via_open, ref))"
+  dphi_closed: "wrap(phase_difference(via_closed, ref))"

@@ -1,0 +1,9 @@
+answer: {A: [r], B: [p, r], C: [q, r], D: [p, r, s]}
+final_scene: B4_matrix_9.v1.yaml
+engine_fit: partial
+hand_steps: ["Mapping of rows to string cases (refraction = transmission into heavier string, denser = heavier string) is the LLM mapping; the engine gives speeds/frequencies/phases"]
+coverage: partial
+not_represented: "Light, real refraction (angles, Snell), sound/light; only a string junction analogue"
+missing_in_source: "Whether Column-I A (refraction) should also match p is a matter of the key; engine speed changes in transmission"
+reasoning: "Engine: frequency 50 in all three waves; transmitted speed 50 vs 100 and wavelength 1 vs 2 (decreased); reflected speed 100 (unchanged); reflected phase change pi; transmitted phase 0."
+friction: "Refraction and reflection of light have no medium type in the engine; mapped via a string junction. Row D includes p, r by my reading."

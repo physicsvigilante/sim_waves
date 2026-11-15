@@ -1,0 +1,9 @@
+answer: [a]
+final_scene: B4_single_165.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "nothing"
+missing_in_source: "none"
+reasoning: "String media from density and diameter; f1 = 4 f2 gives d1 = d2/4, ratio 1:4."
+friction: "none"

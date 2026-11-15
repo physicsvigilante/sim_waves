@@ -1,0 +1,6 @@
+id: B4/integer/26
+format: numerical
+statement: A string fixed at both ends is vibrating in the lowest possible mode of vibration for which
+  a point at quarter of its length from one end is a point of maximum displacement. The frequency of vibration
+  in this mode is 100 Hz. What will be the frequency emitted, in Hz, when it vibrates in the next mode
+  such that this point is again a point of maximum displacement?

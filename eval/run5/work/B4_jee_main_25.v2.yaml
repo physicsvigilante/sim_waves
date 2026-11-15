@@ -1,0 +1,11 @@
+id: B4/jee_main/25
+assume: ["Scale is not given and the answer does not depend on it; A, f, lam kept as symbols. No medium needed."]
+symbols: {A: positive, f: positive, lam: positive}
+unknowns: {phi: phase}
+waves:
+  w: {harmonic: {A: A, f: f, lambda: lam, dir: +x, phase: phi}}
+given:
+  - {fact: "y(w, x=0[m], t=0[s]) == 0[m]", source: figure, note: "curve crosses the origin"}
+  - {fact: "slope(w, x=0[m], t=0[s]) < 0", source: figure, note: "positive just left, negative just right"}
+observe:
+  phi: "phi"

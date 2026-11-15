@@ -1,0 +1,5 @@
+id: B4/integer/20
+format: numerical
+statement: A string of mass m is fixed at both ends. The fundamental tone oscillation are excited in the
+  string with angular frequency ω and maximum displacement amplitude A. The total energy contained in
+  the string is mω^2A^2/x, where x is an integer from zero to 9. Find x.

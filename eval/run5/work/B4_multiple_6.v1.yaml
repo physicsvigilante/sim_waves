@@ -1,0 +1,12 @@
+id: B4/multiple/6
+assume:
+  - "Max speed of a point = max over t of |vy| at a point; the wave is a harmonic travelling wave (direction and phase do not matter)."
+  - "a = 1e-3 m, v = 10 m/s, max point speed = v/10 (all stated)."
+unknowns: {f: positive}
+waves:
+  w: {harmonic: {A: 1e-3 m, f: f, v: 10 m/s, dir: +x, phase: 0}}
+given:
+  - {fact: "max_over(t, abs(vy(w, x=0[m], t=t))) == speed(w)/10", source: stated}
+observe:
+  f: "f"
+  lam: "wavelength(w)"

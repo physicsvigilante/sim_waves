@@ -1,0 +1,13 @@
+id: B4/single/136
+assume:
+  - "End correction neglected (not mentioned); same air, same length L."
+symbols: {v: positive, L: positive}
+media:
+  air: {type: gas, v: v}
+resonators:
+  po: {type: pipe, on: air, length: L, ends: [open, open], end_correction: 0 m}
+  pc: {type: pipe, on: air, length: L, ends: [closed, open], end_correction: 0 m}
+observe:
+  n: "frequency(po, harmonic=1)"
+  fc: "frequency(pc, harmonic=1)"
+  ratio: "frequency(pc, harmonic=1)/frequency(po, harmonic=1)"

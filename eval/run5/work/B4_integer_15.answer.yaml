@@ -1,0 +1,9 @@
+answer: "138 W"
+final_scene: B4_integer_15.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "nothing"
+missing_in_source: "none"
+reasoning: "Engine power(w) = 138.25 W (v = 8.854 m/s)."
+friction: "none"

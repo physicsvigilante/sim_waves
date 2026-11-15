@@ -1,0 +1,19 @@
+id: B4/jee_advanced/36
+number: 36
+source: "book p.116, JEE Advanced archive, multiple correct Q4 (overall no. 36) [JEE (Advanced) 2014]"
+format: multiple_correct
+statement: >-
+  One end of a taut string of length 3 m along X-axis is fixed at x = 0. The speed of the waves in the string is 100 m s^-1. The other end of the string is vibrating in the y-direction so that stationary waves are set up in the string. The possible waveform(s) of these stationary wave is (are)
+figure: null
+options:
+  A: "y(t) = A sin(pi x/6) cos(50 pi t/3)"
+  B: "y(t) = A sin(pi x/3) cos(100 pi t/3)"
+  C: "y(t) = A sin(5 pi x/6) cos(250 pi t/3)"
+  D: "y(t) = A sin(5 pi x/2) cos(250 pi t)"
+answer: "A, C, D"
+answer_value: "A, C, D"
+units: null
+verified: "Matches key. Each option has w/k = 100 m/s. The vibrating end x = 3 m must not be a node: kL = pi/2 (A), pi (B, node), 5pi/2 (C), 15pi/2 (D, sin = -1). So A, C, D."
+kinds: [equation_form, classification]
+physics: [standing wave, boundary condition, wave speed]
+notes: "Numbering: multiple-correct subsection Q4; overall index 32+4 = 36 (single correct has 32 problems). Option B fails only because the driven end would sit at a node."

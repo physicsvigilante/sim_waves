@@ -1,0 +1,9 @@
+id: B4/single/138
+format: single_correct
+statement: The equation of a wave disturbance is given as y = 0.02 cos(pi/2 + 50 pi t) cot(10 pi x), where
+  x and y are in metres and t in seconds. Select the incorrect statement.
+options:
+  a: Antinode occurs at x = 0.3 m
+  b: The wavelength is 0.2 m
+  c: The speed of the constituent waves is 4 m s^-1
+  d: Node occurs at x = 0.15 m

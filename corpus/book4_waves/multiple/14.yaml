@@ -1,0 +1,27 @@
+id: B4/multiple/14
+number: 14
+source: book p.95 (answer key p.122)
+format: multiple_correct
+statement: A wave is represented by the equation y = A sin(10πx + 15πt + π/3) where x is in meters and
+  t is in seconds. The expression represents
+figure: null
+options:
+  A: a wave travelling in the positive x-direction with a velocity 1.5 m/s
+  B: a wave travelling in the negative x-direction with a velocity 1.5 m/s
+  C: a wave travelling in the negative x-direction with a wavelength 0.2 m
+  D: a wave travelling in the positive x-direction with a wavelength 0.2 m
+answer: B, C
+answer_value:
+- B
+- C
+units: null
+verified: Same-sign kx and omega t -> negative x direction; v = 15pi/10pi = 1.5 m/s; lambda = 2pi/10pi
+  = 0.2 m. Matches key.
+kinds:
+- given_wavefunction
+- classification
+physics:
+- wave_speed
+- wavelength
+- direction
+notes: Consistent.

@@ -1,0 +1,17 @@
+id: B4/single/63
+assume:
+  - "Two waves on one string; phase difference taken in (0, pi] (magnitude)."
+symbols: {a: positive}
+unknowns: {phi: phase}
+media:
+  s: {type: string, mu: 1 g/m, tension: 10 N}
+waves:
+  w1: {harmonic: {on: s, A: a, f: 50 Hz, dir: +x, phase: 0}}
+  w2: {harmonic: {on: s, A: a, f: 50 Hz, dir: +x, phase: phi}}
+  tot: {sum: [w1, w2]}
+given:
+  - {fact: "amplitude(tot) == a", source: stated}
+  - {fact: "phi > 0", source: assumption, note: "magnitude of the phase difference"}
+  - {fact: "phi <= pi", source: assumption, note: "magnitude of the phase difference"}
+observe:
+  phi: "phi"

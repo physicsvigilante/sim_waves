@@ -1,0 +1,11 @@
+answer: [b, d]
+final_scene: B4_jee_advanced_38.v1.yaml
+engine_fit: partial
+hand_steps:
+  - "Geometry: image path source -> wall (5 m) -> P (x=1 m) = 9 m, reference ray length 9 m."
+  - "Reading phase change 0 as 'pressure pulse returns high' and pi as 'returns low'."
+coverage: partial
+not_represented: "A pulse in a pipe (harmonic pressure wave used instead); the pipe walls; an open pipe end's real end correction."
+missing_in_source: "none"
+reasoning: "Engine: reflection from a rigid (closed) end shifts pressure phase by 0, from an open (pressure-release) end by pi, so open end returns low pressure (B), closed end returns high pressure (D)."
+friction: "No pipe-end reflector for a pipe resonator or pulses in gas; used point source, reflector plane and a same-length reference ray to read the reflection phase."

@@ -1,0 +1,10 @@
+id: B4/single/13
+assume:
+  - "Same material and thickness: same mu. Tension on B = T, on A = 2T. Lengths are irrelevant to wave speed."
+symbols: {mu: positive, T: positive}
+media:
+  A: {type: string, mu: mu, tension: 2*T}
+  B: {type: string, mu: mu, tension: T}
+given: []
+observe:
+  ratio: "speed(A)/speed(B)"

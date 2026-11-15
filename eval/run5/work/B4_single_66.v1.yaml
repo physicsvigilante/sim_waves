@@ -1,0 +1,12 @@
+id: B4/single/66
+assume:
+  - "Ideal gas with fixed gamma and molar mass at temperatures T1 and T2. The engine has no observable for r.m.s. molecular speed, so only the sound-speed ratio is obtained here."
+symbols: {T1: positive, T2: positive, gam: positive, M: positive}
+media:
+  g1: {type: gas, gamma: gam, temperature: T1, molar_mass: M}
+  g2: {type: gas, gamma: gam, temperature: T2, molar_mass: M}
+observe:
+  V1: "speed(g1)"
+  V2: "speed(g2)"
+  V_ratio: "speed(g2)/speed(g1)"
+  V_ratio_sq: "(speed(g2)/speed(g1))**2/(T2/T1)"

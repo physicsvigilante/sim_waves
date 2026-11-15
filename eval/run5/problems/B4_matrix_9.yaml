@@ -1,0 +1,14 @@
+id: B4/matrix/9
+format: matrix_match
+statement: Match the quantities in COLUMN-I to respective properties in COLUMN-II.
+options:
+  column_i:
+    A: In refraction
+    B: In reflection
+    C: In refraction from rarer to denser medium
+    D: In reflection from a denser medium
+  column_ii:
+    p: Speed of wave does not change
+    q: Wavelength is decreased
+    r: Frequency does not change
+    s: Phase change of π takes place

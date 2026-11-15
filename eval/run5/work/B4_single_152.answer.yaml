@@ -1,0 +1,9 @@
+answer: [c]
+final_scene: B4_single_152.v2.yaml
+engine_fit: full
+hand_steps: []
+coverage: partial
+not_represented: "'Between adjacent antinodes' is not located (y1+y2 is not a pure standing wave); a half-wavelength stretch starting at x=0, and shifted start at pi/(4k) (same result), is used."
+missing_in_source: "Location of antinodes is ambiguous because the amplitudes are unequal"
+reasoning: "Engine: period-averaged energy of the stretch = 5 * (pi s rho omega^2 a^2/(2k)), independent of start point."
+friction: "tension: free refused for energy; had to make T unknown solved from the cross-check. Normalising by the option formula was written in observe."

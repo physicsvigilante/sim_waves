@@ -1,0 +1,10 @@
+id: B4/multiple/13
+format: multiple_correct
+statement: A metallic wire of length ℓ is held between two rigid supports. If the wire is cooled through
+  a temperature t, Y is the Young's modulus of elasticity, ρ is the density and α is the thermal coefficient
+  of linear expansion of the wire, then the frequency of oscillation is proportional to
+options:
+  A: 1/ℓ
+  B: √Y
+  C: √(α/ρ)
+  D: √t

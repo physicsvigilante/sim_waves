@@ -1,0 +1,19 @@
+id: B4/comprehension/9
+assume:
+  - "Second overtone of a closed-open pipe = harmonic 5 (engine converts via harmonic(overtone=2))."
+  - "Closed end at x=0, open end at x=L."
+symbols: {}
+unknowns: {L: positive}
+media:
+  air: {type: gas, v: 330 m/s}
+resonators:
+  p: {type: pipe, on: air, length: L, ends: [closed, open], end_correction: 0 m}
+given:
+  - {fact: "frequency(p, harmonic=harmonic(p, overtone=2)) == 440[Hz]", source: stated}
+observe:
+  L: "L"
+  h: "harmonic(p, overtone=2)"
+  middle_disp_shape: "mode_shape(p, harmonic=5, x=L/2)"
+  pnodes: "pressure_nodes(p, harmonic=5)"
+  pantinodes: "pressure_antinodes(p, harmonic=5)"
+  nodes_disp: "nodes(p, harmonic=5)"

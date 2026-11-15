@@ -1,0 +1,9 @@
+answer: [d]
+final_scene: B4_single_67.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "nothing"
+missing_in_source: "none"
+reasoning: "displacement_amplitude = 1/(30000 pi) m, identical to option d (evaluated by engine)."
+friction: "none"

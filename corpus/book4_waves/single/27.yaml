@@ -1,0 +1,22 @@
+id: B4/single/27
+number: 27
+source: wanes_full.pdf book p.4.84 (page image p-084); key p.4.122 (p-122)
+format: single_correct
+statement: A source of frequency 10 kHz when vibrated over the mouth of a closed organ pipe is in unison at 300 K. The beats produced when temperature rises by 1 K is
+figure: null
+options:
+  a: 30 Hz
+  b: 13.33 Hz
+  c: 16.67 Hz
+  d: 40 Hz
+answer: c
+answer_value: 16.67
+units: Hz
+verified: 'f proportional to sqrt(T): df = f/(2T) = 10000/600 = 16.67 Hz. Matches key.'
+kinds:
+- inverse_condition
+physics:
+- beats
+- temperature
+- organ_pipe
+notes: Consistent.
