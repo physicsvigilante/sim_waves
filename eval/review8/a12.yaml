@@ -1,0 +1,5 @@
+media: {s: {type: string, mu: 0.01 kg/m, tension: 4 N}}
+waves: {w: {harmonic: {on: s, A: 0.02 m, f: 10 Hz, dir: +x, phase: 0}}}
+observe:
+  E_rev: "energy(w, start=2[m], end=0[m], t=0[s])"
+  E_zero: "energy(w, start=1[m], end=1[m], t=0[s])"

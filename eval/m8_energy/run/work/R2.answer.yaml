@@ -1,0 +1,11 @@
+answer: {a: 0.60 m, b: 5.55e-3 J (9*pi^2/16000), c: 1.67e-2 J (27*pi^2/16000), d: 2.78e-2 J/m (9*pi^2/3200)}
+final_scene: R2.v3.yaml
+engine_fit: partial
+hand_steps:
+  - "(d): choosing candidate positions 1.35, 1.5, 1.65 m (zeros of the diff() output 3*pi^3*sin(20*pi*x/3)/320) and 1.25/1.75 for comparison, then reading the largest of the sampled kinetic_density values. The maximum itself is an engine value but the search for it was done by me."
+  - "(d): the instant t = 0.05 s was chosen by me so that the transmitted pulse (1.2 to 1.8 m) is clear of the joint; the position range 1.2-1.8 was read from the diff() output."
+coverage: full
+not_represented: "nothing"
+missing_in_source: none
+reasoning: "width(p_transmitted)=3/5 m; E_refl=9pi^2/16000, E_trans=27pi^2/16000 (sum equals engine energy(p)=9pi^2/4000, i.e. conserved). Max KE density sampled at x=1.35 and 1.65 m = 9pi^2/3200 J/m; zero at 1.5 m; smaller at 1.25/1.75."
+friction: "max_over(x, ...) does not work on a pulse energy density (not a sinusoid; also refuses symbolic position because of corners). No observable for the maximum of an arbitrary density over x; peak() accepts only waves. Had to probe points by hand using diff()."

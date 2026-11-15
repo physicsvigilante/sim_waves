@@ -302,3 +302,42 @@ production change needed to author them (`eval/m7_pulses/RESULT.md`). After the 
 - documented the horizontal pulse launch.
 
 Remaining observation gaps: pulse extent and pulse/segment energy.
+
+## Milestone 8: energy on strings and pulse width (before review)
+
+New in `engine/simwaves/energy.py`: energy densities, energy in a stretch, `mean_over` and
+`width`. A shape with a jump is refused. mu and T come from the string, including strings
+with a coordinate variable.
+
+**Checks:**
+- Energy per wavelength x v/lambda = `power` (r88).
+- Standing-wave kinetic energy between nodes: maximum pi k A^2 T, average half (r89,
+  motivating 11/05/009).
+- Junction energy split of 1/4 and 3/4, with width scaling 1/3 (r90; it reproduces the
+  exposed m7 R2(c) value of 1.7765e-3 J).
+
+**Also fixed:**
+- `peak_position` now has a numerical fallback, and the symbolic budget is 20 s. The
+  flaky r87 was budget-bound.
+
+## Review 8 (Fable 5.2, medium): energy
+
+The full report is in `eval/review8/REPORT.md`.
+
+| # | Finding | Fix | Test |
+|---|---|---|---|
+| 1 | The numeric integral ignored breakpoints (1–5% off, printed to 12 digits) | Integrated piece by piece with high-precision quadrature; symbolic budget 10 s | r93 |
+| 2 | The jump check was skipped at symbolic edges or instants, giving 0 | Refused | r94 |
+| 3 | Jumps at periodic breakpoints were missed | Refused ("infinitely many corners") | reviewer a04 |
+| 4 | Small jumps were missed (absolute tolerance) | Exact one-sided comparison | r95 |
+| 5 | The `peak_position` numeric fallback missed narrow far peaks and ties | Seeds from each term's own extremes plus refinement; tie detection | r96 |
+| 6 | Densities had no extent check | Checked | reviewer a06 |
+| 7 | A pulse stretch without `t` silently used t = 0 | Refused | r97 |
+| 8 | Density at a kink took one branch arbitrarily | Refused at corners | reviewer b03 |
+| — | Dimension holes in `mean_over` limits | Checked against the variable | reviewer a13c |
+| — | `width` internal errors; zero shapes; separate parts | Clear errors; separate parts are ambiguous | reviewer w* |
+| — | A given standing wave on a string was refused | Allowed (no speed comparison) | reviewer b06 |
+
+**Reserved transfer (m8):** 3 of 3 reserved problems matched in every part, with no
+production change needed (`eval/m8_energy/RESULT.md`). After the run, `max_in`/`min_in`
+were added.

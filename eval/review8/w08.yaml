@@ -1,0 +1,4 @@
+symbols: {A: positive, L: positive}
+media: {s: {type: string, mu: 0.01 kg/m, tension: 4 N}}
+waves: {p: {pulse: {on: s, shape: "0.01*(1 - x**2)*step(1 - x**2)", units: {x: m, y: m}, dir: +x}}}
+observe: {W: "width(p)"}

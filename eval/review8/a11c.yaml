@@ -1,0 +1,5 @@
+symbols: {s: positive}
+media:
+  rope: {type: string, mu: 0.1 kg/m, coordinate: {origin: lower_end, direction: up, variable: s}, tension: {hanging: {load: 1 kg, g: 10 m/s^2}}}
+waves: {w: {harmonic: {on: rope, A: 0.01 m, f: 5 Hz, from: lower_end, toward: up, phase: 0}}}
+observe: {Kd: "kinetic_density(w, x=1[m], t=0[s])"}

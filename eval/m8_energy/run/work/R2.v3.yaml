@@ -1,0 +1,22 @@
+id: m8/R2
+assume:
+  - "Joint is massless, strings are long (one junction only); only the first interaction is modelled."
+  - "Observation instant for (d) is t = 0.05 s, after the pulse has fully crossed; any later instant gives the same maximum."
+media:
+  left: {type: string, mu: 0.090 kg/m, tension: 36 N}
+  right: {type: string, mu: 0.010 kg/m, tension: 36 N}
+junctions:
+  J: {at: 0 m, left: left, right: right}
+waves:
+  p: {pulse: {on: left, shape: "0.0025*(1 + cos(pi*(x + 0.5)/0.1))*(step(x + 0.6) - step(x + 0.4))", units: {x: m, y: m}, dir: +x}}
+given:
+  - {fact: "mu(left) == 0.090[kg/m]", source: stated}
+  - {fact: "mu(right) == 0.010[kg/m]", source: stated}
+  - {fact: "tension(left) == 36[N]", source: stated}
+observe:
+  KEd_1p35: "kinetic_density(p_transmitted, x=1.35[m], t=0.05[s])"
+  KEd_1p5: "kinetic_density(p_transmitted, x=1.5[m], t=0.05[s])"
+  KEd_1p65: "kinetic_density(p_transmitted, x=1.65[m], t=0.05[s])"
+  KEd_1p25: "kinetic_density(p_transmitted, x=1.25[m], t=0.05[s])"
+  KEd_1p75: "kinetic_density(p_transmitted, x=1.75[m], t=0.05[s])"
+  dKE: "diff(kinetic_density(p_transmitted, x=x, t=0.05[s]), x)"

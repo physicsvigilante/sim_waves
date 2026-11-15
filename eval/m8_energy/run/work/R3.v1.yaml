@@ -1,0 +1,18 @@
+id: m8/R3
+assume:
+  - "y1 = A sin(kx - wt) is written in the engine convention y = A sin(w t - k x + phase) as phase = pi; y2 = A sin(kx + wt) is dir -x with phase 0."
+  - "String is long: no junctions or reflections; tension fixed by the wave speed."
+media:
+  rope: {type: string, mu: 0.025 kg/m, tension: free}
+waves:
+  y1: {harmonic: {on: rope, A: 4.0 mm, omega: 200*pi rad/s, k: 5*pi rad/m, dir: +x, phase: pi}}
+  y2: {harmonic: {on: rope, A: 2.0 mm, omega: 200*pi rad/s, k: 5*pi rad/m, dir: -x, phase: 0}}
+  total: {sum: [y1, y2]}
+given:
+  - {fact: "mu(rope) == 0.025[kg/m]", source: stated}
+observe:
+  T: "tension(rope)"
+  v: "speed(rope)"
+  PE_a: "potential_density(total, x=0.050[m], t=0.50[ms])"
+  E_b: "energy(total, start=0[m], end=0.40[m], t=2.0[ms])"
+  KE_c_mean: "mean_over(t, kinetic_energy(total, start=0[m], end=0.050[m], t=t), 0[s], period(y1))"

@@ -1,0 +1,10 @@
+# m8: energy per wavelength x v / lambda equals power; kinetic and potential densities equal for a travelling wave
+symbols: {A: positive}
+media: {s: {type: string, mu: 0.01 kg/m, tension: 4 N}}
+waves: {w: {harmonic: {on: s, A: A, f: 10 Hz, dir: +x, phase: 0}}}
+observe:
+  E_lambda: "energy(w, start=0[m], end=wavelength(w), t=0[s])"
+  check_power: "energy(w, start=0[m], end=wavelength(w), t=0[s]) * speed(w) / wavelength(w) - power(w)"
+  U_density: "potential_density(w, x=0[m], t=0[s])"
+  K_density: "kinetic_density(w, x=0[m], t=0[s])"
+expect: {E_lambda: "4*pi**2*A**2", check_power: 0, U_density: "2*pi**2*A**2", K_density: "2*pi**2*A**2"}

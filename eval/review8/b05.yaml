@@ -1,0 +1,5 @@
+media: {s: {type: string, mu: 25 g/m, tension: 10 N}}
+junctions: {wall: {at: 0.80 m, left: s, right: fixed}}
+waves:
+  p: {pulse: {on: s, shape: "0.006*max(0, 1 - abs(x - 0.4)/0.2)", units: {x: m, y: m}, dir: +x}}
+observe: {E: "energy(p)", Er: "energy(p_reflected)", Wr: "width(p_reflected)", K: "kinetic_energy(p_reflected)"}

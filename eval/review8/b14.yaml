@@ -1,0 +1,6 @@
+media: {s: {type: string, mu: 0.01 kg/m, tension: 4 N}}
+waves:
+  p1: {pulse: {on: s, shape: "0.035*exp(-((x - 300.3)/0.05)**2)", units: {x: m, y: m}, dir: +x}}
+  p2: {pulse: {on: s, shape: "0.02*exp(-((x - 0.5)/0.05)**2)", units: {x: m, y: m}, dir: -x}}
+  tot: {sum: [p1, p2]}
+observe: {where: "peak_position(tot, t=0[s])"}

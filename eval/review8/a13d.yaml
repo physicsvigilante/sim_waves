@@ -1,0 +1,5 @@
+media: {s: {type: string, mu: 0.01 kg/m, tension: 4 N}}
+waves: {w: {harmonic: {on: s, A: 0.02 m, f: 10 Hz, dir: +x, phase: 0}}}
+observe:
+  avg_density: "mean_over(x, energy_density(w, x=x, t=0[s]), 0[m], wavelength(w))"
+  plus: "mean_over(t, kinetic_density(w, x=0[m], t=t), 0[s], period(w)) + 1[J/m]"

@@ -1,0 +1,16 @@
+id: m8/R3
+format: numerical
+statement: |
+  A long string of linear mass density 0.025 kg/m lies along the x-axis. Two waves
+  travel on it simultaneously,
+      y1 = (4.0 mm) sin[(5 pi rad/m) x - (200 pi rad/s) t],
+      y2 = (2.0 mm) sin[(5 pi rad/m) x + (200 pi rad/s) t],
+  and the string's displacement is y = y1 + y2. The tension is uniform and has the
+  value required for these waves to propagate on this string. Neglect gravity and damping.
+  (a) Find the elastic potential energy per unit length of the string at x = 0.050 m
+      at t = 0.50 ms.
+  (b) Find the total mechanical energy of the string between x = 0 and x = 0.40 m
+      at t = 2.0 ms.
+  (c) Find the kinetic energy of the string between x = 0 and x = 0.050 m, averaged
+      over one full period of oscillation.
+figure: null
