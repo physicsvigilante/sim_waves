@@ -1,0 +1,4 @@
+id: s01
+unknowns: {u: positive}
+given: ["u - log(u) == 2"]
+observe: {u: "u"}

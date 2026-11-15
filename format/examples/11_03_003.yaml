@@ -1,0 +1,24 @@
+id: 11/03/003
+# A barking dog: 1 mW spread over a hemisphere; level at 5 m for 1 dog and for 5 dogs.
+assume:
+  - "Hemispherical spreading as stated; dogs at the same place, barking independently (incoherent)."
+  - "No frequency or air density is needed: power and area fix the intensity."
+media:
+  air: {type: gas, v: 340 m/s}
+sources:
+  D1: {on: air, at: [0 m, 0 m], power: 1e-3 W, phase: random, spreading: hemispherical}
+  D2: {on: air, at: [0 m, 0 m], power: 1e-3 W, phase: random, spreading: hemispherical}
+  D3: {on: air, at: [0 m, 0 m], power: 1e-3 W, phase: random, spreading: hemispherical}
+  D4: {on: air, at: [0 m, 0 m], power: 1e-3 W, phase: random, spreading: hemispherical}
+  D5: {on: air, at: [0 m, 0 m], power: 1e-3 W, phase: random, spreading: hemispherical}
+points: {P: [5 m, 0 m]}
+rays:
+  r1: {from: D1, to: P}
+  r2: {from: D2, to: P}
+  r3: {from: D3, to: P}
+  r4: {from: D4, to: P}
+  r5: {from: D5, to: P}
+observe:
+  one: "sound_level(intensity(r1))"
+  five: "sound_level(intensity(r1, r2, r3, r4, r5))"
+expect: {one: {value: 68.0, tol: 0.003}, five: {value: 75.0, tol: 0.003}}

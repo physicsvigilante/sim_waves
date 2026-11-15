@@ -1,0 +1,4 @@
+id: d01
+unknowns: {u: real}
+given: ["atan(u)**2 == atan(u)", "u < 1"]
+observe: {u: "u"}

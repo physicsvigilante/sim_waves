@@ -1,0 +1,4 @@
+media: {air: {type: gas, v: 340 m/s}}
+resonators: {r: {type: rod, on: air, length: 1 m, ends: [clamped, free]}}
+observe: {f: "frequency(r, harmonic=1)"}
+expect: {error: rejected, message: "rod medium"}

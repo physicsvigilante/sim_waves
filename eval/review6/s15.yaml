@@ -1,0 +1,4 @@
+id: s15
+unknowns: {u: positive}
+given: ["2**u == u**2"]
+observe: {u: "u"}

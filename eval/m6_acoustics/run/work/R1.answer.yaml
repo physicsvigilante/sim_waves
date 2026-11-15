@@ -1,0 +1,11 @@
+answer: {a: 1489 m/s, b: 393 W, c: 552.5 Pa, d: {displacement_amplitude: 1.44e-8 m, sound_level: 104.0 dB}}
+final_scene: R1.v1.yaml
+engine_fit: partial
+hand_steps:
+  - "bulk modulus = 1 / adiabatic compressibility (written inside the bulk_modulus field)"
+  - "hydrophone and 50 m point placed on a line from the transducer (geometry only; uniform radiation)"
+coverage: full
+not_represented: "nothing (sound-absorbing floor modelled by simply having no reflection; absorption in water neglected as stated)"
+missing_in_source: "directions of the 25 m and 50 m points (irrelevant for uniform hemispherical radiation)"
+reasoning: "Power solved from the 110 dB level at 25 m with hemispherical spreading (P = 125*pi W); v, pressure amplitude, displacement amplitude and level at 50 m are engine observables."
+friction: "Compressibility is not an accepted input for a fluid, so the reciprocal had to be written by hand in the bulk_modulus expression."

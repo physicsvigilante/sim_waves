@@ -1,0 +1,20 @@
+# review 6 #5: a tube path from a powered source
+id: c03
+media: {air: {type: gas, v: 340 m/s, density: 1.2 kg/m^3}}
+sources:
+  S1: {on: air, at: [0 m, 0 m], f: 170 Hz, power: 1 W, phase: 0, spreading: spherical}
+  S2: {on: air, at: [0 m, 0 m], f: 170 Hz, A: 1 Pa, phase: 0, spreading: none}
+  S3: {on: air, at: [0 m, 0 m], f: 170 Hz, A: 1, phase: 0, spreading: none}
+  S4: {on: air, at: [0 m, 0 m], f: 170 Hz, A: 2 Pa, A_at: 1 m, phase: 0, spreading: hemispherical}
+  S5: {on: air, at: [0 m, 0 m], f: 170 Hz, A: "2[Pa]", phase: 0, spreading: none}
+points: {P: [2 m, 0 m]}
+rays: {r1: {from: S1, to: P}, r2: {from: S2, to: P}, r3: {from: S3, to: P}, r4: {from: S4, to: P}, tb: {from: S1, length: 2 m}, r5: {from: S5, to: P}}
+observe:
+  mixPa: "intensity(r1, r2)"
+  mixnum: "intensity(r1, r3)"
+  i2: "intensity(r2)*816"
+  i4: "intensity(r4)*816"
+  tube: "intensity(tb)*16*pi"
+  i5: "intensity(r5)*816"
+  p3: "pressure_amplitude(r3)"
+expect: {error: rejected, message: "tube"}

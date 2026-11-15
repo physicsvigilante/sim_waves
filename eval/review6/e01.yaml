@@ -1,0 +1,8 @@
+id: e01
+media: {air: {type: gas, v: 340 m/s, density: 1.2 kg/m^3}}
+sources:
+  S1: {on: air, at: [0 m, 0 m], f: 170 Hz, power: 1 W, phase: 0, spreading: spherical}
+  S3: {on: air, at: [0 m, 0 m], f: 170 Hz, power: 1 W, phase: pi, spreading: spherical}
+points: {P: [2 m, 0 m]}
+rays: {r1: {from: S1, to: P}, r3: {from: S3, to: P}}
+observe: {L: "sound_level(intensity(r1, r3))"}

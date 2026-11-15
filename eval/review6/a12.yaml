@@ -1,0 +1,7 @@
+id: a12
+unknowns: {a: positive}
+media: {air: {type: gas, v: 340 m/s, density: 1.2 kg/m^3}}
+waves: {s: {harmonic: {on: air, f: 1000 Hz, A: a, dir: +x, phase: 0}}}
+given: [{fact: "sound_level(intensity(s)) == 80", source: stated}]
+observe: {a: "a", p0: "pressure_amplitude(s)"}
+expect: {p0: {value: 0.28566, tol: 0.001}}

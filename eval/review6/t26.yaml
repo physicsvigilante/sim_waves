@@ -1,0 +1,4 @@
+id: t26
+unknowns: {u: positive}
+given: ["log(u)/u == 0.2"]
+observe: {u: "u"}

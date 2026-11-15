@@ -1,0 +1,4 @@
+id: s08
+unknowns: {u: positive}
+given: ["exp(u) == -1"]
+observe: {u: "u"}

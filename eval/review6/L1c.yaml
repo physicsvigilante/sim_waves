@@ -1,0 +1,8 @@
+id: L1c
+# two points at known distances; level difference is observed (no unknown)
+media: {air: {type: gas, v: 340 m/s}}
+sources:
+  S: {on: air, at: [0 m, 0 m], power: 1 W, phase: random, spreading: spherical}
+points: {P: [10 m, 0 m], Q: [20 m, 0 m]}
+rays: {a: {from: S, to: P}, b: {from: S, to: Q}}
+observe: {dL: "sound_level(intensity(a)) - sound_level(intensity(b))", La: "sound_level(intensity(a))"}

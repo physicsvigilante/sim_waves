@@ -1,0 +1,4 @@
+id: d09
+unknowns: {L: real}
+given: [{fact: "intensity_of_level(L) == 2*intensity_of_level(60)", source: stated}]
+observe: {L: "L"}

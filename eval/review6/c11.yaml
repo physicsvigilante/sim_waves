@@ -1,0 +1,4 @@
+id: c11
+media: {o: {type: open3d}}
+emitters: {pt: {on: o, geometry: point, power: "100[W]"}}
+observe: {I: "intensity(pt, r=2[m])", L: "sound_level(intensity(pt, r=2[m]))", F: "flux(pt, sphere(3[m]))"}

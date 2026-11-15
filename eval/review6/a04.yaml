@@ -1,0 +1,5 @@
+id: a04
+media: {air: {type: gas, gamma: 7/5, pressure: 1e5 Pa, temperature: 300 K, molar_mass: 29 g/mol}}
+waves: {s: {harmonic: {on: air, f: 500 Hz, intensity: 1e-4 W/m^2, dir: +x, phase: 0}}}
+observe: {v: "speed(air)", p0: "pressure_amplitude(s)", rho: "pressure_amplitude(s)**2/(2*intensity(s)*speed(air))"}
+expect: {v: {value: 347.0, tol: 0.001}, rho: {value: 1.16263, tol: 0.001}}

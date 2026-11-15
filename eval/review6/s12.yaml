@@ -1,0 +1,4 @@
+id: s12
+unknowns: {u: positive}
+given: ["exp(u) == 3*u"]
+observe: {u: "u"}

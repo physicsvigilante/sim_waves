@@ -1,0 +1,14 @@
+id: 11/03/001
+# A point source of stated power; pressure and displacement amplitude at 1.5 m.
+assume: ["The source radiates uniformly in all directions (spherical spreading)."]
+media:
+  air: {type: gas, v: 340 m/s, density: 1.29 kg/m^3}
+sources:
+  S: {on: air, at: [0 m, 0 m], f: 600 Hz, power: 0.8 W, phase: 0, spreading: spherical}
+points: {A: [1.5 m, 0 m]}
+rays: {r: {from: S, to: A}}
+observe:
+  dP: "pressure_amplitude(r)"
+  s0: "displacement_amplitude(r)"
+  I: "intensity(r)"
+expect: {dP: {value: 4.98, tol: 0.01}, s0: {value: 3.0e-6, tol: 0.03}}

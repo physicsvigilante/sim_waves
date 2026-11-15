@@ -63,13 +63,13 @@ Write YAML booleans only as `true`/`false`; `on`, `yes`, `no` are plain words.
   - `x` and `t` written freely in a formula count as SI numbers, so book formulas such as
     `0.2*sin(2*pi*(6*t - x/60))` are fine.
   - The `x=`, `t=`, `at=` and `r=` arguments must be lengths or times.
-- **Units:** m, cm, mm, km, s, ms, kg, g, N, Pa, J, mJ, W, Hz, rad, deg, K, degC.
+- **Units:** m, cm, mm, km, s, ms, kg, g, N, Pa, kPa, J, mJ, W, mW, kW, Hz, kHz, rad, deg, K, degC.
 - **Internals:** the engine works in exact SI.
 
 ## Media
 
 ```yaml
-type: string | gas | open3d         # rods: not yet (gas: see Gas media)
+type: string | gas | fluid | rod | open3d   # gas, fluid, rod: see Sound media
 # string, mass per length: mu, or mass + length, or density + area|diameter
 # (giving more than one is cross-checked)
 tension: 60 N
@@ -156,15 +156,38 @@ waves:
 - **Limit (v0):** only one reflection is modelled; derived waves are not reflected
   again. For the normal modes of a finite string, use a resonator.
 
-## Gas media
+## Sound media: gas, fluid (liquid), rod (solid)
 
 ```yaml
-air: {type: gas, v: 340 m/s}
-air: {type: gas, gamma: 7/5, pressure: 1e5 Pa, density: 1.29 kg/m^3}
-air: {type: gas, gamma: 7/5, temperature: 300 K, molar_mass: 29 g/mol}   # uses the exact gas constant R
+air:   {type: gas, v: 340 m/s, density: 1.29 kg/m^3}       # density: needed for pressure/intensity
+air:   {type: gas, gamma: 7/5, pressure: 1e5 Pa, density: 1.29 kg/m^3}
+air:   {type: gas, gamma: 7/5, temperature: 300 K, molar_mass: 29 g/mol}   # uses the exact gas constant R
+air:   {type: gas, gamma: 7/5, pressure: 1e5 Pa, temperature: 300 K, molar_mass: 29 g/mol}  # density = P*M/(R*T)
+water: {type: fluid, bulk_modulus: 2.2e9 Pa, density: 1000 kg/m^3}         # or v + density
+sea:   {type: fluid, compressibility: 4.4e-10 1/Pa, density: 1025 kg/m^3}  # bulk modulus = 1/compressibility
+water: {type: fluid, density: 1000 kg/m^3, bulk_modulus: "1e5[Pa] / (50[cm^3]/1[m^3])"}  # B = dP/(dV/V)
+steel: {type: rod, Y: 2e11 Pa, density: 7800 kg/m^3}                       # longitudinal: v = sqrt(Y/density)
+steel: {type: rod, Y: 2e11 Pa, mass: 0.1 kg, length: 1 m, area: 1e-6 m^2}  # density from mass/(length*area)
+# a medium is a material: its length only fixes the density; resonators on it may have any length
 ```
 
 - Every input must belong to a complete route; leftover inputs are an error.
+- `density` is always allowed. It is needed for pressure amplitudes and intensities; it is
+  never invented (missing gives "undetermined").
+- A fluid works like a gas everywhere (pipes, sources, rays).
+- **Sound waves:** a harmonic wave on a gas, fluid or rod states its amplitude as exactly
+  one of `A` (displacement), `pressure_amplitude` or `intensity`. The engine links them:
+  - p0 = density * v * omega * A;
+  - I = p0^2 / (2 * density * v).
+
+  For a rod, p0 is the stress amplitude.
+- **Observables:** `pressure_amplitude(w)`, `displacement_amplitude(w)` and
+  `intensity(w)`.
+- **Sound level:** `sound_level(I)` = 10*log10(I/I0), and its inverse
+  `intensity_of_level(L)`.
+  - I0 = 1e-12 W/m^2 is the standard reference of the decibel scale, a definition.
+  - A level fact may contain an unknown, e.g. `sound_level(intensity(r)) == 80` solves
+    for a power.
 - If the book uses a rounded gas constant, record it:
   `gas_constant: 8.3 J/(mol*K)`, tagged as a convention.
 
@@ -174,6 +197,7 @@ air: {type: gas, gamma: 7/5, temperature: 300 K, molar_mass: 29 g/mol}   # uses 
 resonators:
   r: {type: string, on: wire, length: 1 m, ends: [fixed, fixed]}                      # fixed | free
   p: {type: pipe, on: air, length: L, ends: [closed, open], end_correction: 0.6 cm}    # closed | open
+  b: {type: rod, on: steel, length: 1 m, ends: [clamped, free]}                        # clamped | free
 ```
 
 - **Pipes must state `end_correction`** (`0 m` if the problem neglects it). It is added
@@ -225,7 +249,8 @@ resonators:
     can excite.
   - `harmonics(r, upto=N, antinode_at=x0)`: the harmonics with an antinode at x0.
   - Use `count(...)`, `min(...)` or `max(...)` on these lists.
-- **Not supported yet:** rods; resonators on non-uniform media.
+- **Rods:** `type: rod` on a rod medium, ends `clamped` (displacement node) or `free` (antinode); same mode rules.
+- **Not supported yet:** transverse (bending) modes of rods; resonators on non-uniform media.
 
 ## Point sources, reflectors and rays (sound interference by path)
 
@@ -235,6 +260,7 @@ sources:
   S1: {on: air, at: [0 m, 0 m], f: 170 Hz, A: 1, phase: 0, spreading: none}
   S2: {on: air, at: [3 m, 0 m], f: 170 Hz, A: 2, phase: pi/2, spreading: none}
   N:  {on: air, f: 170 Hz, A: 1, phase: random, spreading: none}     # incoherent
+  D:  {on: air, at: [0 m, 0 m], power: 1e-3 W, phase: random, spreading: hemispherical}  # stated power
 reflectors:
   wall: {point: [4 m, 0 m], normal: [-1, 0], boundary: rigid}         # or open
 points:
@@ -254,9 +280,24 @@ rays:
   - Write `phase_change: pi` instead only when the problem itself states the phase
     change, and tag it as a convention.
   - Do not import the string rule ("a hard reflection adds lambda/2") into sound problems.
-- **Spreading must be stated.** `none` keeps A at every distance. `spherical` (A*A_at/s)
-  and `cylindrical` need `A_at`, the distance where the amplitude is A. If a problem
-  gives the amplitudes or intensities at the point, use `none` and say so in `assume`.
+- **Spreading must be stated.**
+  - `none` keeps A at every distance. `spherical` / `hemispherical` (A*A_at/s) and
+    `cylindrical` need `A_at`, the distance where the amplitude is A. If a problem gives
+    the amplitudes or intensities at the point, use `none` and say so in `assume`.
+- **Power instead of an amplitude:** `power: 0.8 W` with `spreading: spherical`
+  (I = P/(4 pi s^2)) or `hemispherical` (P/(2 pi s^2)).
+  - Each ray then has a physical intensity, and with the medium's density a pressure and
+    displacement amplitude.
+  - `f` is optional when nothing needs a phase (e.g. incoherent sources and levels).
+  - For such sources, `amplitude(ray)` is refused: ask for `pressure_amplitude` or
+    `displacement_amplitude`.
+  - A stated-length ray (a tube) from a powered source is refused, because spreading
+    along a tube is not modelled.
+- **Physical intensity of rays:** `intensity(r1, r2, ...)` in W/m^2, for sources with
+  `power` or with A in Pa. Coherent rays of one frequency add as phasors; anything else
+  adds as intensities. Also `pressure_amplitude(r1, r2, ...)`, the resultant for coherent
+  rays, and `displacement_amplitude(ray)`.
+- **`emitters` are older and need no change**; new scenes should use `sources`.
 - **Coherence:** sources not marked `phase: random` are treated as coherent with each
   other.
   - Mark independent sources (two loudspeakers on separate amplifiers, two people)
@@ -316,6 +357,10 @@ pl:   {on: air, geometry: plane, intensity: I}
   - other unknowns over the range allowed by their sign and by the inequalities.
 - **Refused trig cases:** any other unknown inside a trig function is refused rather than
   risk a lost root.
+- **Unknowns inside log, exp, inverse trig or an exponent** (e.g. a power from a level):
+  - Solved for one unknown at a time, with the full real root set; every root is
+    re-checked.
+  - Several such unknowns together are refused: fix the others first.
 - **Absolute values** (`abs(...)`, and `beat_frequency`, which is |f1 - f2|) around
   unknowns are solved by sign cases. Each case is checked, so a beat with two possible
   sides gives one answer or an "ambiguous" error, never a guess.

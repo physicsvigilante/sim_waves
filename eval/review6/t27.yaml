@@ -1,0 +1,4 @@
+id: t27
+unknowns: {u: positive}
+given: ["sound_level(1[W]/(4*pi*u**2*1[m^2])) - sound_level(1[W]/(4*pi*(u+10)**2*1[m^2])) == 6"]
+observe: {u: "u"}

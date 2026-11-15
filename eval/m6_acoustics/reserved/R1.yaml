@@ -1,0 +1,15 @@
+id: m6/R1
+format: numerical
+statement: |
+  A small sonar transducer rests on the flat, sound-absorbing sea floor and radiates
+  uniformly into the half-space of water above it at a frequency of 2.0 kHz. Seawater has
+  density 1025 kg/m^3 and adiabatic compressibility 4.4 x 10^-10 Pa^-1. A hydrophone
+  placed 25 m from the transducer (in the water above the floor) records a sound level of 110 dB.
+  Take the reference intensity for sound level as 1.0 x 10^-12 W/m^2 and neglect absorption
+  in the water.
+  (a) Find the speed of sound in the seawater.
+  (b) Find the acoustic power radiated by the transducer.
+  (c) Find the pressure amplitude at the hydrophone.
+  (d) Find the displacement amplitude of the water particles at a point 50 m from the
+      transducer, and the sound level there.
+figure: null

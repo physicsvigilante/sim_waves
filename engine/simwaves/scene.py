@@ -27,6 +27,7 @@ RESERVED = {"x", "t", "pi"}
 TOP_KEYS = {"id", "assume", "symbols", "unknowns", "functions", "media", "junctions", "waves",
             "resonators", "emitters", "sources", "reflectors", "points", "rays", "given", "observe", "view", "expect", "illustrate", "explore"}
 R_GAS = sp.Rational(831446261815324, 10 ** 14)     # J/(mol K), exact SI value
+I0_HEARING = sp.Rational(1, 10 ** 12)                # W/m^2: the standard reference of the decibel scale
 
 D_FREQ, D_SPEED, D_WAVENUM = dim(T=-1), dim(L=1, T=-1), dim(L=-1)
 D_LINDENS, D_DENS, D_PRESS = dim(L=-1, M=1), dim(L=-3, M=1), dim(-1, 1, -2)
@@ -164,6 +165,10 @@ class Scene:
                           ("antinode_at", LENGTH), ("no_node_at", LENGTH)):
             if key in kwargs:
                 chk.same(kwargs[key], want, f"argument {key}=")
+        if fname == "sound_level" and args:
+            chk.same(args[0], dim(0, 1, -3), "the argument of sound_level() (an intensity in W/m^2)")
+        if fname == "intensity_of_level" and args:
+            chk.same(args[0], DIMLESS, "the argument of intensity_of_level() (a level in dB, a number)")
         if fname == "beat_frequency":
             for a_ in args:
                 if a_ != "obj":
@@ -252,7 +257,11 @@ def make_medium(sc, name, spec):
         return Open3D(name)
     if spec["type"] == "gas":
         return GasMedium(sc, name, spec)
-    raise SceneError(f"media.{name}: type '{spec['type']}' not supported yet (string, gas, open3d)")
+    if spec["type"] == "fluid":
+        return FluidMedium(sc, name, spec)
+    if spec["type"] == "rod":
+        return RodMedium(sc, name, spec)
+    raise SceneError(f"media.{name}: type '{spec['type']}' not supported yet (string, gas, fluid, rod, open3d)")
 
 
 class GasMedium:
@@ -269,12 +278,20 @@ class GasMedium:
         P, rho = q("pressure", D_PRESS), q("density", D_DENS)
         Tk, M = q("temperature", TEMP, temperature=True), q("molar_mass", MASS)
         R = q("gas_constant", dim(L=2, M=1, T=-2, K=-1))
-        cands, used = [q("v", D_SPEED)], {"type", "v"}
+        Rg = R_GAS if R is None else R
+        cands, used = [q("v", D_SPEED)], {"type", "v", "density"}    # density is always a property
+        # density from the ideal-gas law when pressure, temperature and molar mass are all given
+        rho_c = [rho]
+        if P is not None and Tk is not None and M is not None:
+            rho_c.append(P * M / (Rg * Tk))
+            used |= {"pressure", "temperature", "molar_mass", "gas_constant"}
+        rho = _pick(sc, rho_c, "density (given vs ideal gas P*M/(R*T))", w) if any(
+            c is not None for c in rho_c) else None
         if gamma is not None and P is not None and rho is not None:
             cands.append(sp.sqrt(gamma * P / rho))
-            used |= {"gamma", "pressure", "density"}
+            used |= {"gamma", "pressure"}
         if gamma is not None and Tk is not None and M is not None:
-            cands.append(sp.sqrt(gamma * (R_GAS if R is None else R) * Tk / M))
+            cands.append(sp.sqrt(gamma * Rg * Tk / M))
             used |= {"gamma", "temperature", "molar_mass", "gas_constant"}
         if all(c is None for c in cands):
             raise SceneError(f"{w}: give v, or gamma + pressure + density, or gamma + temperature + molar_mass")
@@ -282,10 +299,13 @@ class GasMedium:
         if unused:
             raise SceneError(f"{w}: {unused} not used: they do not complete a route to the speed of "
                              f"sound (v; gamma + pressure + density; gamma + temperature + molar_mass "
-                             f"[+ gas_constant])")
+                             f"[+ gas_constant]) or to the density (pressure + temperature + molar_mass)")
         self.v = _pick(sc, cands, "speed of sound", w)
         if self.v.is_positive is False:
             raise SceneError(f"{w}: speed must be positive")
+        self.rho = rho
+        if rho is not None and rho.is_positive is False:
+            raise SceneError(f"{w}: density must be positive")
 
     @property
     def uniform(self):
@@ -293,6 +313,82 @@ class GasMedium:
 
     def speed(self, at=None):
         return self.v
+
+
+class FluidMedium(GasMedium):
+    """A liquid (or any fluid): speed of sound from bulk modulus and density, or given."""
+    KEYS = {"type", "v", "bulk_modulus", "compressibility", "density"}
+
+    def __init__(self, sc, name, spec):
+        w = f"media.{name}"
+        _keys(spec, self.KEYS, w)
+        self.name, self.kind, self.mu, self.extent = name, "fluid", None, None
+        q = lambda k, d: sc.quantity(spec.get(k), d, f"{w}.{k}")
+        kappa = q("compressibility", dim(1, -1, 2))
+        B_c = [q("bulk_modulus", D_PRESS), 1 / kappa if kappa is not None else None]
+        B = _pick(sc, B_c, "bulk modulus (vs 1/compressibility)", w) if any(c is not None for c in B_c) else None
+        rho = q("density", D_DENS)
+        cands = [q("v", D_SPEED), sp.sqrt(B / rho) if B is not None and rho is not None else None]
+        if all(c is None for c in cands):
+            raise SceneError(f"{w}: give v, or bulk_modulus + density")
+        if B is not None and rho is None:
+            raise SceneError(f"{w}: bulk_modulus needs density")
+        for label, val in (("bulk_modulus", B), ("density", rho)):
+            if val is not None and val.is_positive is False:
+                raise SceneError(f"{w}: {label} must be positive")
+        self.v = _pick(sc, cands, "speed of sound", w)
+        if self.v.is_positive is False:
+            raise SceneError(f"{w}: speed must be positive")
+        self.rho = rho
+
+
+class RodMedium:
+    """A solid rod or wire carrying longitudinal waves: v = sqrt(Y / density)."""
+    KEYS = {"type", "v", "Y", "density", "mass", "length", "area", "diameter"}
+
+    def __init__(self, sc, name, spec):
+        w = f"media.{name}"
+        _keys(spec, self.KEYS, w)
+        self.name, self.kind, self.mu, self.extent = name, "rod", None, None
+        q = lambda k, d: sc.quantity(spec.get(k), d, f"{w}.{k}")
+        Y, length, mass = q("Y", D_PRESS), q("length", LENGTH), q("mass", MASS)
+        area = _pick(sc, [q("area", D_AREA), sp.pi * q("diameter", LENGTH) ** 2 / 4
+                          if spec.get("diameter") is not None else None], "cross-section", w) \
+            if (spec.get("area") is not None or spec.get("diameter") is not None) else None
+        rho_c = [q("density", D_DENS)]
+        if mass is not None:
+            if length is None or area is None:
+                raise SceneError(f"{w}: mass needs length and area (or diameter) to give the density")
+            rho_c.append(mass / (length * area))
+        rho = _pick(sc, rho_c, "density", w) if any(c is not None for c in rho_c) else None
+        if Y is not None and rho is None:
+            raise SceneError(f"{w}: Y needs the density (or mass + length + area) to give the speed")
+        if rho is not None and Y is None and "v" not in spec:
+            raise SceneError(f"{w}: give Y with the density, or v")
+        cands = [q("v", D_SPEED), sp.sqrt(Y / rho) if Y is not None and rho is not None else None]
+        if all(c is None for c in cands):
+            raise SceneError(f"{w}: give v, or Y + density (or Y + mass + length + area)")
+        self.v = _pick(sc, cands, "longitudinal speed", w)
+        if self.v.is_positive is False:
+            raise SceneError(f"{w}: speed must be positive")
+        self.rho, self.length, self.area = rho, length, area
+
+    @property
+    def uniform(self):
+        return True
+
+    def speed(self, at=None):
+        return self.v
+
+
+ACOUSTIC_MEDIA = (GasMedium, RodMedium)      # FluidMedium is a GasMedium
+
+
+def acoustic_density(medium, what):
+    rho = getattr(medium, "rho", None)
+    if rho is None:
+        raise UndeterminedError(f"{what} needs the density of '{medium.name}' (add density to the medium)")
+    return rho
 
 
 class Open3D:
@@ -481,7 +577,7 @@ def _direction(sc, spec, medium, w):
 
 class Harmonic:
     KEYS = {"on", "A", "f", "omega", "period", "lambda", "k", "v", "dir",
-            "phase", "from", "toward"}
+            "phase", "from", "toward", "pressure_amplitude", "intensity"}
 
     def __init__(self, sc, name, spec):
         w = f"waves.{name}"
@@ -489,8 +585,9 @@ class Harmonic:
         self.name, self.sc = name, sc
         self.medium = None
         if "on" in spec:
-            if spec["on"] not in sc.objects or not isinstance(sc.objects[spec["on"]], (StringMedium, GasMedium)):
-                raise SceneError(f"{w}.on: '{spec['on']}' is not a string or gas medium defined above")
+            if spec["on"] not in sc.objects or not isinstance(sc.objects[spec["on"]], (StringMedium, GasMedium,
+                                                                                      RodMedium)):
+                raise SceneError(f"{w}.on: '{spec['on']}' is not a string, gas, fluid or rod medium defined above")
             self.medium = sc.objects[spec["on"]]
         q = lambda k, d: sc.quantity(spec.get(k), d, f"{w}.{k}")
         self.A = q("A", LENGTH)
@@ -533,6 +630,24 @@ class Harmonic:
         elif k is not None and v is not None:
             om = k * v
         self.omega, self.k, self.v = om, k, v
+        # sound: the amplitude may be stated as displacement, pressure or intensity (exactly one)
+        amp_keys = [a for a in ("A", "pressure_amplitude", "intensity") if a in spec]
+        if len(amp_keys) > 1:
+            raise SceneError(f"{w}: give one amplitude: A (displacement), pressure_amplitude or intensity")
+        if amp_keys and amp_keys[0] != "A":
+            if not isinstance(self.medium, ACOUSTIC_MEDIA):
+                raise SceneError(f"{w}.{amp_keys[0]}: only for sound waves (on a gas, fluid or rod medium)")
+            if self.omega is None:
+                raise SceneError(f"{w}: {amp_keys[0]} needs the frequency")
+            rho = acoustic_density(self.medium, f"{w}.{amp_keys[0]}")
+            if amp_keys[0] == "pressure_amplitude":
+                p0 = sc.quantity(spec["pressure_amplitude"], D_PRESS, f"{w}.pressure_amplitude")
+            else:
+                inten = sc.quantity(spec["intensity"], dim(0, 1, -3), f"{w}.intensity")
+                p0 = sp.sqrt(2 * rho * self.v * inten)
+            if p0.is_positive is False:
+                raise SceneError(f"{w}.{amp_keys[0]} must be positive")
+            self.A = p0 / (rho * self.v * self.omega)       # p0 = rho v omega s0
 
     def _need(self, *attrs):
         for a in attrs:
@@ -917,19 +1032,19 @@ def derived_waves(sc, wave):
 class Resonator:
     """A finite string or air column with given end conditions: its standing-wave modes."""
     KEYS = {"type", "on", "length", "ends", "end_correction"}
-    ENDS = {"string": ("fixed", "free"), "pipe": ("closed", "open")}
+    ENDS = {"string": ("fixed", "free"), "pipe": ("closed", "open"), "rod": ("clamped", "free")}
 
     def __init__(self, sc, name, spec):
         w = f"resonators.{name}"
         _keys(spec, self.KEYS, w)
         self.name, self.type = name, spec.get("type")
         if self.type not in self.ENDS:
-            raise SceneError(f"{w}.type: string or pipe (rods are not supported yet)")
+            raise SceneError(f"{w}.type: string, pipe or rod")
         m = sc.objects.get(spec.get("on"))
-        want = StringMedium if self.type == "string" else GasMedium
+        want = {"string": StringMedium, "pipe": GasMedium, "rod": RodMedium}[self.type]
         if not isinstance(m, want) or not m.uniform or getattr(m, "kind", None) == "free":
-            raise SceneError(f"{w}.on: a {self.type} resonator needs a uniform "
-                             f"{'string' if want is StringMedium else 'gas'} medium with a known speed")
+            label = {"string": "string", "pipe": "gas or fluid", "rod": "rod"}[self.type]
+            raise SceneError(f"{w}.on: a {self.type} resonator needs a uniform {label} medium with a known speed")
         self.medium = m
         ends = spec.get("ends")
         if not (isinstance(ends, list) and len(ends) == 2 and all(e in self.ENDS[self.type] for e in ends)):
@@ -938,6 +1053,7 @@ class Resonator:
         self.L = sc.quantity(spec.get("length"), LENGTH, f"{w}.length")
         if self.L is None:
             raise SceneError(f"{w}: needs a length")
+
         if self.type == "pipe":
             if "end_correction" not in spec:
                 raise SceneError(f"{w}: give end_correction (0 m if the problem neglects it)")
@@ -1154,7 +1270,7 @@ def _phase(_sc, w, x=None, t=None):
 
 
 def _speed(_sc, obj, at=None):
-    if isinstance(obj, Ref) and isinstance(obj.obj, (StringMedium, GasMedium)):
+    if isinstance(obj, Ref) and isinstance(obj.obj, (StringMedium, GasMedium, RodMedium)):
         return obj.obj.speed(at)
     if isinstance(obj, Ref) and isinstance(obj.obj, Resonator):
         return obj.obj.medium.speed()
@@ -1345,7 +1461,47 @@ def _flux(_sc, e, surface):
     return sp.simplify(em.intensity(r) * 4 * sp.pi * r ** 2)
 
 
-def _intensity(_sc, e, r=None):
+def _pressure_amplitude(_sc, w, *more):
+    from .rays import Ray, _pressure_amplitude_rays
+    if isinstance(w, Ref) and isinstance(w.obj, Ray):
+        return _pressure_amplitude_rays(_sc, w, *more)
+    if more:
+        raise SceneError("pressure_amplitude(): several arguments only for rays")
+    wave = _obj(w, (Harmonic,), "pressure_amplitude")
+    if not isinstance(wave.medium, ACOUSTIC_MEDIA):
+        raise SceneError("pressure_amplitude(): only for sound waves (on a gas, fluid or rod medium)")
+    rho = acoustic_density(wave.medium, "pressure_amplitude()")
+    return rho * wave.speed() * wave.ang_freq() * wave.amplitude()
+
+
+def _displacement_amplitude(_sc, w):
+    from .rays import Ray
+    if isinstance(w, Ref) and isinstance(w.obj, Ray):
+        return w.obj.displacement_amplitude()
+    return _obj(w, WAVES, "displacement_amplitude").amplitude()
+
+
+def _sound_level(_sc, inten):
+    i = sp.sympify(inten)
+    if i.is_positive is False or i.is_zero:
+        raise SceneError("sound_level(): the intensity must be positive")
+    return 10 * sp.log(i / I0_HEARING) / sp.log(10)
+
+
+def _intensity_of_level(_sc, level):
+    return I0_HEARING * 10 ** (sp.sympify(level) / 10)
+
+
+def _intensity(_sc, e, *more, r=None):
+    from .rays import Ray, ray_intensity
+    if isinstance(e, Ref) and isinstance(e.obj, Ray):
+        return ray_intensity(_sc, [e] + list(more))
+    if more:
+        raise SceneError("intensity(): several arguments only for rays")
+    if isinstance(e, Ref) and isinstance(e.obj, (Harmonic, GivenWave)) and r is None:
+        p0 = _pressure_amplitude(_sc, e)
+        rho = acoustic_density(e.obj.medium, "intensity()")
+        return p0 ** 2 / (2 * rho * e.obj.speed())
     em = _obj(e, (Emitter,), "intensity")
     if r is None:
         raise SceneError("intensity(): give r=")
@@ -1381,6 +1537,8 @@ OBS_DIMS = {
     "field": LENGTH, "y": LENGTH, "vy": D_SPEED, "ay": D_ACC, "slope": DIMLESS, "phase": DIMLESS,
     "power": D_POWER, "front": LENGTH, "tension": FORCE, "mu": D_LINDENS, "impedance": D_KGS,
     "intensity": dim(0, 1, -3), "flux": D_POWER, "sphere": "obj", "equivalent": None,
+    "pressure_amplitude": D_PRESS, "displacement_amplitude": LENGTH, "sound_level": DIMLESS,
+    "intensity_of_level": dim(0, 1, -3),
     "is_travelling": None, "wrap": DIMLESS,
     "harmonic": DIMLESS, "node_spacing": LENGTH, "beat_frequency": D_FREQ, "resonances": None,
     "count": DIMLESS, "frequency_of": None,
@@ -1461,6 +1619,8 @@ OBSERVABLES = {
     "tension": _tension, "mu": _mu, "impedance": _impedance,
     # emitters
     "intensity": _intensity, "flux": _flux,
+    "pressure_amplitude": _pressure_amplitude, "displacement_amplitude": _displacement_amplitude,
+    "sound_level": _sound_level, "intensity_of_level": _intensity_of_level,
     "sphere": lambda sc, r: Ref("sphere", Sphere(r)),
     # maths
     "diff": _diff, "max_over": _max_over, "min_over": _min_over, "equivalent": _equivalent,

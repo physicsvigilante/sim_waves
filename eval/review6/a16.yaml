@@ -1,0 +1,4 @@
+id: a16
+media: {air: {type: gas, v: 340 m/s, density: 1.2 kg/m^3}}
+waves: {s: {harmonic: {on: air, f: 1000 Hz, A: 1e-6 m, intensity: 8.053e-3 W/m^2, dir: +x, phase: 0}}}
+observe: {I: "intensity(s)"}

@@ -1,0 +1,13 @@
+id: m6/R2
+format: numerical
+statement: |
+  A uniform solid cylindrical rod of an unknown metal has length 1.20 m, diameter 1.00 cm
+  and mass 254.5 g. In a static tensile test, a tension of 2000 N applied along its axis
+  lengthens it by 0.437 mm (within the elastic limit). The rod is then rigidly clamped at
+  one end, the other end being free, and set into longitudinal vibration by stroking it.
+  (a) Find Young's modulus of the metal.
+  (b) Find the speed of longitudinal waves in the rod.
+  (c) Find the frequency of the second-lowest longitudinal normal mode of the clamped rod.
+  (d) A second rod of the same metal, free at both ends, is to have its fundamental
+      longitudinal frequency equal to the frequency found in (c). What must its length be?
+figure: null

@@ -1,0 +1,4 @@
+id: s13
+unknowns: {u: real}
+given: ["acos(u) == 2"]
+observe: {u: "u"}

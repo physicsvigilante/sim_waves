@@ -1,0 +1,3 @@
+id: e02
+media: {air: {type: gas, v: 340 m/s, density: -1.2 kg/m^3}}
+observe: {v: "speed(air)"}

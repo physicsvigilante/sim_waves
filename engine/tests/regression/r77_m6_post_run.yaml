@@ -1,0 +1,13 @@
+# m6 reserved-run friction, corrected: compressibility input, mW unit, resultant pressure of rays
+media:
+  sea: {type: fluid, density: 1025 kg/m^3, compressibility: 4.4e-10 1/Pa}
+  air: {type: gas, v: 340 m/s, density: 1.2 kg/m^3}
+sources:
+  S1: {on: air, at: [0 m, 0 m], f: 425 Hz, power: 20 mW, phase: 0, spreading: spherical}
+  S2: {on: air, at: [7.2 m, 0 m], f: 425 Hz, power: 80 mW, phase: 0, spreading: spherical}
+points: {M: [3 m, 0 m]}
+rays: {r1: {from: S1, to: M}, r2: {from: S2, to: M}}
+observe:
+  v: "speed(sea)"
+  p: "pressure_amplitude(r1, r2)"
+expect: {v: {value: 1489.0, tol: 0.001}, p: {value: 0.1628, tol: 0.001}}

@@ -223,3 +223,40 @@ Each correction has a test:
   teacher needed (r63).
 
 The diagnostic's frozen outcomes are unchanged in `eval/diag1/`.
+
+## Milestone 6: acoustics, and review 6
+
+Built to `eval/m6_acoustics/PLAN.md`:
+- fluid and rod media, and gas density;
+- sound-wave amplitudes linked as displacement, pressure and intensity;
+- sound level and its inverse;
+- sources given by power (spherical or hemispherical), with physical intensity of rays;
+- rod resonators.
+
+The four motivating problems reproduce the book (examples `11_03_001`, `24_01_cnt_004`,
+`11_05_004a`, `11_03_003`, plus `11_03_013`).
+
+**Unplanned change:** unknowns inside log/exp are now solved (a power from a level). This
+was a solver change, not physics.
+
+Review 6 (Fable 5.2, medium; `eval/review6/REPORT.md`):
+
+| # | Finding | Fix | Test |
+|---|---|---|---|
+| 1 | `amplitude(ray)` of a powered source returned a pressure typed as a length (silent wrong in a fact) | Refused, with a pointer to `pressure_amplitude` / `displacement_amplitude` | r72 |
+| 2 | The log change lost roots: sympy's `solve` drops log(u) = 0 | One unknown at a time via solveset or polynomial roots, each re-checked; several unknowns refused | r73 |
+| 3 | A level difference with an unknown distance timed out | Log-linear rewrite to an algebraic equation | r74 |
+| 4 | Rod: Y ignored without density; medium and resonator lengths not cross-checked | Refused; cross-checked | r75 |
+| 5 | A tube path from a powered source spread as a sphere | Refused | r76 |
+| 6 | Messages: `A: "2[Pa]"` not seen as a pressure; "gas medium" when fluids work | Fixed | — |
+
+**Still open:** `molar_mass: 29 g` is accepted, because mol is dimensionless in the unit
+table.
+
+**Reserved transfer (m6):** 3 of 3 reserved problems matched in every part, with no
+production change (`eval/m6_acoustics/RESULT.md`). Post-run corrections from author
+friction:
+- a `compressibility` input;
+- units mW, kW, kHz, kPa;
+- `pressure_amplitude` of several rays;
+- reverting the medium/resonator length cross-check added after review 6.

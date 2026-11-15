@@ -1,0 +1,7 @@
+# m6: rod clamped at one end, free at the other: f1 = v/(4L), odd modes only; clamped end = node
+media: {al: {type: rod, Y: 7e10 Pa, density: 2700 kg/m^3}}
+resonators: {r: {type: rod, on: al, length: 0.5 m, ends: [clamped, free]}}
+observe:
+  f1: "frequency(r, harmonic=1)"
+  n3: "nodes(r, harmonic=3)"
+expect: {f1: {value: 2545.88, tol: 0.0001}, n3: "(0, 1/3)"}

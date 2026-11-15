@@ -1,0 +1,5 @@
+id: a03
+media: {water: {type: fluid, bulk_modulus: 2.25e9 Pa, density: 1000 kg/m^3}}
+waves: {s: {harmonic: {on: water, f: 500 Hz, intensity: 1 W/m^2, dir: -x, phase: 0}}}
+observe: {A: "displacement_amplitude(s)", p0: "pressure_amplitude(s)", v: "speed(water)", lam: "wavelength(s)"}
+expect: {A: {value: 3.6755e-7, tol: 0.001}, p0: {value: 1732.05, tol: 0.001}}

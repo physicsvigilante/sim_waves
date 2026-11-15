@@ -1,0 +1,4 @@
+id: a09
+media: {air: {type: gas, v: 340 m/s}}
+waves: {s: {harmonic: {on: air, f: 500 Hz, A: 1e-6 m, dir: +x, phase: 0}}}
+observe: {A: "displacement_amplitude(s)", I: "intensity(s)"}

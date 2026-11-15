@@ -1,0 +1,8 @@
+id: b04
+media: {steel: {type: rod, Y: 2e11 Pa, density: 8000 kg/m^3}, air: {type: gas, v: 340 m/s}, water: {type: fluid, v: 1500 m/s, density: 1000 kg/m^3}}
+resonators:
+  cc: {type: rod, on: steel, length: 1 m, ends: [clamped, clamped]}
+  ff: {type: rod, on: steel, length: 1 m, ends: [free, free]}
+  fc: {type: rod, on: steel, length: 1 m, ends: [free, clamped]}
+  wp: {type: pipe, on: water, length: 1 m, ends: [closed, open], end_correction: 0 m}
+observe: {cc: "frequency(cc, harmonic=2)", ff: "frequency(ff, harmonic=1)", fc: "frequency(fc, harmonic=1)", wp: "frequency(wp, harmonic=1)", ncc: "nodes(cc, harmonic=2)", nff: "nodes(ff, harmonic=1)", nfc: "nodes(fc, harmonic=1)", pn: "pressure_nodes(ff, harmonic=1)", sp: "speed(ff)", md: "mode_shape(fc, harmonic=1, x=0[m])"}

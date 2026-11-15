@@ -1,0 +1,4 @@
+id: a06
+media: {air: {type: gas, v: 340 m/s, pressure: 1e5 Pa, temperature: 300 K, molar_mass: 29 g/mol}}
+waves: {s: {harmonic: {on: air, f: 500 Hz, intensity: 1e-4 W/m^2, dir: +x, phase: 0}}}
+observe: {v: "speed(air)", p0: "pressure_amplitude(s)"}

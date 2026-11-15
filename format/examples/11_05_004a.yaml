@@ -1,0 +1,9 @@
+id: 11/05/004 (a)
+# Longitudinal vibrations of a steel wire (as a rod): fundamental frequency.
+assume: ["Longitudinal fundamental with both ends free (or both clamped): lambda = 2L. The book uses f = v/(2L)."]
+media:
+  steel: {type: rod, Y: 2e11 Pa, mass: 0.1 kg, length: 1 m, area: 1e-6 m^2}
+resonators:
+  w: {type: rod, on: steel, length: 1 m, ends: [free, free]}
+observe: {f1: "frequency(w, harmonic=1)", v: "speed(steel)"}
+expect: {f1: {value: 707.1, tol: 0.001}}

@@ -1,0 +1,5 @@
+id: a01
+media: {air: {type: gas, v: 340 m/s, density: 1.2 kg/m^3}}
+waves: {s: {harmonic: {on: air, f: 1000 Hz, A: 1e-6 m, dir: +x, phase: 0}}}
+observe: {p0: "pressure_amplitude(s)", I: "intensity(s)", L: "sound_level(intensity(s))", back: "intensity_of_level(sound_level(intensity(s)))", vmax: "max_over(t, vy(s, x=0[m], t=t))"}
+expect: {p0: {value: 2.5635, tol: 0.001}, I: {value: 8.053e-3, tol: 0.001}}

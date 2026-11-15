@@ -1,0 +1,4 @@
+id: d04
+unknowns: {I: real}
+given: [{fact: "sound_level(I*1[W/m^2] - 1e-3[W/m^2]) == 60", source: stated}, "sound_level(I*1[W/m^2]) > 20"]
+observe: {I: "I"}

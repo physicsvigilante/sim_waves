@@ -1,0 +1,8 @@
+id: v01
+media: {air: {type: gas, v: 340 m/s, density: 1.29 kg/m^3}}
+sources:
+  S: {on: air, at: [0 m, 0 m], f: 600 Hz, power: 0.8 W, phase: 0, spreading: spherical}
+points: {A: [1.5 m, 0 m]}
+rays: {r: {from: S, to: A}}
+observe: {dP: "pressure_amplitude(r)", L: "sound_level(intensity(r))"}
+explore: {vary: {sources.S.power: [0.8 W, 8 W, 0 W]}}

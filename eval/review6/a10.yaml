@@ -1,0 +1,7 @@
+id: a10
+media: {air: {type: gas, v: 340 m/s, density: 1.2 kg/m^3}}
+waves:
+  s1: {harmonic: {on: air, f: 1000 Hz, A: 1e-6 m, dir: +x, phase: 0}}
+  s2: {harmonic: {on: air, f: 1000 Hz, A: 1e-6 m, dir: +x, phase: 0}}
+  tot: {sum: [s1, s2]}
+observe: {I: "intensity(tot)", p: "pressure_amplitude(tot)", A: "displacement_amplitude(tot)"}

@@ -1,0 +1,3 @@
+id: a05
+media: {air: {type: gas, gamma: 7/5, pressure: 1e5 Pa, density: 1.29 kg/m^3, temperature: 300 K, molar_mass: 29 g/mol}}
+observe: {v: "speed(air)"}

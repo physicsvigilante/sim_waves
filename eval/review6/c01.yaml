@@ -1,0 +1,30 @@
+id: c01
+media: {air: {type: gas, v: 340 m/s, density: 1.2 kg/m^3}}
+sources:
+  S1: {on: air, at: [0 m, 0 m], f: 170 Hz, power: 1 W, phase: 0, spreading: spherical}
+  S2: {on: air, at: [0 m, 0 m], f: 170 Hz, power: 4 W, phase: 0, spreading: spherical}
+  S3: {on: air, at: [0 m, 0 m], f: 170 Hz, power: 1 W, phase: pi, spreading: spherical}
+  H:  {on: air, at: [0 m, 0 m], f: 170 Hz, power: 1 W, phase: 0, spreading: hemispherical}
+  R:  {on: air, at: [0 m, 0 m], f: 170 Hz, power: 1 W, phase: random, spreading: spherical}
+  G:  {on: air, at: [0 m, 0 m], f: 340 Hz, power: 1 W, phase: 0, spreading: spherical}
+  Far: {on: air, at: [-1 m, 0 m], f: 170 Hz, power: 1 W, phase: 0, spreading: spherical}
+points: {P: [2 m, 0 m]}
+rays: {r1: {from: S1, to: P}, r2: {from: S2, to: P}, r3: {from: S3, to: P}, h: {from: H, to: P}, rr: {from: R, to: P}, g: {from: G, to: P}, far: {from: Far, to: P}}
+observe:
+  I1: "intensity(r1)*16*pi"
+  coh9: "intensity(r1, r2)*16*pi"
+  anti0: "intensity(r1, r3)*16*pi"
+  hemi2: "intensity(h)*16*pi"
+  inc2: "intensity(r1, rr)*16*pi"
+  dif2: "intensity(r1, g)*16*pi"
+  cohh: "intensity(r1, h)*16*pi"
+  far: "intensity(r1, far)*16*pi"
+  ph: "phase_difference(r1, far)"
+  pa: "pressure_amplitude(r1)"
+  ra: "resultant_amplitude(r1, r2)"
+  amp: "amplitude(r1)"
+  ampdim: "amplitude(r1) + 1[m]"
+  ampdim2: "amplitude(r1) + 1[Pa]"
+  ri: "relative_intensity(r1, r2)/(2*1.2[kg/m^3]*340[m/s])*16*pi"
+  da: "displacement_amplitude(r1)"
+  lvl: "sound_level(intensity(r1, rr))"

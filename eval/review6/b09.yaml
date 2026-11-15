@@ -1,0 +1,8 @@
+id: b09
+# clamped at the middle = two clamped-free halves; kundt-like: rod length 1 m, f = v/(2L)
+symbols: {Y: positive}
+unknowns: {n: integer}
+media: {steel: {type: rod, Y: Y, density: 8000 kg/m^3}}
+resonators: {h: {type: rod, on: steel, length: 0.5 m, ends: [clamped, free]}}
+given: [{fact: "frequency(h, harmonic=n) == 3*frequency(h, harmonic=1)", source: stated}]
+observe: {n: "n", f: "frequency(h, harmonic=1)"}

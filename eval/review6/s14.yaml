@@ -1,0 +1,4 @@
+id: s14
+unknowns: {u: real}
+given: ["tan(atan(u)) == 1", "log(exp(u)) == 1"]
+observe: {u: "u"}

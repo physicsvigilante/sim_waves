@@ -1,0 +1,10 @@
+id: d07
+# distance at which level is 60 dB, source power 1 W: r = sqrt(1/(4 pi 1e-6)) = 282.1 m; and factor-of-distance problem
+unknowns: {k: positive}
+symbols: {r: positive, P: positive}
+media: {air: {type: gas, v: 340 m/s}}
+sources: {S: {on: air, at: [0 m, 0 m], power: P, phase: random, spreading: spherical}}
+points: {A: [r, 0 m], B: ["k*r", 0 m]}
+rays: {a: {from: S, to: A}, b: {from: S, to: B}}
+given: [{fact: "sound_level(intensity(a)) - sound_level(intensity(b)) == 20", source: stated}]
+observe: {k: "k"}

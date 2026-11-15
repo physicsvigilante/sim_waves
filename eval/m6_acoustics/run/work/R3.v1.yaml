@@ -1,0 +1,31 @@
+id: m6/R3
+assume:
+  - "Uniform radiation in all directions in open air: spherical spreading."
+  - "Only the distances S1-M = 3.00 m and S2-M = 4.20 m are given; S1-S2 separation and directions are not, and the path-based result does not depend on them. Drawn collinear for the engine only (M at 3 m from S1 on the x axis, S2 on the far side of S1 at 4.2 m from M)."
+  - "Parts (a),(b): coherent sources, same phase 0 (driven in phase from one oscillator)."
+  - "Part (c): the same speakers with independent random-noise drive are modelled as separate incoherent sources N1, N2 at the same places with the same powers."
+media:
+  air: {type: gas, v: 340 m/s, density: 1.20 kg/m^3}
+sources:
+  S1: {on: air, at: [0 m, 0 m], f: 425 Hz, power: 20 mW, phase: 0, spreading: spherical}
+  S2: {on: air, at: [-1.2 m, 0 m], f: 425 Hz, power: 80 mW, phase: 0, spreading: spherical}
+  N1: {on: air, at: [0 m, 0 m], power: 20 mW, phase: random, spreading: spherical}
+  N2: {on: air, at: [-1.2 m, 0 m], power: 80 mW, phase: random, spreading: spherical}
+points:
+  M: [3 m, 0 m]
+rays:
+  r1: {from: S1, to: M}
+  r2: {from: S2, to: M}
+  n1: {from: N1, to: M}
+  n2: {from: N2, to: M}
+given:
+  - {fact: "length(r1) == 3[m]", source: stated}
+  - {fact: "length(r2) == 4.2[m]", source: stated}
+observe:
+  dpath: "path_difference(r2, r1)"
+  dphi: "wrap(phase_difference(r1, r2))"
+  I_coh: "intensity(r1, r2)"
+  La: "sound_level(intensity(r1, r2))"
+  pb: "resultant_amplitude(r1, r2)"
+  pb2: "pressure_amplitude(r1, r2)"
+  Lc: "sound_level(intensity(n1, n2))"

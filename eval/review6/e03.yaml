@@ -1,0 +1,4 @@
+id: e03
+media: {w: {type: fluid, bulk_modulus: -2e9 Pa, density: -1000 kg/m^3}}
+waves: {s: {harmonic: {on: w, f: 1000 Hz, A: 1e-6 m, dir: +x, phase: 0}}}
+observe: {v: "speed(w)", p: "pressure_amplitude(s)"}

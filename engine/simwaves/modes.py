@@ -10,7 +10,7 @@ import sympy as sp
 from .errors import SceneError
 from .scene import (DIMLESS, LENGTH, OBS_DIMS, OBSERVABLES, TR8, Resonator, _obj, one_sinusoid)
 
-NODE_ENDS = ("fixed", "closed")
+NODE_ENDS = ("fixed", "closed", "clamped")
 
 
 def _geometry(r):

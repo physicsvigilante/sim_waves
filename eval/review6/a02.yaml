@@ -1,0 +1,5 @@
+id: a02
+media: {steel: {type: rod, Y: 2e11 Pa, density: 8000 kg/m^3}}
+waves: {s: {harmonic: {on: steel, f: 1000 Hz, pressure_amplitude: 1e5 Pa, dir: +x, phase: 0}}}
+observe: {A: "displacement_amplitude(s)", I: "intensity(s)", v: "speed(s)", strain: "max_over(t, slope(s, x=0[m], t=t))*2e11[Pa]"}
+expect: {A: {value: 3.979e-7, tol: 0.001}, I: {value: 125, tol: 0.001}}
