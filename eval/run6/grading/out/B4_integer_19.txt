@@ -1,0 +1,10 @@
+FINAL: B4_integer_19.v1.yaml
+solved a = 3/5  (= 0.600000)
+solved b = 3/10  (= 0.300000)
+solved c = 1/5  (= 0.200000)
+a_cm = 3/5  (= 0.600000)  <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>
+b_cm = 3/10  (= 0.300000)  <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>
+c_cm = 1/5  (= 0.200000)  <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>
+first_bridge_from_end1 = 3/5  (= 0.600000)  <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>
+second_bridge_from_end2 = 1/5  (= 0.200000)  <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>
+EXIT: 0

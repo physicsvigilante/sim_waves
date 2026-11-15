@@ -1,0 +1,9 @@
+answer: [B]
+final_scene: B4_comprehension_11.v1.yaml
+engine_fit: partial
+hand_steps: ["Reading 'pressure antinode at x=0' as 'pressure swings P0 -/+ dP0 there' (the engine lists positions, not the pressure values P0 +/- dP0)"]
+coverage: partial
+not_represented: "Absolute pressure P0 and dP0 are not quantities in the scene; only the node/antinode positions."
+missing_in_source: none
+reasoning: "Engine: second overtone = harmonic 5, L=15/16 m; pressure antinodes at (0, 3/8, 3/4) m, so the closed end (x=0) is a pressure antinode: full swing P0+dP0 to P0-dP0."
+friction: "No observable for the pressure at a point as P0 +/- amplitude; had to map 'antinode' to max/min pressure by hand."

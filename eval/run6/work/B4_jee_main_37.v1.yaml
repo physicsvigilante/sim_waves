@@ -1,0 +1,10 @@
+id: B4/jee_main/37
+assume:
+  - "Clamped at the middle, both ends free: ends [free, free]; check the middle is a node of the fundamental."
+media:
+  granite: {type: rod, Y: 9.27e10 Pa, density: 2.7e3 kg/m^3}
+resonators:
+  r: {type: rod, on: granite, length: 60 cm, ends: [free, free]}
+observe:
+  f1: "frequency(r, harmonic=1)"
+  nodes1: "nodes(r, harmonic=1)"

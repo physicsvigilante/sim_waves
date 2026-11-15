@@ -1,0 +1,10 @@
+answer: '8 cm'
+final_scene: B4_integer_24.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: end corrections neglected (assumed)
+missing_in_source: none
+reasoning: Third overtone of closed pipe = harmonic 7 (engine); unison with open harmonic 4 solved
+  Lo = 2/25 m.
+friction: none

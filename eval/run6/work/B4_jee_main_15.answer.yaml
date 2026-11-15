@@ -1,0 +1,9 @@
+answer: D (2.1 m)
+final_scene: B4_jee_main_15.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "nothing"
+missing_in_source: "Ends of the wire (fixed-fixed) are not stated"
+reasoning: "Engine solved n=6, L=15/7 m=2.14 m with v=300 m/s."
+friction: "none"

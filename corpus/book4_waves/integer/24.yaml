@@ -1,0 +1,18 @@
+id: B4/integer/24
+number: 24
+source: book p.107 (answer key p.123)
+format: numerical
+statement: Third overtone of a closed organ pipe of length 7 cm is in unison with fourth harmonic of an
+  open organ pipe. Find the length of the open organ pipe, in cm.
+figure: null
+options: null
+answer: '8'
+answer_value: 8
+units: cm
+verified: 'Closed third overtone = 7th harmonic: 7 v/(4 x 7) = v/4. Open fourth harmonic: 4 v/(2 L) =
+  2v/L. v/4 = 2v/L -> L = 8 cm. Matches key.'
+kinds:
+- ratio
+physics:
+- organ_pipe
+notes: Consistent.

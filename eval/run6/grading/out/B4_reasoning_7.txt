@@ -1,0 +1,6 @@
+FINAL: B4_reasoning_7.v1.yaml
+ratio = sqrt(35)/5  (= 1.18322)  <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>
+ratio_sq_is_gamma = True  <proved; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>
+v_adiabatic: NOT AVAILABLE (SceneError: depends on the arbitrary value(s) ['P', 'rho']: the problem does not fix this result)
+v_isothermal: NOT AVAILABLE (SceneError: depends on the arbitrary value(s) ['P', 'rho']: the problem does not fix this result)
+EXIT: 1

@@ -1,0 +1,9 @@
+answer: A (6.25 N)
+final_scene: B4_jee_main_54.v3.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "nothing"
+missing_in_source: "none"
+reasoning: "Engine solved T = 6.25 N from the stated wave (speed 12.5 m/s) on mu=0.04 kg/m."
+friction: "tension: free cannot be observed (tension(rope) is undetermined) so tension had to be an unknown solved via the cross-check."

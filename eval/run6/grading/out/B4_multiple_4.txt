@@ -1,0 +1,10 @@
+FINAL: B4_multiple_4.v1.yaml
+A_plus = True  <proved>
+B_plus = True  <proved>
+C_plus = False  <counterexample>
+D_plus = False  <counterexample>
+A_minus = True  <proved>
+B_minus = False  <counterexample>
+C_minus = False  <counterexample>
+D_minus = True  <proved>
+EXIT: 0

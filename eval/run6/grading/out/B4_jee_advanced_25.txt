@@ -1,0 +1,7 @@
+FINAL: B4_jee_advanced_25.v1.yaml
+ratio = sqrt(4*rho - 2)/(2*sqrt(rho))
+A = True  <proved>
+B = False  <counterexample>
+C = False  <counterexample>
+D = False  <counterexample>
+EXIT: 0

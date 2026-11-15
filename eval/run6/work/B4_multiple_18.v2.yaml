@@ -1,0 +1,17 @@
+id: B4/multiple/18
+assume:
+  - "The speed of sound is NOT stated. v1 (arbitrary v) showed the result depends on it. Here v = 330 m/s is ASSUMED (the usual textbook value; it is the value that makes the options' round numbers work)."
+  - "Horn and driver at the same place at rest; wall at an arbitrary distance D moving toward the car at 3.3 m/s along the normal."
+arbitrary: {D: {value: 500 m, above: 100 m}}
+media: {air: {type: gas, v: 330 m/s}}
+sources:
+  horn: {on: air, at: [0 m, 0 m], f: 1000 Hz, A: 1, phase: 0, spreading: none}
+reflectors:
+  wall: {point: [D, 0 m], normal: [-1, 0], boundary: rigid, velocity: [-3.3 m/s, 0 m/s]}
+points: {O: [0 m, 0 m]}
+rays: {echo: {from: horn, to: O, via: wall}}
+observe:
+  f: "frequency(echo, emitted=0[s])"
+  pct: "(frequency(echo, emitted=0[s]) - 1000[Hz])/1000[Hz]*100"
+  A: "frequency(echo, emitted=0[s]) == 1020[Hz]"
+  B: "frequency(echo, emitted=0[s]) == 980[Hz]"

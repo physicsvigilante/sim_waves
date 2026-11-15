@@ -1,0 +1,14 @@
+id: B4/jee_advanced/21
+assume:
+  - "y = A sin(kx - wt) written as A sin(wt - kx + pi): dir +x, phase pi."
+  - "Particle velocity observed at x = 0; any x gives the same maximum."
+symbols: {A: positive, omega: positive, k: positive}
+media:
+  rope: {type: string, tension: free}
+waves:
+  w: {harmonic: {on: rope, A: A, omega: omega, k: k, dir: +x, phase: pi}}
+observe:
+  vmax: "max_over(t, vy(w, x=0[m], t=t))"
+  a: "max_over(t, vy(w, x=0[m], t=t)) == A*omega"
+  phase_speed: "velocity(w)"
+  b_is_vmax: "max_over(t, vy(w, x=0[m], t=t)) == omega/k"

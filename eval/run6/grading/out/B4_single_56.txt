@@ -1,0 +1,7 @@
+FINAL: B4_single_56.v1.yaml
+v_h = sqrt(g)*sqrt(s)
+v_at_zero = 0
+slope_positive = True  <decided>
+concave_down = True  <decided>
+not_linear_ratio_2s_over_s = sqrt(2)  (= 1.41421)
+EXIT: 0

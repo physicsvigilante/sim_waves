@@ -1,0 +1,17 @@
+id: B4/comprehension/12
+format: single_correct
+statement: |-
+  Passage (Comprehension 4): A progressive wave pulse is generated on a string is travelling in -ve X direction as shown in figure. Based on above information, answer the following questions.
+
+  Q12. Kinetic energy is maximum for the particle
+figure: 'A pulse on a horizontal string, shape of one full sine-like cycle with a crest then a trough,
+  axes x (right) and y (up) shown at right. Labelled points left to right: A on the baseline at the left
+  start of the pulse; B on the rising front just below the crest; C at the crest; D on the falling slope
+  just after the crest; E on the baseline where the shape crosses it going down; F on the falling slope
+  just below the baseline; G at the trough; H on the rising slope after the trough; I on the baseline
+  at the right end of the pulse. The wave travels in the -x direction.'
+options:
+  A: D
+  B: E
+  C: F
+  D: G

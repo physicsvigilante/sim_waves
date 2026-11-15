@@ -1,0 +1,6 @@
+FINAL: B4_jee_main_21.v2.yaml
+solved u1 = 12
+solved u2 = 18
+u1 = 12  <exact; same at 5 values of each arbitrary value (ranged ones spread across their ranges, others x0.01 to x89; sampled)>
+u2 = 18  <exact; same at 5 values of each arbitrary value (ranged ones spread across their ranges, others x0.01 to x89; sampled)>
+EXIT: 0

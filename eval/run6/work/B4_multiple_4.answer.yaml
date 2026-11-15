@@ -1,0 +1,9 @@
+answer: [a, b]
+final_scene: B4_multiple_4.v1.yaml
+engine_fit: partial
+hand_steps: ['conclusion that the statement holds for any progressive wave is by sampling +x and -x harmonic waves only']
+coverage: partial
+not_represented: "General progressive waves F(wt - kx) (only harmonic family tested); D is true instead of B for a wave in -x direction"
+missing_in_source: "Direction of propagation"
+reasoning: "equivalent(): A true for both directions, B true for +x, D true for -x, C false for both. Assuming +x (as written with minus sign in B) gives A, B."
+friction: "The format has no arbitrary-profile wave with F(omega t - k x) in observables; harmonic wave used as a stand-in."

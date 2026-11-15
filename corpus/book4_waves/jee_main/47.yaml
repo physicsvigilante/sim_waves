@@ -1,0 +1,25 @@
+id: B4/jee_main/47
+number: 47
+source: book p.111 (answer key p.123)
+format: single_correct
+statement: '[Online 2016] A toy car blowing its horn is moving with a steady speed of 5 m/s away from
+  a wall. An observer, towards whom the toy car is moving, is able to hear 5 beats per second. If the
+  velocity of sound in air is 340 m/s, the frequency of the horn of the toy car is close to'
+figure: null
+options:
+  A: 680 Hz
+  B: 510 Hz
+  C: 340 Hz
+  D: 170 Hz
+answer: D
+answer_value: 170 Hz
+units: Hz
+verified: Direct sound f v/(v-5), reflected f v/(v+5); beat = f v 10/(v^2-25) = 5 -> f = 5 x (340^2-25)/(3400)
+  = 170 Hz. Matches key.
+kinds:
+- numeric
+physics:
+- doppler
+- beats
+- reflection
+notes: Observer is in front of the car, wall behind it.

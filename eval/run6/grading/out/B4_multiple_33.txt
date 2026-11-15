@@ -1,0 +1,8 @@
+FINAL: B4_multiple_33.v1.yaml
+h1 = 80
+h3 = 240
+h5 = 400
+h2: NOT AVAILABLE (SceneError: resonator 'p' has one closed and one open end: only odd harmonics exist (harmonic 2 does not))
+h4: NOT AVAILABLE (SceneError: resonator 'p' has one closed and one open end: only odd harmonics exist (harmonic 4 does not))
+A_80: NOT AVAILABLE (SceneError: unknown name 'fs')
+EXIT: 1

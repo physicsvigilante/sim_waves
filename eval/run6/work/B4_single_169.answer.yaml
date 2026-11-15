@@ -1,0 +1,9 @@
+answer: B (decrease)
+final_scene: B4_single_169.v1.yaml
+engine_fit: partial
+hand_steps: ['claim true for every dl > 0 rests on two sampled values dl=L/10 (3.27 Hz) and dl=3L (2 Hz), both < 4 Hz; the engine could not decide the for-all comparison (abs)']
+coverage: full
+not_represented: "nothing"
+missing_in_source: "Amount of lengthening (any dl > 0); speed of sound"
+reasoning: "Engine: beats before 4 Hz; after lengthening 3.27 Hz (dl=L/10) and 2 Hz (dl=3L): fewer beats."
+friction: "for-all-dl comparison undecidable by the engine because of the absolute value in the beat frequency"

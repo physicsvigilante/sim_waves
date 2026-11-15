@@ -1,0 +1,9 @@
+answer: [B, C]
+final_scene: B4_multiple_9.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "Pitch read as the fundamental frequency; each action as a factor-2 change."
+missing_in_source: "none"
+reasoning: "Engine proves tightening (tension x2) and shortening (length /2) raise the fundamental; loosening and lengthening lower it."
+friction: "none"

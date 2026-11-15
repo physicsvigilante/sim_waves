@@ -1,0 +1,25 @@
+id: B4/multiple/18
+number: 18
+source: book p.96 (answer key p.122)
+format: multiple_correct
+statement: A driver in a stationary car blows a horn which produces monochromatic sound waves of frequency
+  1000 Hz normally towards a reflecting wall. The wall approaches the car with a speed of 3.3 m/s.
+figure: null
+options:
+  A: The frequency of sound reflected from wall and heard by the driver is 1020 Hz.
+  B: The frequency of sound reflected from wall and heard by the driver is 980 Hz.
+  C: The percentage increase in frequency of sound after reflection from wall is 2%.
+  D: The percentage decrease in frequency of sound after reflection from wall is 2%.
+answer: A, C
+answer_value:
+- A
+- C
+units: null
+verified: 'With v = 330 m/s (not stated in the problem): wall as observer 1000 x (330+3.3)/330 = 1010;
+  wall as source 1010 x 330/(330-3.3) = 1020.2 Hz, +2%. Matches key (A, C).'
+kinds:
+- numeric
+physics:
+- doppler
+- reflection
+notes: Speed of sound is not given; 330 m/s assumed (consistent with the 3.3 = 1% of v).

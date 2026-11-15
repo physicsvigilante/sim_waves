@@ -1,0 +1,10 @@
+id: B4/matrix/2
+assume:
+  - "y = 0.02 sin 2pi(10 t - 5 x) in SI, taken literally as the wave field (y in m)."
+waves:
+  w: {given: "0.02*sin(2*pi*(10*t - 5*x))", units: {x: m, t: s, y: m}}
+observe:
+  A_speed: "speed(w)"
+  B_omega: "omega(w)"
+  C_wavelength: "wavelength(w)"
+  D_max_particle_speed: "max_over(t, vy(w, x=0[m], t=t))"

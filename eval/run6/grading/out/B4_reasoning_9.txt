@@ -1,0 +1,8 @@
+FINAL: B4_reasoning_9.v2.yaml
+f_still = 500
+f_toward = 8750/17  (= 514.706)
+freq_changes = True  <decided>
+lambda_still = 17/25  (= 0.680000)
+lambda_toward = 17/25  (= 0.680000)
+wavelength_unchanged = True  <decided>
+EXIT: 0

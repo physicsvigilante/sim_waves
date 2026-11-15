@@ -1,0 +1,12 @@
+id: B4/comprehension/11
+format: single_correct
+statement: |-
+  Passage (Comprehension 3): The air column in a pipe closed at one end is made to vibrate in its second overtone by tuning fork of frequency 440 Hz. The speed of sound in air is 330 m/s. End corrections may be neglected. Let P0 denote the mean pressure at any point in the pipe and ΔP0 the maximum amplitude of pressure variation. Based on the above facts, answer the following questions.
+
+  Q11. If P'max and P'min be the maximum and the minimum pressures at the closed end of the pipe, then
+figure: null
+options:
+  A: P'max = P0 + ΔP0; P'min = P0
+  B: P'max = P0 + ΔP0; P'min = P0 - ΔP0
+  C: P'max = P0 - ΔP0; Pmin = P0 - 2ΔP0
+  D: P'max = P0; P'min = P0 - ΔP0

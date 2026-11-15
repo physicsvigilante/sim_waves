@@ -1,0 +1,10 @@
+answer: [A]
+final_scene: B4_single_73.v1.yaml
+engine_fit: none
+hand_steps: ['intensity answer from own knowledge: frequency rise and shorter distance raise intensity']
+coverage: unsupported
+not_represented: intensity of a moving source
+missing_in_source: none
+reasoning: Engine confirms heard frequency is higher; intensity on a moving ray is refused in
+  v0.
+friction: Intensity (and phases/paths) on moving rays refused.

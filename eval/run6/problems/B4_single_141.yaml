@@ -1,0 +1,11 @@
+id: B4/single/141
+format: single_correct
+statement: A source and a listener are both moving towards each other with speed v/10, where v is the
+  speed of sound. If the frequency of the note emitted by the source is f, the frequency heard by the
+  listener would be nearly
+figure: null
+options:
+  A: 1.11 f
+  B: 1.22 f
+  C: 1.27 f
+  D: f

@@ -1,0 +1,9 @@
+answer: [C]
+final_scene: B4_reasoning_9.v2.yaml
+engine_fit: partial
+hand_steps: ["Statement-1 (intensity unchanged by listener motion) is not checkable: intensities on moving rays are refused in v0; judged from knowledge that intensity is a property of the wave field"]
+coverage: partial
+not_represented: "Intensity / energy received by the moving listener."
+missing_in_source: "Meaning of 'intensity' (field intensity vs energy absorbed by the listener); statement-1 could be read as false."
+reasoning: "Engine: moving listener hears 514.7 Hz vs 500 Hz (frequency changes) but wavelength in air stays 0.68 m, so Statement-2 (change in wavelength) is false; Statement-1 true by field definition."
+friction: "Intensity of a moving ray is refused; v1 with a ranged arbitrary speed left the comparison NOT AVAILABLE, v2 fixed the speed as an assumption."

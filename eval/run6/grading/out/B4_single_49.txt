@@ -1,0 +1,7 @@
+FINAL: B4_single_49.v1.yaml
+vpmax = A0*om
+vwave = lam*om/(2*pi)
+ratio = 2*pi*A0/lam
+A_cond_ratio = True  <decided>
+less_iff_A_below_lam_over_2pi: NOT AVAILABLE (SceneError: comparison not allowed here: '(max_over(t, vy(w, x=0[m], t=t)) < speed(w)) == (A0 < lam/(2*pi))')
+EXIT: 1

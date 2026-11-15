@@ -1,0 +1,17 @@
+id: B4/jee_advanced/55
+assume:
+  - "Whistle components at f1 and f2 are two coherent-free tones; the passengers sit in train A with the whistle: same motion, same place."
+  - "Still air; the end components 800 and 1120 Hz are enough to see the shift of the whole band edge."
+media:
+  air: {type: gas, v: 340 m/s}
+sources:
+  lo: {on: air, at: [0 m, 0 m], velocity: [20 m/s, 0 m/s], f: 800 Hz, A: 1, phase: 0, spreading: none}
+  hi: {on: air, at: [0 m, 0 m], velocity: [20 m/s, 0 m/s], f: 1120 Hz, A: 1, phase: 0, spreading: none}
+points:
+  pass: {at: [0 m, 0 m], velocity: [20 m/s, 0 m/s]}
+rays:
+  rlo: {from: lo, to: pass}
+  rhi: {from: hi, to: pass}
+observe:
+  flo: "frequency(rlo, t=1[s])"
+  fhi: "frequency(rhi, t=1[s])"

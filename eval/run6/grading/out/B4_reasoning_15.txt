@@ -1,0 +1,7 @@
+FINAL: B4_reasoning_15.v2.yaml
+p_inc = 2*pi**2*A**2*sqrt(T)*f**2*sqrt(mu)
+p_ref = 2*pi**2*A**2*sqrt(T)*f**2*sqrt(mu)
+e_loop_t0 = 2*pi**2*A**2*sqrt(T)*f*sqrt(mu)
+e_loop_t1 = 2*pi**2*A**2*sqrt(T)*f*sqrt(mu)
+conserved = True  <proved>
+EXIT: 0

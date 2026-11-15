@@ -1,0 +1,21 @@
+id: B4/jee_advanced/21
+number: 21
+source: book p.114 (answer key p.123)
+format: single_correct
+statement: '[IIT-JEE 1997] A travelling wave in a stretched string is described by the equation, y = A
+  sin(kx - ωt). The maximum particle velocity is'
+figure: null
+options:
+  A: Aω
+  B: ω/k
+  C: dω/dk
+  D: x/ω
+answer: A
+answer_value: Aω
+units: null
+verified: v_y = dy/dt = -A w cos(kx - wt), maximum A w. Matches key.
+kinds:
+- symbolic
+physics:
+- particle_velocity
+notes: Consistent.

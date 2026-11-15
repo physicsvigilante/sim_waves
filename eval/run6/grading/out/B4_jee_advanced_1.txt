@@ -1,0 +1,9 @@
+FINAL: B4_jee_advanced_1.v1.yaml
+solved L = 2433/16000  (= 0.152063)
+L = 2433/16000  (= 0.152063)
+L_cm = 2433/160  (= 15.2062)
+A = False  <decided>
+B = False  <decided>
+C = False  <decided>
+D = False  <decided>
+EXIT: 0

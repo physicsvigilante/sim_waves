@@ -1,0 +1,14 @@
+id: B4/jee_main/5
+assume:
+  - "Closed (water surface) - open (top) pipe; air column length = tube height - water height. The tube height is not stated, so v2 (unknown height + integer harmonic) was an infinite family. Here the column length is a free symbol Lc and each option frequency is tested for resonances of the column."
+  - "End correction neglected (not stated): 0 m."
+  - "The two resonances are at water heights 17.0 and 24.5 cm, i.e. column lengths Lc and Lc - 7.5 cm; the 7.5 cm spacing is read from the list by hand."
+symbols: {Lc: positive}
+media: {air: {type: gas, v: 330 m/s}}
+resonators:
+  p: {type: pipe, on: air, length: Lc, ends: [closed, open], end_correction: 0 m}
+observe:
+  A_1100: "resonances(p, f=1100[Hz], vary=Lc, lo=1[cm], hi=60[cm])"
+  B_3300: "resonances(p, f=3300[Hz], vary=Lc, lo=1[cm], hi=60[cm])"
+  C_2200: "resonances(p, f=2200[Hz], vary=Lc, lo=1[cm], hi=60[cm])"
+  D_550: "resonances(p, f=550[Hz], vary=Lc, lo=1[cm], hi=60[cm])"

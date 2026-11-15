@@ -1,0 +1,5 @@
+FINAL: B4_single_73.v1.yaml
+fshift_up = True  <proved for every allowed arbitrary value>
+I: NOT AVAILABLE (SceneError: ray 'r': something on it moves (or the air moves), so it has no fixed path; path lengths, phases and intensities are not defined in v0. Ask frequency(ray, t=...), emitted_at(...) or arrives_at(...))
+f: NOT AVAILABLE (SceneError: depends on the arbitrary value(s) ['u', 'D']: the problem does not fix this result)
+EXIT: 1

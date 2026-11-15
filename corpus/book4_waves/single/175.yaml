@@ -1,0 +1,22 @@
+id: B4/single/175
+number: 175
+source: book p.94 (answer key p.122)
+format: single_correct
+statement: A boat at anchor is rocked by waves of velocity 25 m/s, having crests 100 m apart. They reach
+  the boat once every
+figure: null
+options:
+  A: 4.0 s
+  B: 8.0 s
+  C: 2.0 s
+  D: 0.25 s
+answer: A
+answer_value: 4.0 s
+units: s
+verified: T = lambda/v = 100/25 = 4.0 s. Matches key.
+kinds:
+- numeric
+physics:
+- wave_speed
+- period
+notes: Consistent.

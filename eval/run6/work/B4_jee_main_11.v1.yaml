@@ -1,0 +1,23 @@
+id: B4/jee_main/11
+assume:
+  - "Observer at rest at the origin; fork 1 approaches along the line, fork 2 recedes along the same line (opposite sides)."
+  - "Fork distances at t=0 are not stated; arbitrary. Beats evaluated at a fixed reception time."
+arbitrary: {D: {value: 200 m, above: 100 m}}
+unknowns: {u: positive}
+media: {air: {type: gas, v: 350 m/s}}
+sources:
+  F1: {on: air, at: ["-D", 0 m], velocity: ["u", 0 m/s], f: 1400 Hz, A: 1, phase: 0, spreading: none}
+  F2: {on: air, at: ["-D", 0 m], velocity: ["-u", 0 m/s], f: 1400 Hz, A: 1, phase: 0, spreading: none}
+points: {O: [0 m, 0 m]}
+rays:
+  r1: {from: F1, to: O}
+  r2: {from: F2, to: O}
+given:
+  - {fact: "beat_frequency(frequency(r1, emitted=0[s]), frequency(r2, emitted=0[s])) == 2[Hz]", source: stated}
+  - {fact: "u < 350[m/s]", source: assumption}
+observe:
+  u: "u"
+  A: "u == (1/8)[m/s]"
+  B: "u == (1/2)[m/s]"
+  C: "u == 1[m/s]"
+  D: "u == (1/4)[m/s]"

@@ -1,0 +1,13 @@
+id: B4/single/64
+assume:
+  - "Air column length h_air is the variable; water level lowers it from 120 cm. Closed (water) - open (mouth), end correction neglected (not stated)."
+symbols: {La: positive}
+media:
+  air: {type: gas, v: 340 m/s}
+resonators:
+  col: {type: pipe, on: air, length: La, ends: [closed, open], end_correction: 0 m}
+  start: {type: pipe, on: air, length: 120 cm, ends: [open, open], end_correction: 0 m}
+observe:
+  cols: "resonances(col, f=340[Hz], vary=La, lo=0.001[cm], hi=120[cm])"
+  longest: "max(resonances(col, f=340[Hz], vary=La, lo=0.001[cm], hi=120[cm]))"
+  water: "120[cm] - max(resonances(col, f=340[Hz], vary=La, lo=0.001[cm], hi=120[cm]))"

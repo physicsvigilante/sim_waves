@@ -1,0 +1,21 @@
+id: B4/jee_main/54
+number: 54
+source: book p.112 (answer key p.123)
+format: single_correct
+statement: '[2010] The equation of a wave on a string of linear mass density 0.04 kg/m is given by y =
+  0.02 (m) sin[2π (t/0.04 (s) - x/0.50 (m))]. The tension in the string is'
+figure: null
+options:
+  A: 6.25 N
+  B: 4.0 N
+  C: 12.5 N
+  D: 0.5 N
+answer: A
+answer_value: 6.25 N
+units: N
+verified: v = lambda/T = 0.50/0.04 = 12.5 m/s; T = mu v^2 = 0.04 x 156.25 = 6.25 N. Matches key.
+kinds:
+- numeric
+physics:
+- string_wave_speed
+notes: Consistent.

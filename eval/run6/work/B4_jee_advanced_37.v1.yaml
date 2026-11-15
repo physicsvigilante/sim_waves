@@ -1,0 +1,28 @@
+id: B4/jee_advanced/37
+assume:
+  - "Road along x. Source vehicle at x=-100 m moving +x at u, observer vehicle at x=+100 m moving -x at u (approaching each other); u is relative to the ground. Distances arbitrary, only the emitted=0 frequency compared."
+  - "Case 'wind blows from source to observer' = wind +x (medium airSO). Case 'observer to source' = wind -x (medium airOS)."
+  - "u, w, V not given numerically: arbitrary with ranges; keep every speed subsonic (u + w < V by the ranges chosen: u,w < 100 m/s, V > 250 m/s)."
+  - "Source frequency f1 arbitrary 500 Hz."
+arbitrary:
+  V: {value: 340 m/s, above: 250 m/s, below: 400 m/s}
+  u: {value: 20 m/s, below: 100 m/s}
+  w: {value: 10 m/s, below: 100 m/s}
+  f1: 500 Hz
+media:
+  airSO: {type: gas, v: V, wind: [w, 0 m/s]}
+  airOS: {type: gas, v: V, wind: ["-w", 0 m/s]}
+sources:
+  S_SO: {on: airSO, at: [-100 m, 0 m], velocity: [u, 0 m/s], f: f1, A: 1, phase: 0, spreading: none}
+  S_OS: {on: airOS, at: [-100 m, 0 m], velocity: [u, 0 m/s], f: f1, A: 1, phase: 0, spreading: none}
+points:
+  O_SO: {at: [100 m, 0 m], velocity: ["-u", 0 m/s]}
+  O_OS: {at: [100 m, 0 m], velocity: ["-u", 0 m/s]}
+rays:
+  heard_SO: {from: S_SO, to: O_SO}
+  heard_OS: {from: S_OS, to: O_OS}
+observe:
+  B_wind_src_to_obs_f2_gt_f1: "frequency(heard_SO, emitted=0[s]) > f1"
+  D_wind_src_to_obs_f2_lt_f1: "frequency(heard_SO, emitted=0[s]) < f1"
+  A_wind_obs_to_src_f2_gt_f1: "frequency(heard_OS, emitted=0[s]) > f1"
+  C_wind_obs_to_src_f2_lt_f1: "frequency(heard_OS, emitted=0[s]) < f1"

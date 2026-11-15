@@ -1,0 +1,38 @@
+id: B4/matrix/2
+number: 2
+source: book p.104 (answer key p.123)
+format: matrix_match
+statement: The equation of a travelling wave is given by (all quantities are in SI units) y = (0.02) sin
+  2π(10t - 5x). Match the quantities in COLUMN-I with the SI values in COLUMN-II.
+figure: null
+options:
+  column_i:
+    A: Speed of wave
+    B: Angular frequency of wave
+    C: Wavelength of wave
+    D: Maximum particle speed
+  column_ii:
+    p: '10'
+    q: 0.4π
+    r: '2'
+    s: '0.2'
+answer:
+  A:
+  - r
+  B:
+  - p
+  C:
+  - q
+  D:
+  - s
+answer_value: null
+units: null
+verified: 'DISPUTED. y = 0.02 sin(20 pi t - 10 pi x): v = 2 m/s (r); frequency = 10 Hz (p, but ''angular
+  frequency'' would be 20 pi = 62.8 rad/s); wavelength = 0.2 m (s); maximum particle speed = 0.02 x 20
+  pi = 0.4 pi m/s (q). Key gives C -> q and D -> s, which looks swapped.'
+kinds:
+- classification
+- numeric
+physics:
+- wave_parameters
+notes: 'Key as printed: A r, B p, C q, D s.'

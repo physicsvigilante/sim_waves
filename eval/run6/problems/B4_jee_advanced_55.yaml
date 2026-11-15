@@ -1,0 +1,16 @@
+id: B4/jee_advanced/55
+format: single_correct
+statement: |-
+  Passage (Comprehension 1): Two trains A and B are moving with speeds 20 m/s and 30 m/s respectively in the same direction on the same straight track, with B ahead of A. The engines are at the front ends. The engine of train A blows a long whistle. Assume that the sound of the whistle is composed of components varying in frequency from f1 = 800 Hz to f2 = 1120 Hz, as shown in the figure. The spread in the frequency (highest frequency - lowest frequency) is thus 320 Hz. The speed of sound in still air is 340 m/s. Based on the above facts, answer the following questions.
+
+  Q2. [IIT-JEE 2007] The distribution of the sound intensity of the whistle as observed by the passengers in train A is best represented by
+figure: 'Passage figure: Intensity versus Frequency, a rectangular block of constant intensity between
+  f1 and f2. Option graphs (each Intensity vs Frequency with dashed marks at f1 and f2): (A) block spans
+  exactly from f1 to f2. (B) block shifted to the left, starting slightly left of f1 and ending slightly
+  left of f2, same width. (C) block shifted to the right, starting slightly right of f1 and ending slightly
+  right of f2, same width. (D) block wider than f1 to f2, starting left of f1 and ending right of f2.'
+options:
+  A: 'graph (A): block from f1 to f2'
+  B: 'graph (B): block shifted left of f1 to f2'
+  C: 'graph (C): block shifted right of f1 to f2'
+  D: 'graph (D): block wider, from left of f1 to right of f2'

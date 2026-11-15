@@ -1,0 +1,18 @@
+id: B4/integer/7
+number: 7
+source: book p.106 (answer key p.123)
+format: numerical
+statement: An astronaut approaching moon is sending radio signal of 5 x 10^9 Hz and finds out that the
+  frequency shift of the echo received is 10^3 Hz. Calculate his speed of approach in m/s.
+figure: null
+options: null
+answer: '30'
+answer_value: 30
+units: m/s
+verified: Echo shift df = 2 v f / c -> v = 1e3 x 3e8 / (2 x 5e9) = 30 m/s. Matches key.
+kinds:
+- numeric
+physics:
+- doppler
+- radar
+notes: c = 3e8 m/s not stated.

@@ -1,0 +1,9 @@
+id: B4/single/175
+assume:
+  - "'Crests 100 m apart' = wavelength; 'reach the boat once every' = period of the wave at the boat (boat at rest). Water surface wave taken as a harmonic wave; amplitude is irrelevant (arbitrary)."
+arbitrary: {A0: 1 m}
+waves:
+  w: {harmonic: {A: A0, v: 25 m/s, lambda: 100 m, dir: +x, phase: 0}}
+observe:
+  T: "period(w)"
+  f: "frequency(w)"

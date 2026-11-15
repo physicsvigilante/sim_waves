@@ -1,0 +1,20 @@
+id: B4/jee_advanced/25
+assume:
+  - "The wire has the same mass per unit length and length throughout; only the tension changes when the object is partly immersed. Wire mass and its own weight are neglected against the object's weight."
+  - "Tension in air = W = rho*V*rhow*g; with half the volume submerged the buoyancy is rhow*V*g/2 (Archimedes). The engine has no buoyancy observable, so tension values are entered as these hand-built expressions."
+  - "Specific gravity rho = density of object / density of water (rho > 1 for the object to hang and sink)."
+symbols: {rho: positive, V: positive, rw: positive, g: positive, mu: positive, L: positive}
+media:
+  w1: {type: string, mu: mu, tension: "rho*rw*V*g"}
+  w2: {type: string, mu: mu, tension: "rho*rw*V*g - rw*V*g/2"}
+resonators:
+  r1: {type: string, on: w1, length: L, ends: [fixed, fixed]}
+  r2: {type: string, on: w2, length: L, ends: [fixed, fixed]}
+given:
+  - {fact: "rho > 1", source: assumption}
+observe:
+  ratio: "frequency(r2, harmonic=1)/frequency(r1, harmonic=1)"
+  A: "equivalent(frequency(r2, harmonic=1)/frequency(r1, harmonic=1), sqrt((2*rho - 1)/(2*rho)))"
+  B: "equivalent(frequency(r2, harmonic=1)/frequency(r1, harmonic=1), sqrt(2*rho/(2*rho - 1)))"
+  C: "equivalent(frequency(r2, harmonic=1)/frequency(r1, harmonic=1), 2*rho/(2*rho - 1))"
+  D: "equivalent(frequency(r2, harmonic=1)/frequency(r1, harmonic=1), (2*rho - 1)/(2*rho))"

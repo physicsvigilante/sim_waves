@@ -1,0 +1,18 @@
+id: B4/jee_advanced/1
+assume:
+  - "Resonance column = pipe closed at the water surface and open at the top; the first resonance is the fundamental (harmonic 1)."
+  - "Water level reading = length of the air column, since the scale zero is at the top end."
+  - "End correction at the open end is the usual practical-physics convention 0.3*d = 0.6*r, with d = 4 cm (r = 2 cm). The problem does not state it; the option values (15.2 cm) only make sense with it."
+unknowns: {L: positive}
+media: {air: {type: gas, v: 336 m/s}}
+resonators:
+  p: {type: pipe, on: air, length: L, ends: [closed, open], end_correction: "0.6*2[cm]"}
+given:
+  - {fact: "frequency(p, harmonic=1) == 512[Hz]", source: stated}
+observe:
+  L: "L"
+  L_cm: "L/1[cm]"
+  A: "L == 14[cm]"
+  B: "L == 15.2[cm]"
+  C: "L == 16.4[cm]"
+  D: "L == 17.6[cm]"

@@ -1,0 +1,24 @@
+id: B4/jee_main/49
+number: 49
+source: book p.112 (answer key p.123)
+format: single_correct
+statement: '[Online 2015] A bat moving at 10 m/s towards a wall sends a sound signal of 8000 Hz towards
+  it. On reflection it hears a sound of frequency f. The value of f in Hz is close to (speed of sound
+  = 320 m/s)'
+figure: null
+options:
+  A: '8258'
+  B: '8516'
+  C: '8000'
+  D: '8424'
+answer: B
+answer_value: '8516'
+units: Hz
+verified: Wall hears 8000 x 320/(320-10) = 8258.06; bat (moving toward wall) hears 8258.06 x (320+10)/320
+  = 8516 Hz. Matches key.
+kinds:
+- numeric
+physics:
+- doppler
+- reflection
+notes: Consistent.

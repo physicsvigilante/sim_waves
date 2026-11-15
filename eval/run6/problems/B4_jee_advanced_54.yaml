@@ -1,0 +1,13 @@
+id: B4/jee_advanced/54
+format: single_correct
+statement: |-
+  Passage (Comprehension 1): Two trains A and B are moving with speeds 20 m/s and 30 m/s respectively in the same direction on the same straight track, with B ahead of A. The engines are at the front ends. The engine of train A blows a long whistle. Assume that the sound of the whistle is composed of components varying in frequency from f1 = 800 Hz to f2 = 1120 Hz, as shown in the figure. The spread in the frequency (highest frequency - lowest frequency) is thus 320 Hz. The speed of sound in still air is 340 m/s. Based on the above facts, answer the following questions.
+
+  Q1. [IIT-JEE 2007] The speed of sound of the whistle is
+figure: 'Graph of Intensity (vertical axis) versus Frequency (horizontal axis): a rectangular block of
+  constant intensity between f1 = 800 Hz and f2 = 1120 Hz, zero outside.'
+options:
+  A: 340 m/s for passengers in A and 310 m/s for passengers in B
+  B: 360 m/s for passengers in A and 310 m/s for passengers in B
+  C: 310 m/s for passengers in A and 360 m/s for passengers in B
+  D: 340 m/s for passengers in both the trains

@@ -1,0 +1,9 @@
+answer: [A]
+final_scene: B4_reasoning_7.v1.yaml
+engine_fit: partial
+hand_steps: ["Statement-1 as a printed formula checked only through the gamma-dependence (ratio of speeds squared = gamma); Statement-2 (no heat exchange) judged from my own knowledge, and that it explains the formula"]
+coverage: partial
+not_represented: "The adiabatic (no heat exchange) argument itself; only gamma=7/5 vs gamma=1 media."
+missing_in_source: "none"
+reasoning: "Engine: with P and density fixed, (v_adiabatic/v_isothermal)^2 = gamma exactly, so the gamma factor of Laplace's formula is confirmed; the adiabatic reasoning is the accepted explanation."
+friction: "No way to represent heat exchange; the assume note in v1 wrongly mentions 300 K / 29 g/mol (scene uses P and density only)."

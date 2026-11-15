@@ -1,0 +1,9 @@
+answer: [A]
+final_scene: B4_jee_advanced_55.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: wide band represented only by its two edge components
+missing_in_source: none
+reasoning: 'Listener moves with source: edges stay 800 and 1120 Hz, so the graph is unchanged.'
+friction: Continuous band of frequencies cannot be expressed; two edge tones used.

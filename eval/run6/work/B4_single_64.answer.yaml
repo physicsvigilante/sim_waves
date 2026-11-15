@@ -1,0 +1,10 @@
+answer: [B]
+final_scene: B4_single_64.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: nothing
+missing_in_source: none
+reasoning: Resonant air columns 25 cm and 75 cm in 120 cm; longest 75 cm so water 120-75 = 45
+  cm.
+friction: none

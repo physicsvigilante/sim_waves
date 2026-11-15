@@ -1,0 +1,6 @@
+FINAL: B4_single_111.v1.yaml
+amp_over_A = sqrt(2)  (= 1.41421)
+omega_total_over_omega = 1
+amp_total = sqrt(2)*A
+omega_total = om
+EXIT: 0

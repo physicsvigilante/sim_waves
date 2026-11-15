@@ -1,0 +1,4 @@
+FINAL: B4_integer_23.v1.yaml
+f1 = 25*sqrt(10)  (= 79.0569)  <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>
+v = 50*sqrt(10)  (= 158.114)  <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>
+EXIT: 0

@@ -1,0 +1,14 @@
+id: B4/single/11
+format: single_correct
+statement: Two loudspeakers L1 and L2, driven by a common oscillator and amplifier, are arranged as shown.
+  The frequency of the oscillator is gradually increased from zero and the detector at D records a series
+  of maxima and minima. If the speed of sound is 330 m/s then the frequency at which the first maximum
+  is observed is
+figure: L1 at top left and L2 directly below it, separated by 9 m (vertical). Detector D lies to the right
+  of L1 on the same horizontal line, 40 m from L1 (dashed horizontal line L1-D). A dashed line joins L2
+  to D.
+options:
+  A: 165 Hz
+  B: 330 Hz
+  C: 495 Hz
+  D: 660 Hz

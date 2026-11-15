@@ -1,0 +1,22 @@
+id: B4/single/90
+number: 90
+source: book p.88 (answer key p.122)
+format: single_correct
+statement: Which of the following equations does not represent a progressive wave
+figure: null
+options:
+  A: y = A sin{ω(t - x/c)}
+  B: y = A sin{(2π/λ)(ct - x)}
+  C: y = A sin{2π(t/T + x/λ)}
+  D: y = A sin{2π(t/T - x/c)}
+answer: D
+answer_value: y = A sin{2π(t/T - x/c)}
+units: null
+verified: A, B, C are functions of (x -/+ vt) with consistent dimensions. In D, t/T is dimensionless but
+  x/c has units of time, so the argument is not a valid wave phase. Matches key.
+kinds:
+- conceptual
+- dimension
+physics:
+- wave_equation
+notes: Here c is the wave speed; the error is dimensional.

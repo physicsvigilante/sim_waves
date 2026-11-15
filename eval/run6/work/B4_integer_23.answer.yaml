@@ -1,0 +1,9 @@
+answer: 79 Hz
+final_scene: B4_integer_23.v1.yaml
+engine_fit: partial
+hand_steps: ["Tension = Y*strain*area (Hooke's law) written by me as the tension expression 2e11*0.001*A"]
+coverage: full
+not_represented: nothing
+missing_in_source: "Wire cross-section (arbitrary, cancels); that the wire is fixed at both ends and vibrates transversely in its fundamental."
+reasoning: "Engine: v = 50*sqrt(10) = 158.1 m/s, fundamental of the 1 m fixed-fixed wire = 25*sqrt(10) = 79.06 Hz, same at all area scalings."
+friction: "No strain-based tension in the format (tension from Young's modulus and stretch); had to write the Hooke relation inside the tension expression myself."

@@ -1,0 +1,21 @@
+id: B4/single/33
+assume:
+  - "Radar wave speed in air taken as 3e8 m/s (not stated)."
+  - "Plane flies along the normal toward the radar, acts as a moving reflecting wall; radar and receiver at the same place."
+  - "Plane starts at arbitrary distance D."
+arbitrary: {D: {value: 50 km, above: 10 km}}
+unknowns: {u: positive}
+media:
+  em: {type: gas, v: 3e8 m/s}
+sources:
+  radar: {on: em, at: [0 m, 0 m], f: 780e6 Hz, A: 1, phase: 0, spreading: none}
+points:
+  rx: [0 m, 0 m]
+reflectors:
+  plane: {point: [D, 0 m], normal: [-1, 0], boundary: rigid, velocity: [-u, 0 m/s]}
+rays:
+  echo: {from: radar, to: rx, via: plane}
+given:
+  - {fact: "frequency(echo, emitted=0[s]) - 780e6[Hz] == 2.6[kHz]", source: stated}
+observe:
+  u: "u"

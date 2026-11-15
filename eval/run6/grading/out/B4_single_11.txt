@@ -1,0 +1,7 @@
+FINAL: B4_single_11.v1.yaml
+dpath = 1
+maxima_f = (330, 660, 990, 1320)
+first_max = 330
+minima_f = (165, 495, 825, 1155, 1485)
+first_min = 165
+EXIT: 0

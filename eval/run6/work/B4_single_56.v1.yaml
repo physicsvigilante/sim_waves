@@ -1,0 +1,18 @@
+id: B4/single/56
+assume:
+  - "Rope hangs with nothing attached: load = 0 kg. h is the height above the lower end = coordinate s. Rope mass m and length L are not needed for the shape (mu, L symbolic)."
+  - "Rope's own weight gives the tension (engine derives T(s))."
+symbols: {mu: positive, L: positive, g: positive, s: positive}
+media:
+  rope:
+    type: string
+    mu: mu
+    length: L
+    coordinate: {origin: lower_end, direction: up, variable: s}
+    tension: {hanging: {load: 0 kg, g: g}}
+observe:
+  v_h: "speed(rope, at=s)"
+  v_at_zero: "limit(speed(rope, at=s), s, 0)"
+  slope_positive: "diff(speed(rope, at=s), s) > 0"
+  concave_down: "diff(speed(rope, at=s), s, 2) < 0"
+  not_linear_ratio_2s_over_s: "speed(rope, at=2*s)/speed(rope, at=s)"

@@ -1,0 +1,17 @@
+id: B4/single/102
+assume:
+  - "Same string, same tension; tension unknown, solved from the 512 Hz fact with the fundamental assumed (n=1; not stated)."
+  - "Then list all lengths (0.1 m..3 m) at which any mode of the string has 256 Hz, to show that overtone resonances also allow 2.0 m."
+arbitrary: {mu: 10 g/m}
+unknowns: {T: positive}
+symbols: {Ls: positive}
+media:
+  s: {type: string, mu: mu, tension: T}
+resonators:
+  r1: {type: string, on: s, length: 0.5 m, ends: [fixed, fixed]}
+  r2: {type: string, on: s, length: Ls, ends: [fixed, fixed]}
+given:
+  - {fact: "frequency(r1, harmonic=1) == 512[Hz]", source: assumption, note: "fundamental assumed"}
+observe:
+  lengths_256Hz: "resonances(r2, f=256[Hz], vary=Ls, lo=0.1[m], hi=3[m])"
+  how_many: "count(resonances(r2, f=256[Hz], vary=Ls, lo=0.1[m], hi=3[m]))"

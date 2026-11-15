@@ -1,0 +1,12 @@
+FINAL: B4_comprehension_16.v2.yaml
+t_meet = sqrt(mu)/(5*sqrt(T))
+net_y = 0
+net_peak = 0
+amp_p1 = 1/100  (= 0.0100000)
+amp_p2 = 1/100  (= 0.0100000)
+vy_p1 = -sqrt(2)*pi*sqrt(T)/(40*sqrt(mu))
+vy_p2 = -sqrt(2)*pi*sqrt(T)/(40*sqrt(mu))
+vy_net = -sqrt(2)*pi*sqrt(T)/(20*sqrt(mu))
+vy_net_nonzero = False  <decided>
+vy_p1_nonzero = False  <decided>
+EXIT: 0

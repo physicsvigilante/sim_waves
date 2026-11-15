@@ -1,0 +1,9 @@
+answer: [a, b, d]
+final_scene: B4_multiple_33.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "nothing"
+missing_in_source: "none"
+reasoning: "Engine: closed pipe odd harmonics 80, 240, 400 Hz; harmonic 4 (320 Hz) does not exist."
+friction: "My resonances(...) probe with an undeclared symbol failed (side probe, unnecessary)."

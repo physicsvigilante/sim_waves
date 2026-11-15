@@ -1,0 +1,20 @@
+id: B4/integer/23
+number: 23
+source: book p.107 (answer key p.123)
+format: numerical
+statement: A wire made of material of Young's modulus 20 x 10^10 N/m^2 is stretched by 0.1%. If its length
+  is one metre and density of the material of the wire is 8000 kg/m^3. Calculate the fundamental frequency
+  of wire, in Hz.
+figure: null
+options: null
+answer: '79'
+answer_value: 79
+units: Hz
+verified: T/A = Y x strain, mu = rho A, so v = sqrt(Y strain/rho) = sqrt(2e11 x 1e-3/8000) = 158.1 m/s;
+  f = v/2L = 79 Hz. Matches key.
+kinds:
+- numeric
+physics:
+- string_fundamental
+- elasticity
+notes: Consistent.

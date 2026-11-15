@@ -1,0 +1,6 @@
+FINAL: B4_multiple_18.v2.yaml
+f = 101000/99  (= 1020.20)  <exact; same at 5 values of each arbitrary value (ranged ones spread across their ranges, others x0.01 to x89; sampled)>
+pct = 200/99  (= 2.02020)  <exact; same at 5 values of each arbitrary value (ranged ones spread across their ranges, others x0.01 to x89; sampled)>
+A = False  <proved for every allowed arbitrary value>
+B = False  <proved for every allowed arbitrary value>
+EXIT: 0

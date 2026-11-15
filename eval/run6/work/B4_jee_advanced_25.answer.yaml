@@ -1,0 +1,9 @@
+answer: A
+final_scene: B4_jee_advanced_25.v1.yaml
+engine_fit: partial
+hand_steps: ['wire tension in air = rho*rw*V*g and with half submerged = rho*rw*V*g - rw*V*g/2 (weight and Archimedes buoyancy) typed by me as the tension expressions']
+coverage: partial
+not_represented: "Buoyancy / hanging object not represented; its effect is typed as tension values. Wire weight neglected"
+missing_in_source: "none"
+reasoning: "Engine ratio f2/f1 = sqrt(4rho-2)/(2 sqrt(rho)); equivalent() proved it equals sqrt((2rho-1)/(2rho)) (option A), counterexamples for B, C, D."
+friction: "No buoyancy / submerged-volume model: Archimedes force is hand-written into the tension."

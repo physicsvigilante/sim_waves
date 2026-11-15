@@ -1,0 +1,6 @@
+FINAL: B4_single_141.v1.yaml
+ratio = 11/9  (= 1.22222)  <exact; same at 5 values of each arbitrary value (ranged ones spread across their ranges, others x0.01 to x89; sampled)>
+A = False  <proved for every allowed arbitrary value>
+B = False  <proved for every allowed arbitrary value>
+C = False  <proved for every allowed arbitrary value>
+EXIT: 0

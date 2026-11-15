@@ -1,0 +1,25 @@
+id: B4/jee_advanced/1
+number: 1
+source: book p.112 (answer key p.123)
+format: single_correct
+statement: '[IIT-JEE 2012] A student is performing the experiment of resonance column. The diameter of
+  the column tube is 4 cm. The frequency of the tuning fork is 512 Hz. The air temperature is 38 C in
+  which the speed of sound is 336 m/s. The zero of the meter scale coincides with the top end of the resonance
+  column tube. When the first resonance occurs, the reading of the water level in the column is'
+figure: null
+options:
+  A: 14 cm
+  B: 15.2 cm
+  C: 16.4 cm
+  D: 17.6 cm
+answer: B
+answer_value: 15.2 cm
+units: cm
+verified: lambda = 336/512 = 65.6 cm; lambda/4 = 16.4 cm = L + 0.3 d with d = 4 cm -> L = 16.4 - 1.2 =
+  15.2 cm. Matches key.
+kinds:
+- numeric
+physics:
+- resonance_tube
+- end_correction
+notes: Uses end correction e = 0.3 d (not stated in the problem).

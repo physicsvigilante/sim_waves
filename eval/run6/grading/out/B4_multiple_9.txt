@@ -1,0 +1,6 @@
+FINAL: B4_multiple_9.v1.yaml
+A_loosen_raises = False  <proved for every allowed arbitrary value>
+B_tighten_raises = True  <proved for every allowed arbitrary value>
+C_shorten_raises = True  <proved for every allowed arbitrary value>
+D_lengthen_raises = False  <proved for every allowed arbitrary value>
+EXIT: 0

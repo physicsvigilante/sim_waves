@@ -1,0 +1,7 @@
+FINAL: B4_comprehension_11.v1.yaml
+solved L = 15/16  (= 0.937500)
+n = 5
+L = 15/16  (= 0.937500)
+pnodes = (3/16, 9/16, 15/16)
+pantinodes = (0, 3/8, 3/4)
+EXIT: 0

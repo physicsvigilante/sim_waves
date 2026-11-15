@@ -1,0 +1,17 @@
+id: B4/multiple/4
+assume:
+  - "A progressive wave is modelled as a harmonic wave y = A sin(omega t - d k x + phase) with arbitrary-symbol A, omega, k, phase; w1 travels in +x, w2 in -x. 'Any' progressive wave is only sampled by this family (general F(x - ct) is not tested)."
+  - "omega and k are symbols; the speed v = omega/k follows from the pair."
+symbols: {om: positive, kk: positive, A0: positive, ph: phase}
+waves:
+  w1: {harmonic: {A: A0, omega: om, k: kk, dir: +x, phase: ph}}
+  w2: {harmonic: {A: A0, omega: om, k: kk, dir: -x, phase: ph}}
+observe:
+  A_plus: "equivalent(diff(field(w1), t, 2)/om**2, diff(field(w1), x, 2)/kk**2)"
+  B_plus: "equivalent(diff(field(w1), t)/om, -diff(field(w1), x)/kk)"
+  C_plus: "equivalent(diff(field(w1), t, 2)/om**2, -diff(field(w1), x, 2)/kk**2)"
+  D_plus: "equivalent(diff(field(w1), t)/om, diff(field(w1), x)/kk)"
+  A_minus: "equivalent(diff(field(w2), t, 2)/om**2, diff(field(w2), x, 2)/kk**2)"
+  B_minus: "equivalent(diff(field(w2), t)/om, -diff(field(w2), x)/kk)"
+  C_minus: "equivalent(diff(field(w2), t, 2)/om**2, -diff(field(w2), x, 2)/kk**2)"
+  D_minus: "equivalent(diff(field(w2), t)/om, diff(field(w2), x)/kk)"

@@ -1,0 +1,9 @@
+answer: [B]
+final_scene: B4_single_11.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "Spreading losses (amplitudes treated equal)."
+missing_in_source: "Equal amplitudes at D; reading of 'first maximum' as the lowest non-zero frequency (f->0 is trivially in phase)."
+reasoning: "Engine: path difference 1 m; maxima at 330, 660, ... Hz; first minimum 165 Hz, so the first maximum is 330 Hz."
+friction: "none beyond needing lo=1 Hz to exclude the trivial f->0 maximum."

@@ -1,0 +1,9 @@
+id: B4/jee_main/54
+assume: ["Tension is an unknown fixed by requiring the stated wave to travel at the string's speed (cross-check of a given wave against its medium)."]
+unknowns: {T: positive}
+media: {rope: {type: string, mu: 0.04 kg/m, tension: T}}
+waves:
+  w: {given: "0.02*sin(2*pi*(t/0.04 - x/0.50))", units: {x: m, t: s, y: m}, on: rope}
+observe:
+  T: "T"
+  v: "speed(w)"

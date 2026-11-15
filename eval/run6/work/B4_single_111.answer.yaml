@@ -1,0 +1,9 @@
+answer: [D]
+final_scene: B4_single_111.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "Waves assumed to travel in the same direction."
+missing_in_source: "Directions of the waves."
+reasoning: "Engine sum: amplitude sqrt(2)*A, angular frequency unchanged (om)."
+friction: "none"

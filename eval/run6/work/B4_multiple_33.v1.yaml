@@ -1,0 +1,11 @@
+id: B4/multiple/33
+media: {air: {type: gas, v: 320 m/s}}
+resonators:
+  p: {type: pipe, on: air, length: 1 m, ends: [closed, open], end_correction: 0 m}
+observe:
+  h1: "frequency(p, harmonic=1)"
+  h3: "frequency(p, harmonic=3)"
+  h5: "frequency(p, harmonic=5)"
+  h2: "frequency(p, harmonic=2)"
+  h4: "frequency(p, harmonic=4)"
+  A_80: "resonances(p, f=80[Hz], vary=fs, lo=1[Hz], hi=1[kHz])"

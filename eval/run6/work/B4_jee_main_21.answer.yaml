@@ -1,0 +1,9 @@
+answer: D (12, 18)
+final_scene: B4_jee_main_21.v2.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "Observer starting distances arbitrary"
+missing_in_source: "Directions of motion (deduced from the shift sign, not stated)"
+reasoning: "Engine solved u1=12 m/s (receding, 480 Hz) and u2=18 m/s (approaching, 530 Hz)."
+friction: "v1 used frequency(r, t=1[s]) which is refused for unknown speeds (side of listener undecidable); had to use emitted=0[s]."

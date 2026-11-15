@@ -1,0 +1,27 @@
+id: B4/single/35
+number: 35
+source: book p.84 (answer key p.122)
+format: single_correct
+statement: |-
+  An open pipe of sufficient length is dipping in water with a speed v vertically. If at any instant l is length of tube above water then the rate at which fundamental frequency of pipe changes, is
+  (speed of sound = c)
+figure: A vertical cylindrical tube standing in water (flat water surface drawn as a horizontal sheet).
+  A downward arrow labelled v beside the tube; a double arrow labelled l spans the length of tube above
+  the water.
+options:
+  A: cv/(2 l^2)
+  B: cv/(4 l^2)
+  C: c/(2 v^2 l^2)
+  D: c/(4 v^2 l^2)
+answer: B
+answer_value: cv/(4 l^2)
+units: null
+verified: 'Once the lower end is under water the pipe is closed at the bottom: f = c/(4l). df/dt = -c/(4
+  l^2) dl/dt with dl/dt = -v -> df/dt = c v/(4 l^2) (frequency rises). Matches key.'
+kinds:
+- symbolic
+- rate
+physics:
+- organ_pipe
+- closed_pipe
+notes: Magnitude of rate taken.

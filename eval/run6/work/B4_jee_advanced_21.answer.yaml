@@ -1,0 +1,12 @@
+answer: [A]
+final_scene: B4_jee_advanced_21.v1.yaml
+engine_fit: partial
+hand_steps: ['option C (d omega/dk, group velocity) not checked by engine; judged equal to omega/k
+    for a non-dispersive string from own knowledge']
+coverage: full
+not_represented: nothing
+missing_in_source: none
+reasoning: max_over of vy = A*omega (True); phase speed = omega/k; option B == vmax is undecidable
+  (not generally equal). D is dimensionally wrong.
+friction: No derivative of omega w.r.t. k available (dispersion relation is not an object in
+  the format).

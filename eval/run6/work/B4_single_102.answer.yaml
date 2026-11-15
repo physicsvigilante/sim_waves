@@ -1,0 +1,9 @@
+answer: [C]
+final_scene: B4_single_102.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: nothing
+missing_in_source: "Whether the resonances are fundamentals; with overtones allowed 1 m, 2 m and 3 m all resonate at 256 Hz (v2), so options C and D are both physically possible."
+reasoning: "With the fundamental assumed in both cases the engine solves L2 = 1 m (same tension); v2 shows 2.0 m also resonates in a higher harmonic."
+friction: "Problem ambiguity (fundamental not stated) had to be encoded as an assumption fact."

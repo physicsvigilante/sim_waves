@@ -1,0 +1,9 @@
+answer: [B]
+final_scene: B4_single_33.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: speed of radio waves 3e8 assumed
+missing_in_source: speed of radar waves
+reasoning: Solved u = 500 m/s = 0.5 km/s from the 2.6 kHz shift.
+friction: MHz not a unit (wrote 780e6 Hz); radar modelled as a gas with v = 3e8.

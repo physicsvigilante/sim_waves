@@ -1,0 +1,8 @@
+FINAL: B4_jee_main_11.v1.yaml
+solved u = -245000 + 350*sqrt(490001)  (= 0.250000)
+u = -245000 + 350*sqrt(490001)  (= 0.250000)  <exact; same at 5 values of each arbitrary value (ranged ones spread across their ranges, others x0.01 to x89; sampled)>
+A = False  <proved for every allowed arbitrary value>
+B = False  <proved for every allowed arbitrary value>
+C = False  <proved for every allowed arbitrary value>
+D = False  <proved for every allowed arbitrary value>
+EXIT: 0

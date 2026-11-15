@@ -1,0 +1,25 @@
+id: B4/comprehension/16
+number: 16
+source: book p.100 (answer key p.123)
+format: single_correct
+statement: |-
+  Passage (Comprehension 5): When two pulses are allowed to pass through a string in opposite direction with same speed, the shape of string varies. Each pulse passes the overlap region as if the other pulse were not present there. The superposition principle can be applied to deal with the two waves in opposite direction. If two wave pulses are identical in shape, except that one is inverted with respect to another, at some instant displacement will be zero, but not their velocities. When reflection takes place from denser medium's surface or a rigid body, there will be phase difference of π. The corresponding path difference and time difference can be analysed. Based on above information, answer the following questions.
+
+  Q16. When displacement is zero as two wave pulses are moving in opposite direction, then which of the following will remain non-zero?
+figure: null
+options:
+  A: Amplitude of each wave.
+  B: Velocity of each wave.
+  C: Both (A) and (B).
+  D: Net amplitude and net velocity.
+answer: C
+answer_value: Both (A) and (B).
+units: null
+verified: Each pulse keeps its own amplitude and velocity; only the net displacement is zero at that instant.
+  Net velocity is non-zero too, but the net amplitude is zero, so D fails. Matches key C.
+kinds:
+- conceptual
+physics:
+- superposition
+- pulses
+notes: Book numbers this question 16 in Linked Comprehension.

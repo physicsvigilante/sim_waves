@@ -1,0 +1,10 @@
+FINAL: B4_comprehension_12.v1.yaml
+KG = 0  <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>
+E_gt_all = True  <proved for every allowed arbitrary value>
+E_gt_F = True  <proved for every allowed arbitrary value>
+E_gt_G = True  <proved for every allowed arbitrary value>
+KD: NOT AVAILABLE (SceneError: depends on the arbitrary value(s) ['mu', 'T']: the problem does not fix this result)
+KE: NOT AVAILABLE (SceneError: depends on the arbitrary value(s) ['mu', 'T']: the problem does not fix this result)
+KF: NOT AVAILABLE (SceneError: depends on the arbitrary value(s) ['mu', 'T']: the problem does not fix this result)
+Kmax: NOT AVAILABLE (SceneError: depends on the arbitrary value(s) ['mu', 'T']: the problem does not fix this result)
+EXIT: 1

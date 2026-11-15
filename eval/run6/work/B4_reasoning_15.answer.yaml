@@ -1,0 +1,12 @@
+answer: [A]
+final_scene: B4_reasoning_15.v2.yaml
+engine_fit: partial
+hand_steps: [subtracting p_inc and p_ref (equal) to say net power is zero; no net-power observable
+    of a sum]
+coverage: partial
+not_represented: statement 2 (no outward disturbance motion) not directly an observable
+missing_in_source: none
+reasoning: Incident and reflected powers equal (opposite directions); energy between two nodes
+  is the same at two instants (proved). Statement 1 true, 2 true and explains it.
+friction: 'v1 failed: power/energy of a time-dependent scene was NOT AVAILABLE with arbitrary
+  values; no net energy-flux observable for a standing wave.'

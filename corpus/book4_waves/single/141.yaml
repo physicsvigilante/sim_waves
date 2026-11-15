@@ -1,0 +1,23 @@
+id: B4/single/141
+number: 141
+source: book p.92 (answer key p.122)
+format: single_correct
+statement: A source and a listener are both moving towards each other with speed v/10, where v is the
+  speed of sound. If the frequency of the note emitted by the source is f, the frequency heard by the
+  listener would be nearly
+figure: null
+options:
+  A: 1.11 f
+  B: 1.22 f
+  C: 1.27 f
+  D: f
+answer: B
+answer_value: 1.22 f
+units: null
+verified: f' = f (v + v/10)/(v - v/10) = f x 1.1/0.9 = 1.222 f. Matches key.
+kinds:
+- numeric
+- ratio
+physics:
+- doppler
+notes: Consistent.

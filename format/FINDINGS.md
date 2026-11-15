@@ -513,3 +513,12 @@ Tests: r136–r142.
   FORMAT.md.
 - **Candidates for later:** a beat instant at which both sounds arrive, and splitting
   the regression suite, which now takes about 3 minutes.
+
+## Run 6: broad blind test after m9–m11 (eval/run6/SCORECARD.md)
+- **Scale:** 47 problems, 15 of them Doppler. Graded independently.
+- **No wrong engine value.** 39/47 engine-derived textbook matches (set S: 28/32).
+  Answers decided by hand halved compared with run 5.
+- **One misrepresentation:** radar entered as `type: gas`. The engine needs a guard or
+  an electromagnetic medium.
+- **Next gaps:** deciding and comparing services (8), format limits (7), physics outside
+  the model (6), and arbitrary values with time-dependent results (5).

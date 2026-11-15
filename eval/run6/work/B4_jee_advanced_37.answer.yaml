@@ -1,0 +1,9 @@
+answer: [A, B]
+final_scene: B4_jee_advanced_37.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "Vehicle spacing and f1 are arbitrary values; speeds u, w, V ranged and subsonic."
+missing_in_source: "Numerical u, w, V, f1 and distance (not needed; comparisons proved for every allowed value)."
+reasoning: "Engine proves f2 > f1 for both wind directions and f2 < f1 False in both, so A and B hold; C and D fail."
+friction: "Needed two media (one per wind direction) and duplicated source/point/ray; ranged arbitrary speeds must be set by hand so that u+w < V."

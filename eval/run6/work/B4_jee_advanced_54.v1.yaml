@@ -1,0 +1,25 @@
+id: B4/jee_advanced/54
+assume:
+  - "Train A engine (whistle) at x=0 moving +x at 20 m/s; train B ahead moving +x at 30 m/s. Still air, no wind (none stated)."
+  - "Whistle modelled as a single 800 Hz component (the speed question does not depend on which component)."
+  - "B passenger at x=200 m (arbitrary distance). A passenger given in two positions at 20 m/s: 10 m ahead of the whistle (x=10) and 10 m behind (x=-10), since the problem does not say where in train A the passenger sits."
+  - "Speed of sound relative to a moving observer = heard frequency * wavelength in the air (definition of wave speed), written as an observable product."
+media:
+  air: {type: gas, v: 340 m/s}
+sources:
+  whistle: {on: air, at: [0 m, 0 m], velocity: [20 m/s, 0 m/s], f: 800 Hz, A: 1, phase: 0, spreading: none}
+points:
+  pB: {at: [200 m, 0 m], velocity: [30 m/s, 0 m/s]}
+  pA_front: {at: [10 m, 0 m], velocity: [20 m/s, 0 m/s]}
+  pA_back: {at: [-10 m, 0 m], velocity: [20 m/s, 0 m/s]}
+rays:
+  toB: {from: whistle, to: pB}
+  toAf: {from: whistle, to: pA_front}
+  toAb: {from: whistle, to: pA_back}
+observe:
+  v_air: "speed(air)"
+  fB: "frequency(toB, emitted=0[s])"
+  lamB: "wavelength(toB, emitted=0[s])"
+  v_rel_B: "frequency(toB, emitted=0[s])*wavelength(toB, emitted=0[s])"
+  v_rel_Afront: "frequency(toAf, emitted=0[s])*wavelength(toAf, emitted=0[s])"
+  v_rel_Aback: "frequency(toAb, emitted=0[s])*wavelength(toAb, emitted=0[s])"

@@ -1,0 +1,24 @@
+id: B4/jee_main/37
+number: 37
+source: book p.111 (answer key p.123)
+format: single_correct
+statement: '[2018] A granite rod of 60 cm length is clamped at its middle point and is set into longitudinal
+  vibrations. The density of granite is 2.7 x 10^3 kg/m^3 and its Young''s modulus is 9.27 x 10^10 Pa.
+  What will be the fundamental frequency of the longitudinal vibrations?'
+figure: null
+options:
+  A: 5 kHz
+  B: 2.5 kHz
+  C: 10 kHz
+  D: 7.5 kHz
+answer: A
+answer_value: 5 kHz
+units: kHz
+verified: 'v = sqrt(Y/rho) = sqrt(9.27e10/2.7e3) = 5859 m/s; clamped middle: node at centre, antinodes
+  at ends, so lambda = 2 x 0.6 = 1.2 m; f = 5859/1.2 = 4.88 kHz ~ 5 kHz. Matches key.'
+kinds:
+- numeric
+physics:
+- longitudinal_rod
+- elasticity
+notes: Approximate answer.

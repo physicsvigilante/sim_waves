@@ -1,0 +1,8 @@
+FINAL: B4_single_169.v1.yaml
+solved L = 85/4  (= 21.2500)  (depends on the arbitrary values)
+small_dl = 36/11  (= 3.27273)  <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>
+large_dl = 2  <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>
+decrease_all_dl: NOT AVAILABLE (UndeterminedError: cannot decide 'beat_frequency(frequency(po2, harmonic=1), frequency(pc, harmonic=1)) < 4[Hz]' for all symbol values (4*(-4*dl + Abs(4*dl - 85) - 85)/(4*dl + 85) < 0))
+L: NOT AVAILABLE (SceneError: depends on the arbitrary value(s) ['vs']: the problem does not fix this result)
+beats_after: NOT AVAILABLE (SceneError: depends on the arbitrary value(s) ['vs']: the problem does not fix this result)
+EXIT: 1
