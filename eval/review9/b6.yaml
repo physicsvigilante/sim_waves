@@ -1,0 +1,4 @@
+# real symbol, upper bound negative: n < -1
+symbols: {n: real}
+given: [{fact: "n < -1", source: stated}]
+observe: {a: "abs(n)", b: "abs(n + 1)", c: "sqrt(n^2)", d: "n", e: "n^2 - 1", f: "abs(n+1)/(n+1)"}

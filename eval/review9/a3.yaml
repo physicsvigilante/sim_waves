@@ -1,0 +1,9 @@
+# solved unknown from arbitrary values used in observable
+arbitrary: {mu: 10 g/m, L: 1 m}
+unknowns: {F: positive, q: positive}
+media: {w1: {type: string, mu: mu, tension: F}}
+resonators: {r1: {type: string, on: w1, length: L, ends: [fixed, fixed]}}
+given:
+  - "frequency(r1, harmonic=1) == 50[Hz]"
+  - "q == F/(mu*L^2)"
+observe: {F: "F", q: "q", twice: "2*q"}

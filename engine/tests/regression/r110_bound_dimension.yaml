@@ -1,0 +1,7 @@
+# m9 review: a symbol bounded by a time cannot be used as a frequency
+symbols: {L: positive}
+given: ["L > 2[s]"]
+media: {s: {type: string, mu: 0.01 kg/m, tension: 4 N}}
+waves: {w: {harmonic: {on: s, A: 1 cm, f: L, dir: +x, phase: 0}}}
+observe: {fw: "frequency(w)"}
+expect: {error: rejected, message: "bounded by a value with dimension"}

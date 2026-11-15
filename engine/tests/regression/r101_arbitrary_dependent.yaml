@@ -1,0 +1,6 @@
+# m9: an observable that depends on an arbitrary value is NOT AVAILABLE, never a number
+arbitrary: {mu: 10 g/m, L: 1 m}
+media: {w1: {type: string, mu: mu, tension: 50 N}}
+resonators: {r1: {type: string, on: w1, length: L, ends: [fixed, fixed]}}
+observe: {f1: "frequency(r1, harmonic=1)"}
+expect: {error: rejected, message: "depends on the arbitrary"}

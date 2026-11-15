@@ -1,0 +1,10 @@
+# m9: a stated bound n > 1 decides the sign of n - 1 (travel time, frequency)
+symbols: {n: positive}
+given: [{fact: "n > 1", source: stated}]
+media: {s: {type: string, mu: 0.01 kg/m, tension: 4 N}}
+waves: {w: {harmonic: {on: s, A: 1 cm, f: "(n - 1)[Hz]", dir: +x, phase: 0}}}
+observe:
+  fw: "frequency(w)"
+  T: "travel_time(s, start=0[m], end=(n - 1)*1[m])"
+  b: "beat_frequency(n[Hz], (n - 1)[Hz])"
+expect: {fw: "(n - 1)", T: "(n - 1)/20", b: 1}

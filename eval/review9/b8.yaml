@@ -1,0 +1,4 @@
+# two bounds, different order: weaker first then bound; duplicate; n == const
+symbols: {n: positive}
+given: ["n > 0", "n < 5", "n <= 5"]
+observe: {a: "n"}

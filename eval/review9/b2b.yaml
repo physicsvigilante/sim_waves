@@ -1,0 +1,5 @@
+symbols: {L: positive}
+given: [{fact: "L >= 2[m]", source: stated}]
+media: {s: {type: string, mu: 0.01 kg/m, tension: 4 N}}
+resonators: {r: {type: string, on: s, length: L, ends: [fixed, fixed]}}
+observe: {a: "abs(L - 2[m])", f: "frequency(r, harmonic=1)"}

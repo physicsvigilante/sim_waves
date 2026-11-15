@@ -1,0 +1,5 @@
+# m9 review: log(a^2) = log(4) for real a has two roots; rewriting as 2 log(a) would lose a = -2
+unknowns: {a: real}
+given: ["log(a**2) == log(4)"]
+observe: {a: "a"}
+expect: {error: rejected, message: "2 situations"}

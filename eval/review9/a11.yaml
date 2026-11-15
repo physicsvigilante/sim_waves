@@ -1,0 +1,18 @@
+# noise: irrational/numeric paths; ratio that is truly independent
+arbitrary: {mu: 7.3 g/m, L: 0.83 m, F: 31.7 N}
+media:
+  w1: {type: string, mu: mu, tension: F}
+  w2: {type: string, mu: "3*mu", tension: "2*F"}
+resonators:
+  r1: {type: string, on: w1, length: L, ends: [fixed, fixed]}
+  r2: {type: string, on: w2, length: "L/3", ends: [fixed, free]}
+waves:
+  h1: {harmonic: {on: w1, A: 1 mm, f: 100 Hz, dir: +x, phase: 0}}
+  h2: {harmonic: {on: w2, A: 1 mm, f: 100 Hz, dir: +x, phase: 0}}
+observe:
+  r: "frequency(r2, harmonic=1)/frequency(r1, harmonic=3)"
+  p: "power(h2)/power(h1)"
+  lam: "wavelength(h2)/wavelength(h1)"
+  z: "impedance(w2)/impedance(w1)"
+  tt: "travel_time(w2, start=0[m], end=L)/travel_time(w1, start=0[m], end=L)"
+  fl: "sqrt(2.0)*speed(w2)/speed(w1)"

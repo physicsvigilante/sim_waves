@@ -1,0 +1,4 @@
+# pure maths: log(a^2) + log(b) == 0, log(b) - log(a^2) == log(16): a^2 b = 1, b = 16 a^2 -> a^4 = 1/16, a = +-1/2, b = 4. expect ambiguous
+unknowns: {a: real, b: positive}
+given: ["log(a^2) + log(b) == 0", "log(b) - log(a^2) == log(16)"]
+observe: {a: "a", b: "b"}

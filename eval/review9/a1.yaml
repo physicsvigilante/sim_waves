@@ -1,0 +1,9 @@
+# tiny-magnitude leak: intensity depends on arbitrary P (1 nW at 1 m: I = 7.96e-11 W/m^2)
+arbitrary: {P: 1e-9 W}
+media: {air: {type: gas, v: 340 m/s}}
+sources: {S: {on: air, at: [0 m, 0 m], power: P, phase: random, spreading: spherical}}
+points: {A: [1 m, 0 m]}
+rays: {a: {from: S, to: A}}
+observe:
+  I: "intensity(a)"
+  lvl: "sound_level(intensity(a))"

@@ -1,0 +1,13 @@
+id: m9/R3
+format: numerical
+statement: >-
+  Two small loudspeakers A and B, 5.0 m apart, each radiate sound uniformly in all
+  directions, and their outputs are incoherent with each other. Their acoustic powers are
+  not known. With both speakers running, a sound level meter reads 80.0 dB at a point P
+  that is 2.0 m from A and 4.0 m from B, and reads 75.0 dB at a point Q that is 4.0 m from
+  A and 2.0 m from B. What will the meter read, in dB, at a point R that is 4.0 m from
+  each speaker, with both speakers running? Treat the speakers as point sources in free
+  space with no absorption, and take the reference intensity as 1.0e-12 W/m^2. Give the
+  answer to one decimal place.
+options: null
+figure: null

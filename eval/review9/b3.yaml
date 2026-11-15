@@ -1,0 +1,3 @@
+symbols: {m: integer}
+given: ["m > 2"]
+observe: {b: "abs(m - 2)", d: "abs(m-1)"}

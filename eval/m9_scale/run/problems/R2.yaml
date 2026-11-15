@@ -1,0 +1,14 @@
+id: m9/R2
+format: multiple_correct
+statement: >-
+  A narrow tube closed at one end and open at the other has a length L about which it is
+  known only that L > 0.40 m. A tuning fork of frequency 250 Hz is sounded near the open
+  end at the same time as the tube is made to sound in its fundamental mode. Take the
+  speed of sound in the air in the tube as 340 m/s and neglect end correction. Which of
+  the following statements is/are correct?
+options:
+  A: "The fork frequency exceeds the tube's fundamental frequency by (250 - 85/L) Hz, with L in metres."
+  B: "If the tube is made slightly shorter, the difference between the fork frequency and the tube's fundamental frequency increases."
+  C: "Whether the first overtone of the tube lies above or below 250 Hz cannot be decided from the information given."
+  D: "A tube of the same length L open at both ends would necessarily have a fundamental frequency higher than 250 Hz."
+figure: null

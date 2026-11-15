@@ -1,0 +1,10 @@
+# r103 with d real: d = +-100 -> expect ambiguous
+unknowns: {P: positive, d: real}
+media: {air: {type: gas, v: 340 m/s}}
+sources: {S: {on: air, at: [0 m, 0 m], power: P, phase: random, spreading: spherical}}
+points: {A: [10 m, 0 m], B: [d, 0 m]}
+rays: {a: {from: S, to: A}, b: {from: S, to: B}}
+given:
+  - "sound_level(intensity(a)) == 80"
+  - "sound_level(intensity(b)) == 60"
+observe: {P: "P", d: "d"}

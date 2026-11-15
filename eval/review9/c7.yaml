@@ -1,0 +1,4 @@
+# spurious root: log(a-3) + log(b) == 0 and a*b == ... ; log(a*b)==log(4), log(a)-log(b)==0 with reals: a=b=2 or a=b=-2 (log(a*b) defined, log(a) not) -> only (2,2)
+unknowns: {a: real, b: real}
+given: ["log(a*b) == log(4)", "log(a) - log(b) == 0"]
+observe: {a: "a", b: "b"}

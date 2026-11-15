@@ -1,0 +1,9 @@
+answer: 2
+final_scene: R1.v2.yaml
+engine_fit: full
+hand_steps: []
+coverage: partial
+not_represented: "The clamp itself (a point constraint inside the rod) is not an element of the format; it is represented as a displacement-node filter via harmonics(node_at=...) on a free-free rod. Clamp mass/stiffness effects ignored."
+missing_in_source: "none (Y, density, L are not needed for the ratio)"
+reasoning: "Free-free rod with node at L/2 allows harmonics 1,3,5..; with node at L/4 allows 2,6,10..; engine ratio of lowest frequencies = 2 (same at 5 scalings)."
+friction: "Format has no interior clamp/support; v1 failed because arbitrary names must not also be declared in symbols (and nothing in docs said arbitrary may be used for medium inputs Y, rho; v2 worked)."

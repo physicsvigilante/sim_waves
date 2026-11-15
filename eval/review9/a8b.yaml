@@ -1,0 +1,3 @@
+arbitrary: {mu: 10 g/m, L: 1 m}
+media: {w2: {type: string, mu: "mu", tension: 50 N}}
+observe: {bad: "(mu + L)/(mu + L)", bad2: "sin(L)/sin(L)", ok: "L/L", d: "L > 0.5[m]", e: "equivalent(L, L)", g: "max(L, 2*L)/L"}

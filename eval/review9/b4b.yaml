@@ -1,0 +1,5 @@
+symbols: {L: positive}
+media: {s: {type: string, mu: 0.01 kg/m, tension: 4 N}}
+waves: {w: {harmonic: {on: s, A: 1 cm, f: L, dir: +x, phase: 0}}}
+resonators: {r: {type: string, on: s, length: L, ends: [fixed, fixed]}}
+observe: {f: "frequency(r, harmonic=1)", fw: "frequency(w)"}

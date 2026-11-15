@@ -1,0 +1,4 @@
+# bound in units: 50 cm
+symbols: {L: positive}
+given: ["L > 50[cm]"]
+observe: {a: "abs(L - 0.5[m])", b: "abs(L - 0.4[m])", c: "abs(L - 0.6[m])"}

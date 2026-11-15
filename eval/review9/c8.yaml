@@ -1,0 +1,4 @@
+# log(a*b)==log(4), a - b == 0 reals: (2,2) and (-2,-2) both valid -> ambiguous
+unknowns: {a: real, b: real}
+given: ["log(a*b) == log(4)", "a - b == 0"]
+observe: {a: "a", b: "b"}

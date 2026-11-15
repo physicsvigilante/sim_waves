@@ -1,0 +1,36 @@
+id: m9/R3
+assume:
+  - "Air v and density are not given; they are set to conventional values only so the scene is complete. Intensity from power does not depend on them."
+  - "Speakers are point sources, spherical spreading, incoherent (phase random) as stated; no reflections."
+  - "Speaker positions on the x-axis; P, Q, R placed by distances (2D plane): A=(0,0), B=(5,0); P, Q, R by triangle geometry."
+symbols: {}
+unknowns: {PA: positive, PB: positive}
+media:
+  air: {type: gas, v: 340 m/s, density: 1.2 kg/m^3}
+sources:
+  A: {on: air, at: [0 m, 0 m], power: PA, phase: random, spreading: spherical}
+  B: {on: air, at: [5 m, 0 m], power: PB, phase: random, spreading: spherical}
+points:
+  P: [1.2 m, 1.6 m]
+  Q: [3.8 m, 1.6 m]
+  R: [2.5 m, 3.122498999199199 m]
+rays:
+  aP: {from: A, to: P}
+  bP: {from: B, to: P}
+  aQ: {from: A, to: Q}
+  bQ: {from: B, to: Q}
+  aR: {from: A, to: R}
+  bR: {from: B, to: R}
+given:
+  - {fact: "distance(P, A) == 2[m]", source: stated}
+  - {fact: "distance(P, B) == 4[m]", source: stated}
+  - {fact: "distance(Q, A) == 4[m]", source: stated}
+  - {fact: "distance(Q, B) == 2[m]", source: stated}
+  - {fact: "sound_level(intensity(aP, bP)) == 80", source: stated}
+  - {fact: "sound_level(intensity(aQ, bQ)) == 75", source: stated}
+observe:
+  LR: "sound_level(intensity(aR, bR))"
+  dR_A: "distance(R, A)"
+  dR_B: "distance(R, B)"
+  PA: "PA"
+  PB: "PB"

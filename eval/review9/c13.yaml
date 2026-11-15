@@ -1,0 +1,4 @@
+# lost root in level form: level of intensity k/d^2 with d real, plus second log unknown
+unknowns: {a: real, b: positive}
+given: ["2*log(a^2) + log(b) == 0", "b == 1"]
+observe: {a: "a", b: "b"}

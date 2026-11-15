@@ -1,0 +1,8 @@
+symbols: {n: positive}
+unknowns: {u: positive}
+given: [{fact: "n > 1", source: stated}, "u == n - 1"]
+media: {s: {type: string, mu: 0.01 kg/m, tension: 4 N}}
+waves: {w: {harmonic: {on: s, A: 1 cm, f: "(n - 1)[Hz]", dir: +x, phase: 0}}}
+illustrate: {n: 0.5}
+view: [{snapshot: w, t: 0 s, x: [0 m, 10 m]}]
+observe: {fw: "frequency(w)", u: "u"}

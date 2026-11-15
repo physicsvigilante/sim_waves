@@ -1,0 +1,4 @@
+# m9 review: a threshold outside the near scalings (max(L, 5 m) with L = 1 m) is caught by the far ones
+arbitrary: {L: 1 m}
+observe: {m: "max(L, 5[m])"}
+expect: {error: rejected, message: "depends on the arbitrary"}

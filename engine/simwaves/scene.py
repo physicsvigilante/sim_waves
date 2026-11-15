@@ -25,7 +25,7 @@ KINDS = {"positive": dict(positive=True), "real": dict(real=True),
          "direction": dict(real=True, nonzero=True)}    # direction: +1 or -1, solved by cases
 RESERVED = {"x", "t", "pi"}
 TOP_KEYS = {"id", "assume", "symbols", "unknowns", "functions", "media", "junctions", "waves",
-            "resonators", "emitters", "sources", "reflectors", "points", "rays", "given", "observe", "view", "expect", "illustrate", "explore"}
+            "resonators", "emitters", "arbitrary", "sources", "reflectors", "points", "rays", "given", "observe", "view", "expect", "illustrate", "explore"}
 R_GAS = sp.Rational(831446261815324, 10 ** 14)     # J/(mol K), exact SI value
 I0_HEARING = sp.Rational(1, 10 ** 12)                # W/m^2: the standard reference of the decibel scale
 
@@ -66,7 +66,7 @@ def _pick(sc, cands, label, where):
 
 
 class Scene:
-    def __init__(self, data):
+    def __init__(self, data, scale=None):
         if not isinstance(data, dict):
             raise SceneError("scene must be a mapping")
         _keys(data, TOP_KEYS, "scene")
@@ -91,6 +91,19 @@ class Scene:
                 self.names[name], self.kinds[s] = s, kind
                 if is_unknown:
                     self.unknowns.append(s)
+        # values the problem leaves unstated and the answer must not depend on (checked by re-running)
+        self.arbitrary = {}
+        for name, value in (data.get("arbitrary") or {}).items():
+            self._new_name(name)
+            text, unit, factor, udim = split_quantity(value)
+            v = self.expr(text) * factor
+            if not v.is_number or not v.is_positive:
+                raise SceneError(f"arbitrary.{name}: give a positive number with its unit, e.g. 10 g/m")
+            if scale:
+                v = v * scale[name]
+            self.names[name] = v
+            self.arbitrary[name] = DIMLESS if udim is None else udim
+        self._bounds_from_given(data)
         for name in data.get("functions") or []:
             self._new_name(name)
             self.functions[name] = sp.Function(name)
@@ -113,6 +126,97 @@ class Scene:
         from . import rays as _rays
         _rays.build(self, data)
         self.solution = {}
+
+    def _bounds_from_given(self, data):
+        """A given inequality between one symbol and a constant is a stated bound: the symbol is
+        rewritten as bound + (positive), so every sign decision can use it."""
+        self.bounds = {}
+        self.bound_dims = {}
+        for item in data.get("given") or []:
+            text = item if isinstance(item, str) else (item.get("fact") if isinstance(item, dict) else None)
+            if not isinstance(text, str):
+                continue
+            try:
+                tree = ast.parse(text.strip(), mode="eval").body
+            except SyntaxError:
+                continue
+            if not (isinstance(tree, ast.Compare) and len(tree.ops) == 1):
+                continue
+            flip = {ast.Gt: ast.Lt, ast.GtE: ast.LtE, ast.Lt: ast.Gt, ast.LtE: ast.GtE}
+            if not isinstance(tree.left, ast.Name) and isinstance(tree.comparators[0], ast.Name) and \
+                    type(tree.ops[0]) in flip:
+                # '1 < n' is the same bound as 'n > 1'
+                tree = ast.Compare(left=tree.comparators[0], ops=[flip[type(tree.ops[0])]()],
+                                   comparators=[tree.left])
+            if not isinstance(tree.left, ast.Name):
+                continue
+            name = tree.left.id
+            if name in self.bounds and type(tree.ops[0]) in (ast.Gt, ast.GtE, ast.Lt, ast.LtE):
+                raise SceneError(f"given: '{name}' has two bounds; v0 supports one bound per symbol")
+            sym = self.names.get(name)
+            if not isinstance(sym, sp.Symbol) or sym in self.unknowns or self.kinds.get(sym) not in (
+                    "positive", "real", "integer"):
+                continue
+            right = ast_unparse(tree.comparators[0])
+            try:
+                c = sp.sympify(self.expr(right))
+            except SceneError:
+                continue
+            if not c.is_number or c.free_symbols:
+                continue
+            op = type(tree.ops[0])
+            if op not in (ast.Gt, ast.GtE, ast.Lt, ast.LtE):
+                continue
+            if name in self.bounds:
+                raise SceneError(f"given: '{name}' has two bounds; v0 supports one bound per symbol")
+            lower = op in (ast.Gt, ast.GtE)
+            kind = self.kinds.get(sym)
+            if kind == "positive" and lower and c <= 0:
+                continue                       # weaker than 'positive': nothing to add
+            if kind == "positive" and not lower and c <= 0:
+                raise SceneError(f"given: '{name}' is declared positive but bounded by {text!r}")
+            strict = op in (ast.Gt, ast.Lt)
+            try:
+                bdim = dimension_of(right, self)
+            except SceneError:
+                bdim = None
+            if bdim is None and "[" not in right:
+                bdim = DIMLESS
+            # the offset from the bound gets a name no scene can declare, so it never merges
+            # with a user symbol; messages show it as Δ(n)
+            pname = f"Δ({name})"
+            if kind == "integer":
+                # integer n > c: n = (first integer allowed) + (integer >= 0)
+                first = (sp.floor(c) + 1 if strict else sp.ceiling(c)) if lower else \
+                    (sp.ceiling(c) - 1 if strict else sp.floor(c))
+                p = sp.Symbol(pname, integer=True, nonnegative=True)
+                self.names[name] = first + p if lower else first - p
+                self.kinds[p] = "integer"
+                self.bounds[name] = (sym, p, (sym - first) if lower else (first - sym))
+                self.bound_dims[name] = bdim
+                continue
+            p = sp.Symbol(pname, **({"positive": True} if strict else {"nonnegative": True}))
+            self.names[name] = c + p if lower else c - p
+            self.kinds[p] = "positive"
+            self.bounds[name] = (sym, p, (sym - c) if lower else (c - sym))
+            self.bound_dims[name] = bdim
+
+    def bound_variable(self, v):
+        """If v is a bounded symbol as it appears in expressions (base + s*offset), return
+        (declared symbol, offset symbol, s, base); otherwise None."""
+        for sym, p, _ in getattr(self, "bounds", {}).values():
+            if isinstance(v, sp.Basic) and v.has(p) and v.free_symbols == {p}:
+                sgn = sp.diff(v, p)
+                base = v.xreplace({p: 0})
+                if sgn in (1, -1) and sp.expand(v - base - sgn * p) == 0:
+                    return sym, p, sgn, base
+        return None
+
+    def show_back(self, v):
+        """Write a result in the original symbols (undo bound substitutions)."""
+        if not getattr(self, "bounds", None) or not isinstance(v, sp.Basic):
+            return v
+        return sp.simplify(v.xreplace({p: back for _, p, back in self.bounds.values()}))
 
     def _new_name(self, name):
         if not isinstance(name, str) or not name.isidentifier():
@@ -156,6 +260,10 @@ class Scene:
     def name_dim(self, n):
         if n in self.objects:
             return "obj"
+        if n in getattr(self, "arbitrary", {}):
+            return self.arbitrary[n]
+        if n in getattr(self, "bound_dims", {}):
+            return self.bound_dims[n]       # a bounded symbol has its bound's dimension
         # x and t inside free formulas are plain SI numbers (book formulas such as
         # 0.2*sin(2*pi*(6*t - x/60)) carry implicit units); observables are still checked.
         return {"pi": DIMLESS}.get(n)
@@ -242,6 +350,22 @@ class Scene:
             e = e + CELSIUS_OFFSET
         if udim is not None and d is not None and udim != d:
             raise SceneError(f"{where}: unit '{unit}' has the wrong dimension")
+        names_in = set()
+        try:
+            names_in = {nd.id for nd in ast.walk(ast.parse(str(text).strip(), mode="eval")) if isinstance(nd, ast.Name)}
+        except SyntaxError:
+            pass
+        if udim is None and d is not None and names_in & set(getattr(self, "arbitrary", {})):
+            got = dimension_of(text, self)
+            if got is not None and got != d:
+                raise SceneError(f"{where}: '{value}' has dimension {show_dim(got)}, expected {show_dim(d)}")
+            udim = d
+        if udim is None and d is not None and str(text).strip() in getattr(self, "bound_dims", {}):
+            bd = self.bound_dims[str(text).strip()]
+            if bd is not None and bd != d:
+                raise SceneError(f"{where}: '{text}' is bounded by a value with dimension {show_dim(bd)}, "
+                                 f"but is used here as {show_dim(d)}")
+            udim = d
         if udim is None and "[" in str(text) and d is not None:
             # an expression with unit brackets, e.g. '9[kg]*9.8[m/s^2]': check its dimension
             got = dimension_of(text, self)
@@ -1472,10 +1596,16 @@ def _resonances(sc, r, f=None, vary=None, lo=None, hi=None):
     res = _resonator(r, "resonances")
     if f is None or vary is None or lo is None or hi is None:
         raise SceneError("resonances(r, f=..., vary=<symbol>, lo=..., hi=...)")
-    if not isinstance(vary, sp.Symbol):
+    bv = None if isinstance(vary, sp.Symbol) else sc.bound_variable(vary)
+    if not isinstance(vary, sp.Symbol) and bv is None:
         raise SceneError("resonances(): vary must be a symbol used in the resonator")
     N = sp.Dummy("n", positive=True, integer=True)
     fN = res.medium.speed() / ((4 if res.mixed else 2) * res.Leff / N)
+    if bv is not None:
+        # a bounded symbol: solve in the declared symbol, keep only values inside the bound
+        V, p_off, sgn, base = bv
+        fN, f = (sp.sympify(a).xreplace({p_off: sgn * (V - base)}) for a in (fN, f))
+        vary = V
     known = {u: v for u, v in (sc.solution or {}).items() if u != vary}
     fN = fN.xreplace(known)
     f, lo, hi = (sp.sympify(a).xreplace(known) for a in (f, lo, hi))
@@ -1493,7 +1623,7 @@ def _resonances(sc, r, f=None, vary=None, lo=None, hi=None):
     branches = sp.solve(sp.Eq(fN, f), vary)
     if not branches:
         raise SceneError(f"resonances(): no value of {vary} gives frequency {f}")
-    positive = sc.kinds.get(vary) == "positive"
+    positive = sc.kinds.get(vary) == "positive" or (bv is not None and bv[0].is_positive)
     eps = 1e-12 * max(1.0, abs(lo_v), abs(hi_v))
     found, prev, done = [], [None] * len(branches), [False] * len(branches)
     for n in res.allowed():
@@ -1511,7 +1641,9 @@ def _resonances(sc, r, f=None, vary=None, lo=None, hi=None):
                 prev[b] = "nonreal"
                 continue
             fv = cv.real
-            if lo_v - eps <= fv <= hi_v + eps and not (positive and fv <= 0):
+            inside = True if bv is None else (float(sgn * (fv - base)) > 0 if bv[1].is_positive
+                                              else float(sgn * (fv - base)) >= 0)
+            if lo_v - eps <= fv <= hi_v + eps and not (positive and fv <= 0) and inside:
                 found.append(v)
             p_ = prev[b] if isinstance(prev[b], float) else None
             if p_ is not None and ((fv > hi_v + eps and fv >= p_) or (fv < lo_v - eps and fv <= p_)):
@@ -1694,6 +1826,12 @@ def _limit(_sc, e, var, value):
 def _diff(_sc, e, var, n=sp.Integer(1)):
     if not (n.is_Integer and 1 <= n <= 10):
         raise SceneError("diff(): order must be an integer from 1 to 10")
+    bv = None if isinstance(var, sp.Symbol) else _sc.bound_variable(var)
+    if bv is not None:                 # a bounded symbol n = base + s*offset: d/dn = s*d/d(offset)
+        _, p_off, sgn, _ = bv
+        return sp.diff(e, p_off, int(n)) * sgn ** int(n)
+    if not isinstance(var, sp.Symbol):
+        raise SceneError("diff(): the second argument must be a variable or symbol")
     return sp.diff(e, var, int(n))
 
 
@@ -1884,6 +2022,14 @@ def _at(sc, e, **values):
     rep = {}
     for name, val in values.items():
         sym = sc.names.get(name)
+        bound = getattr(sc, "bounds", {}).get(name)
+        if bound is not None:
+            orig, p_off, back = bound
+            off = sp.simplify(back.xreplace({orig: sp.sympify(val)}))
+            if off.is_negative or (p_off.is_positive and off.is_positive is False):
+                raise SceneError(f"at(): {name} = {val} is outside the stated bound on '{name}'")
+            rep[p_off] = off
+            continue
         if not isinstance(sym, sp.Symbol):
             raise SceneError(f"at(): '{name}' is not a variable or symbol of the scene")
         if sym in sc.unknowns:

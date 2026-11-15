@@ -1,0 +1,10 @@
+# threshold leak: max / boolean / step
+arbitrary: {L: 1 m, mu: 10 g/m}
+media: {w1: {type: string, mu: mu, tension: 50 N}}
+resonators: {r1: {type: string, on: w1, length: L, ends: [fixed, fixed]}}
+observe:
+  m: "max(L, 5[m])"
+  s: "step(L - 0.5[m])"
+  a: "abs(L - 3[m]) + L"
+  c: "count(resonances(r1, lo=1[Hz], hi=20[Hz]))"
+  f: "min(frequency(r1, harmonic=1), 10[Hz])"

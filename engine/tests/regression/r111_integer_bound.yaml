@@ -1,0 +1,5 @@
+# m9 review: an integer symbol with a bound (also written reversed, 2 < m)
+symbols: {m: integer}
+given: ["2 < m"]
+observe: {b: "abs(m - 2)", c: "abs(m - 3)"}
+expect: {b: "m - 2", c: "m - 3"}
