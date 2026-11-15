@@ -1,0 +1,8 @@
+symbols: {s: positive}
+media:
+  rope: {type: string, mu: 0.1 kg/m, coordinate: {origin: lower_end, direction: up, variable: s}, tension: {hanging: {load: 1 kg, g: 10 m/s^2}}}
+waves: {w: {given: "0.01*sin(2*x - 3*t)", units: {x: m, t: s, y: m}, on: rope}}
+observe:
+  Ud2: "potential_density(w, x=2[m], t=0[s])"
+  U: "potential_energy(w, start=0[m], end=2[m], t=0[s])"
+  Tt: "tension(rope, at=2[m])"

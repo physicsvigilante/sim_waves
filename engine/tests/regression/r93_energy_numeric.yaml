@@ -1,0 +1,5 @@
+# review 8 #1: numeric energy integral split at breakpoints (was 1% off)
+media: {s: {type: string, mu: 0.01 kg/m, tension: 4 N}}
+waves: {p: {pulse: {on: s, shape: "0.01*sin(pi*x)*exp(sin(3*x))*(step(x) - step(x - 1))", units: {x: m, y: m}, dir: +x}}}
+observe: {E: "energy(p)"}
+expect: {E: {value: 0.0133308, tol: 0.00001}}

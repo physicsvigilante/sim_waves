@@ -1,0 +1,2 @@
+bad: NOT AVAILABLE (SceneError: dimension mismatch in a sum of 'kinetic_density(w, x=0[m], t=0[s]) + 1[J]': m*kg*s^-2 vs m^2*kg*s^-2)
+[exit 1 in 2s]

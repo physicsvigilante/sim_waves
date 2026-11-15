@@ -1,0 +1,3 @@
+media: {s: {type: string, mu: 0.01 kg/m, tension: 4 N}}
+waves: {st: {given: "0.02*sin(pi*x)*cos(20*pi*t)", units: {x: m, t: s, y: m}, on: s}}
+observe: {K: "kinetic_energy(st, start=0[m], end=1[m], t=0.025[s])"}

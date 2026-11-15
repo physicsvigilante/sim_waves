@@ -202,7 +202,17 @@ class Scene:
         if fname in ("sin", "cos", "tan", "exp", "log", "atan", "asin", "acos"):
             chk.same(a, DIMLESS, f"the argument of {fname}()")
             return DIMLESS
-        if fname in ("max_over", "min_over"):
+        if fname == "mean_over" and len(args) >= 4:
+            span = chk.same(args[2], args[3], "the limits of mean_over()")
+            v0 = node.args[0]
+            if isinstance(v0, ast.Name):
+                want_ = {"x": LENGTH, "t": TIME}.get(v0.id)
+                if want_ is None and v0.id in self.names:
+                    want_ = self.symbol_dims.get(self.names[v0.id])
+                chk.same(span, want_, f"the limits of mean_over() (the dimension of {v0.id})")
+        if fname in ("max_in", "min_in") and len(args) >= 2:
+            return args[1]
+        if fname in ("max_over", "min_over", "mean_over"):
             return args[1] if len(args) > 1 else None
         if fname in ("min", "max", "limit", "at"):
             if fname == "at":
@@ -748,7 +758,13 @@ class GivenWave:
             raise SceneError(f"{w}: formula uses undeclared symbols")
         self.f = fac["y"] * raw.xreplace({X: X / fac["x"], T: T / fac["t"]})
         self._sin = None
-        if self.medium is not None and self.medium.uniform and self.medium.kind != "free":
+        travelling = True
+        if self.medium is not None:
+            try:
+                self.velocity()
+            except SceneError:
+                travelling = False      # e.g. a standing wave given directly: no single speed to compare
+        if travelling and self.medium is not None and self.medium.uniform and self.medium.kind != "free":
             same = _same(self.speed(), self.medium.speed())
             if same is False:
                 raise SceneError(f"{w}: formula speed {self.speed()} differs from the medium's "
@@ -1013,33 +1029,58 @@ def _within(seconds, fn):
             signal.alarm(max(1, int(remaining - (time.time() - t0))))
 
 
-def _numeric_peak(e, var, dom):
-    """Largest |e| for a purely numeric e: dense log-spaced scan, then golden-section refinement.
-    The result is a decimal (a numerical value, not a symbolic one)."""
-    import mpmath
+def _numeric_extremum(e, var, dom):
+    """(x, |e|) of the largest |e| for a purely numeric e, as decimals, and whether another
+    place reaches the same value (a tie). Candidates: the extremes of each additive term
+    (found exactly, term by term), plus a coarse scan; each is refined by golden section on
+    a window scaled to the term's own width."""
     import numpy as np
     f = sp.lambdify(var, e, modules=["numpy"])
-    lo = float(dom.inf) if dom.inf.is_finite else None
-    hi = float(dom.sup) if dom.sup.is_finite else None
-    grid = np.concatenate([-np.logspace(-6, 6, 4000)[::-1], [0.0], np.logspace(-6, 6, 4000)])
-    grid = np.unique(np.concatenate([grid, np.linspace(-50, 50, 20001)]))
-    if lo is not None:
-        grid = grid[grid >= lo]
-    if hi is not None:
-        grid = grid[grid <= hi]
+    absf = lambda u: abs(float(f(u)))
+    lo = float(dom.inf) if dom.inf.is_finite else -1e9
+    hi = float(dom.sup) if dom.sup.is_finite else 1e9
+    seeds = []
+    for term in sp.Add.make_args(sp.expand(e)):
+        if not term.has(var):
+            continue
+        try:
+            pts = _within(5, lambda: _extreme_values(term, var, dom, points=True))
+            seeds += [float(sp.N(q)) for q, _ in pts if q is not None]
+        except Exception:
+            continue
+    grid = np.linspace(max(lo, -50), min(hi, 50), 20001)
     with np.errstate(all="ignore"):
         vals = np.abs(np.asarray(f(grid), dtype=float) * np.ones_like(grid))
     vals[~np.isfinite(vals)] = 0
-    i = int(np.argmax(vals))
-    a, b = grid[max(i - 1, 0)], grid[min(i + 1, len(grid) - 1)]
-    g = lambda u: -abs(float(f(u)))
-    for _ in range(80):                                   # golden-section refinement
-        c, d = b - (b - a) / 1.618033988749895, a + (b - a) / 1.618033988749895
-        if g(c) < g(d):
-            b = d
-        else:
-            a = c
-    return sp.Float(max(-g((a + b) / 2), float(vals[i])), 12)
+    seeds += [float(grid[k]) for k in np.argsort(vals)[::-1][:20]]
+    seeds = sorted({min(max(x0, lo), hi) for x0 in seeds})
+    best = []
+    for x0 in seeds:
+        for w in (1e-3, 1e-1, 1.0):
+            a, b = max(lo, x0 - w), min(hi, x0 + w)
+            for _ in range(100):
+                c, d = b - (b - a) / 1.618033988749895, a + (b - a) / 1.618033988749895
+                if absf(c) > absf(d):
+                    b = d
+                else:
+                    a = c
+            xm = (a + b) / 2
+            best.append((absf(xm), xm))
+    best.sort(reverse=True)
+    top_v, top_x = best[0]
+    tie = any(abs(v - top_v) <= 1e-9 * max(top_v, 1e-300) and abs(x - top_x) > 1e-6 for v, x in best[1:])
+    return sp.Float(top_x, 12), sp.Float(top_v, 12), tie
+
+
+def _numeric_argmax(e, var, dom):
+    x, _, tie = _numeric_extremum(e, var, dom)
+    if tie:
+        raise AmbiguousError("peak_position(): |y| is largest at several places")
+    return x
+
+
+def _numeric_peak(e, var, dom):
+    return _numeric_extremum(e, var, dom)[1]
 
 
 def _peak_of(e, var, extent, what):
@@ -1859,9 +1900,11 @@ def _peak_position(sc, w, t=None):
     dom = sp.Interval(-sp.oo if lo is None else lo, sp.oo if hi is None else hi)
     e = wave.field().xreplace({T: sp.sympify(t)})
     try:
-        cands = _within(15, lambda: _extreme_values(e, X, dom, points=True))
+        cands = _within(20, lambda: _extreme_values(e, X, dom, points=True))
     except _Budget:
-        raise SceneError("peak_position(): the extremes take too long to find; give a simpler shape")
+        if e.free_symbols - {X}:
+            raise SceneError("peak_position(): the extremes take too long to find symbolically; give numbers")
+        return _numeric_argmax(e, X, dom)
     cands = [(q, abs(float(sp.N(v)))) for q, v in cands if q is not None]
     if not cands:
         raise SceneError("peak_position(): no maximum found")
@@ -1948,3 +1991,4 @@ OBSERVABLES = {
 
 from . import rays as _rays_module  # noqa: E402,F401  (registers source/ray observables)
 from . import modes as _modes_module  # noqa: E402,F401  (registers standing-wave pattern observables)
+from . import energy as _energy_module  # noqa: E402,F401  (registers energy observables)

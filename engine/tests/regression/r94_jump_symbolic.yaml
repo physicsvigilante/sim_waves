@@ -1,0 +1,6 @@
+# review 8 #2: a jump at a symbolic edge or instant is refused, not 0
+symbols: {a: positive}
+media: {s: {type: string, mu: 0.01 kg/m, tension: 4 N}}
+waves: {p: {pulse: {on: s, shape: "0.01*(step(x - a) - step(x - a - 0.2))", units: {x: m, y: m}, dir: +x}}}
+observe: {E: "energy(p)"}
+expect: {error: rejected, message: "symbolic position"}

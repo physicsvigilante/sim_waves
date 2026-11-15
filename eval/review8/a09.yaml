@@ -1,0 +1,10 @@
+media: {s: {type: string, mu: 0.01 kg/m, tension: 4 N}}
+waves:
+  w1: {harmonic: {on: s, A: 0.02 m, f: 10 Hz, dir: +x, phase: 0}}
+  w2: {harmonic: {on: s, A: 0.01 m, f: 10 Hz, dir: -x, phase: 0}}
+  st: {sum: [w1, w2]}
+observe:
+  K0: "kinetic_energy(st, start=0[m], end=2[m], t=0[s])"
+  U0: "potential_energy(st, start=0[m], end=2[m], t=0[s])"
+  E_t: "energy(st, start=0[m], end=2[m], t=0.013[s])"
+  Kavg: "mean_over(t, kinetic_energy(st, start=0[m], end=2[m], t=t), 0[s], period(w1))"

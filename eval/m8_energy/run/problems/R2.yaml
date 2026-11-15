@@ -1,0 +1,21 @@
+id: m8/R2
+format: numerical
+statement: |
+  Two long strings are joined at x = 0 and kept under a common tension of 36 N. The
+  string on the left (x < 0) has linear mass density 0.090 kg/m; the string on the right
+  (x > 0) has linear mass density 0.010 kg/m. At t = 0 a smooth pulse lies wholly on the
+  left string, travelling towards the joint. Its displacement is
+      y = (2.5 mm) [1 + cos(pi (x + 0.50 m)/(0.10 m))]   for -0.60 m <= x <= -0.40 m,
+  and zero elsewhere. Neglect gravity, damping and the mass of the joint. Consider the
+  string long after the pulse has fully interacted with the joint, when the reflected and
+  transmitted pulses are both clear of it.
+  (a) Find the length of string over which the transmitted pulse is non-zero.
+  (b) Find the energy carried by the reflected pulse.
+  (c) Find the energy carried by the transmitted pulse.
+  (d) Find the greatest kinetic energy per unit length found anywhere on the right-hand
+      string at that time.
+figure: |
+  Horizontal string along the x-axis with a joint marked at x = 0. Left segment labelled
+  mu1 = 0.090 kg/m, right segment labelled mu2 = 0.010 kg/m, tension T = 36 N in both.
+  On the left segment a single smooth hump of height 5.0 mm, zero at x = -0.60 m and at
+  x = -0.40 m, peak at x = -0.50 m, with an arrow pointing in +x towards the joint.

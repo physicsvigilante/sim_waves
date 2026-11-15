@@ -1,0 +1,6 @@
+media: {s: {type: string, mu: 0.01 kg/m, tension: 4 N}}
+waves: {w: {given: "2*sin(pi*x/100 - 20*pi*t)", units: {x: cm, t: s, y: cm}, on: s}}
+observe:
+  E: "energy(w, start=0[cm], end=200[cm], t=0[s])"
+  Kd: "kinetic_density(w, x=0[m], t=0[s])"
+  Ud: "potential_density(w, x=50[cm], t=0[s])"

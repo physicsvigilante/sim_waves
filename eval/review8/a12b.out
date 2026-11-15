@@ -1,0 +1,2 @@
+E_sym = pi*(-2*pi*a + 2*pi*b - sin(2*pi*a) + sin(2*pi*b))/2500
+[exit 0 in 3s]

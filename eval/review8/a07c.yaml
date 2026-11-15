@@ -1,0 +1,7 @@
+media:
+  L: {type: string, mu: 20 g/m, tension: 18 N}
+  R: {type: string, mu: 180 g/m, tension: 18 N}
+junctions: {J: {at: 0 m, left: L, right: R}}
+waves:
+  p: {pulse: {on: L, shape: "0.004*sin(pi*(x + 1.2)/0.6)*(step(x + 1.2) - step(x + 0.6))", units: {x: m, y: m}, dir: +x}}
+observe: {Et_half: "energy(p_transmitted, t=0.03[s])", Er_half: "energy(p_reflected, t=0.03[s])"}

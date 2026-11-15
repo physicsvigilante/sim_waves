@@ -1,0 +1,20 @@
+id: m8/R1
+format: numerical
+statement: |
+  A long, uniform string of linear mass density 0.050 kg/m is stretched along the x-axis
+  under a tension of 80 N. At t = 0 a single pulse sits on it: the displacement is zero
+  for x < 0.20 m, rises linearly from 0 at x = 0.20 m to a peak of 6.0 mm at x = 0.30 m,
+  falls linearly from that peak back to 0 at x = 0.60 m, and is zero for x > 0.60 m.
+  The pulse travels in the +x direction without change of shape. Ignore gravity, damping
+  and any reflections from the far ends of the string.
+  (a) Over what length of string is the displacement non-zero?
+  (b) Find the total mechanical energy carried by the pulse.
+  (c) At t = 20 ms, find the kinetic energy of the portion of string between
+      x = 1.05 m and x = 1.30 m.
+  (d) At t = 20 ms, find the elastic potential energy per unit length of the string at
+      x = 1.25 m.
+figure: |
+  Snapshot of the string at t = 0, x-axis horizontal, displacement y vertical. The string
+  lies flat on the x-axis except for an asymmetric triangular bump: y = 0 at x = 0.20 m,
+  straight line up to y = 6.0 mm at x = 0.30 m, straight line down to y = 0 at x = 0.60 m.
+  An arrow above the bump points in the +x direction. Labels: mu = 0.050 kg/m, T = 80 N.

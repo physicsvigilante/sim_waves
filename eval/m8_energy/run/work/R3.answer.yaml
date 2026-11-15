@@ -1,0 +1,9 @@
+answer: {a: 0.0987 J/m, b: 0.0395 J, c: 1.21e-3 J}
+final_scene: R3.v2.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "nothing"
+missing_in_source: none
+reasoning: "Tension solved by engine as 40 N from speed(rope)==speed(y1). Then potential_density, energy(total,...) and mean_over(kinetic_energy) give pi^2*(...)^2/32000, pi^2/250 and pi*(5*pi-8)/20000 J."
+friction: "tension: free did not resolve from the wave (v1 failed: energy needs tension); had to declare unknown T and add the fact speed(rope)==speed(y1). Converting sin(kx - wt) to the engine convention (phase pi) is a manual step, recorded in assume."

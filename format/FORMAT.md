@@ -350,6 +350,43 @@ rays:
     Use `max(...)`, `min(...)` or `count(...)` on the list. "Adjacent maxima" are
     neighbours in this list.
 
+## Energy on strings
+
+For any wave on a string (harmonic, given with `on:`, sum, shaped pulse and its reflected
+or transmitted parts):
+
+- **Per unit length at (x, t):**
+  - `kinetic_density(w, x=, t=)` = (1/2) mu (dy/dt)^2;
+  - `potential_density(w, x=, t=)` = (1/2) T (dy/dx)^2;
+  - `energy_density(w, x=, t=)` = their sum.
+
+  For energy per unit volume, divide by the cross-section.
+- **In a stretch at an instant:** `kinetic_energy(w, start=, end=, t=)`,
+  `potential_energy(...)` and `energy(...)`.
+  - Without `start`/`end`, the whole string is used.
+  - For a shaped pulse, `t` may be omitted. Then the integral covers the whole pulse, and
+    for a reflected or transmitted pulse that is the energy it carries.
+- **Largest or smallest value over a range:** `max_in(var, expr, lo, hi)` and
+  `min_in(...)`, e.g. `max_in(x, kinetic_density(p, x=x, t=0.05[s]), 1[m], 2[m])`. They work
+  for any expression in one variable, including piecewise ones.
+- **Averages over a period:** `mean_over(t, kinetic_energy(w, start=0[m], end=wavelength(w)/2, t=t), 0[s], period(w))`.
+- **Pulse width:** `width(p)` is the length over which a shaped pulse is non-zero; for a
+  transmitted pulse it is v2/v1 times the incident width. A shape that never reaches zero
+  (e.g. a Gaussian) has no width.
+- **Refusals:**
+  - A shape with a jump (e.g. a rectangle) is refused: it has infinite stretching energy.
+    Continuity can only be checked where corners and edges are at numeric positions, so
+    give numbers, including the instant.
+  - A density exactly at a corner is refused (the slope is undefined there); ask just
+    beside it.
+  - A stretch (`start`/`end`) of a pulse needs `t`. Without `t`, the whole pulse is meant.
+  - A wave with no string has no mu or T: undetermined.
+- **Exact or decimal:** integrals are exact where possible. Otherwise a numerical value
+  is computed piece by piece and shown as a decimal.
+- `width` of a pulse with several separate non-zero parts is ambiguous, and is refused.
+- A standing wave may be given directly (`given:` with `on:`); it has no single speed, so
+  its speed is not compared with the string's.
+
 ## Emitters (open3d)
 
 ```yaml

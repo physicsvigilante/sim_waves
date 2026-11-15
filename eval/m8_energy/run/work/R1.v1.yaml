@@ -1,0 +1,17 @@
+id: m8/R1
+assume:
+  - "String is long: no junctions or reflections modelled (stated: ignore reflections from far ends)."
+  - "Pulse shape written as piecewise linear with step windows from the stated corner points."
+media:
+  rope: {type: string, mu: 0.050 kg/m, tension: 80 N}
+waves:
+  p: {pulse: {on: rope, shape: "0.006*((x - 0.2)/0.1*(step(x - 0.2) - step(x - 0.3)) + (0.6 - x)/0.3*(step(x - 0.3) - step(x - 0.6)))", units: {x: m, y: m}, dir: +x}}
+given:
+  - {fact: "mu(rope) == 0.050[kg/m]", source: stated}
+  - {fact: "tension(rope) == 80[N]", source: stated}
+observe:
+  width_a: "width(p)"
+  E_total: "energy(p)"
+  KE_c: "kinetic_energy(p, start=1.05[m], end=1.30[m], t=0.020[s])"
+  PE_density_d: "potential_density(p, x=1.25[m], t=0.020[s])"
+  speed: "speed(rope)"

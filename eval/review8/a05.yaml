@@ -1,0 +1,3 @@
+media: {s: {type: string, mu: 0.01 kg/m, tension: 4 N}}
+waves: {p: {pulse: {on: s, shape: "max(0, 0.5 - 1000*abs(x))", units: {x: m, y: m}, dir: +x}}}
+observe: {E: "energy(p)"}

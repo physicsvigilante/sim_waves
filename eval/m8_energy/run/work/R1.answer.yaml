@@ -1,0 +1,9 @@
+answer: {a: 0.40 m, b: 0.0384 J, c: 0.0104 J, d: 0.016 J/m}
+final_scene: R1.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "nothing (far-end reflections ignored per the problem)"
+missing_in_source: none
+reasoning: "width(p)=2/5 m; energy(p)=24/625 J; kinetic_energy over 1.05-1.30 m at 20 ms = 13/1250 J; potential_density at 1.25 m = 2/125 J/m (all exact)."
+friction: "Piecewise-linear shape needs step-window construction; no direct polyline syntax. Otherwise none."

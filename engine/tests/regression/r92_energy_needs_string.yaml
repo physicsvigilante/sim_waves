@@ -1,0 +1,4 @@
+# m8: a given wave with no string has no mu and T: energy undetermined
+waves: {w: {given: "0.01*sin(2*x - 3*t)", units: {x: m, t: s, y: m}}}
+observe: {E: "energy_density(w, x=0[m], t=0[s])"}
+expect: {error: undetermined, message: "not on a string"}

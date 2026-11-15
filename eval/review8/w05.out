@@ -1,0 +1,2 @@
+W: NOT AVAILABLE (SceneError: width(): pulse 'p' never falls to zero (e.g. a Gaussian or Lorentzian); its width is not defined without a threshold)
+[exit 1 in 2s]
