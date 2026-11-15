@@ -1,0 +1,14 @@
+# m10: 24/03 asc_008 #5: sound speed from two heard frequencies
+arbitrary: {D: 100 m}
+unknowns: {c: positive, f0: positive}
+media: {air: {type: gas, v: c}}
+sources: {S: {on: air, at: [0 m, 0 m], f: f0, A: 1, phase: 0, spreading: none}}
+points:
+  P: {at: [D, 0 m], velocity: [-40 m/s, 0 m/s]}
+  Q: {at: [D, 0 m], velocity: [40 m/s, 0 m/s]}
+rays: {toward: {from: S, to: P}, away: {from: S, to: Q}}
+given:
+  - {fact: "frequency(toward, emitted=0[s]) == 200[Hz]", source: stated}
+  - {fact: "frequency(away, emitted=0[s]) == 160[Hz]", source: stated}
+observe: {c: "c", f0: "f0"}
+expect: {c: 360, f0: 180}

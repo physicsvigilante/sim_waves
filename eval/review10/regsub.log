@@ -1,0 +1,74 @@
+[PASS] r103_two_log_unknowns.yaml: solved P=pi/25  (= 0.125664), d=100
+  re-checked facts: 3 proved
+  P = pi/25  (= 0.125664)  [ok]
+  d = 100  [ok]
+[PASS] r105_arbitrary_tiny.yaml: rejected as expected (rejected): depends on the arbitrary value(s) ['P']: the problem does not fix this result
+[PASS]   fa = 680  [ok]
+  fa_t = 680  [ok]
+  fb = 5440/9  (= 604.444)  [ok]
+  te = 35/16  (= 2.18750)  [ok]
+  ta = 50/17  (= 2.94118)  [ok]
+  lam = 1/2  (= 0.500000)  [ok]
+[PASS]   f = 3433000/3367  (= 1019.60) <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>  [ok]
+  pct = 6600/3367  (= 1.96020) <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>  [ok]
+[PASS]   beats = 2000/83  (= 24.0964) <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>  [ok]
+  fr = 43500/83  (= 524.096) <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>  [ok]
+[PASS]   a = 1000  [ok]
+  b = 17500/17  (= 1029.41)  [ok]
+  c = 1000  [ok]
+  d = 8750/9  (= 972.222)  [ok]
+[PASS] r119_no_sound_yet.yaml: rejected as expected (rejected): ray 'r': no sound yet: the sound arriving then would have left the source at t = -9/7, before it starts emitting at 0
+[PASS]   fBA = 604 <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>  [ok]
+  fAB = 600 <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>  [ok]
+  beatsA = 8 <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>  [ok]
+  beatsB = 0 <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>  [ok]
+[PASS]   f = 1024*sqrt(1153)/383 + 394240/383  (= 1120.13) <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>  [ok]
+[PASS]   n3 = 500 <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>  [ok]
+  b_order = 1 <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>  [ok]
+[PASS]   f = 400 <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>  [ok]
+[PASS] r124_unknown_sound_speed.yaml: solved c=360, f0=180
+  re-checked facts: 3 proved
+  c = 360 <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>  [ok]
+  f0 = 180 <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>  [ok]
+[PASS] r125_supersonic.yaml: rejected as expected (rejected): source 'S': moves at or above the speed of sound relative to the air; v0 handles subsonic motion only (shock waves are not modelled)
+[PASS] r126_moving_wall_offline.yaml: rejected as expected (rejected): ray 'r': a moving wall is handled in v0 only when the source, the listener and their motion (and the wind) lie on one line along the wall's normal
+[PASS] r127_needs_time.yaml: rejected as expected (rejected): frequency(r): something on this ray moves (or the air moves), so the heard frequency can change with time; give t= (when heard) or emitted= (when emitted)
+[PASS]   f = 500  [ok]
+  f2 = 115600/231 - 28900*sqrt(7291)/1684221  (= 498.968)  [ok]
+[PASS]   d = 10  [ok]
+  top = 10  [ok]
+  n = 5  [ok]
+  bottom = 20  [ok]
+[PASS]   top = 20  [ok]
+[PASS]   I = 25  [ok]
+[PASS] r44_incoherent_amplitude.yaml: rejected as expected (rejected): resultant_amplitude(): the rays are not all coherent (a source has a random phase); only relative_intensity is defined
+[PASS]   ratio = 1/9  (= 0.111111)  [ok]
+  amp_A = 1  [ok]
+[PASS] r46_spherical_and_side.yaml: rejected as expected (rejected): rays.bad: source and point must be on the same side of reflector 'wall', off its surface
+[PASS]   a = 1/5  (= 0.200000)  [ok]
+  L = 5  [ok]
+  lam = 1  [ok]
+[PASS] r48_reflector_needs_boundary.yaml: rejected as expected (rejected): reflectors.wall: give exactly one of boundary (rigid | open) or phase_change (only when the problem itself states the phase change)
+[PASS] r49_coherence_after_solve.yaml: solved f0=170
+  re-checked facts: 2 proved
+  I = 4  [ok]
+  A = 2  [ok]
+[PASS]   I = 2*cos(20*pi/lam) + 2  [ok]
+[PASS] r51_amplitude_units.yaml: rejected as expected (rejected): resultant_amplitude(): the sources' amplitudes A are in different units (or mix units and plain numbers); give them all in one unit, or all as plain numbers
+[PASS] r52_unknown_frequencies.yaml: rejected as expected (undetermined): relative_intensity(): cannot tell whether rays 'r2' and 'r1' have the same frequency (f2 vs f1)
+[PASS]   first = 3*sqrt(3)/2  (= 2.59808)  [ok]
+[PASS]   I120 = 4  [ok]
+  I100 = 2*cos(10*sqrt(5)*pi) + 2  (= 2.84769)  [ok]
+[PASS] r69_power_with_none.yaml: rejected as expected (rejected): sources.S: a source with power needs spreading spherical or hemispherical (and no A_at)
+[PASS] r71_power_from_level.yaml: solved P=pi/25  (= 0.125664)
+  re-checked facts: 2 proved
+  P = pi/25  (= 0.125664)  [ok]
+[PASS] r72_powered_ray_amplitude.yaml: rejected as expected (rejected): amplitude(): this sound source carries a pressure; ask for pressure_amplitude(...) or displacement_amplitude(...) so the units are explicit
+[PASS] r74_level_difference.yaml: solved d=10*10**(7/10)/(10 - 10**(7/10))  (= 10.0476)
+  re-checked facts: 2 proved
+  d = 10*10**(7/10)/(10 - 10**(7/10))  (= 10.0476)  [ok]
+[PASS] r76_tube_from_power.yaml: rejected as expected (rejected): rays.tb: a stated-length path (a tube) from a source given by power: how the sound spreads along it is not modelled; give the source an amplitude A
+[PASS]   v = 10000*sqrt(4510)/451  (= 1489.06)  [ok]
+  p = sqrt(102)/(35*sqrt(pi))  (= 0.162801)  [ok]
+
+summary: PASS 36

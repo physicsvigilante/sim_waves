@@ -1,0 +1,8 @@
+
+media: {air: {type: gas, v: 340 m/s, wind: [8 m/s, -5 m/s]}}
+sources: {toy: {on: air, at: [2 m, 0 m], circle: {center: [0 m, 0 m], speed: 30 m/s, sense: ccw}, f: 500 Hz, A: 1, phase: 0, spreading: none}}
+points: {O: [10 m, 0 m], C: {at: [10 m, 3 m], circle: {center: [10 m, 0 m], speed: 20 m/s, sense: cw}}}
+rays: {r: {from: toy, to: O}, b: {from: toy, to: C}}
+observe:
+  a: "frequency(r, t=0.3[s])"    # 530.00073
+  b: "frequency(b, t=1[s])"      # 437.88224

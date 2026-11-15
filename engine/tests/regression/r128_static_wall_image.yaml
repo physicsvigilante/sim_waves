@@ -1,0 +1,8 @@
+# m10: a still wall, source moving parallel to it (image method), heard at t = 1 s
+media: {air: {type: gas, v: 340 m/s}}
+sources: {S: {on: air, at: [0 m, 0 m], velocity: [0 m/s, 10 m/s], f: 500 Hz, A: 1, phase: 0, spreading: none}}
+points: {O: [0 m, 0 m]}
+reflectors: {wall: {point: [50 m, 0 m], normal: [-1, 0], boundary: rigid}}
+rays: {r: {from: S, to: O, via: wall}}
+observe: {f: "frequency(r, emitted=0[s])", f2: "frequency(r, t=1[s])"}
+expect: {f: 500, f2: "115600/231 - 28900*sqrt(7291)/1684221"}

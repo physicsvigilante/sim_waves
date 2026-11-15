@@ -1,0 +1,12 @@
+
+media: {air: {type: gas, v: 340 m/s}}
+arbitrary: {D: 100 m, f0: 400 Hz}
+sources: {a: {on: air, at: [0 m, 0 m], velocity: [34 m/s, 0 m/s], f: f0, A: 1, phase: 0, spreading: none}}
+points: {O: [D, 0 m], B: [-D, 0 m], side: [0 m, D]}
+rays: {r: {from: a, to: O}, b: {from: a, to: B}, s: {from: a, to: side}}
+observe:
+  ratio: "frequency(r, emitted=0[s])/frequency(b, emitted=0[s])"   # (374)/(306) = 11/9
+  dep: "frequency(r, emitted=0[s])"       # depends on f0
+  wlr: "wavelength(r, emitted=0[s])/wavelength(b, emitted=0[s])"  # 9/11
+  fixt: "frequency(r, t=5[s])/frequency(b, t=5[s])"   # at D*89 source hasn't passed; at D/97 passed -> depends
+  side: "frequency(s, emitted=0[s])/frequency(a)"   # 1

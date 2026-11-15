@@ -1,0 +1,7 @@
+# m10: a source faster than sound is refused
+media: {air: {type: gas, v: 340 m/s}}
+sources: {S: {on: air, at: [0 m, 0 m], velocity: [400 m/s, 0 m/s], f: 500 Hz, A: 1, phase: 0, spreading: none}}
+points: {O: [1000 m, 0 m]}
+rays: {r: {from: S, to: O}}
+observe: {f: "frequency(r, emitted=0[s])"}
+expect: {error: rejected, message: "speed of sound"}

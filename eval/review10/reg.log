@@ -1,0 +1,96 @@
+[PASS] r01_two_coefficients.yaml: rejected as expected (ambiguous): infinitely many situations fit the facts, e.g. k=25*pi/2; k=425*pi/2; k=825*pi/2; k=1225*pi/2. Values seen: k in {25*pi/2, 425*pi/2, 825*pi/2, 1225*pi/2, 1625*pi/2, 2025*pi/2, ...}. Add a constraint and record the reason in 'assume'.
+[PASS] r02_symbolic_period.yaml: rejected as expected (rejected): unknown 'k' sits inside a sine/cosine in a way v0 cannot solve reliably (non-numeric or mixed coefficient); restate the facts
+[PASS] r03_phase_multiplier.yaml: rejected as expected (ambiguous): 2 situations fit the facts, e.g. phi=pi/4; phi=5*pi/4. Values seen: phi in {pi/4, 5*pi/4}. Add a constraint and record the reason in 'assume'.
+[PASS] r04_far_window.yaml: solved xP=201/100  (= 2.01000)
+  re-checked facts: 4 proved
+  xP = 201/100  (= 2.01000)  [ok]
+[PASS] r05_unknown_frequency_identity.yaml: rejected as expected (rejected): given[0]: the time dependence involves an unknown frequency or is not sinusoidal; v0 cannot match it for all t: 'y(w, x=0, t=t) == 2[cm]*sin(3*pi*t)'
+[PASS] r06_underdetermined.yaml: rejected as expected (undetermined): unknowns not fixed by the facts: [A]
+[PASS] r07_dispersion_enforced.yaml: rejected as expected (inconsistent): no situation satisfies the facts; contradiction appears at given[1] '[implicit] waves.w: omega = k*v'
+[PASS] r07b_dispersion_solved.yaml: solved lam=2*sqrt(3)  (= 3.46410)
+  re-checked facts: 3 proved
+  lam = 2*sqrt(3)  (= 3.46410)  [ok]
+[PASS] r08_given_on_medium.yaml: rejected as expected (rejected): waves.w: formula speed 4 differs from the medium's 34.6410
+[PASS]   same = False <counterexample>  [ok]
+[PASS]   ratio = 2 <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>  [ok]
+[PASS] r101_arbitrary_dependent.yaml: rejected as expected (rejected): depends on the arbitrary value(s) ['mu', 'L']: the problem does not fix this result
+[PASS]   re-checked facts: 1 proved
+  fw = n - 1  [ok]
+  T = n/20 - 1/20  [ok]
+  b = 1  [ok]
+[PASS] r103_two_log_unknowns.yaml: solved P=pi/25  (= 0.125664), d=100
+  re-checked facts: 3 proved
+  P = pi/25  (= 0.125664)  [ok]
+  d = 100  [ok]
+[PASS] r104_two_bounds.yaml: rejected as expected (rejected): given: 'n' has two bounds; v0 supports one bound per symbol
+[PASS] r105_arbitrary_tiny.yaml: rejected as expected (rejected): depends on the arbitrary value(s) ['P']: the problem does not fix this result
+[PASS] r106_arbitrary_threshold.yaml: rejected as expected (rejected): depends on the arbitrary value(s) ['L']: the problem does not fix this result
+[PASS] r107_log_square_root_kept.yaml: rejected as expected (rejected): 2 situations fit the facts, e.g. a=-2; a=2. Values seen: a in {2, -2}. Add a constraint and record the reason in 'assume'.
+[PASS] r108_log_undefined_root.yaml: rejected as expected (rejected): no situation satisfies the facts; contradiction appears at given[2] 'a < 0'
+[PASS]   re-checked facts: 1 proved
+  a = n - 1  [ok]
+[PASS]   accel = g/2  [ok]
+[PASS] r110_bound_dimension.yaml: rejected as expected (rejected): waves.w.f: 'L' is bounded by a value with dimension s, but is used here as s^-1
+[PASS]   re-checked facts: 1 proved
+  b = m - 2  [ok]
+  c = m - 3  [ok]
+[PASS] r112_log_family.yaml: rejected as expected (rejected): the facts tie ['a', 'b'] together but do not fix each one (a family of solutions); a fact is missing
+[PASS]   re-checked facts: 1 proved
+  d = 85/L**2  [ok]
+  a = 255/2  (= 127.500)  [ok]
+  r = 3  [ok]
+[PASS] r114_bound_at_outside.yaml: rejected as expected (rejected): at(): L = 2 is outside the stated bound on 'L'
+[PASS]   fa = 680  [ok]
+  fa_t = 680  [ok]
+  fb = 5440/9  (= 604.444)  [ok]
+  te = 35/16  (= 2.18750)  [ok]
+  ta = 50/17  (= 2.94118)  [ok]
+  lam = 1/2  (= 0.500000)  [ok]
+[PASS]   f = 3433000/3367  (= 1019.60) <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>  [ok]
+  pct = 6600/3367  (= 1.96020) <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>  [ok]
+[PASS]   beats = 2000/83  (= 24.0964) <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>  [ok]
+  fr = 43500/83  (= 524.096) <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>  [ok]
+[PASS]   a = 1000  [ok]
+  b = 17500/17  (= 1029.41)  [ok]
+  c = 1000  [ok]
+  d = 8750/9  (= 972.222)  [ok]
+[PASS] r119_no_sound_yet.yaml: rejected as expected (rejected): ray 'r': no sound yet: the sound arriving then would have left the source at t = -9/7, before it starts emitting at 0
+[PASS] r11_power_dimension.yaml: rejected as expected (rejected): dimension mismatch in a comparison of 'power(w) == 100[m]': m^2*kg*s^-3 vs m
+[PASS]   fBA = 604 <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>  [ok]
+  fAB = 600 <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>  [ok]
+  beatsA = 8 <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>  [ok]
+  beatsB = 0 <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>  [ok]
+[PASS]   f = 1024*sqrt(1153)/383 + 394240/383  (= 1120.13) <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>  [ok]
+[PASS]   n3 = 500 <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>  [ok]
+  b_order = 1 <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>  [ok]
+[PASS]   f = 400 <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>  [ok]
+[PASS] r124_unknown_sound_speed.yaml: solved c=360, f0=180
+  re-checked facts: 3 proved
+  c = 360 <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>  [ok]
+  f0 = 180 <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>  [ok]
+[PASS] r125_supersonic.yaml: rejected as expected (rejected): source 'S': moves at or above the speed of sound relative to the air; v0 handles subsonic motion only (shock waves are not modelled)
+[PASS] r126_moving_wall_offline.yaml: rejected as expected (rejected): ray 'r': a moving wall is handled in v0 only when the source, the listener and their motion (and the wind) lie on one line along the wall's normal
+[PASS] r127_needs_time.yaml: rejected as expected (rejected): frequency(r): something on this ray moves (or the air moves), so the heard frequency can change with time; give t= (when heard) or emitted= (when emitted)
+[PASS]   f = 500  [ok]
+  f2 = 115600/231 - 28900*sqrt(7291)/1684221  (= 498.968)  [ok]
+[PASS] r12_area_vs_diameter.yaml: rejected as expected (rejected): media.a: inconsistent cross-section (area vs diameter): 1/1000000 vs pi/160000
+[PASS] r13_dir_and_from.yaml: rejected as expected (rejected): waves.w: give either dir or from, not both
+[PASS] r14_fixed_ends.yaml: rejected as expected (rejected): media.a.ends: fixed ends (reflection) are not modelled in v0
+[PASS] r15_symbolic_overspec.yaml: rejected as expected (rejected): a fact without unknowns cannot be checked for all symbol values (mu0 - m0/L0 = 0); it over-specifies the scene
+[PASS] r16_dos_power.yaml: rejected as expected (rejected): exponent too large in 'a*9**9**9**9*sin(x - t)'
+[PASS] r17_dos_literal.yaml: rejected as expected (rejected): number literal out of range: '1e99999999'
+[PASS] r18_dos_unit.yaml: rejected as expected (rejected): unit exponent too large
+[PASS] r19_hanging_wave_speed.yaml: rejected as expected (rejected): wave 'w': speed is not specified
+[PASS] r20_direction_unknown.yaml: solved phi=pi  (= 3.14159), d=1
+  re-checked facts: 4 proved
+  v = 2  [ok]
+[PASS]   standing = False  [ok]
+  progressive = True  [ok]
+[PASS]   node = True <proved>  [ok]
+  antinode_amp = 1/50  (= 0.0200000)  [ok]
+[PASS]   re-checked facts: 1 proved
+  continuity = True <proved>  [ok]
+  r = 1/3  (= 0.333333)  [ok]
+  tr = 2/3  (= 0.666667)  [ok]
+[PASS] r24_even_harmonic_closed_pipe.yaml: rejected as expected (rejected): resonator 'p' has one closed and one open end: only odd harmonics exist (harmonic 2 does not)
+[PASS] r25_pipe_needs_end_correction.yaml: rejected as expected (rejected): resonators.p: give end_correction (0 m if the problem neglects it)

@@ -1,0 +1,8 @@
+media: {air: {type: gas, v: 340 m/s}}
+unknowns: {u: real}
+sources: {a: {on: air, at: [-1 m, 0 m], f: 500 Hz, A: 1, phase: 0, spreading: none}, b: {on: air, at: [1000 m, 0 m], velocity: [u, 0 m/s], f: 500 Hz, A: 1, phase: 0, spreading: none}}
+points: {O: [0 m, 0 m]}
+rays: {ra: {from: a, to: O}, rb: {from: b, to: O}}
+given:
+  - {fact: "abs(frequency(ra, emitted=0[s]) - frequency(rb, emitted=0[s])) == 10[Hz]", source: stated}
+observe: {u: "u"}

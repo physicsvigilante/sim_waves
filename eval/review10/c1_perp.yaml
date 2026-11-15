@@ -1,0 +1,16 @@
+
+media: {air: {type: gas, v: 340 m/s}}
+sources: {car: {on: air, at: [-100 m, 0 m], velocity: [20 m/s, 0 m/s], f: 500 Hz, A: 1, phase: 0, spreading: none}}
+points: {O: [0 m, 50 m], M: {at: [0 m, 50 m], velocity: [0 m/s, -12 m/s]}}
+rays: {r: {from: car, to: O}, m: {from: car, to: M}}
+observe:
+  t5: "frequency(r, t=5[s])"    # 501.7361
+  e5: "frequency(r, emitted=5[s])"   # 500
+  arr5: "arrives_at(r, emitted=5[s])"  # 5.1470588
+  t1: "frequency(r, t=1[s])"   # 526.776
+  t12: "frequency(r, t=12[s])"  # 473.936
+  te5: "emitted_at(r, t=5[s])"  # 4.852686
+  m2: "frequency(m, t=2[s])"   # 535.8427
+  m7: "frequency(m, t=7[s])"   # 467.7946
+  mte: "emitted_at(m, t=7[s])"  # 6.852116
+  rt: "arrives_at(m, emitted=emitted_at(m, t=7[s]))"

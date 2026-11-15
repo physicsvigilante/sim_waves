@@ -1,0 +1,8 @@
+# m10: 24/02 cnt_004 #10: listener on a circle round the source
+arbitrary: {R: 5 m}
+media: {air: {type: gas, v: 340 m/s}}
+sources: {S: {on: air, at: [0 m, 0 m], f: 400 Hz, A: 1, phase: 0, spreading: none}}
+points: {boy: {at: [R, 0 m], circle: {center: [0 m, 0 m], speed: 6 m/s, sense: ccw}}}
+rays: {r: {from: S, to: boy}}
+observe: {f: "frequency(r, t=1[s])"}
+expect: {f: 400}

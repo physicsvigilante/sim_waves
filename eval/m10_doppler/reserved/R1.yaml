@@ -1,0 +1,16 @@
+id: B4/single/44
+book: wanes_full.pdf, Chapter 4 (Mechanical Waves), Single Correct Choice Type Questions, problem 44, page 4.85
+type: single_correct
+statement: |
+  A source of sound emitting a note of constant frequency is moving towards a
+  stationary listener, and then recedes from the listener with constant velocity
+  maintained throughout the motion. The frequency heard by the listener (f) when
+  plotted against time (t) will give the following curve(s).
+figure: |
+  The four options are sketch graphs, each with f on the vertical axis, t on the
+  horizontal axis and origin O. No numbers are marked on any graph.
+options:
+  A: "Graph: f rises with increasing (upward-curving) slope to a sharp peak (cusp) at a time marked by a vertical dashed line, then falls back symmetrically with the mirror-image curve."
+  B: "Graph: f is constant at a higher level from near t = 0, then drops abruptly (vertical step) to a constant lower level that continues to the right."
+  C: "Graph: f rises along a straight line from near the origin to a peak at a time marked by a vertical dashed line, then falls along a straight line (a symmetric triangle)."
+  D: "Graph: f is constant at a lower level from near t = 0, then jumps abruptly (vertical step) up to a constant higher level that continues to the right."

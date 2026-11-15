@@ -1,0 +1,9 @@
+answer: [A]
+final_scene: R3.v2.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "Graph B (f vs 1/v0) shape was judged from the engine's f(v0) being linear with nonzero slope, so f is not linear in 1/v0 (a judgement, not an observable)."
+missing_in_source: "vs, f0, v numeric values (illustrative 20 m/s, 500 Hz, 340 m/s used; the slope identity was proved at these)"
+reasoning: "f(v0) = 25*v0/16 + 2125/4: linear with positive intercept (graph A); equivalent(slope, f0/(v-vs)) is proved True, f0/(v+vs) a counterexample."
+friction: "Slope identity checked only at illustrative numbers, not symbolically for general vs (needs unit-consistent symbols and arbitrary speeds, which cannot be scaled). Option formulas had to be written in observe via equivalent. No way to ask for f vs 1/v0 linearity."

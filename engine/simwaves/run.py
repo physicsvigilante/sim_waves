@@ -66,9 +66,9 @@ def _evaluate_arbitrary(sc, timeout):
         # each arbitrary value gets its own factor so that no two scale together by accident
         scale = {n: f ** (j + 1) if k == 0 else f * sp.Rational(101 + 7 * j, 100) for j, n in enumerate(names)}
         # (k == 0: powers 1.37, 1.37^2, ...; later runs: one shared factor times 1.01, 1.08, ...)
-        sc2 = Scene(copy.deepcopy(sc.data), scale=scale)
         try:
-            others.append(_evaluate_once(sc2, timeout))
+            sc2 = Scene(copy.deepcopy(sc.data), scale=scale)
+            others.append(_evaluate_once(sc2, timeout) + (sc2, f))
         except SceneError as exc:
             for name in list(res):
                 sc.obs_errors[name] = SceneError(f"with other arbitrary values the scene fails ({exc}); the "
@@ -76,13 +76,24 @@ def _evaluate_arbitrary(sc, timeout):
                 res.pop(name)
             return sol, res
     for name in list(res):
-        if all(name in r2 and _same_result(res[name], r2[name]) for _, r2 in others):
+        failed = [(f, sc2.obs_errors[name]) for _, r2, sc2, f in others if name not in r2 and name in
+                  getattr(sc2, "obs_errors", {})]
+        if failed:
+            f, exc = failed[0]
+            sc.obs_errors[name] = SceneError(f"cannot be shown independent of the arbitrary values: with them "
+                                             f"scaled by about x{sp.N(f, 3)} it fails ({exc}); choose arbitrary "
+                                             f"values for which every scaling stays valid (e.g. speeds well "
+                                             f"below the speed of sound)")
+            res.pop(name)
+            continue
+        if all(name in r2 and _same_result(res[name], r2[name]) for _, r2, _, _ in others):
             sc.basis[name] = (sc.basis.get(name, "exact") + "; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)")
         else:
             sc.obs_errors[name] = SceneError(f"depends on the arbitrary value(s) {names}: the problem does not "
                                              f"fix this result")
             res.pop(name)
-    sc.arbitrary_solved = {k: all(k in s2 and _same_result(v, s2[k]) for s2, _ in others) for k, v in sol.items()}
+    sc.arbitrary_solved = {k: all(k in s2 and _same_result(v, s2[k]) for s2, _, _, _ in others)
+                           for k, v in sol.items()}
     return sol, res
 
 
@@ -126,6 +137,8 @@ def _evaluate_inner(sc):
     from .errors import InconsistentError
     from .scene import harmonic_problem
     sol = solve_given(sc)
+    from .doppler import check_solution
+    check_solution(sc, sol)
     sc.solution = sol
     results, sc.basis, errors = {}, {}, []
     for name, text in (sc.data.get("observe") or {}).items():
@@ -137,6 +150,12 @@ def _evaluate_inner(sc):
         except Exception as exc:                       # an engine fault in one observable only
             errors.append((name, SceneError(f"engine internal error ({type(exc).__name__}: {exc}); "
                                             f"please report it")))
+            continue
+        from .doppler import HeardFrequency
+        if isinstance(v, sp.Basic) and v.has(HeardFrequency):
+            errors.append((name, SceneError(f"observe.{name}: a heard frequency at the time variable t is a "
+                                            f"curve, not a value; give a time, or draw it with a view plot "
+                                            f"(vs: t)")))
             continue
         if not isinstance(v, sp.logic.boolalg.BooleanAtom):
             v = sp.simplify(v)

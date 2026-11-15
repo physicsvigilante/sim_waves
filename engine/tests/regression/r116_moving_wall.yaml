@@ -1,0 +1,11 @@
+# m10: 24/02 bmc_004 #6: horn reflected from an approaching wall
+arbitrary: {D: 100 m}
+media: {air: {type: gas, v: 340 m/s}}
+sources: {H: {on: air, at: [0 m, 0 m], f: 1000 Hz, A: 1, phase: 0, spreading: none}}
+points: {driver: [0 m, 0 m]}
+reflectors: {wall: {point: [D, 0 m], normal: [-1, 0], boundary: rigid, velocity: [-3.3 m/s, 0 m/s]}}
+rays: {back: {from: H, to: driver, via: wall}}
+observe:
+  f: "frequency(back, emitted=0[s])"
+  pct: "100*(frequency(back, emitted=0[s]) - 1000[Hz])/(1000[Hz])"
+expect: {f: "3433000/3367", pct: "6600/3367"}

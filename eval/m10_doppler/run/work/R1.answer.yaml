@@ -1,0 +1,11 @@
+answer: [B]
+final_scene: R1.v2.yaml
+engine_fit: partial
+hand_steps:
+  - "Reading the engine values at sample times as 'constant high, abrupt drop, constant low' (shape judgement, no formula)."
+  - "Choosing a 1 m offset to avoid the singular head-on pass."
+coverage: full
+not_represented: "nothing (a perfectly head-on pass through the listener is replaced by a 1 m offset)"
+missing_in_source: "source speed, frequency, geometry (immaterial to the shape)"
+reasoning: "Engine gives ~548 Hz at t=1,5 s, 543.7 at 6.6 s, 472.4 at 6.7 s, ~459.5 from 8 s on: a high plateau, abrupt drop, low plateau = option B (D is the step up, A/C rise-then-fall never occur)."
+friction: "arbitrary: cannot be used for speeds/times (x89 scaling is supersonic and fixed times change); had to use illustrative numbers in assume. No observable for 'shape of a plot'; judged from samples."

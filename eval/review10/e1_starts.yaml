@@ -1,0 +1,21 @@
+
+media: {air: {type: gas, v: 350 m/s}}
+sources: {S: {on: air, at: [0 m, 0 m], velocity: [10 m/s, 0 m/s], starts: 5 s, emits_from: 0 s, f: 500 Hz, A: 1, phase: 0, spreading: none}}
+points: {P: [100 m, 40 m], M: {at: [100 m, 40 m], velocity: [-20 m/s, 5 m/s], starts: 2 s}, X: [350 m, 0 m]}
+rays: {r: {from: S, to: P}, m: {from: S, to: M}, xr: {from: S, to: X}}
+observe:
+  a: "frequency(r, t=5.2[s])"   # 500
+  b: "frequency(r, t=5.4[s])"   # 513.60688
+  c: "frequency(r, t=9[s])"     # 512.30613
+  m1: "frequency(m, t=1[s])"    # 500
+  m3: "frequency(m, t=3[s])"    # 521.40029
+  m8: "frequency(m, t=8[s])"    # 470.47424
+  mte: "emitted_at(m, t=8[s])"  # 7.7581699
+  early: "frequency(xr, t=0.9[s])"   # no sound yet (arrives at 1.0)
+  just: "frequency(xr, t=1.001[s])"  # 500
+  exact: "frequency(xr, t=1[s])"     # te = 0 = emits_from: ok 500 or refuse
+  before: "frequency(xr, emitted=-1[s])"  # no sound
+  jump: "frequency(xr, t=6[s])"   # emitted exactly at 5s: refuse
+  at5: "frequency(xr, t=5[s])"    # source starts at t=5; listener hears te=4 -> 500
+  post: "frequency(xr, t=6.5[s])"  # 500*350/340 = 514.7059
+  d4: "distance(S, M, t=4[s])"

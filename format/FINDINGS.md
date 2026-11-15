@@ -416,3 +416,61 @@ positive.
 - **R2 showed a defect:** a stated bound broke `at`, `diff` and `resonances(vary=)`, and
   the author dropped the bound. Fixed after the run (r113, r114).
 - **R3:** placing points from their distances to other points is a format gap for later.
+
+## Milestone 10: Doppler (before review)
+
+Built to `eval/m10_doppler/PLAN.md` in a new module, `engine/simwaves/doppler.py`.
+- **Motion:** sources and points take `velocity`, `starts` or `circle`; sources take
+  `emits_from`; walls take `velocity` along their normal; air takes `wind`.
+- **How the heard frequency is found:** the emission time comes from the travel
+  condition, and the heard frequency is f · dte/dt.
+  - On a line: a side-aware linear equation. It is exact and works with unknown speeds,
+    since the side is fixed by subsonic motion.
+  - Off a line: the squared condition, with roots checked.
+  - Circles: exact when the unknown time's side moves linearly; otherwise a bisection.
+- **Moving walls:** a two-leg chain on the normal line; still walls use an image source.
+- **Plots** against t are solved instant by instant.
+
+Also in this milestone:
+- **The m9 arbitrary check** now reports a scaled run that fails (e.g. a speed scaled
+  past the speed of sound) as such, not as "depends on the arbitrary values".
+- **Path lengths** of zero are refused only when a length is used, so a listener can
+  carry its own source.
+
+Tests: r115–r128, from design-set problems 24/02 and 24/03.
+
+### Milestone 10 review (Fable 5.2, medium; eval/review10/REPORT.md)
+
+**Three silent wrong answers, all fixed with tests r129–r135:**
+1. **Supersonic motion was not refused when the speed came from an unknown.** For
+   example, u = 400 m/s gave −2833 Hz. Solved values are now substituted into the motion,
+   and a solution that needs supersonic motion makes the scene inconsistent. A negative
+   heard rate is refused as well.
+2. **The wall's speed was compared with v without the wind.** It is now compared
+   relative to the air.
+3. **Sources and listeners could pass through the wall,** and the engine still answered.
+   An echo now needs the source in front of the wall when it emits and the listener in
+   front when it hears.
+
+**Medium findings:**
+- `period`, `omega` and `k` leaked the source's own values on a moving ray. They are now
+  refused.
+- An unknown wall speed could not be solved. Wall legs now take the side from the
+  geometry, so it can.
+
+**Low findings:**
+- A stated-length ray from a moving source is now marked as moving.
+- The instant a motion starts is no longer refused when only a position is needed.
+- `beat_frequency(ray, number, t=...)` is allowed.
+
+**Verified correct:** two moving objects along a line, wind, walls, oblique and 3D
+geometry, circles, timing, consistency of emission and arrival times, and solving for
+unknowns.
+
+### Milestone 10 frozen run (eval/m10_doppler/RESULT.md)
+- **R1–R3 matched the book's key.** R4 is a defective item (the printed f0 contradicts
+  the figure); the author answered both readings correctly.
+- **Friction for later:**
+  - arbitrary speeds turn supersonic under the ×89 scaling (a ranged `arbitrary` is a
+    candidate);
+  - comparisons in `observe` (`step(a - b)` works but is undocumented).

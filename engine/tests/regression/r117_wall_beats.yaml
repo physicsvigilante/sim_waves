@@ -1,0 +1,11 @@
+# m10: 24/03 cnt_005 #12: beats between direct and reflected sound
+arbitrary: {D: 50 m}
+media: {air: {type: gas, v: 340 m/s}}
+sources: {S: {on: air, at: [0 m, 0 m], f: 500 Hz, A: 1, phase: 0, spreading: none}}
+points: {M: [D/1000, 0 m]}
+reflectors: {wall: {point: [D, 0 m], normal: [-1, 0], boundary: rigid, velocity: [-8 m/s, 0 m/s]}}
+rays: {direct: {from: S, to: M}, back: {from: S, to: M, via: wall}}
+observe:
+  beats: "beat_frequency(direct, back, t=D/(100[m/s]))"
+  fr: "frequency(back, t=D/(100[m/s]))"
+expect: {beats: "2000/83", fr: "43500/83"}

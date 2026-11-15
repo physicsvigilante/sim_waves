@@ -1,0 +1,11 @@
+answer: [A]
+final_scene: R4.v1.yaml
+engine_fit: partial
+hand_steps:
+  - "Comparing engine's f_max_possible = 2828.57 Hz with 2500 and 2250 (observe refuses comparisons)."
+  - "Modelling the pass-by curve's extremes as head-on approach/recede cases."
+coverage: partial
+not_represented: "the intermediate S-curve of a pass-by (only the limiting values are modelled); the 2000 Hz crossing"
+missing_in_source: "Statement prints f0 = 2200 Hz but the figure marks 2000; whether 2000 is f0 or only a crossing level is unclear"
+reasoning: "As printed (f0 = 2200): 1800 asymptote gives u = 200/3 = 66.7 m/s (A true, C false) and f_m max = 2828.6 Hz so B, D false. Alternative reading f0 = 2000 (R4.v2): u = 100/3 = 33.33 m/s, f_m max = 2250 Hz, giving C and D. Printed text gives [A]; the source is inconsistent and the alternative reading would give [C, D]."
+friction: "Cannot express an asymptote/limit as a time-dependent fact; comparison in observe not allowed; inconsistent source data needs two scenes."

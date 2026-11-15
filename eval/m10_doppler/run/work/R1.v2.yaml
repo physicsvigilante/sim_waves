@@ -1,0 +1,20 @@
+id: B4/single/44
+assume:
+  - "Straight-line passage; listener 1 m off the line (exactly head-on would pass through the listener), so the path is nearly head-on."
+  - "Source speed 30 m/s, f 500 Hz, start 200 m before the closest point are illustrative values (not given); only the shape of f(t) is read."
+media: {air: {type: gas, v: 340 m/s}}
+sources:
+  S: {on: air, at: [-200 m, 0 m], velocity: [30 m/s, 0 m/s], f: 500 Hz, A: 1, phase: 0, spreading: none}
+points:
+  O: [0 m, 1 m]
+rays:
+  heard: {from: S, to: O}
+observe:
+  f_t1: frequency(heard, t=1[s])
+  f_t5: frequency(heard, t=5[s])
+  f_t6: frequency(heard, t=6.6[s])
+  f_t7: frequency(heard, t=6.7[s])
+  f_t8: frequency(heard, t=8[s])
+  f_t12: frequency(heard, t=12[s])
+view:
+  - {plot: "frequency(heard, t=t)", vs: t, range: [0 s, 14 s]}

@@ -1,0 +1,6 @@
+media: {air: {type: gas, v: 340 m/s}}
+arbitrary: {u: 400 m/s}
+sources: {b: {on: air, at: [-1000 m, 0 m], velocity: [u, 0 m/s], f: 500 Hz, A: 1, phase: 0, spreading: none}}
+points: {O: [0 m, 0 m]}
+rays: {rb: {from: b, to: O}}
+observe: {f0: "frequency(rb, emitted=0[s])"}

@@ -1,0 +1,10 @@
+media: {air: {type: gas, v: 340 m/s}}
+sources: {toy: {on: air, at: [2 m, 0 m], circle: {center: [0 m, 0 m], speed: 30 m/s, sense: cw}, emits_from: 0 s, f: 500 Hz, A: 1, phase: 0, spreading: none}, car: {on: air, at: [-100 m, 40 m], velocity: [20 m/s, -10 m/s], f: 500 Hz, A: 1, phase: 0, spreading: none}}
+points: {C: [0 m, 0 m], O: [0 m, 30 m]}
+reflectors: {wall: {point: [0 m, 0 m], normal: [0, 1], boundary: rigid}}
+rays: {r: {from: toy, to: C}, e: {from: car, to: O, via: wall}}
+observe:
+  centre: "frequency(r, t=1[s])"   # 500
+  nos: "frequency(r, t=0.001[s])"  # no sound (2/340=0.00588)
+  ok: "frequency(e, t=2[s])"
+  crossed: "frequency(e, t=8[s])"   # car at y=-40 by t=8 (crossed wall plane at t=4): must refuse

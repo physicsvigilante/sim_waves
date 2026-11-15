@@ -1,0 +1,13 @@
+# m10: source moving along the line: ahead, behind, emission/arrival times, wavelength ahead
+media: {air: {type: gas, v: 340 m/s}}
+sources: {S: {on: air, at: [0 m, 0 m], velocity: [20 m/s, 0 m/s], f: 640 Hz, A: 1, phase: 0, spreading: none}}
+points: {L: [1000 m, 0 m], M: [-1000 m, 0 m]}
+rays: {a: {from: S, to: L}, b: {from: S, to: M}}
+observe:
+  fa: "frequency(a, emitted=0[s])"
+  fa_t: "frequency(a, t=5[s])"
+  fb: "frequency(b, emitted=0[s])"
+  te: "emitted_at(a, t=5[s])"
+  ta: "arrives_at(a, emitted=0[s])"
+  lam: "wavelength(a, emitted=0[s])"
+expect: {fa: 680, fa_t: 680, fb: "5440/9", te: "35/16", ta: "50/17", lam: 0.5}

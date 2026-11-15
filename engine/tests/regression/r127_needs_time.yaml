@@ -1,0 +1,7 @@
+# m10: a heard frequency that can change with time needs t= or emitted=
+media: {air: {type: gas, v: 340 m/s}}
+sources: {S: {on: air, at: [0 m, 0 m], velocity: [20 m/s, 0 m/s], f: 640 Hz, A: 1, phase: 0, spreading: none}}
+points: {L: [1000 m, 3 m]}
+rays: {r: {from: S, to: L}}
+observe: {f: "frequency(r)"}
+expect: {error: rejected, message: "give t="}

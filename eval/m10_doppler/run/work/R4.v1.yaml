@@ -1,0 +1,27 @@
+id: B4/jee_advanced/50
+assume:
+  - "Source moves at constant speed u along a straight line past the observer (S-shaped decrease in the figure = a pass-by); max and min of f(t) are the limiting head-on cases, modelled as an approaching and a receding collinear source with the same speed u."
+  - "The late-time asymptote (1800 Hz) is the receding value; the early-time value f_m is bounded by the head-on approach value."
+  - "Distances 1000 m are arbitrary (not given)."
+  - "Statement printed f0 = 2200 Hz is used as stated (the figure's 2000 line is only a crossing level)."
+unknowns: {u: positive}
+media: {air: {type: gas, v: 300 m/s}}
+sources:
+  Sa: {on: air, at: [-1000 m, 0 m], velocity: [u, 0 m/s], f: 2200 Hz, A: 1, phase: 0, spreading: none}
+  Sr: {on: air, at: [1000 m, 0 m], velocity: [u, 0 m/s], f: 2200 Hz, A: 1, phase: 0, spreading: none}
+points:
+  O: [0 m, 0 m]
+rays:
+  approach: {from: Sa, to: O}
+  recede: {from: Sr, to: O}
+given:
+  - {fact: "frequency(recede, emitted=0[s]) == 1800[Hz]", source: figure, note: "asymptote of the curve"}
+  - {fact: "u < 300[m/s]", source: assumption, note: "subsonic"}
+observe:
+  u: u
+  f_max_possible: frequency(approach, emitted=0[s])
+  f_min: frequency(recede, emitted=0[s])
+  optA_u_is_66_7: equivalent(u, (200/3)[m/s])
+  optC_u_is_33_33: equivalent(u, (100/3)[m/s])
+  optB_fm_le_2500: frequency(approach, emitted=0[s]) <= 2500[Hz]
+  optD_fm_le_2250: frequency(approach, emitted=0[s]) <= 2250[Hz]

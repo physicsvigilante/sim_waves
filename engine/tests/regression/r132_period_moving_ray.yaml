@@ -1,0 +1,7 @@
+# m10 review: period/omega/k of a moving ray would leak the source's values: refused
+media: {air: {type: gas, v: 340 m/s}}
+sources: {S: {on: air, at: [0 m, 0 m], velocity: [20 m/s, 0 m/s], f: 500 Hz, A: 1, phase: 0, spreading: none}}
+points: {L: [1000 m, 0 m]}
+rays: {r: {from: S, to: L}}
+observe: {per: "period(r)"}
+expect: {error: rejected, message: "moves"}

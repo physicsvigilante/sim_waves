@@ -1,0 +1,7 @@
+
+media: {air: {type: gas, v: 340 m/s, wind: [-20 m/s, 0 m/s]}}
+sources: {car: {on: air, at: [-100 m, 0 m], velocity: [330 m/s, 0 m/s], f: 500 Hz, A: 1, phase: 0, spreading: none}}
+points: {O: [0 m, 0 m]}
+rays: {r: {from: car, to: O}}
+observe:
+  a: "frequency(r, emitted=0[s])"

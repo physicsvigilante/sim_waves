@@ -1,0 +1,13 @@
+
+media: {air: {type: gas, v: 340 m/s}}
+sources: {st: {on: air, at: [0 m, 0 m], f: 500 Hz, A: 1, phase: 0, spreading: none}}
+points: {P: [50 m, 0 m], N: [-50 m, 0 m]}
+reflectors: {app: {point: [200 m, 0 m], normal: [-1, 0], boundary: rigid, velocity: [-5 m/s, 0 m/s]}}
+rays: {e: {from: st, to: P, via: app}, n: {from: st, to: N, via: app}}
+observe:
+  ok: "frequency(e, t=5[s])"     # 500*345/335
+  past_listener: "frequency(e, t=35[s])"   # wall at 25 < P=50: P behind wall: refuse
+  past_source: "frequency(e, t=50[s])"   # wall at -50: refuse
+  n_past_source: "frequency(n, t=45[s])"  # wall at -25, between N and source: refuse
+  arr: "arrives_at(e, emitted=29.9[s])"    # wall at 50.5 ; fine. 
+  arr2: "arrives_at(e, emitted=35[s])"    # wall at 25, P behind -> refuse

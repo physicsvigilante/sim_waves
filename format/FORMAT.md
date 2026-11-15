@@ -356,6 +356,77 @@ rays:
     Use `max(...)`, `min(...)` or `count(...)` on the list. "Adjacent maxima" are
     neighbours in this list.
 
+## Moving sources, listeners and walls (Doppler); wind
+
+Sources and points can move, a plane wall can move along its normal, and the air can move
+(wind).
+
+```yaml
+media: {air: {type: gas, v: 340 m/s, wind: [10 m/s, 0 m/s]}}     # wind: optional; fluids use flow:
+sources:
+  car:  {on: air, at: [-100 m, 0 m], velocity: [20 m/s, 0 m/s], f: 500 Hz, A: 1, phase: 0, spreading: none}
+  horn: {on: air, at: [0 m, 0 m], velocity: [10 m/s, 0 m/s], starts: 5 s, emits_from: 0 s, ...}
+  toy:  {on: air, at: [2 m, 0 m], circle: {center: [0 m, 0 m], speed: 5 m/s, sense: ccw}, ...}
+points:
+  O: [50 m, 0 m]                                         # a still listener
+  bike: {at: [80 m, 0 m], velocity: [-15 m/s, 0 m/s]}    # a moving listener
+reflectors:
+  wall: {point: [200 m, 0 m], normal: [-1, 0], boundary: rigid, velocity: [-5 m/s, 0 m/s]}
+rays:
+  heard: {from: car, to: bike}
+  echo:  {from: horn, to: O, via: wall}
+```
+
+- **Motion.**
+  - `at` is the position at t = 0.
+  - With `starts`, the object rests at `at` until that time, then moves with `velocity`.
+  - `circle`: uniform circular motion in the plane. `at` is the position at t = 0, on the
+    circle.
+  - `emits_from`: the source is silent before this time.
+- **How the engine hears** (first principles, not the textbook formula):
+  - The sound heard at time t left the source at the emission time te, where
+    |R(t) − E(te) − wind·(t − te)| = v (t − te).
+  - The heard frequency is f · dte/dt: exact when te is (a line, a still side), and a
+    30-digit decimal when an unknown time sits on a circle.
+  - Wind at an angle is treated exactly, not by its component along the line, so the
+    result can differ slightly from the book's formula; choose the nearest option.
+- **Observables:**
+  - `frequency(ray, t=...)`: heard at reception time t.
+  - `frequency(ray, emitted=...)`: the sound emitted at that time ("when the source is at
+    A").
+  - `emitted_at(ray, t=...)`, `arrives_at(ray, emitted=...)`.
+  - `wavelength(ray, t= or emitted=)`: in the air at the listener.
+  - `beat_frequency(ray1, ray2, t=...)`: two rays heard at the same instant.
+  - `distance(p, q, t=...)`.
+  - Times in expressions need brackets: `t=2[s]`.
+- **A time is required** when something on the ray moves, because the heard frequency
+  can change with time. `frequency(ray)` alone is refused.
+  - For "while approaching": place the source at a distance and use `emitted=0[s]`.
+  - For "after they cross": use a time after the crossing.
+  - Put unstated distances in `arbitrary:`: the answer must not depend on them.
+- **Speeds and arbitrary values:** keep arbitrary speeds well below the speed of sound.
+  The arbitrary check scales them up to x89, and every scaling must stay subsonic.
+- **A listener carrying its own source** (same motion, same place) hears the source's own
+  frequency.
+- **Reflections:**
+  - A moving wall must move along its normal. Source, listener, their velocities and the
+    wind must lie on the normal line (v0).
+  - A still wall works off the line too (image source), but not with wind.
+- **Plotting** the heard frequency against time: `view: [{plot: "frequency(r, t=t)", vs: t,
+  range: [0 s, 20 s]}]`. Each instant is solved on its own. In `observe`, a time is
+  required.
+- **On a moving ray** (anything moves, or wind), path lengths, phases, intensities, and
+  `period`, `omega` and `k` are refused in v0.
+- **Unknown speeds** (of a source, listener, wall or sound) can be solved from `given`
+  facts. Ask with `emitted=` at a time whose positions are known (e.g. `emitted=0[s]`).
+  If the solved speed is at or above the speed of sound, the scene is inconsistent.
+- **No echo:** an echo exists only while the source (when it emits) and the listener
+  (when it hears) are in front of the wall. Otherwise it is refused.
+- **Refused:**
+  - motion at or above the speed of sound (relative to the air);
+  - an instant exactly when a motion starts, where the frequency jumps;
+  - sound asked for before it was emitted ("no sound yet").
+
 ## Energy on strings
 
 For any wave on a string (harmonic, given with `on:`, sum, shaped pulse and its reflected

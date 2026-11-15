@@ -1,0 +1,12 @@
+
+media: {air: {type: gas, v: 340 m/s}}
+sources: {car: {on: air, at: [-100 m, 0 m], velocity: [340 m/s, 0 m/s], f: 500 Hz, A: 1, phase: 0, spreading: none}, ws: {on: air, at: [-100 m, 0 m], velocity: [300 m/s, 200 m/s], f: 500 Hz, A: 1, phase: 0, spreading: none}, cs: {on: air, at: [2 m, 0 m], circle: {center: [0 m, 0 m], speed: 400 m/s, sense: ccw}, f: 500 Hz, A: 1, phase: 0, spreading: none}, ok: {on: air, at: [0 m, 0 m], f: 500 Hz, A: 1, phase: 0, spreading: none}}
+points: {O: [0 m, 50 m], F: {at: [0 m, 50 m], velocity: [0 m/s, -350 m/s]}}
+reflectors: {wall: {point: [0 m, 500 m], normal: [0, -1], boundary: rigid, velocity: [0 m/s, -400 m/s]}}
+rays: {r: {from: car, to: O}, wr: {from: ws, to: O}, cr: {from: cs, to: O}, f: {from: ok, to: F}, wl: {from: ok, to: O, via: wall}}
+observe:
+  a: "frequency(r, t=1[s])"
+  b: "frequency(wr, t=1[s])"
+  c: "frequency(cr, t=1[s])"
+  d: "frequency(f, t=0.01[s])"
+  e: "frequency(wl, t=0.01[s])"

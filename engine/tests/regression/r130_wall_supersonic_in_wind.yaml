@@ -1,0 +1,9 @@
+# m10 review: a wall faster than sound relative to the air (wind) is refused
+media: {air: {type: gas, v: 340 m/s, wind: [10 m/s, 0 m/s]}}
+sources: {a: {on: air, at: [0 m, 0 m], f: 500 Hz, A: 1, phase: 0, spreading: none}}
+points: {O: [1 m, 0 m]}
+reflectors: {wall: {point: [5000 m, 0 m], normal: [-1, 0], boundary: rigid, velocity: [-335 m/s, 0 m/s]}}
+rays: {e: {from: a, to: O, via: wall}}
+observe:
+  f: "frequency(e, emitted=0[s])"
+expect: {error: rejected, message: "speed of sound"}
