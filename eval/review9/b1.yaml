@@ -1,0 +1,4 @@
+# positive symbol with upper bound: positivity lost?
+symbols: {n: positive}
+given: ["n < 5"]
+observe: {a: "abs(n)", b: "sqrt(n^2)", c: "abs(n - 5)", d: "abs(n - 6)", e: "beat_frequency(n[Hz], 7[Hz])", f: "max(n, 0)", g: "min(n, 5)"}

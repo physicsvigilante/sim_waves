@@ -1,0 +1,7 @@
+# m9 run: at() with a value outside the stated bound is refused
+symbols: {L: positive}
+media: {air: {type: gas, v: 340 m/s}}
+resonators: {p: {type: pipe, on: air, length: L, ends: [closed, open], end_correction: 0 m}}
+given: [{fact: "L < 1[m]", source: stated}]
+observe: {a: "at(frequency(p, harmonic=1), L=2[m])"}
+expect: {error: rejected, message: "outside the stated bound"}

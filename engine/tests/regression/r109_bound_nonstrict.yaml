@@ -1,0 +1,5 @@
+# m9 review: a non-strict bound n >= 1 decides |n - 1|
+symbols: {n: positive}
+given: ["n >= 1"]
+observe: {a: "abs(n - 1)"}
+expect: {a: "(n - 1)"}

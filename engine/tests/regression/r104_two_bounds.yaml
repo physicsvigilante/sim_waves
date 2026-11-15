@@ -1,0 +1,5 @@
+# m9: two bounds on one symbol are refused in v0
+symbols: {n: positive}
+given: ["n > 1", "n < 5"]
+observe: {a: "n"}
+expect: {error: rejected, message: "two bounds"}

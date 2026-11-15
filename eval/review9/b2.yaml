@@ -1,0 +1,3 @@
+symbols: {n: positive}
+given: ["n >= 1"]
+observe: {a: "abs(n - 1)"}

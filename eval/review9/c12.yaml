@@ -1,0 +1,4 @@
+# logs undefined at the only root: expect inconsistent
+unknowns: {a: real, b: real}
+given: ["log(a) - log(b) == 0", "a*b == 4", "a < 0"]
+observe: {a: "a", b: "b"}

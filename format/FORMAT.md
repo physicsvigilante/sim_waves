@@ -402,6 +402,53 @@ line: {on: air, geometry: line,  power_per_length: P}
 pl:   {on: air, geometry: plane, intensity: I}
 ```
 
+## Ratio and comparison questions (values the problem does not give)
+
+- **Arbitrary values:** if the answer cannot depend on a value the problem never states
+  (the wire's mass per length in "the tension is doubled", a pipe's length in "how does the
+  frequency change"), do not invent it as a fact. Declare it arbitrary:
+
+  ```yaml
+  arbitrary: {mu: 10 g/m, L: 1 m}      # any convenient positive values, with units
+  media: {w1: {type: string, mu: mu, tension: 50 N}, w2: {type: string, mu: mu, tension: 200 N}}
+  ```
+
+  - The engine runs the scene at these values and at four other scalings (two near them,
+    and x1/97 and x89). An observable is reported only if all five runs agree; its basis
+    then says "same at 5 scalings ... (sampled)".
+  - This is a sampled check, not a proof: a threshold far outside x0.01 to x89 would go
+    unseen. Pick arbitrary values of a sensible size for the problem.
+  - If an observable does depend on them, it is NOT AVAILABLE ("depends on the arbitrary
+    values"): the problem really does not fix it.
+  - A name under `arbitrary` is not also declared in `symbols`. Any field may use it
+    (lengths, Y, density, tension, power).
+  - Use arbitrary values wherever a number is needed only to run the scene (resonance
+    lists, `max_in`, sources). Never tag them as stated facts.
+  - If the scene fails at another scaling, every observable is NOT AVAILABLE.
+  - In the export:
+    - unknowns solved from arbitrary values are marked "for drawing only";
+    - panels carry a note that only scale-free features mean anything;
+    - `explore: {vary: {arbitrary.L: [...]}}` is labelled an arbitrary value, never a
+      physical input.
+- **Bounds on a symbol:** a `given` fact comparing one symbol with a constant, e.g.
+  `{fact: "n > 1", source: stated}`, `L >= 2[m]` or `2 < m`, is a stated bound.
+  - It works for positive, real and integer symbols.
+  - The engine uses it in every sign decision (e.g. n - 1 > 0).
+  - Results are shown in the original symbol.
+  - The symbol takes the bound's dimension: write the unit on the bound.
+  - An `illustrate` value must satisfy the bound.
+  - `at(..., n=value)`, `diff(..., n)` and `resonances(..., vary=n)` work on a bounded
+    symbol: values outside the bound are refused or skipped.
+  - Messages may show Δ(n), the distance of n from its bound.
+  - One bound per symbol in v0. A bound on an unknown is an ordinary fact.
+- **Several unknowns tied through sound levels** (two dB readings, two unknown powers or
+  distances) are solved together. Every root is re-checked against the facts, and a root
+  where a log's argument is not positive is dropped.
+  - Declare such unknowns `positive` (distances, powers).
+  - A real unknown inside a log of a product or power (log(d^2), log(a*b)) is refused, so
+    that no sign case is lost.
+  - Facts that fix only a combination of the unknowns are reported as undetermined.
+
 ## given: how facts are solved
 
 - **Exactly one situation, or an error:**
@@ -422,7 +469,8 @@ pl:   {on: air, geometry: plane, intensity: I}
 - **Unknowns inside log, exp, inverse trig or an exponent** (e.g. a power from a level):
   - Solved for one unknown at a time, with the full real root set; every root is
     re-checked.
-  - Several such unknowns together are refused: fix the others first.
+  - Several such unknowns are solved together when each fact is linear in logs (e.g. sound
+    levels); other forms are refused.
 - **Absolute values** (`abs(...)`, and `beat_frequency`, which is |f1 - f2|) around
   unknowns are solved by sign cases. Each case is checked, so a beat with two possible
   sides gives one answer or an "ambiguous" error, never a guess.

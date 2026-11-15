@@ -1,0 +1,4 @@
+# bound + other fact on same symbol: equality contradicting bound
+symbols: {n: positive}
+given: ["n > 3", "n == 2"]
+observe: {a: "n"}

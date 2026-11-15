@@ -1,4 +1,6 @@
 """Run a scene: solve its facts, evaluate its observe block."""
+import copy
+
 import sympy as sp
 import yaml
 
@@ -33,7 +35,64 @@ def load(path):
     return Scene(data)
 
 
+# scalings of the arbitrary values: two near the stated values and two far away (x1/97, x89), so
+# a threshold (max, min, abs, step, a cutoff) between them is crossed; a sampled check, not a proof
+ARBITRARY_SCALES = (sp.Rational(137, 100), sp.Rational(61, 100), sp.Rational(1, 97), sp.Integer(89))
+
+
+def _same_result(a, b):
+    if isinstance(a, sp.logic.boolalg.BooleanAtom) or isinstance(b, sp.logic.boolalg.BooleanAtom):
+        return a == b
+    if isinstance(a, sp.Tuple) or isinstance(b, sp.Tuple):
+        return isinstance(a, sp.Tuple) and isinstance(b, sp.Tuple) and len(a) == len(b) and all(
+            _same_result(x, y) for x, y in zip(a, b))
+    d = sp.simplify(sp.sympify(a) - sp.sympify(b))
+    if d == 0:
+        return True
+    if d.is_number:
+        # relative only: SI answers such as intensities (1e-11 W/m^2) are far below any absolute floor
+        size = max(abs(complex(sp.N(a, 30))), abs(complex(sp.N(b, 30))))
+        return abs(complex(sp.N(d, 30))) <= 1e-9 * size
+    return False
+
+
+def _evaluate_arbitrary(sc, timeout):
+    """Run the scene at the stated arbitrary values and at two other scalings; keep only the
+    observables that agree in all three runs."""
+    sol, res = _evaluate_once(sc, timeout)
+    names = list(sc.arbitrary)
+    others = []
+    for k, f in enumerate(ARBITRARY_SCALES):
+        # each arbitrary value gets its own factor so that no two scale together by accident
+        scale = {n: f ** (j + 1) if k == 0 else f * sp.Rational(101 + 7 * j, 100) for j, n in enumerate(names)}
+        # (k == 0: powers 1.37, 1.37^2, ...; later runs: one shared factor times 1.01, 1.08, ...)
+        sc2 = Scene(copy.deepcopy(sc.data), scale=scale)
+        try:
+            others.append(_evaluate_once(sc2, timeout))
+        except SceneError as exc:
+            for name in list(res):
+                sc.obs_errors[name] = SceneError(f"with other arbitrary values the scene fails ({exc}); the "
+                                                 f"answer depends on them")
+                res.pop(name)
+            return sol, res
+    for name in list(res):
+        if all(name in r2 and _same_result(res[name], r2[name]) for _, r2 in others):
+            sc.basis[name] = (sc.basis.get(name, "exact") + "; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)")
+        else:
+            sc.obs_errors[name] = SceneError(f"depends on the arbitrary value(s) {names}: the problem does not "
+                                             f"fix this result")
+            res.pop(name)
+    sc.arbitrary_solved = {k: all(k in s2 and _same_result(v, s2[k]) for s2, _ in others) for k, v in sol.items()}
+    return sol, res
+
+
 def evaluate(sc, timeout=120):
+    if getattr(sc, "arbitrary", None):
+        return _evaluate_arbitrary(sc, timeout)
+    return _evaluate_once(sc, timeout)
+
+
+def _evaluate_once(sc, timeout=120):
     """Solve and evaluate, with a wall-clock limit where the OS supports it (POSIX)."""
     import signal
     if hasattr(signal, "SIGALRM"):
@@ -85,7 +144,7 @@ def _evaluate_inner(sc):
                     v.has(sp.zoo, sp.oo, -sp.oo, sp.nan, sp.AccumBounds):
                 errors.append((name, SceneError(f"observe.{name} is infinite or undefined ({v})")))
                 continue
-        results[name], sc.basis[name] = v, basis
+        results[name], sc.basis[name] = sc.show_back(v), basis
     why = harmonic_problem(sc, sol, final=True)
     if why:                                   # a whole-scene contradiction, not one observable
         exc = InconsistentError(why)

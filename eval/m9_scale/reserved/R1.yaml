@@ -1,0 +1,11 @@
+id: m9/R1
+format: numerical
+statement: >-
+  A uniform metal rod of length L is held by a clamp at its midpoint, with both ends
+  free, and is set into longitudinal vibration. Its lowest longitudinal frequency is
+  f_a. The clamp is then moved so that it grips the same rod at a point a distance L/4
+  from one end, both ends still free, and the rod is again excited longitudinally. The
+  lowest longitudinal frequency the rod can now sustain is f_b. Neither the length,
+  the Young's modulus nor the density of the rod is given. Find the value of f_b / f_a.
+options: null
+figure: null

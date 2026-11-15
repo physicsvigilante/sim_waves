@@ -1,0 +1,4 @@
+# three unknowns levels: exp mix
+unknowns: {a: positive, b: positive}
+given: ["exp(a) * exp(b) == exp(5)", "a - b == 1"]
+observe: {a: "a", b: "b"}

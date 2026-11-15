@@ -1,0 +1,10 @@
+answer: 74.2 dB
+final_scene: R3.v2.yaml
+engine_fit: partial
+hand_steps:
+  - "Computed the plane coordinates of P, Q, R from the side lengths 2, 4, 5 (law of cosines) to place points; engine distance() facts re-verify them."
+coverage: full
+not_represented: "nothing (air v and density set to conventional values, which do not affect intensity from power)"
+missing_in_source: "powers of A and B (solved by the engine from the two levels)"
+reasoning: "Engine solved PA = 4.94e-3 W and PB = 3.55e-4 W from 80 dB at P and 75 dB at Q with incoherent spherical sources; sound_level(intensity(aR,bR)) = 74.2036 dB."
+friction: "No way to state a point only by its distances to the sources (triangle placement); had to compute coordinates by hand. v1 (my wrong coordinates) was caught by the distance facts."

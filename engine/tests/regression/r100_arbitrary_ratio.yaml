@@ -1,0 +1,13 @@
+# m9: arbitrary values; the ratio is independent of them, the absolute frequency is not
+# same wire, tension quadrupled: frequency doubles; mu and L arbitrary
+arbitrary: {mu: 10 g/m, L: 1 m}
+media:
+  w1: {type: string, mu: mu, tension: 50 N}
+  w2: {type: string, mu: mu, tension: 200 N}
+resonators:
+  r1: {type: string, on: w1, length: L, ends: [fixed, fixed]}
+  r2: {type: string, on: w2, length: L, ends: [fixed, fixed]}
+observe:
+  ratio: "frequency(r2, harmonic=1)/frequency(r1, harmonic=1)"
+  f1: "frequency(r1, harmonic=1)"
+expect: {ratio: 2}

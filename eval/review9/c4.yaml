@@ -1,0 +1,4 @@
+# mix log + algebraic: log(a) + log(b) == log(6), a + b == 5 -> (2,3),(3,2): ambiguous
+unknowns: {a: positive, b: positive}
+given: ["log(a) + log(b) == log(6)", "a + b == 5"]
+observe: {a: "a", b: "b"}

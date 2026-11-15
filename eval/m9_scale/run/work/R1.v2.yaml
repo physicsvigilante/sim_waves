@@ -1,0 +1,14 @@
+id: m9/R1
+assume:
+  - "Clamp is modelled as a displacement node imposed on a free-free rod (resonator with both ends free); modes allowed are those with a node at the clamp point."
+  - "Y, density, L are not given; declared arbitrary because the ratio cannot depend on them."
+  - "Position measured from one end (x=0); L/4 from either end is equivalent by symmetry."
+arbitrary: {L: 1 m, Y: 2e11 Pa, rho: 7800 kg/m^3}
+media:
+  rod: {type: rod, Y: Y, density: rho}
+resonators:
+  r: {type: rod, on: rod, length: L, ends: [free, free]}
+observe:
+  mid_modes: "harmonics(r, upto=12, node_at=L/2)"
+  q_modes: "harmonics(r, upto=12, node_at=L/4)"
+  ratio: "frequency(r, harmonic=min(harmonics(r, upto=12, node_at=L/4)))/frequency(r, harmonic=min(harmonics(r, upto=12, node_at=L/2)))"

@@ -1,0 +1,3 @@
+arbitrary: {mu: 10 g/m, L: 1 m}
+media: {w2: {type: string, mu: "mu*L", tension: 50 N}}
+observe: {r: "speed(w2)"}

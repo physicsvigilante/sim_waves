@@ -1,0 +1,9 @@
+# lists
+arbitrary: {mu: 10 g/m, L: 1 m, F: 50 N}
+media: {w1: {type: string, mu: mu, tension: F}}
+resonators: {r1: {type: string, on: w1, length: L, ends: [fixed, fixed]}}
+observe:
+  lst: "resonances(r1, lo=frequency(r1, harmonic=1)*0.5, hi=frequency(r1, harmonic=1)*3.5)"
+  n: "count(resonances(r1, lo=frequency(r1, harmonic=1)*0.5, hi=frequency(r1, harmonic=1)*3.5))"
+  n2: "count(resonances(r1, lo=1[Hz], hi=100[Hz]))"
+  mx: "max(resonances(r1, lo=1[Hz], hi=100[Hz]))"

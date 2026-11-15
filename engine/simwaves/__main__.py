@@ -64,7 +64,8 @@ def main(argv):
         print(f"{type(exc).__name__}: {exc}")
         return 1
     for k, v in sol.items():
-        print(f"solved {k} = {show(v)}")
+        note = "" if getattr(sc, "arbitrary_solved", {}).get(k, True) else "  (depends on the arbitrary values)"
+        print(f"solved {k} = {show(sc.show_back(v))}{note}")
     for k, v in res.items():
         basis = getattr(sc, "basis", {}).get(k, "exact")
         print(f"{k} = {show(v)}" + ("" if basis == "exact" else f"  <{basis}>"))

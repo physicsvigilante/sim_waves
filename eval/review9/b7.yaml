@@ -1,0 +1,5 @@
+# bound symbol in medium & wave; display back
+symbols: {F: positive, mu: positive}
+given: ["F > 4[N]"]
+media: {s: {type: string, mu: mu, tension: "F - 4[N]"}, s2: {type: string, mu: mu, tension: F}}
+observe: {v: "speed(s)", v2: "speed(s2)", r: "speed(s)/speed(s2)", imp: "impedance(s)"}

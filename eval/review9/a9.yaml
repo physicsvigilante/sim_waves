@@ -1,0 +1,4 @@
+# conflict arbitrary vs symbols; non-positive; no unit
+symbols: {L: positive}
+arbitrary: {L: 1 m}
+observe: {a: "L"}

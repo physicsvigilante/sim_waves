@@ -1,0 +1,4 @@
+arbitrary: {L: 1, k: 2}
+media: {w1: {type: string, mu: 10 g/m, tension: 50 N}}
+resonators: {r1: {type: string, on: w1, length: L, ends: [fixed, fixed]}}
+observe: {a: "frequency(r1, harmonic=1)*L", b: "k/k", c: "equivalent(L, 1[m])", d: "L > 0.5"}

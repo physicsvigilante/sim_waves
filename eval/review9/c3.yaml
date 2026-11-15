@@ -1,0 +1,4 @@
+# dependent facts: non-unique -> expect undetermined, not inconsistent
+unknowns: {a: positive, b: positive}
+given: ["log(a) + log(b) == 0", "2*log(a) + 2*log(b) == 0"]
+observe: {a: "a", b: "b"}

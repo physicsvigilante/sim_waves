@@ -110,7 +110,10 @@ def run_file(path):
             lines.append(f"  {key}: no such observable")
             status = "FAIL"
             continue
-        ok, detail = check(sc, res[key], exp)
+        try:
+            ok, detail = check(sc, res[key], exp)
+        except SceneError as exc:
+            ok, detail = False, f"(expected value unreadable: {exc})"
         disputed = isinstance(exp, dict) and exp.get("status") == "disputed"
         tag = "ok" if ok else "MISMATCH"
         if disputed:

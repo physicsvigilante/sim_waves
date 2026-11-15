@@ -1,0 +1,9 @@
+arbitrary: {mu: 10 g/m, L: 1 m}
+unknowns: {F: positive}
+media: {w1: {type: string, mu: mu, tension: F}}
+resonators: {r1: {type: string, on: w1, length: L, ends: [fixed, fixed]}}
+waves: {h: {harmonic: {on: w1, A: 1 cm, f: 50 Hz, dir: +x, phase: 0}}}
+given: ["frequency(r1, harmonic=1) == 50[Hz]"]
+observe: {F: "F", lam: "wavelength(h)", r: "wavelength(h)/L"}
+view: [{snapshot: h, t: 0 s}]
+explore: {vary: {arbitrary.L: [1 m, 2 m]}}

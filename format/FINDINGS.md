@@ -368,3 +368,51 @@ matrix records. Future builders must copy every field the transcriber writes exc
 - composite and driven resonators (5);
 - sound at boundaries between media (5);
 - tension from mechanics (5).
+
+## Milestone 9: scale-free questions (before review)
+
+Built to `eval/m9_scale/PLAN.md`:
+- **`arbitrary:` values:** three runs at different scalings; an observable is reported
+  only if they agree, otherwise "depends on the arbitrary values".
+- **Bounds from `given` facts on one symbol:** the symbol is rewritten as bound +
+  positive; results are shown in the original symbol.
+- **Several unknowns inside logs:** solved via log-linear algebraic rewrites, with the
+  roots re-checked.
+- **The harness** now records an unreadable expected value as a FAIL instead of
+  crashing the suite.
+
+Tests: r100–r104.
+
+### Milestone 9 review (Fable 5.2, medium; eval/review9/REPORT.md)
+
+**Three silent wrong answers, all fixed with tests r105–r112:**
+1. **Answers below 1e-9 in SI passed as "independent".** Intensities and amplitudes did.
+   The comparison is now relative only.
+2. **Threshold dependences were missed** (max, step, abs, min against a constant). There
+   are now 5 scalings, including x1/97 and x89, and the basis is labelled as sampled.
+3. **Log systems lost the root a = -2 of log(a^2), and accepted roots where a log was
+   undefined.** Such forms are now refused or solved without the forced rewrite; roots
+   with a non-positive log argument are dropped. Dependent log facts are now reported
+   as undetermined, not inconsistent.
+
+**Medium findings, all fixed:**
+- `>=` bounds did not work: the sign test now uses nonnegativity.
+- A bounded symbol escaped dimension checks: it now takes its bound's dimension.
+- The export ignored the milestone. It now marks solved values as "for drawing only",
+  puts a note on panels, labels a varied arbitrary value, shows bounded values in the
+  original symbol, and accepts `illustrate` on bounded symbols.
+
+**Low findings:**
+- Integer bounds and the reversed form `2 < m` now work.
+- The internal name is now Δ(n), which a scene cannot declare, so it no longer merges with
+  user symbols. Messages show facts in the original symbols.
+
+**Cost of the fixes:** a real unknown inside log(d^2) or log(a*b), such as a distance
+declared real, is now refused instead of being solved. Authors should declare distances
+positive.
+
+### Milestone 9 frozen run (eval/m9_scale/RESULT.md)
+- **All 3 reserved problems matched the keys,** each in 2 attempts.
+- **R2 showed a defect:** a stated bound broke `at`, `diff` and `resonances(vary=)`, and
+  the author dropped the bound. Fixed after the run (r113, r114).
+- **R3:** placing points from their distances to other points is a format gap for later.

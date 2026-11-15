@@ -1,0 +1,25 @@
+id: m9/R2
+assume:
+  - "Tube is a closed-open pipe with end_correction 0 m (stated: neglect end correction); the speed is taken as stated."
+  - "L is kept as a free symbol bounded by L > 0.40 m; no value is invented for it."
+  - "Open-open comparison tube (option D) is a second resonator of the same length L."
+symbols: {L: positive}
+media:
+  air: {type: gas, v: 340 m/s}
+resonators:
+  p:  {type: pipe, on: air, length: L, ends: [closed, open], end_correction: 0 m}
+  p2: {type: pipe, on: air, length: L, ends: [open, open], end_correction: 0 m}
+given:
+  - {fact: "L > 0.40[m]", source: stated}
+observe:
+  f1: "frequency(p, harmonic=1)"
+  diff: "250[Hz] - frequency(p, harmonic=1)"
+  A_diff_equals: "equivalent(250[Hz] - frequency(p, harmonic=1), 250[Hz] - 85[m*Hz]/L)"
+  B_ddiff_dL: "diff(250[Hz] - frequency(p, harmonic=1), L)"
+  f3: "frequency(p, harmonic=3)"
+  f3_at_L_0p5: "at(frequency(p, harmonic=3), L=0.5[m])"
+  f3_at_L_2: "at(frequency(p, harmonic=3), L=2[m])"
+  f3_equals_250_at: "resonances(p, f=250[Hz], vary=L, lo=0.4[m], hi=3[m])"
+  open_f1: "frequency(p2, harmonic=1)"
+  open_at_L_0p5: "at(frequency(p2, harmonic=1), L=0.5[m])"
+  open_at_L_1: "at(frequency(p2, harmonic=1), L=1[m])"

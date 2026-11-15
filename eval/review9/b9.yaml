@@ -1,0 +1,4 @@
+# bound on unknown is ordinary fact; decides abs branch
+unknowns: {f: positive}
+given: ["beat_frequency(f, 100[Hz]) == 4[Hz]", "f > 100[Hz]"]
+observe: {f: "f"}

@@ -1,0 +1,4 @@
+# mix with ordering: unique a=2,b=3
+unknowns: {a: positive, b: positive}
+given: ["log(a) + log(b) == log(6)", "a + b == 5", "a < b"]
+observe: {a: "a", b: "b"}

@@ -1,0 +1,4 @@
+# fractional ratios: log(a) + 0.5*log(b) == log(6); log(a) - log(b) == log(2/9) -> a=2,b=9
+unknowns: {a: positive, b: positive}
+given: ["log(a) + 0.5*log(b) == log(6)", "log(a) - log(b) == log(2/9)"]
+observe: {a: "a", b: "b"}

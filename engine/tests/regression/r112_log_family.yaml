@@ -1,0 +1,5 @@
+# m9 review: dependent log facts leave a family of solutions: undetermined, not inconsistent
+unknowns: {a: positive, b: positive}
+given: ["log(a) + log(b) == 0", "2*log(a) + 2*log(b) == 0"]
+observe: {a: "a"}
+expect: {error: rejected, message: "family of solutions"}

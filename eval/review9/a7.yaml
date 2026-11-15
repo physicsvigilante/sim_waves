@@ -1,0 +1,5 @@
+# solved unknown tiny
+arbitrary: {A0: 1e-10 m}
+unknowns: {B: positive}
+given: ["B == 3*A0"]
+observe: {B: "B"}

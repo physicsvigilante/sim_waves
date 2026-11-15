@@ -144,6 +144,41 @@ check("10 list observable exported as text", r10["nodes"]["value"] is None and "
       str(r10.get("nodes")))
 check("10 unavailable observable marked, others kept", r10["bad"].get("unavailable") is True, str(r10.get("bad")))
 
+# m9 review: arbitrary values and bounds in export
+import yaml as _y  # noqa: E402
+from simwaves.run import _Loader  # noqa: E402
+m9 = export(_y.load("""
+arbitrary: {mu: 10 g/m, L: 1 m}
+unknowns: {F: positive}
+media: {w1: {type: string, mu: mu, tension: F}}
+resonators: {r1: {type: string, on: w1, length: L, ends: [fixed, fixed]}}
+waves: {h: {harmonic: {on: w1, A: 1 cm, f: 50 Hz, dir: +x, phase: 0}}}
+given: ["frequency(r1, harmonic=1) == 50[Hz]"]
+observe: {r: "wavelength(h)/L"}
+view: [{snapshot: h, t: 0 s}]
+explore: {vary: {arbitrary.L: [1 m, 2 m]}}
+""", Loader=_Loader))
+check("m9 solved unknown from arbitrary values is marked", "arbitrary" in m9["solved"]["F"], m9["solved"]["F"])
+check("m9 panels drawn at arbitrary values carry a note", all(p.get("arbitrary_note") for p in m9["panels"] if p))
+check("m9 varying an arbitrary value is not a physical input",
+      m9["variants"]["source_value"] is None and not any(i["is_source"] for i in m9["variants"]["items"]),
+      str(m9["variants"]["target_kind"]))
+bd = """
+symbols: {n: positive}
+unknowns: {u: positive}
+given: [{fact: "n > 1", source: stated}, "u == n - 1"]
+media: {s: {type: string, mu: 0.01 kg/m, tension: 4 N}}
+waves: {w: {harmonic: {on: s, A: 1 cm, f: "(n - 1)[Hz]", dir: +x, phase: 0}}}
+view: [{snapshot: w, t: 0 s, x: [0 m, 10 m]}]
+illustrate: {n: %s}
+observe: {u: "u"}
+"""
+m9b = export(_y.load(bd % "3", Loader=_Loader))
+check("m9 bounded symbol: solved shown in the declared symbol", m9b["solved"]["u"] == "n - 1", m9b["solved"]["u"])
+check("m9 bounded symbol can be illustrated", not m9b["missing"] or all("n" not in m for m in m9b["missing"][:-1]),
+      str(m9b["missing"]))
+check("m9 illustrate outside the bound rejected", raises(lambda: export(_y.load(bd % "0.5", Loader=_Loader)), ViewError))
+
 bad = [r for r in results if not r[1]]
 for name, ok, detail in results:
     print(("PASS " if ok else "FAIL ") + name + (f"  [{detail}]" if detail and not ok else ""))

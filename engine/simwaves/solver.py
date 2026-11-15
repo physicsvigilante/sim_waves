@@ -149,9 +149,7 @@ def _solve_monotonic(E, targets):
     solve() can drop roots such as log(u) = 0 in polynomial-in-log equations). Every root is
     checked against every equation. More unknowns: refused rather than risk a lost root."""
     if len(targets) != 1:
-        raise SceneError(f"unknowns {sorted(map(str, targets))} appear inside log/exp/inverse-trig functions "
-                         f"together; v0 solves these with one unknown at a time. Restate the facts so the "
-                         f"other unknowns are fixed first")
+        return _solve_monotonic_system(E, targets)
     u = targets[0]
     roots = None
     for e in E:
@@ -159,7 +157,11 @@ def _solve_monotonic(E, targets):
             continue
         ss = None
         e_log = sp.expand_log(e, force=True)
-        forms = [f for f in (_log_linear(e_log, u), e_log, e) if f is not None]
+        if e_log != sp.expand_log(e):
+            # force=True assumed a sign the unknown does not have (log(u^2) -> 2 log(u) loses u < 0)
+            forms = [e]
+        else:
+            forms = [f for f in (_log_linear(e_log, u), e_log, e) if f is not None]
         for form in forms:
             num = sp.numer(sp.together(form))
             if num.is_polynomial(u) and sp.degree(num, u) <= 4:
@@ -184,7 +186,8 @@ def _solve_monotonic(E, targets):
         good = set()
         for v in ss:
             try:
-                ok = all(abs(complex(sp.N(ei.xreplace({u: v}), 30))) < 1e-20 for ei in E)
+                ok = all(abs(complex(sp.N(ei.xreplace({u: v}), 30))) < 1e-20 for ei in E) and \
+                    _logs_defined(E, {u: v})
             except (TypeError, ValueError):
                 ok = False
             if ok:
@@ -213,6 +216,80 @@ def _log_linear(e, u):
         return None
     prod = sp.Mul(*[f.args[0] ** r for f, r in zip(L, ratios)])
     return sp.together(prod - sp.exp(sp.simplify(-c0 / coeffs[0])))
+
+
+def _log_linear_multi(e, us):
+    """Like _log_linear, for several unknowns: e = sum c_i log(g_i) + c0 with rational ratios
+    c_i/c_1 becomes prod g_i^(c_i/c_1) - exp(-c0/c_1)."""
+    logs = [f for f in e.atoms(sp.log) if f.has(*us)]
+    if not logs:
+        return e
+    L = {f: sp.Dummy("L") for f in logs}
+    e1 = sp.expand(e.xreplace(L))
+    if e1.has(*us):
+        return None
+    coeffs = [sp.diff(e1, d) for d in L.values()]
+    if any(c.has(*L.values()) or c.has(*us) for c in coeffs):
+        return None
+    c0 = sp.simplify(e1.xreplace({d: 0 for d in L.values()}))
+    ratios = [sp.nsimplify(sp.simplify(c / coeffs[0])) for c in coeffs]
+    if not all(r.is_Rational for r in ratios):
+        return None
+    prod = sp.Mul(*[f.args[0] ** r for f, r in zip(L, ratios)])
+    return sp.numer(sp.together(prod - sp.exp(sp.simplify(-c0 / coeffs[0]))))
+
+
+def _solve_monotonic_system(E, targets):
+    """Several unknowns inside logs: rewrite each fact linear in logs as an algebraic equation,
+    solve the algebraic system, and keep only roots that satisfy the original facts."""
+    alg = []
+    for e in E:
+        if not any(e.has(u) for u in targets):
+            continue
+        e_log = sp.expand_log(e, force=True)
+        if e_log != sp.expand_log(e):
+            raise SceneError(f"unknowns {sorted(map(str, targets))} appear inside logs whose sign v0 cannot "
+                             f"track ({e} = 0); declare them positive if the problem says so, or fix one first")
+        a = _log_linear_multi(e_log, targets)
+        if a is None or _in_monotonic_any(a, targets):
+            raise SceneError(f"unknowns {sorted(map(str, targets))} appear together inside log/exp/inverse-trig "
+                             f"functions in a form v0 cannot rewrite reliably ({e} = 0); fix one of them first")
+        alg.append(a)
+    raw = sp.solve(alg, targets, dict=True)
+    out = []
+    for r in raw:
+        if set(r) != set(targets) or any(v.free_symbols & set(targets) for v in r.values()):
+            raise UndeterminedError(f"the facts tie {sorted(map(str, targets))} together but do not fix "
+                                    f"each one (a family of solutions); a fact is missing")
+        if not all(_real(v) for v in r.values()):
+            continue
+        try:
+            ok = all(abs(complex(sp.N(e.xreplace(r), 30))) < 1e-20 for e in E) and _logs_defined(E, r)
+        except (TypeError, ValueError):
+            ok = False
+        if ok:
+            out.append(r)
+    return out
+
+
+def _logs_defined(E, r):
+    """Every log in the facts has a positive real argument at the root (a real log of a
+    negative number is undefined, even when the complex parts cancel)."""
+    for e in E:
+        for f in e.atoms(sp.log):
+            if not f.has(*r):
+                continue
+            a = sp.N(f.args[0].xreplace(r), 30)
+            if not a.is_number:
+                continue
+            c = complex(a)
+            if abs(c.imag) > 1e-20 or c.real <= 0:
+                return False
+    return True
+
+
+def _in_monotonic_any(e, us):
+    return any(_in_monotonic(u, [e]) for u in us)
 
 
 def _angular_base(u, E):
@@ -319,8 +396,8 @@ def _sign_ok(d, op):
     if op == ">":
         return pos
     if op == "<=":
-        return True if (neg or zero) else (False if pos else None)
-    return True if (pos or zero) else (False if neg else None)
+        return True if (neg or zero or d.is_nonpositive) else (False if pos else None)
+    return True if (pos or zero or d.is_nonnegative) else (False if neg else None)
 
 
 def _assumptions_ok(sc, sol):
@@ -476,7 +553,7 @@ def _solve(sc, eqs, ineqs, strict):
                 continue
             if se.free_symbols:
                 raise SceneError(f"a fact without unknowns cannot be checked for all symbol values "
-                                 f"({e} = 0); it over-specifies the scene")
+                                 f"({sc.show_back(e)} = 0); it over-specifies the scene")
             bad_case = True
         if bad_case:
             continue
@@ -600,7 +677,10 @@ def _solve_given(sc):
         for m in idxs:
             sub = [r for r in rels if r[0] <= m]
             e2, i2 = _conditions(sc, sub)
-            s2, _ = _solve(sc, e2, i2, strict=False)
+            try:
+                s2, _ = _solve(sc, e2, i2, strict=False)
+            except UndeterminedError:
+                s2 = [{}]                      # the first facts alone leave a family: no contradiction yet
             if not s2:
                 culprit = next(r for r in rels if r[0] == m)
                 hint = _range_hint(sc, prior, *culprit) if culprit[2] == "==" else ""

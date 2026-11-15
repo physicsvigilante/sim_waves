@@ -1,0 +1,3 @@
+arbitrary: {T0: 27 degC}
+media: {air: {type: gas, gamma: 1.4, molar_mass: 29 g/mol, temperature: T0}}
+observe: {v: "speed(air)"}

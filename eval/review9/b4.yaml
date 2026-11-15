@@ -1,0 +1,6 @@
+symbols: {L: positive}
+given: ["L > 2[s]"]
+media: {s: {type: string, mu: 0.01 kg/m, tension: 4 N}}
+waves: {w: {harmonic: {on: s, A: 1 cm, f: L, dir: +x, phase: 0}}}
+resonators: {r: {type: string, on: s, length: L, ends: [fixed, fixed]}}
+observe: {f: "frequency(r, harmonic=1)", fw: "frequency(w)", s: "abs(L - 2[m])", bad: "L + 1[kg]"}

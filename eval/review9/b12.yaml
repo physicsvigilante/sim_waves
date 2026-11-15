@@ -1,0 +1,4 @@
+# bound + second inequality on expression contradicting
+symbols: {n: positive}
+given: ["n > 3", "2*n < 4"]
+observe: {a: "n"}

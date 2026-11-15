@@ -1,0 +1,11 @@
+answer: [A, C]
+final_scene: R2.v2.yaml
+engine_fit: partial
+hand_steps:
+  - "Read the sign of the engine's d(diff)/dL = 85/L^2 > 0 to conclude that shortening the tube decreases the difference (B false)."
+  - "Chose test lengths (0.5 m, 2 m; 0.5 m, 1 m) to show the first overtone/open-open fundamental can fall on either side of 250 Hz; resonance at L=1.02 m also reported by engine."
+coverage: partial
+not_represented: "The stated bound L > 0.40 m is not a fact in the final scene (see friction); it is only used by choosing test lengths above 0.4 m. Statement truth-values are judged by me, not the engine."
+missing_in_source: "L itself (only a bound), so C and D depend on unknown L."
+reasoning: "diff = 250 - 85/L (A true, proved). d(diff)/dL = 85/L^2 > 0 so B false. f3 = 255/L equals 510 Hz at L=0.5 m and 127.5 Hz at L=2 m, crossing 250 Hz at L=1.02 m, so C true. Open-open f1 = 170/L is 340 Hz at 0.5 m but 170 Hz at 1 m, so D false."
+friction: "Writing the stated bound L > 0.40 m as a given fact made diff(), at(...L=...) and resonances(vary=L) fail (L became an offset symbol); no way to evaluate at values or compare a quantity with 250 Hz as a boolean across a range."

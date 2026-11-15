@@ -1,0 +1,5 @@
+# m9 review: a = b = -2 satisfies the rewritten facts, but log(a) is undefined there: no situation
+unknowns: {a: real, b: real}
+given: ["log(a) - log(b) == 0", "a*b == 4", "a < 0"]
+observe: {a: "a"}
+expect: {error: rejected, message: "contradiction"}

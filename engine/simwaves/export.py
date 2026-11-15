@@ -43,10 +43,15 @@ def _illustrate(sc):
     vals, texts = {}, {}
     for name, val in (sc.data.get("illustrate") or {}).items():
         sym = sc.names.get(name)
+        bound = getattr(sc, "bounds", {}).get(name)
+        if bound is not None:
+            sym = bound[0]                 # check against the declared symbol, then store the offset
         if sym is None or sym not in sc.kinds or sym in sc.unknowns:
             raise ViewError(f"illustrate.{name}: must be a declared symbol (not an unknown)")
         text, unit, factor, udim = split_quantity(val)
         want = sc.symbol_dims.get(sym)
+        if bound is not None and want is None:
+            want = sc.bound_dims.get(name)   # a bounded symbol has its bound's dimension
         if udim is None:
             if want not in (None, DIMLESS) or (want is None and text.strip() not in ("0",)):
                 if want is None:
@@ -63,8 +68,18 @@ def _illustrate(sc):
             raise ViewError(f"illustrate.{name}: '{name}' is declared positive")
         if kind == "integer" and not q.is_integer:
             raise ViewError(f"illustrate.{name}: '{name}' is declared integer")
+        if bound is not None:
+            orig, p, back = bound
+            off = sp.simplify(back.xreplace({orig: q}))
+            if off.is_negative or (p.is_positive and not off.is_positive):
+                raise ViewError(f"illustrate.{name}: {val} is outside the stated bound on '{name}'")
+            vals[p], texts[name] = off, str(val)
+            continue
         vals[sym], texts[name] = q, str(val)
     return vals, texts
+
+
+_BOUNDS = {}       # offset symbol -> (declared symbol, offset); set per export by _one
 
 
 def _closed(e, sol, illus, allowed, missing, what):
@@ -75,7 +90,9 @@ def _closed(e, sol, illus, allowed, missing, what):
     e2 = e1.xreplace(illus).doit()
     free = {s for s in e2.free_symbols if s not in allowed}
     if free:
-        missing.append(f"{what}: no value for {sorted(map(str, free))} (add them to `illustrate`)")
+        names = sorted({str(b[0]) if s == b[1] else str(s) for s in free
+                        for b in (_BOUNDS.get(s, (None, None)),)})
+        missing.append(f"{what}: no value for {names} (add them to `illustrate`)")
         return None, used
     return e2, used
 
@@ -299,6 +316,9 @@ def _one(data, fixed):
     """Export one scene (no variants). `fixed` is a list of per-panel windows, or None."""
     sc = Scene(copy.deepcopy(data))
     sol, res = evaluate(sc)
+    _BOUNDS.clear()
+    _BOUNDS.update({b[1]: (b[0], b[1]) for b in getattr(sc, "bounds", {}).values()})
+    arb = getattr(sc, "arbitrary_solved", {})
     illus, illus_text = _illustrate(sc)
     view = sc.data.get("view")
     missing, panels, windows = [], [], []
@@ -309,13 +329,19 @@ def _one(data, fixed):
         view = [{"animate": n} for n in waves]
     for i, spec in enumerate(view):
         p, win = _panel(sc, spec, sol, illus, missing, fixed[i] if fixed else None)
+        if p and getattr(sc, "arbitrary", None):
+            p["arbitrary_note"] = (f"drawn at arbitrary values {sorted(sc.arbitrary)} the problem does not "
+                                   f"give: only scale-free features (ratios, shapes) are meaningful")
         panels.append(p)          # keep indices aligned; None = could not draw
         windows.append(win)
     return {
         "id": data.get("id"),
         "assume": data.get("assume") or [],
         "facts": [{"text": t, "source": s} for t, s in getattr(sc, "facts", [])],
-        "solved": {str(k): show(v) for k, v in sol.items()},
+        "solved": {str(k): show(sc.show_back(v)) + ("" if arb.get(k, True) else
+                                                     "  (depends on the arbitrary values: for drawing only)")
+                   for k, v in sol.items()},
+        "arbitrary": {k: str(v) for k, v in (data.get("arbitrary") or {}).items()},
         "results": _numbers(sc, res, illus),
         "verification": [{"fact": t, "basis": b} for _, t, b in getattr(sc, "verification", [])],
         "illustrative": illus_text,
@@ -386,6 +412,7 @@ def export(data):
     if not isinstance(values, list) or len(values) < 2:
         raise ViewError("explore.vary: give a list of at least two values")
     in_illustrate = target in (data.get("illustrate") or {})
+    is_arbitrary = target.startswith("arbitrary.")
     source_value = (data["illustrate"][target] if in_illustrate else _get_path(data, target))
     for p in base["panels"]:
         if p:
@@ -400,7 +427,8 @@ def export(data):
             d2["illustrate"][target] = val
         else:
             _set_path(d2, target, val)
-        item = {"value": str(val), "is_source": _same_quantity(sc, val, source_value)}
+        item = {"value": str(val),
+                "is_source": False if is_arbitrary else _same_quantity(sc, val, source_value)}
         try:
             sub, _, _ = _one(d2, windows)
             for p in sub["panels"]:
@@ -416,6 +444,8 @@ def export(data):
         items.append(item)
     _y_ranges([base] + items)
     base["variants"] = {"target": target,
-                        "target_kind": "illustrative value" if in_illustrate else "physical input",
-                        "source_value": str(source_value), "items": items}
+                        "target_kind": ("illustrative value" if in_illustrate else
+                                        "arbitrary value (not given by the problem)" if is_arbitrary
+                                        else "physical input"),
+                        "source_value": None if is_arbitrary else str(source_value), "items": items}
     return base

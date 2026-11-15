@@ -1,0 +1,3 @@
+symbols: {q: positive}
+given: ["q > -1"]
+observe: {c: "abs(q)"}
