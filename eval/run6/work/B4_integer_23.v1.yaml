@@ -1,0 +1,13 @@
+id: B4/integer/23
+assume:
+  - "Wire fixed at both ends, vibrating in its fundamental (transverse). Length 1 m is the stretched length."
+  - "Cross-section area not given: arbitrary; cancels (tension and mass both scale with area)."
+  - "Tension = Y * strain * area (Hooke's law) written by me as the tension expression, since the format has no strain-based tension; this is a hand step."
+arbitrary: {A: 1 mm^2}
+media:
+  wire: {type: string, density: 8000 kg/m^3, area: A, tension: "2e11[Pa]*0.001*A"}
+resonators:
+  r: {type: string, on: wire, length: 1 m, ends: [fixed, fixed]}
+observe:
+  f1: "frequency(r, harmonic=1)"
+  v: "speed(r)"

@@ -1,0 +1,22 @@
+id: B4/single/102
+number: 102
+source: book p.89 (answer key p.122)
+format: single_correct
+statement: A vibrating stretched string resonates with a tuning fork of frequency 512 Hz when the length
+  of the string is 0.5 m. The length of the string required to vibrate resonantly with a tuning fork of
+  frequency 256 Hz would be
+figure: null
+options:
+  A: 0.25 m
+  B: 0.75 m
+  C: 1.0 m
+  D: 2.0 m
+answer: C
+answer_value: 1.0 m
+units: m
+verified: 'Same tension: f proportional to 1/L, so L = 0.5 x 512/256 = 1.0 m. Matches key.'
+kinds:
+- ratio
+physics:
+- string_fundamental
+notes: Consistent.

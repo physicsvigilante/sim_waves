@@ -1,0 +1,25 @@
+id: B4/reasoning/15
+number: 15
+source: book p.98 (answer key p.123)
+format: single_correct
+statement: |-
+  Statement-1: In a stationary wave, there is not transfer of energy.
+  Statement-2: There is no outward motion of disturbance from one particle to adjoining particle in a stationary wave.
+  (Mark the answer using the bubble options below.)
+figure: null
+options:
+  A: Both statements are TRUE and STATEMENT 2 is the correct explanation of STATEMENT 1.
+  B: Both statements are TRUE but STATEMENT 2 is not the correct explanation of STATEMENT 1.
+  C: STATEMENT 1 is TRUE and STATEMENT 2 is FALSE.
+  D: STATEMENT 1 is FALSE but STATEMENT 2 is TRUE.
+answer: B
+answer_value: B
+units: null
+verified: DISPUTED (judgement). Both statements are true; S2 (no net propagation of the disturbance) arguably
+  explains S1 (no net energy transfer), which would give A. Book key says B.
+kinds:
+- conceptual
+physics:
+- standing_waves
+- energy
+notes: Explanation-link is a matter of interpretation; key B.

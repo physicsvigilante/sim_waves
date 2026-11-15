@@ -1,0 +1,24 @@
+id: B4/multiple/4
+number: 4
+source: book p.95 (answer key p.122)
+format: multiple_correct
+statement: Any progressive wave equation in differential form is
+figure: null
+options:
+  A: (1/ω^2) ∂²y/∂t² = (1/k^2) ∂²y/∂x²
+  B: (1/ω) ∂y/∂t = -(1/k) ∂y/∂x
+  C: (1/ω^2) ∂²y/∂t² = -(1/k^2) ∂²y/∂x²
+  D: (1/ω) ∂y/∂t = (1/k) ∂y/∂x
+answer: A, B
+answer_value:
+- A
+- B
+units: null
+verified: 'For y = f(kx - wt): y_tt = w^2 f'''', y_xx = k^2 f'''' -> A true; y_t = -w f'', y_x = k f''
+  -> (1/w) y_t = -(1/k) y_x (B, wave toward +x). C is wrong. D is the first-order relation of a wave toward
+  -x, which is also a progressive wave, so D is arguably also correct. DISPUTED on D; key A, B.'
+kinds:
+- symbolic
+physics:
+- wave_equation
+notes: Key assumes propagation along +x.

@@ -1,0 +1,9 @@
+answer: {first_bridge_from_one_end: 60 cm, second_bridge_from_other_end: 20 cm, segments_cm: [60, 30, 20]}
+final_scene: B4_integer_19.v1.yaml
+engine_fit: partial
+hand_steps: ["Unit conversion m -> cm (x100); the engine reports 3/5 m, 3/10 m, 1/5 m"]
+coverage: full
+not_represented: nothing
+missing_in_source: "Which segment is 1,2,3 (order of the ratio relative to the ends); assumed segment 1 is lowest frequency. The answer is symmetric under reversing the wire, so bridges are 60 cm from one end and 20 cm from the other."
+reasoning: "Engine solved three fixed-fixed segments of one wire with total 1.1 m and f2=2f1, f3=3f1: lengths 0.6, 0.3, 0.2 m."
+friction: "Output is in m, not cm (no unit-converted display); which end the 'two bridges' are measured from is not in the format."

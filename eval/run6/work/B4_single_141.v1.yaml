@@ -1,0 +1,16 @@
+id: B4/single/141
+assume:
+  - "Speed of sound v and source frequency f are not given numerically; arbitrary (answer is a ratio)."
+  - "Source and listener start far apart on a line and move toward each other at v/10; the ratio is taken at the emission time 0."
+arbitrary: {vs: {value: 340 m/s, above: 100 m/s, below: 1000 m/s}, f0: 500 Hz, D: {value: 1000 m, above: 100 m}}
+media: {air: {type: gas, v: vs}}
+sources:
+  S: {on: air, at: [0 m, 0 m], velocity: ["vs/10", 0 m/s], f: f0, A: 1, phase: 0, spreading: none}
+points:
+  O: {at: [D, 0 m], velocity: ["-vs/10", 0 m/s]}
+rays: {r: {from: S, to: O}}
+observe:
+  ratio: "frequency(r, emitted=0[s])/f0"
+  A: "frequency(r, emitted=0[s])/f0 == 1.11"
+  B: "frequency(r, emitted=0[s])/f0 == 1.22"
+  C: "frequency(r, emitted=0[s])/f0 == 1.27"

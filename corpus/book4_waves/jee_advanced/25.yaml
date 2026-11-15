@@ -1,0 +1,25 @@
+id: B4/jee_advanced/25
+number: 25
+source: book p.115 (answer key p.123)
+format: single_correct
+statement: '[IIT-JEE 1995] An object of specific gravity ρ is hung from a thin steel wire. The fundamental
+  frequency for transverse standing waves in the wire is 300 Hz. The object is immersed in water so that
+  one half of its volume is submerged. The new fundamental frequency (in Hz) is'
+figure: null
+options:
+  A: 300 ((2ρ - 1)/(2ρ))^(1/2)
+  B: 300 (2ρ/(2ρ - 1))^(1/2)
+  C: 300 (2ρ/(2ρ - 1))
+  D: 300 ((2ρ - 1)/(2ρ))
+answer: A
+answer_value: 300 ((2ρ - 1)/(2ρ))^(1/2)
+units: Hz
+verified: 'T1 = V rho g; with half submerged T2 = V rho g - V g/2 (water density 1) = V g (rho - 1/2).
+  f proportional to sqrt(T): f2 = 300 sqrt((rho - 1/2)/rho) = 300 sqrt((2 rho - 1)/(2 rho)). Matches key.'
+kinds:
+- symbolic
+- ratio
+physics:
+- string_tension
+- buoyancy
+notes: Consistent.

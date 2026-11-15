@@ -1,0 +1,9 @@
+answer: B (15.2 cm)
+final_scene: B4_jee_advanced_1.v1.yaml
+engine_fit: partial
+hand_steps: ['end correction 0.3*d = 0.6*r = 1.2 cm entered by me from the practical-physics convention (not stated in the problem)', 'rounded engine L = 15.206 cm to option B 15.2 cm']
+coverage: full
+not_represented: "nothing"
+missing_in_source: "End correction rule (0.3 d) is not stated; options only make sense with it. Without it the answer would be 16.4 cm (option C)"
+reasoning: "Engine: pipe closed-open, fundamental 512 Hz, end_correction 1.2 cm gives L = 15.2063 cm (air column = water reading)."
+friction: "End correction formula as a function of tube diameter cannot be written as an engine relation; had to type the number via an expression."

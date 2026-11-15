@@ -1,0 +1,9 @@
+answer: [C]
+final_scene: B4_single_142.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: nothing
+missing_in_source: none
+reasoning: 'Second overtone = harmonic 3: 4 nodes, 3 antinodes with the ends counted.'
+friction: none

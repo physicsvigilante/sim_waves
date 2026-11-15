@@ -1,0 +1,24 @@
+id: B4/single/11
+assume:
+  - "Common oscillator and amplifier: the two speakers are in phase (stated). Speaker amplitudes at D treated as equal, spreading none: only phase is used to locate maxima (maxima() tests phase)."
+  - "Coordinates: L1 (0, 9 m), L2 (0, 0), D (40 m, 9 m) read from the figure."
+  - "Detector's first maximum read as the lowest frequency above 0 at which the two rays are in phase (at f -> 0 the path difference is negligible and trivially in phase)."
+symbols: {fs: positive}
+media:
+  air: {type: gas, v: 330 m/s}
+sources:
+  L1: {on: air, at: [0 m, 9 m], f: fs, A: 1, phase: 0, spreading: none}
+  L2: {on: air, at: [0 m, 0 m], f: fs, A: 1, phase: 0, spreading: none}
+points:
+  D: [40 m, 9 m]
+rays:
+  d1: {from: L1, to: D}
+  d2: {from: L2, to: D}
+given:
+  - {fact: "fs > 0[Hz]", source: convention}
+observe:
+  dpath: "path_difference(d2, d1)"
+  maxima_f: "maxima(d1, d2, vary=fs, lo=1[Hz], hi=1500[Hz])"
+  first_max: "min(maxima(d1, d2, vary=fs, lo=1[Hz], hi=1500[Hz]))"
+  minima_f: "minima(d1, d2, vary=fs, lo=1[Hz], hi=1500[Hz])"
+  first_min: "min(minima(d1, d2, vary=fs, lo=1[Hz], hi=1500[Hz]))"

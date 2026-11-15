@@ -1,0 +1,9 @@
+answer: A (4.0 s)
+final_scene: B4_single_175.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: partial
+not_represented: "Boat, sea surface, rocking not represented; surface wave modelled as a harmonic wave without medium"
+missing_in_source: "none"
+reasoning: "period(w) = 4 s for wavelength 100 m and speed 25 m/s."
+friction: "No water-surface-wave medium; harmonic wave with no medium used."

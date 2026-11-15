@@ -1,0 +1,10 @@
+id: B4/multiple/33
+format: multiple_correct
+statement: Velocity of sound in air is 320 m/s. A pipe closed at one end has a length of 1 m. Neglecting
+  end corrections, the air column in the pipe can resonate for sound of frequency
+figure: null
+options:
+  A: 80 Hz
+  B: 240 Hz
+  C: 320 Hz
+  D: 400 Hz

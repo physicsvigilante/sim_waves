@@ -1,0 +1,23 @@
+id: B4/single/33
+number: 33
+source: book p.84 (answer key p.122)
+format: single_correct
+statement: The frequency of a radar is 780 MHz. When it is reflected from an approaching aeroplane, the
+  apparent frequency is more than the actual frequency by 2.6 kHz. The speed of the aeroplane is
+figure: null
+options:
+  A: 0.25 km/s
+  B: 0.5 km/s
+  C: 1.0 km/s
+  D: 2.0 km/s
+answer: B
+answer_value: 0.5 km/s
+units: km/s
+verified: Echo shift df = 2 v f / c -> v = df c / (2 f) = 2600 x 3e8 / (2 x 780e6) = 500 m/s = 0.5 km/s.
+  Matches key.
+kinds:
+- numeric
+physics:
+- doppler
+- radar
+notes: Radar (light), c = 3e8 m/s not stated in the problem.

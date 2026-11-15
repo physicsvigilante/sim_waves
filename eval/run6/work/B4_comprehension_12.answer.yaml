@@ -1,0 +1,9 @@
+answer: [B]
+final_scene: B4_comprehension_12.v1.yaml
+engine_fit: partial
+hand_steps: ["Chose the pulse shape (one sine cycle, crest first, width 0.4 m) and the x positions of D,E,F,G from the figure description"]
+coverage: partial
+not_represented: "Exact figure shape/scale; shape idealised as one sine cycle. D and F positions are my reading."
+missing_in_source: "Figure scale and exact point positions."
+reasoning: "Engine: kinetic density at E (zero crossing) is proved greater than at D, F and G (G = 0) for every mu, T; E is where the sine shape is steepest, so particle speed and KE are maximum there."
+friction: "kinetic density absolute values depend on arbitrary mu,T so only comparisons work; no 'argmax of kinetic_density' observable; shape and labelled point positions had to be invented from a verbal figure description."

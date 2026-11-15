@@ -1,0 +1,16 @@
+id: B4/integer/24
+assume:
+  - "Both pipes hold the same air; end corrections neglected (not stated)."
+  - "Third overtone of a closed (closed-open) pipe is converted to a harmonic number by the engine."
+symbols: {v: positive}
+unknowns: {Lo: positive}
+media:
+  air: {type: gas, v: v}
+resonators:
+  closed: {type: pipe, on: air, length: 7 cm, ends: [closed, open], end_correction: 0 m}
+  open:   {type: pipe, on: air, length: Lo, ends: [open, open], end_correction: 0 m}
+given:
+  - {fact: "frequency(closed, harmonic=harmonic(closed, overtone=3)) == frequency(open, harmonic=4)", source: stated, note: "unison"}
+observe:
+  Lo: "Lo"
+  n_closed: "harmonic(closed, overtone=3)"

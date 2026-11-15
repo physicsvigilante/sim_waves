@@ -1,0 +1,9 @@
+answer: 30 m/s
+final_scene: B4_integer_7.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: partial
+not_represented: "Radio wave modelled as a wave in a gas medium with v=c (no EM medium); non-relativistic-style kinematics only; Moon as plane rigid reflector, distance arbitrary"
+missing_in_source: "Speed of light (c = 3e8 m/s) not given; sign of shift (approach => higher frequency) implied"
+reasoning: "Engine solved u = 3e8/(1e7+1) = 30.0 m/s from echo shift +1e3 Hz at f=5e9 Hz."
+friction: "No electromagnetic medium: had to use a gas medium with v=3e8. Moon had to be a reflector plane."

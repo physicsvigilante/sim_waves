@@ -1,0 +1,22 @@
+id: B4/jee_advanced/4
+assume:
+  - "String vibrates at the frequency of the pipe mode (resonance); the string's mode number and length l are not stated, so l and mu are arbitrary and the fundamental is used."
+  - "'Slightly increased' tension is a small increase d (arbitrary, below 2 percent); only the decrease of beats is used, not the 2 Hz value."
+  - "Tension larger means the string frequency is higher."
+arbitrary: {mu: 10 g/m, l: 1 m, d: {value: 0.01, below: 0.02}}
+unknowns: {T: positive, n: positive}
+media:
+  air: {type: gas, v: 340 m/s}
+  w1: {type: string, mu: mu, tension: T}
+  w2: {type: string, mu: mu, tension: T*(1 + d)}
+resonators:
+  pipe: {type: pipe, on: air, length: 75 cm, ends: [closed, open], end_correction: 0 m}
+  s1: {type: string, on: w1, length: l, ends: [fixed, fixed]}
+  s2: {type: string, on: w2, length: l, ends: [fixed, fixed]}
+given:
+  - {fact: "frequency(s1, harmonic=1) == frequency(pipe, harmonic=harmonic(pipe, overtone=1))", source: stated}
+  - {fact: "beat_frequency(frequency(s1, harmonic=1), n*1[Hz]) == 4[Hz]", source: stated}
+  - {fact: "beat_frequency(frequency(s2, harmonic=1), n*1[Hz]) < beat_frequency(frequency(s1, harmonic=1), n*1[Hz])", source: stated, note: "beats reduce after tension rises (the exact value 2 Hz cannot be hit by an arbitrary small d; only the decrease is used)"}
+observe:
+  f_pipe: "frequency(pipe, harmonic=harmonic(pipe, overtone=1))"
+  n: "n"

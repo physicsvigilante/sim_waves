@@ -1,0 +1,12 @@
+id: B4/single/49
+assume:
+  - "Maximum particle speed compared with wave speed for a harmonic wave with free symbols A, lambda, omega (so v = omega*lambda/2pi follows)."
+symbols: {A0: positive, lam: positive, om: positive, ph: phase}
+waves:
+  w: {harmonic: {A: A0, lambda: lam, omega: om, dir: +x, phase: ph}}
+observe:
+  vpmax: "max_over(t, vy(w, x=0[m], t=t))"
+  vwave: "speed(w)"
+  ratio: "max_over(t, vy(w, x=0[m], t=t))/speed(w)"
+  less_iff_A_below_lam_over_2pi: "(max_over(t, vy(w, x=0[m], t=t)) < speed(w)) == (A0 < lam/(2*pi))"
+  A_cond_ratio: "max_over(t, vy(w, x=0[m], t=t))/speed(w) == 2*pi*A0/lam"

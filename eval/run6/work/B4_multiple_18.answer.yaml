@@ -1,0 +1,9 @@
+answer: [a, c]
+final_scene: B4_multiple_18.v2.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "Wall distance arbitrary"
+missing_in_source: "Speed of sound (330 m/s assumed; v1 with arbitrary v showed the result depends on it)"
+reasoning: "Engine echo frequency 1020.2 Hz (+2.02 %) with v=330 m/s; options B/D are decreases (false)."
+friction: "Option D (percentage decrease 2%) has no direct check; I reasoned its sign from pct > 0."

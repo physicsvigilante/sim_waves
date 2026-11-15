@@ -1,0 +1,9 @@
+answer: [A]
+final_scene: B4_single_117.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: nothing
+missing_in_source: medium speed (irrelevant)
+reasoning: vmax = 3*pi/5 m/s = 60*pi cm/s.
+friction: none

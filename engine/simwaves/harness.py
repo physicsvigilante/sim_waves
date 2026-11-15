@@ -126,12 +126,34 @@ def run_file(path):
     return status, lines
 
 
-def run_dir(path):
+def _timed(f):
+    import time
+    t0 = time.time()
+    status, lines = run_file(f)
+    return f, status, lines, time.time() - t0
+
+
+def run_dir(path, jobs=None):
+    """Run every scene's expect block; scenes run in parallel (one process each, jobs at a
+    time; default: the number of CPUs). Output keeps file order."""
     files = sorted(glob.glob(os.path.join(path, "*.yaml")))
-    counts = {}
-    for f in files:
-        status, lines = run_file(f)
-        counts[status] = counts.get(status, 0) + 1
-        print(f"[{status}] " + "\n".join(lines))
-    print("\nsummary: " + ", ".join(f"{k} {v}" for k, v in sorted(counts.items())))
+    jobs = jobs or os.cpu_count() or 1
+    counts, times = {}, []
+    if jobs > 1 and len(files) > 1:
+        import multiprocessing as mp
+        with mp.get_context("fork").Pool(jobs, maxtasksperchild=20) as pool:
+            out = pool.imap(_timed, files)
+            for f, status, lines, dt in out:
+                counts[status] = counts.get(status, 0) + 1
+                times.append((dt, os.path.basename(f)))
+                print(f"[{status}] " + "\n".join(lines), flush=True)
+    else:
+        for f in files:
+            _, status, lines, dt = _timed(f)
+            counts[status] = counts.get(status, 0) + 1
+            times.append((dt, os.path.basename(f)))
+            print(f"[{status}] " + "\n".join(lines), flush=True)
+    slow = sorted(times, reverse=True)[:5]
+    print("\nslowest: " + ", ".join(f"{n} {dt:.1f}s" for dt, n in slow))
+    print("summary: " + ", ".join(f"{k} {v}" for k, v in sorted(counts.items())))
     return counts

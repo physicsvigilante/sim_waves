@@ -1,0 +1,22 @@
+id: B4/single/49
+number: 49
+source: book p.85 (answer key p.122)
+format: single_correct
+statement: In a plane progressive harmonic wave particle speed is always less than the wave speed if
+figure: null
+options:
+  A: amplitude of wave is less than λ/(2π)
+  B: amplitude of wave is greater than λ/(2π)
+  C: amplitude of wave is less than λ
+  D: amplitude of wave is greater than λ/μ
+answer: A
+answer_value: amplitude of wave is less than λ/(2π)
+units: null
+verified: v_particle,max = A w, wave speed = w/k. A w < w/k -> A < 1/k = lambda/(2 pi). Matches key.
+kinds:
+- symbolic
+- inequality
+physics:
+- particle_velocity
+- wave_speed
+notes: Option D prints 'μ' in the book (apparently a typo for a symbol); copied as printed.

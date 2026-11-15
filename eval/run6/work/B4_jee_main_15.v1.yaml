@@ -1,0 +1,15 @@
+id: B4/jee_main/15
+assume:
+  - "The wire is fixed at both ends (a stretched wire); all harmonics n = 1, 2, 3, ... are allowed."
+  - "'Two consecutive frequencies' = harmonics n and n+1."
+unknowns: {L: positive, n: integer}
+media: {wire: {type: string, mu: 6.0e-3 kg/m, tension: 540 N}}
+resonators:
+  r: {type: string, on: wire, length: L, ends: [fixed, fixed]}
+given:
+  - {fact: "frequency(r, harmonic=n) == 420[Hz]", source: stated}
+  - {fact: "frequency(r, harmonic=n+1) == 490[Hz]", source: stated}
+observe:
+  L: "L"
+  n: "n"
+  speed: "speed(wire)"

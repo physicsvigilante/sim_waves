@@ -1,0 +1,23 @@
+id: B4/jee_main/48
+number: 48
+source: book p.111 (answer key p.123)
+format: single_correct
+statement: '[2015] A train is moving on a straight track with speed 20 m/s. It is blowing its whistle
+  at the frequency of 1000 Hz. The percentage change in the frequency heard by a person standing near
+  the track as the train passes him is (speed of sound = 320 m/s) close to'
+figure: null
+options:
+  A: 6%
+  B: 12%
+  C: 18%
+  D: 24%
+answer: B
+answer_value: 12%
+units: '%'
+verified: Approach 1000 x 320/300 = 1066.7 Hz; recede 1000 x 320/340 = 941.2 Hz; change 125.5 Hz = 12.5%
+  of 1000 (about 12%). Matches key.
+kinds:
+- numeric
+physics:
+- doppler
+notes: Change is relative to the 1000 Hz source frequency.

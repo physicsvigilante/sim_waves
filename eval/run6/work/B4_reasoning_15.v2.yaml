@@ -1,0 +1,17 @@
+id: B4/reasoning/15
+assume:
+  - "Stationary wave built as incident + reflected wave at a fixed end; mu, T, A, f kept symbolic."
+symbols: {mu: positive, T: positive, A: positive, f: positive}
+media:
+  s: {type: string, mu: mu, tension: T}
+junctions:
+  J: {at: 0 m, left: s, right: fixed}
+waves:
+  w: {harmonic: {on: s, A: A, f: f, dir: +x, phase: 0}}
+  total: {sum: [w, w_reflected]}
+observe:
+  p_inc: "power(w)"
+  p_ref: "power(w_reflected)"
+  e_loop_t0: "energy(total, start=-wavelength(w)/2, end=0[m], t=0[s])"
+  e_loop_t1: "energy(total, start=-wavelength(w)/2, end=0[m], t=period(w)/8)"
+  conserved: "equivalent(energy(total, start=-wavelength(w)/2, end=0[m], t=0[s]), energy(total, start=-wavelength(w)/2, end=0[m], t=period(w)/8))"

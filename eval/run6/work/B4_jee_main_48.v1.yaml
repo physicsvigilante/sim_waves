@@ -1,0 +1,18 @@
+id: B4/jee_main/48
+assume:
+  - "Still observer at origin, still air; train far away on either side, so the straight-line approach and recession values apply."
+  - "Distances 1 km are arbitrary (answer does not depend)."
+media:
+  air: {type: gas, v: 320 m/s}
+sources:
+  app: {on: air, at: [-1000 m, 0 m], velocity: [20 m/s, 0 m/s], f: 1000 Hz, A: 1, phase: 0, spreading: none}
+  rec: {on: air, at: [1000 m, 0 m], velocity: [20 m/s, 0 m/s], f: 1000 Hz, A: 1, phase: 0, spreading: none}
+points:
+  P: [0 m, 0 m]
+rays:
+  ra: {from: app, to: P}
+  rr: {from: rec, to: P}
+observe:
+  fa: "frequency(ra, emitted=0[s])"
+  fr: "frequency(rr, emitted=0[s])"
+  pct: "100*(frequency(ra, emitted=0[s]) - frequency(rr, emitted=0[s]))/frequency(ra, emitted=0[s])"

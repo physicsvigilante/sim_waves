@@ -1,0 +1,7 @@
+FINAL: B4_single_35.v1.yaml
+rate = c*v/(4*(L0 - tt*v)**2)
+optA = False  <counterexample>
+optB = True  <proved>
+optC = False  <counterexample>
+optD = False  <counterexample>
+EXIT: 0

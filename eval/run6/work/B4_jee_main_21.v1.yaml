@@ -1,0 +1,23 @@
+id: B4/jee_main/21
+assume:
+  - "Observer 1 hears 480 Hz < 500 Hz so it recedes; observer 2 hears 530 Hz > 500 Hz so it approaches (direction deduced from the sign of the shift, not stated)."
+  - "Observers move along the line through the source; their starting distances are not stated and are arbitrary."
+arbitrary: {D1: {value: 1000 m, above: 500 m}, D2: {value: 1000 m, above: 500 m}}
+unknowns: {u1: positive, u2: positive}
+media: {air: {type: gas, v: 300 m/s}}
+sources:
+  S: {on: air, at: [0 m, 0 m], f: 500 Hz, A: 1, phase: 0, spreading: none}
+points:
+  O1: {at: ["D1", 0 m], velocity: ["u1", 0 m/s]}
+  O2: {at: ["D2", 0 m], velocity: ["-u2", 0 m/s]}
+rays:
+  r1: {from: S, to: O1}
+  r2: {from: S, to: O2}
+given:
+  - {fact: "frequency(r1, t=1[s]) == 480[Hz]", source: stated}
+  - {fact: "frequency(r2, t=1[s]) == 530[Hz]", source: stated}
+  - {fact: "u1 < 300[m/s]", source: assumption}
+  - {fact: "u2 < 300[m/s]", source: assumption}
+observe:
+  u1: "u1"
+  u2: "u2"

@@ -1,0 +1,6 @@
+FINAL: B4_single_102.v1.yaml
+solved L2 = 1
+solved T = 65536/25  (= 2621.44)  (depends on the arbitrary values)
+L2 = 1  <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>
+T_solved: NOT AVAILABLE (SceneError: depends on the arbitrary value(s) ['mu']: the problem does not fix this result)
+EXIT: 1

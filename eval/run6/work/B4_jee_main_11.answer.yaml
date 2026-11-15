@@ -1,0 +1,9 @@
+answer: D (1/4 m/s)
+final_scene: B4_jee_main_11.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "nothing (note: both forks start at the same side, x=-D, one moving toward and one away; the assume text in v1 says opposite sides which is wrong wording only; beat frequency is unaffected at emission time 0)"
+missing_in_source: "none"
+reasoning: "Engine solved u = 0.25000 m/s from 2 Hz beats of the approaching and receding fork."
+friction: "Beats were taken at emission time 0 (emitted=) to avoid relying on the observer side times; a stationary observer between the forks cannot be dropped in a more natural way"

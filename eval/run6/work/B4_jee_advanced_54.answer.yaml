@@ -1,0 +1,9 @@
+answer: [D]
+final_scene: B4_jee_advanced_54.v1.yaml
+engine_fit: partial
+hand_steps: ["Relative wave speed for a passenger = heard frequency * wavelength in air (definition), written as a product of two observables", "Choice of reading 'speed of sound' as the medium's speed (340) rather than a speed relative to the passenger"]
+coverage: partial
+not_represented: "Whistle spectrum 800-1120 Hz reduced to a single 800 Hz component; position of the A passenger in the train."
+missing_in_source: "Where in train A the passenger sits; whether 'speed of sound' means speed in air or relative to the passenger."
+reasoning: "Engine: speed(air)=340 for everyone. Speed relative to the listener: B passenger 310, A passenger 320 (ahead of whistle) or 360 (behind), none gives 340 for A with 310 for B. So the only unambiguous statement is that the sound speed is 340 for both; the intended key may be A (340/310) - not confirmed by the engine."
+friction: "Speed of sound 'for a passenger' has no observable; improvised f*wavelength. Question wording ambiguous between medium speed and relative speed."

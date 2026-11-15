@@ -1,0 +1,20 @@
+id: B4/multiple/9
+assume:
+  - "Pitch = fundamental frequency of the string (fixed-fixed). Each action is modelled as a factor-2 change of one quantity with the others held fixed (the factor is an arbitrary choice; direction is what matters)."
+  - "Base string: mu, T0, L0 arbitrary."
+arbitrary: {mu: 10 g/m, T0: 50 N, L0: 0.6 m}
+media:
+  base: {type: string, mu: mu, tension: T0}
+  loose: {type: string, mu: mu, tension: T0/2}
+  tight: {type: string, mu: mu, tension: 2*T0}
+resonators:
+  r0: {type: string, on: base, length: L0, ends: [fixed, fixed]}
+  r_loose: {type: string, on: loose, length: L0, ends: [fixed, fixed]}
+  r_tight: {type: string, on: tight, length: L0, ends: [fixed, fixed]}
+  r_short: {type: string, on: base, length: L0/2, ends: [fixed, fixed]}
+  r_long: {type: string, on: base, length: 2*L0, ends: [fixed, fixed]}
+observe:
+  A_loosen_raises: "frequency(r_loose, harmonic=1) > frequency(r0, harmonic=1)"
+  B_tighten_raises: "frequency(r_tight, harmonic=1) > frequency(r0, harmonic=1)"
+  C_shorten_raises: "frequency(r_short, harmonic=1) > frequency(r0, harmonic=1)"
+  D_lengthen_raises: "frequency(r_long, harmonic=1) > frequency(r0, harmonic=1)"

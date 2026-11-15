@@ -1,0 +1,28 @@
+id: B4/single/56
+number: 56
+source: book p.86 (answer key p.122)
+format: single_correct
+statement: A uniform rope having mass m hangs vertically from a rigid support. A transverse wave pulse
+  is produced at the lower end. The speed (v) of wave pulse varies with height (h) from the lower end
+  as
+figure: Four v-versus-h graphs (v vertical, h horizontal). (A) horizontal straight line at a positive
+  constant v. (B) straight line through the origin rising linearly with h. (C) curve starting at the origin,
+  rising steeply then flattening (concave down). (D) curve starting at a positive v on the vertical axis
+  (above the origin) and rising with decreasing slope (concave down).
+options:
+  A: 'graph (A): constant v'
+  B: 'graph (B): straight line through origin'
+  C: 'graph (C): concave-down curve from origin'
+  D: 'graph (D): concave-down curve starting above origin'
+answer: C
+answer_value: graph (C)
+units: null
+verified: 'Tension at height h is (m h/L) g, mu = m/L, so v = sqrt(g h): zero at h = 0, concave-down parabola.
+  Matches key.'
+kinds:
+- graph_select
+- scaling
+physics:
+- wave_speed
+- hanging_rope
+notes: Options are graphs.

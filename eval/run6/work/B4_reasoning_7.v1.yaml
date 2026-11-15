@@ -1,0 +1,13 @@
+id: B4/reasoning/7
+assume:
+  - "Air-like gas at 1e5 Pa, 300 K, 29 g/mol (arbitrary, not given). gas a uses gamma=7/5 (adiabatic, Laplace); gas b uses gamma=1 (isothermal limit, Newton's formula) with the same P and density."
+  - "Statement-2 (no time to exchange heat, i.e. adiabatic) is a physical premise the engine does not model; it is only represented through the gamma value."
+arbitrary: {P: 1e5 Pa, rho: 1.29 kg/m^3}
+media:
+  adiabatic: {type: gas, gamma: 7/5, pressure: P, density: rho}
+  isothermal: {type: gas, gamma: 1, pressure: P, density: rho}
+observe:
+  v_adiabatic: "speed(adiabatic)"
+  v_isothermal: "speed(isothermal)"
+  ratio: "speed(adiabatic)/speed(isothermal)"
+  ratio_sq_is_gamma: "equivalent((speed(adiabatic)/speed(isothermal))**2, 7/5)"

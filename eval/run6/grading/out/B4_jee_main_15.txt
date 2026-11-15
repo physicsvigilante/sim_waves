@@ -1,0 +1,7 @@
+FINAL: B4_jee_main_15.v1.yaml
+solved L = 15/7  (= 2.14286)
+solved n = 6
+L = 15/7  (= 2.14286)
+n = 6
+speed = 300
+EXIT: 0

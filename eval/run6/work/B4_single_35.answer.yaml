@@ -1,0 +1,9 @@
+answer: [B]
+final_scene: B4_single_35.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: nothing
+missing_in_source: tube taken as closed at the water end (assumption)
+reasoning: 'd f/dt = c*v/(4*(L0-v t)^2): equivalent to option B.'
+friction: Time dependence of length needed a symbol tt in the length expression.

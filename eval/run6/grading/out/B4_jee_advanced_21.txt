@@ -1,0 +1,6 @@
+FINAL: B4_jee_advanced_21.v1.yaml
+vmax = A*omega
+a = True  <decided>
+phase_speed = omega/k
+b_is_vmax: NOT AVAILABLE (UndeterminedError: cannot decide 'max_over(t, vy(w, x=0[m], t=t)) == omega/k' for all symbol values (A*omega - omega/k == 0))
+EXIT: 1

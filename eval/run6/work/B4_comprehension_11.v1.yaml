@@ -1,0 +1,17 @@
+id: B4/comprehension/11
+assume:
+  - "Pipe closed at x=0 (first end listed), open at x=L; second overtone of closed-open pipe is harmonic 5 (engine converts)."
+  - "Pressure antinodes of the pipe are where the pressure swings between P0-dP0 and P0+dP0 at full amplitude; the engine gives their positions. Whether the closed end is one is read from the list."
+symbols: {}
+unknowns: {L: positive}
+media:
+  air: {type: gas, v: 330 m/s}
+resonators:
+  p: {type: pipe, on: air, length: L, ends: [closed, open], end_correction: 0 m}
+given:
+  - {fact: "frequency(p, harmonic=harmonic(p, overtone=2)) == 440[Hz]", source: stated}
+observe:
+  n: "harmonic(p, overtone=2)"
+  L: "L"
+  pnodes: "pressure_nodes(p, harmonic=harmonic(p, overtone=2))"
+  pantinodes: "pressure_antinodes(p, harmonic=harmonic(p, overtone=2))"

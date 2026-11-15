@@ -1,0 +1,9 @@
+answer: 170 Hz
+final_scene: B4_jee_main_47.v2.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "Car/observer distances and reception time are fixed convenient values."
+missing_in_source: "Observer position/distances (only the direction is stated); reflection from wall assumed to supply the second beating sound."
+reasoning: "Engine solved f0 from beat(direct, echo)=5 Hz: f0=169.96 Hz (direct 172.5, echo 167.5), closest to option D, 170 Hz."
+friction: "Arbitrary-scaled distances broke the echo (v1 failed at x0.01 scaling), so distances had to be fixed numbers; unknown source frequency inside a moving-ray beat worked."

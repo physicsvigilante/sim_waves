@@ -1,0 +1,23 @@
+id: B4/jee_main/15
+number: 15
+source: book p.109 (answer key p.123)
+format: single_correct
+statement: '[Online January 2020] A wire of length L and mass per unit length 6.0 x 10^-3 kg/m is put
+  under tension of 540 N. Two consecutive frequencies that it resonates at are 420 Hz and 490 Hz. Then
+  L in meters is'
+figure: null
+options:
+  A: 8.1 m
+  B: 5.1 m
+  C: 1.1 m
+  D: 2.1 m
+answer: D
+answer_value: 2.1 m
+units: m
+verified: v = sqrt(540/0.006) = 300 m/s; spacing 70 Hz = v/2L -> L = 300/140 = 2.14 m (2.1 m). Matches
+  key.
+kinds:
+- numeric
+physics:
+- string_harmonics
+notes: Consistent.

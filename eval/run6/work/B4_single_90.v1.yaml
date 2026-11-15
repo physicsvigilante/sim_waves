@@ -1,0 +1,21 @@
+id: B4/single/90
+assume:
+  - "Concrete numbers for the free constants (A = 1 m, c = 340 m/s, T = 0.02 s, lambda = c*T = 6.8 m). The wave form, not the constants, is the question."
+  - "Each option is entered as a given wave with the book's own formula. Because bare x and t are SI numbers the engine cannot check the units of option D; it can only check that the speed of the pattern equals the c written in it."
+symbols: {}
+waves:
+  A: {given: "sin(2*pi/0.02*(t - x/340))", units: {x: m, t: s, y: m}}
+  B: {given: "sin((2*pi/6.8)*(340*t - x))", units: {x: m, t: s, y: m}}
+  C: {given: "sin(2*pi*(t/0.02 + x/6.8))", units: {x: m, t: s, y: m}}
+  D: {given: "sin(2*pi*(t/0.02 - x/340))", units: {x: m, t: s, y: m}}
+observe:
+  tA: "is_travelling(A)"
+  tB: "is_travelling(B)"
+  tC: "is_travelling(C)"
+  tD: "is_travelling(D)"
+  vA: "velocity(A)"
+  vB: "velocity(B)"
+  vC: "velocity(C)"
+  vD: "velocity(D)"
+  lamA: "wavelength(A)"
+  lamD: "wavelength(D)"

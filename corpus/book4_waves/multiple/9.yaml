@@ -1,0 +1,22 @@
+id: B4/multiple/9
+number: 9
+source: book p.95 (answer key p.122)
+format: multiple_correct
+statement: To raise the pitch of a stringed musical instrument the player can
+figure: null
+options:
+  A: loosen the string.
+  B: tighten the string.
+  C: shorten the string.
+  D: lengthen the string.
+answer: B, C
+answer_value:
+- B
+- C
+units: null
+verified: 'f = (1/2L) sqrt(T/mu): increase T or decrease L. Matches key.'
+kinds:
+- conceptual
+physics:
+- string_fundamental
+notes: Consistent.

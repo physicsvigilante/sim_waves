@@ -1,0 +1,12 @@
+answer: [A]
+final_scene: B4_jee_advanced_4.v2.yaml
+engine_fit: partial
+hand_steps: [picked n=344 over the second solution 336 using only the decrease of beats; the stated
+    2 Hz value could not be used with a symbolic small tension change]
+coverage: partial
+not_represented: exact size of the 'slight' tension increase; string length and mode (arbitrary)
+missing_in_source: string length and mode number of the string
+reasoning: Pipe first overtone gives 340 Hz; string tuned to it; beats 4 and decrease under tension
+  rise solved n = 344.
+friction: 'v1 inconsistent: ''beats reduce to exactly 2'' cannot hold for an arbitrary small
+  d; needed an inequality. No way to state ''slightly'' as a limit.'

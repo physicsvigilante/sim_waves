@@ -1,0 +1,20 @@
+id: B4/comprehension/12
+assume:
+  - "Figure has no scale: pulse drawn as one full sine cycle (crest then trough) of width 0.4 m, height 1 cm; labelled points placed at C=crest (x=1.1), E=zero crossing (x=1.2), G=trough (x=1.3); D and F are 'just after crest' and 'just below baseline' on the falling slope, placed at x=1.15 and 1.22 (a reading of the figure). Question is about the ordering of kinetic energy per point, expected scale-free."
+  - "String mu and tension are arbitrary (not given); they scale all kinetic energies equally."
+arbitrary: {mu: 10 g/m, T: 40 N}
+media:
+  rope: {type: string, mu: mu, tension: T}
+waves:
+  p: {pulse: {on: rope, shape: "0.01*sin(2*pi*(x - 1)/0.4)*(step(x - 1) - step(x - 1.4))", units: {x: m, y: m}, dir: -x}}
+given:
+  - {fact: "speed(rope) > 0[m/s]", source: convention}
+observe:
+  KD: "kinetic_density(p, x=1.15[m], t=0[s])"
+  KE: "kinetic_density(p, x=1.2[m], t=0[s])"
+  KF: "kinetic_density(p, x=1.22[m], t=0[s])"
+  KG: "kinetic_density(p, x=1.3[m], t=0[s])"
+  E_gt_all: "kinetic_density(p, x=1.2[m], t=0[s]) > kinetic_density(p, x=1.15[m], t=0[s])"
+  E_gt_F: "kinetic_density(p, x=1.2[m], t=0[s]) > kinetic_density(p, x=1.22[m], t=0[s])"
+  E_gt_G: "kinetic_density(p, x=1.2[m], t=0[s]) > kinetic_density(p, x=1.3[m], t=0[s])"
+  Kmax: "max_in(x, kinetic_density(p, x=x, t=0[s]), 1[m], 1.4[m])"

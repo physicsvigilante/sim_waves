@@ -1,0 +1,9 @@
+answer: A
+final_scene: B4_single_49.v1.yaml
+engine_fit: partial
+hand_steps: ['compare ratio 2*pi*A/lambda with 1: particle speed < wave speed iff A < lambda/(2 pi)']
+coverage: full
+not_represented: "nothing"
+missing_in_source: "none"
+reasoning: "Engine: max particle speed / wave speed = 2 pi A/lambda."
+friction: "Comparison of two symbols in one scene (A0 < lam/(2 pi)) as an iff condition is not allowed; had to read the ratio by hand"

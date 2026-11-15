@@ -1,0 +1,15 @@
+id: B4/single/35
+assume:
+  - "Tube enters water: the water surface closes the lower end, so closed-open pipe with length l = L0 - v*tt (tt = time); end correction neglected."
+  - "Rate of change = d f/d tt; sign is negative-of-increase? frequency rises as l shrinks (observed)."
+symbols: {L0: positive, v: positive, tt: positive, c: positive}
+media:
+  air: {type: gas, v: c}
+resonators:
+  p: {type: pipe, on: air, length: "L0 - v*tt", ends: [closed, open], end_correction: 0 m}
+observe:
+  rate: "diff(frequency(p, harmonic=1), tt)"
+  optA: "equivalent(diff(frequency(p, harmonic=1), tt), c*v/(2*(L0 - v*tt)**2))"
+  optB: "equivalent(diff(frequency(p, harmonic=1), tt), c*v/(4*(L0 - v*tt)**2))"
+  optC: "equivalent(diff(frequency(p, harmonic=1), tt), c/(2*v**2*(L0 - v*tt)**2))"
+  optD: "equivalent(diff(frequency(p, harmonic=1), tt), c/(4*v**2*(L0 - v*tt)**2))"

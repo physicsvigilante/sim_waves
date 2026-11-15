@@ -1,0 +1,16 @@
+id: B4/matrix/2
+format: matrix_match
+statement: The equation of a travelling wave is given by (all quantities are in SI units) y = (0.02) sin
+  2π(10t - 5x). Match the quantities in COLUMN-I with the SI values in COLUMN-II.
+figure: null
+options:
+  column_i:
+    A: Speed of wave
+    B: Angular frequency of wave
+    C: Wavelength of wave
+    D: Maximum particle speed
+  column_ii:
+    p: '10'
+    q: 0.4π
+    r: '2'
+    s: '0.2'

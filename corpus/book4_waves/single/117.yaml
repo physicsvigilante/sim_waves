@@ -1,0 +1,21 @@
+id: B4/single/117
+number: 117
+source: book p.90 (answer key p.122)
+format: single_correct
+statement: When a sound wave of frequency 300 Hz passes through a medium, the maximum displacement of
+  a particle of the medium is 0.1 cm. The maximum velocity of particle is equal to
+figure: null
+options:
+  A: 60π cm/s
+  B: 30π cm/s
+  C: 30 cm/s
+  D: 60 cm/s
+answer: A
+answer_value: 60π cm/s
+units: cm/s
+verified: v_max = 2π f A = 2π x 300 x 0.1 = 60π cm/s. Matches key.
+kinds:
+- numeric
+physics:
+- particle_velocity
+notes: Consistent.

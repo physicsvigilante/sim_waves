@@ -1,0 +1,21 @@
+id: B4/single/142
+number: 142
+source: book p.92 (answer key p.122)
+format: single_correct
+statement: A sonometer wire is vibrating in the second overtone. In the wire there are
+figure: null
+options:
+  A: two nodes and two antinodes.
+  B: one node and two antinodes.
+  C: four nodes and three antinodes.
+  D: three nodes and three antinodes.
+answer: C
+answer_value: four nodes and three antinodes.
+units: null
+verified: 'Second overtone = third harmonic of a string fixed at both ends: 3 loops = 3 antinodes, 4 nodes
+  counting both ends. Matches key.'
+kinds:
+- conceptual
+physics:
+- string_harmonics
+notes: Counts nodes including the fixed ends.

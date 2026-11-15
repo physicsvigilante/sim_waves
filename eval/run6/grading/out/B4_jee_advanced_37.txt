@@ -1,0 +1,6 @@
+FINAL: B4_jee_advanced_37.v1.yaml
+B_wind_src_to_obs_f2_gt_f1 = True  <proved for every allowed arbitrary value>
+D_wind_src_to_obs_f2_lt_f1 = False  <proved for every allowed arbitrary value>
+A_wind_obs_to_src_f2_gt_f1 = True  <proved for every allowed arbitrary value>
+C_wind_obs_to_src_f2_lt_f1 = False  <proved for every allowed arbitrary value>
+EXIT: 0

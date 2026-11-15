@@ -1,0 +1,4 @@
+FINAL: B4_jee_main_37.v1.yaml
+f1 = 2500*sqrt(309)/9  (= 4882.89)
+nodes1 = (3/10,)
+EXIT: 0

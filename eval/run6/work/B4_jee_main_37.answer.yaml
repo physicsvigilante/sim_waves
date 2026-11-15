@@ -1,0 +1,10 @@
+answer: [A]
+final_scene: B4_jee_main_37.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: nothing
+missing_in_source: none
+reasoning: Free-free rod with node at middle for harmonic 1 (nodes = 0.3 m); f1 = 4883 Hz ~ 5
+  kHz.
+friction: none

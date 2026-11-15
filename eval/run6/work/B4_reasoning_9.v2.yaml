@@ -1,0 +1,21 @@
+id: B4/reasoning/9
+assume:
+  - "Stationary source at origin, 500 Hz, spreading none (only wavelength/frequency checked). Listener L_still at rest, L_toward moving toward the source at 10 m/s (10 m/s is a convenient assumed value, not arbitrary-scaled). Still air."
+  - "Intensity of a moving-ray is refused by the engine (v0), so Statement-1 cannot be checked here."
+media:
+  air: {type: gas, v: 340 m/s, density: 1.29 kg/m^3}
+sources:
+  S: {on: air, at: [0 m, 0 m], f: 500 Hz, A: 1, phase: 0, spreading: none}
+points:
+  L_still: [100 m, 0 m]
+  L_toward: {at: [100 m, 0 m], velocity: ["-10 m/s", 0 m/s]}
+rays:
+  r_still: {from: S, to: L_still}
+  r_toward: {from: S, to: L_toward}
+observe:
+  f_still: "frequency(r_still, t=1[s])"
+  f_toward: "frequency(r_toward, t=1[s])"
+  freq_changes: "frequency(r_toward, t=1[s]) > frequency(r_still, t=1[s])"
+  lambda_still: "wavelength(r_still, t=1[s])"
+  lambda_toward: "wavelength(r_toward, t=1[s])"
+  wavelength_unchanged: "wavelength(r_toward, t=1[s]) == wavelength(r_still, t=1[s])"

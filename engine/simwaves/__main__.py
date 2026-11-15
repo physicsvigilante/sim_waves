@@ -1,6 +1,6 @@
 """Usage:
   python -m simwaves run  <scene.yaml>               evaluate one scene
-  python -m simwaves test <folder>                   run every scene's expect block
+  python -m simwaves test <folder> [-j N]            run every scene's expect block (N in parallel)
   python -m simwaves view <out.html> <scene.yaml>... build a viewer page from scenes
 """
 import sys
@@ -48,11 +48,14 @@ def main(argv):
         except SceneError as exc:
             print(f"{type(exc).__name__}: {exc}")
             return 1
+    jobs = None
+    if len(argv) == 4 and argv[0] == "test" and argv[2] in ("-j", "--jobs") and argv[3].isdigit():
+        jobs, argv = int(argv[3]), argv[:2]
     if len(argv) != 2 or argv[0] not in ("run", "test"):
         print(__doc__)
         return 2
     if argv[0] == "test":
-        counts = run_dir(argv[1])
+        counts = run_dir(argv[1], jobs)
         return 0 if set(counts) <= {"PASS"} else 1
     try:
         sc = load(argv[1])

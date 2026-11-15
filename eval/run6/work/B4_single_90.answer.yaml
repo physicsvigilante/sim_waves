@@ -1,0 +1,9 @@
+answer: D
+final_scene: B4_single_90.v1.yaml
+engine_fit: partial
+hand_steps: ['D is the one whose pattern speed (17000 m/s) is not the c it contains (340); I read this as the answer; the unit inconsistency x/c vs t/T is not checkable']
+coverage: partial
+not_represented: "Units of the formulas (bare x and t are SI numbers so dimension errors cannot be caught)"
+missing_in_source: "none"
+reasoning: "A, B travel at +340, C at -340 (still progressive); D has velocity 17000 and wavelength 340 m: inconsistent with its own c and T, not a valid travelling wave in c, T, lambda."
+friction: "Dimensional inconsistency (x/c with t/T) cannot be expressed or detected; used speed mismatch as a proxy"

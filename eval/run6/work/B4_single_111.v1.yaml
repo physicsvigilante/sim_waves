@@ -1,0 +1,16 @@
+id: B4/single/111
+assume:
+  - "Both waves travel in the same direction (+x) in air, so they superpose to one travelling wave; 'frequency ω' read as angular frequency omega. Speed of sound 340 m/s is an arbitrary scene value (not needed for the ratios)."
+  - "Phase difference pi/2 realised as phase 0 and pi/2 at the same point."
+symbols: {A: positive, om: positive}
+media:
+  air: {type: gas, v: 340 m/s, density: 1.29 kg/m^3}
+waves:
+  w1: {harmonic: {on: air, A: A, omega: om, dir: +x, phase: 0}}
+  w2: {harmonic: {on: air, A: A, omega: om, dir: +x, phase: pi/2}}
+  total: {sum: [w1, w2]}
+observe:
+  amp_over_A: "amplitude(total)/A"
+  omega_total_over_omega: "omega(total)/om"
+  amp_total: "amplitude(total)"
+  omega_total: "omega(total)"

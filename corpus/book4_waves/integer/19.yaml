@@ -1,0 +1,21 @@
+id: B4/integer/19
+number: 19
+source: book p.107 (answer key p.123)
+format: numerical
+statement: 'A sonometer wire has a total length of 1.1 m between the fixed ends. Where should the two
+  bridges be placed from the ends, in cm, below the wire so that the three segments of the wire have their
+  fundamental frequencies in the ratio 1 : 2 : 3?'
+figure: null
+options: null
+answer: 60, 20
+answer_value: 60, 20
+units: cm
+verified: 'Same tension and mass density: L proportional to 1/f, so segments in ratio 1 : 1/2 : 1/3 =
+  6 : 3 : 2 of 110 cm = 60, 30, 20 cm. Bridges are 60 cm from one end and 20 cm from the other end. Matches
+  key (60, 20).'
+kinds:
+- ratio
+physics:
+- string_fundamental
+- sonometer
+notes: Answer has two values (distance from each end).

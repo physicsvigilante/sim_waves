@@ -1,0 +1,6 @@
+FINAL: B4_jee_advanced_4.v2.yaml
+solved T = 4624  (depends on the arbitrary values)
+solved n = 344
+f_pipe = 340  <exact; same at 5 values of each arbitrary value (ranged ones spread across their ranges, others x0.01 to x89; sampled)>
+n = 344  <exact; same at 5 values of each arbitrary value (ranged ones spread across their ranges, others x0.01 to x89; sampled)>
+EXIT: 0

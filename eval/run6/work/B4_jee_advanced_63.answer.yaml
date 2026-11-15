@@ -1,0 +1,12 @@
+answer: '8 Hz'
+final_scene: B4_jee_advanced_63.v2.yaml
+engine_fit: partial
+hand_steps: [rounded engine result 8.2-8.4 to the integer 8]
+coverage: partial
+not_represented: problem ambiguous whether 600/800 m apply at emission or reception
+missing_in_source: whether the distances hold at emission or at reception
+reasoning: 'Exact engine Doppler gives f1 131.9 (emission reading) or 132.0 (reception reading)
+  vs f2 123.64: beats 8.24 or 8.36, nearest integer 8.'
+friction: Two readings of the geometry give different decimals (8.24 vs 8.36), the textbook
+  formula uses instantaneous geometry; I had to run both. Non-integer beats vs integer
+  answer.

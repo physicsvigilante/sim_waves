@@ -1,0 +1,18 @@
+id: B4/jee_advanced/63
+assume:
+  - "Distances 600 m and 800 m are read at the instant the sound is HEARD (t=0 reception). Not clear in the problem; the emission-time reading is also observed."
+  - "S2 at origin, S1 on the +x axis, O below S2 on the -y axis; wind-free air."
+media:
+  air: {type: gas, v: 330 m/s}
+sources:
+  S1: {on: air, at: [800 m, 0 m], velocity: [-30 m/s, 0 m/s], f: 120 Hz, A: 1, phase: 0, spreading: none}
+  S2: {on: air, at: [0 m, 0 m], f: 120 Hz, A: 1, phase: 0, spreading: none}
+points:
+  O: {at: [0 m, -600 m], velocity: [0 m/s, 10 m/s]}
+rays:
+  h1: {from: S1, to: O}
+  h2: {from: S2, to: O}
+observe:
+  f1: "frequency(h1, t=0[s])"
+  f2: "frequency(h2, t=0[s])"
+  beats: "beat_frequency(h1, h2, t=0[s])"

@@ -1,0 +1,50 @@
+id               att fit      ok   answer -> key
+B4/comprehension/11   1 partial  Y    ['B'] -> B
+B4/comprehension/12   1 partial  Y    ['B'] -> B
+B4/comprehension/16   2 full     Y    ['C'] -> C
+B4/integer/19      1 partial  ?    {'first_bridge_from_one_end': '60 cm', 'second_bridge_from_other_end': '20 cm', 'segments_cm': [60, 30, 20]} -> 60, 20
+B4/integer/23      1 partial  Y    79 Hz -> 79
+B4/integer/24      1 full     Y    8 cm -> 8
+B4/integer/7       1 full     Y    30 m/s -> 30
+B4/jee_advanced/1   1 partial  Y    B (15.2 cm) -> B
+B4/jee_advanced/21   1 partial  Y    ['A'] -> A
+B4/jee_advanced/25   1 partial  Y    A -> A
+B4/jee_advanced/37   1 full     Y    ['A', 'B'] -> A, B
+B4/jee_advanced/4   2 partial  Y    ['A'] -> A
+B4/jee_advanced/54   1 partial  n    ['D'] -> B
+B4/jee_advanced/55   1 full     Y    ['A'] -> A
+B4/jee_advanced/63   2 partial  Y    8 Hz -> 8.13
+B4/jee_main/11     1 full     Y    D (1/4 m/s) -> D
+B4/jee_main/15     1 full     Y    D (2.1 m) -> D
+B4/jee_main/21     2 full     Y    D (12, 18) -> D
+B4/jee_main/37     1 full     Y    ['A'] -> A
+B4/jee_main/47     2 full     n    170 Hz -> D
+B4/jee_main/48     1 full     Y    ['B'] -> B
+B4/jee_main/49     1 full     Y    ['B'] -> B
+B4/jee_main/5      3 partial  Y    C (2200 Hz) -> C
+B4/jee_main/54     3 full     Y    A (6.25 N) -> A
+B4/matrix/2        1 partial  n    {'A': 'r', 'B': 'p', 'C': 's', 'D': 'q'} -> {'A': ['r'], 'B': ['p'], 'C': ['q'], 'D': ['s']}
+B4/multiple/18     2 full     Y    ['a', 'c'] -> A, C
+B4/multiple/33     1 full     Y    ['a', 'b', 'd'] -> A, B, D
+B4/multiple/4      1 partial  Y    ['a', 'b'] -> A, B
+B4/multiple/9      1 full     Y    ['B', 'C'] -> B, C
+B4/reasoning/15    2 partial  n    ['A'] -> B
+B4/reasoning/7     1 partial  Y    ['A'] -> A
+B4/reasoning/9     2 partial  n    ['C'] -> B
+B4/single/102      2 full     Y    ['C'] -> C
+B4/single/11       1 full     Y    ['B'] -> B
+B4/single/111      1 full     Y    ['D'] -> D
+B4/single/117      1 full     Y    ['A'] -> A
+B4/single/141      1 full     Y    B (1.22 f) -> B
+B4/single/142      1 full     Y    ['C'] -> C
+B4/single/169      1 partial  n    B (decrease) -> D
+B4/single/175      1 full     Y    A (4.0 s) -> A
+B4/single/33       1 full     Y    ['B'] -> B
+B4/single/35       1 full     Y    ['B'] -> B
+B4/single/49       1 partial  Y    A -> A
+B4/single/56       1 full     Y    ['C'] -> C
+B4/single/64       1 full     Y    ['B'] -> B
+B4/single/73       1 none     Y    ['A'] -> A
+B4/single/90       1 partial  Y    D -> D
+
+correct 40/47; correct on first attempt 32/47

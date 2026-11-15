@@ -1,0 +1,22 @@
+id: B4/single/73
+number: 73
+source: book p.87 (answer key p.122)
+format: single_correct
+statement: When a source of sound approaches a stationary observer the intensity of the sound wave
+figure: null
+options:
+  A: is increased
+  B: is decreased
+  C: remains constant
+  D: may increase or decrease depending on the speed of source
+answer: A
+answer_value: is increased
+units: null
+verified: 'Source approaching: distance falls so intensity (inverse square) rises; the Doppler shift also
+  raises the received intensity. Matches key.'
+kinds:
+- conceptual
+physics:
+- doppler
+- intensity
+notes: Doppler, qualitative.

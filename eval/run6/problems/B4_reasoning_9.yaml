@@ -1,0 +1,12 @@
+id: B4/reasoning/9
+format: single_correct
+statement: |-
+  Statement-1: Intensity of sound waves does not change when the listener moves towards or away from stationary source.
+  Statement-2: The motion of the listener causes the apparent change in wavelength.
+  (Mark the answer using the bubble options below.)
+figure: null
+options:
+  A: Both statements are TRUE and STATEMENT 2 is the correct explanation of STATEMENT 1.
+  B: Both statements are TRUE but STATEMENT 2 is not the correct explanation of STATEMENT 1.
+  C: STATEMENT 1 is TRUE and STATEMENT 2 is FALSE.
+  D: STATEMENT 1 is FALSE but STATEMENT 2 is TRUE.

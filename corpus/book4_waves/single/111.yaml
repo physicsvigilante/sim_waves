@@ -1,0 +1,22 @@
+id: B4/single/111
+number: 111
+source: book p.90 (answer key p.122)
+format: single_correct
+statement: Two sound waves, each of amplitude A and frequency ω, superpose at a point with a phase difference
+  of π/2. The amplitude and the frequency of the resultant wave are, respectively
+figure: null
+options:
+  A: A/√2, ω/2
+  B: A/√2, ω
+  C: √2 A, ω/2
+  D: √2 A, ω
+answer: D
+answer_value: √2 A, ω
+units: null
+verified: Resultant amplitude 2A cos(pi/4) = sqrt2 A; frequency unchanged. Matches key.
+kinds:
+- symbolic
+physics:
+- superposition
+- phase_difference
+notes: Consistent.

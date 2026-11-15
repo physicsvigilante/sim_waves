@@ -1,0 +1,9 @@
+answer: {A: r, B: p, C: s, D: q}
+final_scene: B4_matrix_2.v1.yaml
+engine_fit: partial
+hand_steps: ["B -> p is a guess: engine gives omega = 20*pi rad/s which matches nothing in column II (p=10 equals the frequency in Hz)"]
+coverage: full
+not_represented: nothing
+missing_in_source: "Column II has no entry equal to 20*pi; likely a source error (omega entry replaced by frequency)."
+reasoning: "Engine: speed 2 (r), omega 20*pi (no match), wavelength 0.2 (s), max particle speed 2*pi/5 = 0.4*pi (q)."
+friction: "none for the engine; the problem as printed has no correct partner for B."

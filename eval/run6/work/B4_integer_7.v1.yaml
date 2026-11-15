@@ -1,0 +1,23 @@
+id: B4/integer/7
+assume:
+  - "Radio waves are modelled as a wave in a gas-type medium with v = c = 3e8 m/s (the engine has no electromagnetic medium; the Doppler kinematics are the same for a wave speed c)."
+  - "The Moon is a plane reflector at rest, normal to the line of approach; the astronaut carries the transmitter and receiver (same motion, same place)."
+  - "Non-relativistic Doppler treatment (u << c); the engine solves the exact signal timing with the wave speed c."
+  - "The distance to the Moon is not stated; it is arbitrary."
+arbitrary: {D: {value: 1e8 m, above: 1e6 m}}
+symbols: {}
+unknowns: {u: positive}
+media: {rad: {type: gas, v: 3e8 m/s}}
+sources:
+  S: {on: rad, at: [0 m, 0 m], velocity: ["u", 0 m/s], f: 5e9 Hz, A: 1, phase: 0, spreading: none}
+reflectors:
+  moon: {point: [D, 0 m], normal: [-1, 0], boundary: rigid}
+points:
+  O: {at: [0 m, 0 m], velocity: ["u", 0 m/s]}
+rays:
+  echo: {from: S, to: O, via: moon}
+given:
+  - {fact: "frequency(echo, emitted=0[s]) - 5e9[Hz] == 1e3[Hz]", source: stated, note: "echo shift 1e3 Hz; the sign is positive for approach"}
+  - {fact: "u < 3e8[m/s]", source: assumption}
+observe:
+  u: "u"

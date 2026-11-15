@@ -1,0 +1,9 @@
+id: B4/jee_main/54
+assume: ["The wave is the stated travelling wave on the string; tension is whatever makes the string carry it at its speed."]
+media: {rope: {type: string, mu: 0.04 kg/m, tension: free}}
+waves:
+  w: {given: "0.02*sin(2*pi*(t/0.04 - x/0.50))", units: {x: m, t: s, y: m}, on: rope}
+observe:
+  T: "tension(rope, at=0[m])"
+  v: "speed(w)"
+  Z: "impedance(rope)"

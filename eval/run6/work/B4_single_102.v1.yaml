@@ -1,0 +1,17 @@
+id: B4/single/102
+assume:
+  - "Same string, same tension in both cases (only the length is changed). Tension not given: unknown, solved."
+  - "Resonance at 512 Hz at 0.5 m is taken as the FUNDAMENTAL (n=1); the problem does not say so. The 256 Hz resonance list is also given for any harmonic, to show the ambiguity."
+arbitrary: {mu: 10 g/m}
+unknowns: {T: positive, L2: positive}
+media:
+  s: {type: string, mu: mu, tension: T}
+resonators:
+  r1: {type: string, on: s, length: 0.5 m, ends: [fixed, fixed]}
+  r2: {type: string, on: s, length: L2, ends: [fixed, fixed]}
+given:
+  - {fact: "frequency(r1, harmonic=1) == 512[Hz]", source: assumption, note: "fundamental assumed; the problem says only 'resonates'"}
+  - {fact: "frequency(r2, harmonic=1) == 256[Hz]", source: assumption, note: "fundamental assumed"}
+observe:
+  L2: "L2"
+  T_solved: "T"

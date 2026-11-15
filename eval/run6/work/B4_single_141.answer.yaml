@@ -1,0 +1,9 @@
+answer: B (1.22 f)
+final_scene: B4_single_141.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "nothing"
+missing_in_source: "none"
+reasoning: "Engine ratio = 11/9 = 1.2222 independent of v and f (5 scalings)."
+friction: "none"

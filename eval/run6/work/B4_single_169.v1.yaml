@@ -1,0 +1,21 @@
+id: B4/single/169
+assume:
+  - "Speed of sound not stated: arbitrary. End corrections neglected (0 m)."
+  - "Open pipe lengthened by dl > 0 (amount not stated; any positive amount). The initial open-pipe length L is solved from the 4 Hz beat."
+  - "Beat count compared as beats(after) < beats(before) = 4 Hz."
+arbitrary: {vs: 340 m/s}
+symbols: {dl: positive}
+unknowns: {L: positive}
+media: {air: {type: gas, v: vs}}
+resonators:
+  po: {type: pipe, on: air, length: L, ends: [open, open], end_correction: 0 m}
+  pc: {type: pipe, on: air, length: L, ends: [closed, open], end_correction: 0 m}
+  po2: {type: pipe, on: air, length: "L + dl", ends: [open, open], end_correction: 0 m}
+given:
+  - {fact: "beat_frequency(frequency(po, harmonic=1), frequency(pc, harmonic=1)) == 4[Hz]", source: stated}
+observe:
+  L: "L"
+  beats_after: "beat_frequency(frequency(po2, harmonic=1), frequency(pc, harmonic=1))"
+  decrease_all_dl: "beat_frequency(frequency(po2, harmonic=1), frequency(pc, harmonic=1)) < 4[Hz]"
+  small_dl: "at(beat_frequency(frequency(po2, harmonic=1), frequency(pc, harmonic=1)), dl=L/10)"
+  large_dl: "at(beat_frequency(frequency(po2, harmonic=1), frequency(pc, harmonic=1)), dl=3*L)"

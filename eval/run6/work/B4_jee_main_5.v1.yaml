@@ -1,0 +1,16 @@
+id: B4/jee_main/5
+assume:
+  - "Closed (water surface) - open (top) pipe; air column length = H - water height, H (tube height) not stated."
+  - "Two consecutive resonances = harmonics 2m-1 and 2m+1 of the SAME fork; the second (higher water level, shorter column) has the higher harmonic."
+  - "End correction neglected (not stated): 0 m."
+unknowns: {H: positive, m: integer, fk: positive}
+media: {air: {type: gas, v: 330 m/s}}
+resonators:
+  p1: {type: pipe, on: air, length: "H - 17[cm]", ends: [closed, open], end_correction: 0 m}
+  p2: {type: pipe, on: air, length: "H - 24.5[cm]", ends: [closed, open], end_correction: 0 m}
+given:
+  - {fact: "frequency(p1, harmonic=2*m-1) == fk", source: stated}
+  - {fact: "frequency(p2, harmonic=2*m+1) == fk", source: stated}
+  - {fact: "H > 24.5[cm]", source: assumption}
+observe:
+  fk: "fk"

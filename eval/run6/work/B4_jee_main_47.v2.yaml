@@ -1,0 +1,24 @@
+id: B4/jee_main/47
+assume:
+  - "Wall at x=0 (rigid, normal +x). Car moves +x (away from wall, toward the observer) at 5 m/s. Observer at rest on the line, in front of the car. Beats are between the direct sound and the sound reflected from the wall."
+  - "Car starts 50 m from wall and observer is at 150 m; these distances and the reception time are fixed convenient choices (not arbitrary-scaled: the echo must exist at t=1 s) (frequencies of uniform motion do not depend on them)."
+  - "Still air, no wind (none stated)."
+symbols: {}
+unknowns: {f0: positive}
+media:
+  air: {type: gas, v: 340 m/s}
+sources:
+  car: {on: air, at: [50 m, 0 m], velocity: [5 m/s, 0 m/s], f: f0, A: 1, phase: 0, spreading: none}
+points:
+  O: [150 m, 0 m]
+reflectors:
+  wall: {point: [0 m, 0 m], normal: [1, 0], boundary: rigid}
+rays:
+  direct: {from: car, to: O}
+  echo: {from: car, to: O, via: wall}
+given:
+  - {fact: "beat_frequency(direct, echo, t=1[s]) == 5[Hz]", source: stated}
+observe:
+  f0: "f0"
+  f_direct: "frequency(direct, t=1[s])"
+  f_echo: "frequency(echo, t=1[s])"

@@ -1,0 +1,10 @@
+id: B4/single/117
+assume:
+  - "Sound speed of the medium is not stated: arbitrary; the maximum particle velocity does not depend on it."
+arbitrary: {c: 340 m/s}
+media:
+  m: {type: gas, v: c}
+waves:
+  w: {harmonic: {on: m, A: 0.1 cm, f: 300 Hz, dir: +x, phase: 0}}
+observe:
+  vmax: "max_over(t, vy(w, x=0[m], t=t))"

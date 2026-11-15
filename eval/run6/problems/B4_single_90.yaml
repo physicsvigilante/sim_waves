@@ -1,0 +1,9 @@
+id: B4/single/90
+format: single_correct
+statement: Which of the following equations does not represent a progressive wave
+figure: null
+options:
+  A: y = A sin{ω(t - x/c)}
+  B: y = A sin{(2π/λ)(ct - x)}
+  C: y = A sin{2π(t/T + x/λ)}
+  D: y = A sin{2π(t/T - x/c)}

@@ -1,0 +1,5 @@
+FINAL: B4_integer_24.v1.yaml
+solved Lo = 2/25  (= 0.0800000)
+Lo = 2/25  (= 0.0800000)
+n_closed = 7
+EXIT: 0

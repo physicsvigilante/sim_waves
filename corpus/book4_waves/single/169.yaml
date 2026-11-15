@@ -1,0 +1,25 @@
+id: B4/single/169
+number: 169
+source: book p.93 (answer key p.122)
+format: single_correct
+statement: A closed organ pipe and an open organ pipe of same length produce four beats when sounded together
+  in their fundamental mode. If length of the open organ pipe is increased, then the number of beats will
+figure: null
+options:
+  A: increase
+  B: decrease
+  C: remain constant
+  D: may increase or decrease
+answer: D
+answer_value: may increase or decrease
+units: null
+verified: 'Open f = v/2L, closed f = v/4L: beat = v/4L = 4 Hz initially (open higher). Lengthening the
+  open pipe lowers its frequency, so beats first decrease, but if lengthened enough (past twice the length)
+  its frequency falls below the closed pipe''s and the beat count rises again. Matches key D only if a
+  large increase is allowed; for a small increase the answer would be ''decrease'' (B).'
+kinds:
+- conceptual
+physics:
+- organ_pipe
+- beats
+notes: Key D relies on arbitrary increase in length.

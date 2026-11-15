@@ -1,0 +1,5 @@
+FINAL: B4_single_142.v1.yaml
+n = 3  <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>
+nodes = 4  <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>
+antinodes = 3  <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>
+EXIT: 0

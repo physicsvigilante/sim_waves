@@ -1,0 +1,8 @@
+FINAL: B4_jee_advanced_54.v1.yaml
+v_air = 340
+fB = 775
+lamB = 2/5  (= 0.400000)
+v_rel_B = 310
+v_rel_Afront = 320
+v_rel_Aback = 360
+EXIT: 0

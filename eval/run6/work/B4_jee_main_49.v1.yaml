@@ -1,0 +1,16 @@
+id: B4/jee_main/49
+assume:
+  - "Wall at an arbitrary distance D; bat flies along the normal toward it; the echo is heard by the bat itself."
+arbitrary: {D: {value: 500 m, above: 100 m}}
+media:
+  air: {type: gas, v: 320 m/s}
+sources:
+  bat: {on: air, at: [0 m, 0 m], velocity: [10 m/s, 0 m/s], f: 8000 Hz, A: 1, phase: 0, spreading: none}
+points:
+  ear: {at: [0 m, 0 m], velocity: [10 m/s, 0 m/s]}
+reflectors:
+  wall: {point: [D, 0 m], normal: [-1, 0], boundary: rigid}
+rays:
+  echo: {from: bat, to: ear, via: wall}
+observe:
+  f: "frequency(echo, emitted=0[s])"

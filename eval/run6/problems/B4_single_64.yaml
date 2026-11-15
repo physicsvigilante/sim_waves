@@ -1,0 +1,11 @@
+id: B4/single/64
+format: single_correct
+statement: A tuning fork of frequency 340 Hz is vibrated just above a cylindrical tube of length 120 cm.
+  Water is slowly poured in the tube. If the speed of sound in air is 340 m/s, then the minimum height
+  of water required for resonance is
+figure: null
+options:
+  A: 25 cm
+  B: 45 cm
+  C: 75 cm
+  D: 95 cm

@@ -1,0 +1,9 @@
+id: B4/multiple/4
+format: multiple_correct
+statement: Any progressive wave equation in differential form is
+figure: null
+options:
+  A: (1/ω^2) ∂²y/∂t² = (1/k^2) ∂²y/∂x²
+  B: (1/ω) ∂y/∂t = -(1/k) ∂y/∂x
+  C: (1/ω^2) ∂²y/∂t² = -(1/k^2) ∂²y/∂x²
+  D: (1/ω) ∂y/∂t = (1/k) ∂y/∂x

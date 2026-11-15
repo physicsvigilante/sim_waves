@@ -1,0 +1,22 @@
+id: B4/integer/19
+assume:
+  - "Same wire, same tension in all three segments (sonometer); each segment vibrates in its fundamental between fixed ends (bridges act as fixed ends)."
+  - "Segments labelled 1,2,3 in the order of the ratio 1:2:3 (segment 1 lowest frequency). Wire mu and tension not given: arbitrary, cancel in a frequency ratio."
+arbitrary: {mu: 5 g/m, T: 50 N}
+unknowns: {a: positive, b: positive, c: positive}
+media:
+  wire: {type: string, mu: mu, tension: T}
+resonators:
+  r1: {type: string, on: wire, length: a, ends: [fixed, fixed]}
+  r2: {type: string, on: wire, length: b, ends: [fixed, fixed]}
+  r3: {type: string, on: wire, length: c, ends: [fixed, fixed]}
+given:
+  - {fact: "a + b + c == 1.1[m]", source: stated}
+  - {fact: "frequency(r2, harmonic=1) == 2*frequency(r1, harmonic=1)", source: stated}
+  - {fact: "frequency(r3, harmonic=1) == 3*frequency(r1, harmonic=1)", source: stated}
+observe:
+  a_cm: "a"
+  b_cm: "b"
+  c_cm: "c"
+  first_bridge_from_end1: "a"
+  second_bridge_from_end2: "c"

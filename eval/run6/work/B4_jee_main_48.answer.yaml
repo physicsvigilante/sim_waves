@@ -1,0 +1,9 @@
+answer: [B]
+final_scene: B4_jee_main_48.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: nothing
+missing_in_source: none
+reasoning: Approach 1066.7 Hz, recession 941.2 Hz, change 11.76% ~ 12%.
+friction: Passing is modelled as two separate far-away sources, not a continuous pass.

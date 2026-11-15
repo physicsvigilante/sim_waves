@@ -1,0 +1,9 @@
+answer: C (2200 Hz)
+final_scene: B4_jee_main_5.v3.yaml
+engine_fit: partial
+hand_steps: ['I read the spacing of consecutive resonance column lengths from the printed list: 7.5 cm only occurs for f = 2200 Hz (3/80, 9/80 m...), 1100 Hz gives 15 cm, 3300 Hz gives 5 cm, 550 Hz gives 30 cm']
+coverage: partial
+not_represented: "Tube height / actual water levels (17.0 and 24.5 cm) not represented; only the column length spacing"
+missing_in_source: "Tube total height; end correction (assumed zero)"
+reasoning: "resonances() lists of column lengths for each option frequency: only 2200 Hz has consecutive resonances 7.5 cm apart (lambda/2)."
+friction: "Resonance lists cannot be used in arithmetic, so 'two consecutive resonances differ by 7.5 cm' could not be a given. v2 with unknown H and integer harmonic m was an infinite family (undetermined); v1 had reversed harmonic order (my error)."

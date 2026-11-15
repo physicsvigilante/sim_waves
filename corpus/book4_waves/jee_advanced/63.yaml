@@ -1,0 +1,27 @@
+id: B4/jee_advanced/63
+number: 63
+source: book p.119-120 (answer key p.124)
+format: numerical
+statement: '[JEE (Advanced) 2019] A train S1, moving with a uniform velocity of 108 km/h, approaches another
+  train S2 standing on a platform. An observer O moves with a uniform velocity of 36 km/h towards S2,
+  as shown in figure. Both the trains are blowing whistles of same frequency 120 Hz. When O is 600 m away
+  from S2 and distance between S1 and S2 is 800 m, the number of beats heard by O is ............... [Speed
+  of the sound = 330 m/s]'
+figure: S2 at the left end of a horizontal line; S1 on the same line 800 m to the right of S2, with an
+  arrow pointing left (towards S2) labelled 108 km/h. O is directly below S2, 600 m away from it, with
+  an upward arrow (towards S2) labelled 36 km/h.
+options: null
+answer: '8.13'
+answer_value: 8.13
+units: null
+verified: 'Geometry: line O->S1 has direction (0.8, 0.6). S1 speed 30 m/s toward -x: component toward
+  O along that line = 30 x 0.8 = 24 m/s. O speed 10 m/s up: component toward S1 = 10 x 0.6 = 6 m/s. f1
+  = 120 (330+6)/(330-24) = 131.76 Hz. From S2: O approaches at 10 m/s: f2 = 120 x 340/330 = 123.64 Hz.
+  Beats = 8.13. Matches key.'
+kinds:
+- numeric
+- figure_geometry
+physics:
+- doppler
+- beats
+notes: Oblique motion for both source and observer.

@@ -1,0 +1,9 @@
+answer: [C]
+final_scene: B4_single_56.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "Rope mass m (not needed for the shape)."
+missing_in_source: "none (load assumed 0 since nothing hangs from the rope)."
+reasoning: "Engine: v(s) = sqrt(g*s): zero at s=0, increasing, concave down, v(2s)/v(s) = sqrt(2), not linear."
+friction: "none"

@@ -1,0 +1,13 @@
+id: B4/single/142
+assume:
+  - "Sonometer wire fixed at both ends; mu, T, L arbitrary."
+  - "Nodes and antinodes counted including the two fixed ends (engine lists ends)."
+arbitrary: {mu: 10 g/m, T: 50 N, L: 1 m}
+media:
+  wire: {type: string, mu: mu, tension: T}
+resonators:
+  r: {type: string, on: wire, length: L, ends: [fixed, fixed]}
+observe:
+  n: "harmonic(r, overtone=2)"
+  nodes: "count(nodes(r, harmonic=harmonic(r, overtone=2)))"
+  antinodes: "count(antinodes(r, harmonic=harmonic(r, overtone=2)))"

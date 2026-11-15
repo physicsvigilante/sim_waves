@@ -1,0 +1,28 @@
+id: B4/jee_advanced/37
+number: 37
+source: book p.116 (answer key p.124)
+format: multiple_correct
+statement: '[JEE (Advanced) 2013] Two vehicles, each moving with speed u on the same horizontal straight
+  road, are approaching each other. Wind blows along the road with velocity w. One of these vehicles blows
+  a whistle of frequency f1. An observer in the other vehicle hears the frequency of the whistle to be
+  f2. The speed of sound in still air is V. The correct statement(s) is (are)'
+figure: null
+options:
+  A: If the wind blows from the observer to the source, f2 > f1
+  B: If the wind blows from the source to the observer, f2 > f1
+  C: If the wind blows from the observer to the source, f2 < f1
+  D: If the wind blows from the source to the observer, f2 < f1
+answer: A, B
+answer_value:
+- A
+- B
+units: null
+verified: 'Wind from observer to source: f2 = f1 (V+u-w)/(V-u-w) > f1. Wind from source to observer: f2
+  = f1 (V+u+w)/(V-u+w) > f1. So A, B. Matches key.'
+kinds:
+- conceptual
+- ratio
+physics:
+- doppler
+- wind
+notes: Moving medium.

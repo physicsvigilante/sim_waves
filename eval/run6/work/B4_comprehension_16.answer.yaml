@@ -1,0 +1,13 @@
+answer: [C]
+final_scene: B4_comprehension_16.v2.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: nothing
+missing_in_source: none
+reasoning: 'Engine: at the instant centres coincide net y and net peak are 0, each pulse keeps
+  amplitude 1 cm, vy of each pulse and of the sum are non-zero, so amplitude of each
+  and velocity of each stay non-zero (C).'
+friction: v1 failed only because the meeting time depended on arbitrary mu,T (arbitrary values
+  cannot be used for time-dependent results); symbols fixed it. Conceptual passage
+  option 'net amplitude' has no direct observable.

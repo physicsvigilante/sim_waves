@@ -1,0 +1,28 @@
+id: B4/jee_advanced/4
+number: 4
+source: book p.113 (answer key p.123)
+format: single_correct
+statement: '[IIT-JEE 2008] A vibrating string of certain length l under a tension T resonates with a mode
+  corresponding to the first overtone (third harmonic) of an air column of length 75 cm inside a tube
+  closed at one end. The string also generates 4 beats per second when excited along with a tuning fork
+  of frequency n. Now when the tension of the string is slightly increased the number of beats reduces
+  to 2 per second. Assuming the velocity of sound in air to be 340 m/s, the frequency n of the tuning
+  fork in Hz is'
+figure: null
+options:
+  A: '344'
+  B: '336'
+  C: '117.3'
+  D: '109.3'
+answer: A
+answer_value: '344'
+units: Hz
+verified: 'Air column: f = 3 v/(4 L) = 3 x 340/3 = 340 Hz = string frequency. Beats 4 -> n = 344 or 336.
+  Raising tension raises the string frequency; beats drop to 2 only if n = 344 (340 -> 342). Matches key.'
+kinds:
+- numeric
+physics:
+- closed_pipe
+- beats
+- string_tension
+notes: Consistent.

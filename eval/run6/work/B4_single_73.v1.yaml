@@ -1,0 +1,16 @@
+id: B4/single/73
+assume:
+  - "Source starts far from the observer on the line; speeds below sound; observer at rest. Source power with spherical spreading to ask for intensity."
+arbitrary: {u: {value: 20 m/s, below: 340 m/s}, D: {value: 1000 m, above: 100 m}}
+media:
+  air: {type: gas, v: 340 m/s, density: 1.29 kg/m^3}
+sources:
+  src: {on: air, at: [0 m, 0 m], velocity: [u, 0 m/s], f: 500 Hz, power: 1 W, phase: random, spreading: spherical}
+points:
+  P: [D, 0 m]
+rays:
+  r: {from: src, to: P}
+observe:
+  f: "frequency(r, emitted=0[s])"
+  fshift_up: "frequency(r, emitted=0[s]) > 500[Hz]"
+  I: "intensity(r)"
