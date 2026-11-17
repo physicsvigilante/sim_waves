@@ -1,0 +1,4 @@
+arbitrary: {L: 1 m}
+media: {s: {type: string, mu: 0.01 kg/m, tension: 40 N}}
+resonators: {r: {type: string, on: s, length: L, ends: [fixed, fixed]}}
+observe: {n: "count(frequencies_in(r, lo=30[Hz], hi=100[Hz]))", l: "frequencies_in(r, lo=30[Hz], hi=100[Hz])"}

@@ -1,0 +1,5 @@
+# temperature solved, output in degC: must be refused (K value would be labelled degC)
+unknowns: {Tg: positive}
+media: {a: {type: gas, gamma: 7/5, temperature: Tg, molar_mass: 29 g/mol}}
+given: [{fact: "speed(a) == 340[m/s]", source: stated}]
+observe: {T_K: "Tg", T_C: "Tg in degC", T_K2: "Tg in K"}

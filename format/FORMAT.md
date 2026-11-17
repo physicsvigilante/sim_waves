@@ -79,6 +79,14 @@ mu: "mu0 + alpha*s"                 # mu may vary with the coordinate variable (
 # hanging tension = load*g + g * (integral of mu below s); speed(m, at=...) and front(pulse, t=)
 # integrate along the string. A symbol used in mu AND as a position must be the variable.
 tension: {thermal: {slack_at: 30 degC, now: 10 degC}}   # needs Y, alpha, density
+tension: {weight: {mass: 4 kg, g: 9.8 m/s^2}}              # T = M g (a hanging load); g as the problem states it
+tension: {weight: {mass: 4 kg, g: 9.8 m/s^2,               # immersed load: T = M g - rho_f V g
+                   buoyancy: {fluid_density: 1000 kg/m^3, volume: 5e-4 m^3}}}
+#   or buoyancy: {fluid_density: ..., load_density: ..., fraction: 1/2}  (fraction immersed, default 1)
+#   a load that would float is refused; mass, g, k, Y and lengths must be positive
+#   (unknowns get these as conditions); a stated area within 1 % of the string's own is accepted
+tension: {stretch: {Y: 2e11 Pa, extension: 1 mm, length: 2 m}}   # T = Y A dL/L0; area here or on the string
+tension: {stretch: {k: 400 N/m, extension: 10 cm}}         # a spring: T = k dL
 tension: free                       # the wave's speed fixes it
 ends: {left: driven, right: absorbing}   # for fixed/free ends and joins, use `junctions`
 ```
@@ -417,6 +425,9 @@ rays:
     Echoes from moving reflectors work as for sound.
   - Book answers use 2u/c approximations; they agree to the digits shown. Pick the option
     with `nearest(...)`.
+  - **Radar beats** (echo mixed with the transmitted signal):
+    `beat_frequency(frequency(echo, t=100[us]), frequency(gun))`, with `echo` a ray from
+    the gun to the gun's receiver via the moving car (a reflector).
   - In a material (`n` or `v`), light travels at c/n in the medium's frame (the scene
     frame), while time dilation uses the vacuum c.
   - `wavelength(ray, ...)` for `em` is the wavelength in the medium's frame:
@@ -553,6 +564,18 @@ pl:   {on: air, geometry: plane, intensity: I}
   options are about equally close.
 - **Lists:** `item(list, n)` (1 for the first), `spacing(list)` (the common difference of
   an equally spaced list; otherwise refused), and `count(list)`.
+- **A band of frequencies** (a source of variable frequency):
+  `frequencies_in(resonator, lo=400[Hz], hi=1000[Hz])` lists the allowed mode frequencies
+  in the band. Use it with `count`, `item` and `spacing`.
+- **Units of a result:** `"expr in cm"` (or kHz, ms, degC, ...) reports the value in
+  that unit. Without `in`, results are SI.
+  - The dimension is checked. Lists and solved unknowns convert entry by entry. An
+    unknown that no field fixes takes its dimension from the facts that use it.
+  - `period(resonator, harmonic=n)` gives the period of a mode.
+  - Angle units (rad, deg, rad/s) are refused: radians have no dimension, so a frequency
+    could not be told from an angular frequency. `omega(...) in Hz` is refused too.
+  - In an `expect` block, a value written with a unit is converted to the observable's
+    unit; a bare number is read in that unit.
 - **Bounds on a symbol:** a `given` fact comparing one symbol with a constant, e.g.
   `{fact: "n > 1", source: stated}`, `L >= 2[m]` or `2 < m`, is a stated bound.
   - It works for positive, real and integer symbols.

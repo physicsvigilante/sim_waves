@@ -1,0 +1,9 @@
+answer: 20 ms
+final_scene: R2.v2.yaml
+engine_fit: partial
+hand_steps: ["Period = 1/frequency: written by me as (1/frequency(r, harmonic=1)) because period() does not accept a resonator mode"]
+coverage: full
+not_represented: "Change of length/area on stretching (stated neglected); clamp length taken as natural length."
+missing_in_source: none
+reasoning: "Engine gives T = 80 N from Y*A*dL/L0, fundamental f = 50 Hz; period 1/f = 20 ms."
+friction: "period(r, harmonic=n) is not supported for resonators (v1 failed with unexpected keyword 'harmonic'); had to invert frequency myself. Also a scene with no given/unknowns needs nothing, but I initially added a dummy fact unnecessarily."

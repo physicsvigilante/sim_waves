@@ -1,0 +1,14 @@
+# m13 review: lists and solved unknowns convert to the asked unit; expected values with units are converted too
+unknowns: {dL: positive}
+media:
+  air: {type: gas, v: 340 m/s}
+  s: {type: string, mu: 0.01 kg/m, diameter: 2 mm, tension: {stretch: {Y: 2e11 Pa, extension: dL, length: 2 m}}}
+resonators:
+  p: {type: pipe, on: air, length: 85 cm, ends: [closed, open], end_correction: 0 m}
+  r: {type: string, on: s, length: 1 m, ends: [fixed, fixed]}
+given: ["tension(s) == 20*pi[N]"]
+observe:
+  band: "frequencies_in(p, lo=200[Hz], hi=800[Hz]) in kHz"
+  ext: "dL in mm"
+  lam: "wavelength(r, harmonic=1) in cm"
+expect: {band: "(0.3, 0.5, 0.7)", ext: 0.2, lam: "2 m"}

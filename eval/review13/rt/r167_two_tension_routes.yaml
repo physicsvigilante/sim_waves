@@ -1,0 +1,4 @@
+# m13: one tension route only
+media: {s: {type: string, mu: 0.01 kg/m, tension: {weight: {mass: 1 kg, g: 10 m/s^2}, stretch: {k: 400 N/m, extension: 1 cm}}}}
+observe: {T: "tension(s)"}
+expect: {error: rejected, message: "use one of"}

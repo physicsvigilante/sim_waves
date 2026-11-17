@@ -1,0 +1,3 @@
+# m13 review: 'in degC' applies the offset (300 K is 26.85 degC)
+observe: {c: "300[K] in degC"}
+expect: {c: 26.85}

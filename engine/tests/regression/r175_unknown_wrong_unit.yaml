@@ -1,0 +1,7 @@
+# m13 run friction: an unknown whose facts make it a frequency cannot be reported in metres
+unknowns: {f0: positive}
+media: {s: {type: string, mu: 0.01 kg/m, tension: 100 N}}
+resonators: {r: {type: string, on: s, length: 1 m, ends: [fixed, fixed]}}
+given: [{fact: "beat_frequency(frequency(r, harmonic=1), f0) == 4[Hz]", source: stated}, "f0 > 50[Hz]"]
+observe: {fork: "f0 in m"}
+expect: {error: rejected, message: "cannot check"}

@@ -1,0 +1,15 @@
+id: R2
+assume:
+  - "Tension from the elastic stretch T = Y A dL/L0 with the stated natural length, area and extension; transverse speed uses that tension."
+  - "Wire fixed at both clamps, so the fundamental of a string fixed at both ends; clamped length taken as the natural length 1.0 m (stated: neglect change in length)."
+symbols: {}
+media:
+  wire: {type: string, density: 8000 kg/m^3, area: 1.0 mm^2, tension: {stretch: {Y: 2.0e11 Pa, extension: 0.4 mm, length: 1.0 m}}}
+resonators:
+  r: {type: string, on: wire, length: 1.0 m, ends: [fixed, fixed]}
+given:
+  - {fact: "1 == 1", source: assumption}
+observe:
+  T: "tension(wire, at=0[m])"
+  f1: "frequency(r, harmonic=1) in Hz"
+  period: "period(r, harmonic=1) in ms"

@@ -1,0 +1,2 @@
+media: {s: {type: string, mu: 0.01 kg/m, tension: {weight: {mass: -4 kg, g: 10 m/s^2}}}}
+observe: {T: "tension(s)"}

@@ -1,0 +1,9 @@
+# m13 run friction: a solved unknown reported 'in Hz' (dimension from the facts that use it); period of a mode
+unknowns: {f0: positive}
+media: {s: {type: string, mu: 0.01 kg/m, tension: 100 N}}
+resonators: {r: {type: string, on: s, length: 1 m, ends: [fixed, fixed]}}
+given: [{fact: "beat_frequency(frequency(r, harmonic=1), f0) == 4[Hz]", source: stated}, "f0 > 50[Hz]"]
+observe:
+  fork: "f0 in Hz"
+  T1: "period(r, harmonic=1) in ms"
+expect: {fork: 54, T1: 20}

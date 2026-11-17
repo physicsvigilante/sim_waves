@@ -1,0 +1,4 @@
+# m13: 'in <unit>' checks the dimension
+media: {s: {type: string, mu: 0.01 kg/m, tension: 40 N}}
+observe: {bad: "tension(s) in cm"}
+expect: {error: rejected, message: "not that of cm"}

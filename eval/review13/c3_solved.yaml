@@ -1,0 +1,10 @@
+# mass unknown, solved from beats between two strings; buoyancy volume
+unknowns: {M: positive}
+media:
+  s1: {type: string, mu: 0.01 kg/m, tension: 40 N}
+  s2: {type: string, mu: 0.01 kg/m, tension: {weight: {mass: M, g: 10 m/s^2, buoyancy: {fluid_density: 1 g/cm^3, volume: 500 cm^3}}}}
+resonators:
+  r1: {type: string, on: s1, length: 1 m, ends: [fixed, fixed]}
+  r2: {type: string, on: s2, length: 1 m, ends: [fixed, fixed]}
+given: [{fact: "frequency(r2, harmonic=1) == 2*frequency(r1, harmonic=1)", source: stated}]
+observe: {M: "M", T: "tension(s2)", b: "frequencies_in(r2, lo=100[Hz], hi=200[Hz])"}

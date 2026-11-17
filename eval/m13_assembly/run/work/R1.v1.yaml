@@ -1,0 +1,20 @@
+id: R1
+assume:
+  - "Wire vibrates between the bridges (0.5 m), fixed at both bridges; tension equals the block's weight (apparent weight in oil)."
+  - "Pulley frictionless; wire mass beyond bridges neglected (stated). Oil buoyancy = oil density * immersed volume * g."
+  - "Fork frequency is a single unknown; the two beat readings select among the candidate roots."
+symbols: {}
+unknowns: {f0: positive}
+media:
+  w_air: {type: string, mu: 10 g/m, tension: {weight: {mass: 10 kg, g: 10 m/s^2}}}
+  w_oil: {type: string, mu: 10 g/m, tension: {weight: {mass: 10 kg, g: 10 m/s^2, buoyancy: {fluid_density: 900 kg/m^3, load_density: 2500 kg/m^3}}}}
+resonators:
+  r_air: {type: string, on: w_air, length: 50 cm, ends: [fixed, fixed]}
+  r_oil: {type: string, on: w_oil, length: 50 cm, ends: [fixed, fixed]}
+given:
+  - {fact: "beat_frequency(frequency(r_air, harmonic=1), f0) == 16[Hz]", source: stated}
+  - {fact: "beat_frequency(frequency(r_oil, harmonic=1), f0) == 4[Hz]", source: stated}
+observe:
+  fork: "f0 in Hz"
+  f_air: "frequency(r_air, harmonic=1) in Hz"
+  f_oil: "frequency(r_oil, harmonic=1) in Hz"

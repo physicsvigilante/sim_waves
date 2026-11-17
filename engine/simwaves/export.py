@@ -312,7 +312,8 @@ def _numbers(sc, res, illus):
         e = v.xreplace(illus)
         val = _finite(_num(e)) if not e.free_symbols and e.is_real is not False else None
         out[k] = {"text": show(v), "basis": sc.basis.get(k), "value": val,
-                  "uses_illustrative": bool(v.free_symbols & set(illus))}
+                  "uses_illustrative": bool(v.free_symbols & set(illus)),
+                  "unit": getattr(sc, "units", {}).get(k)}
     return out
 
 

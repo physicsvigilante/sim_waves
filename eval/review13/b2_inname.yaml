@@ -1,0 +1,17 @@
+symbols: {}
+media: {s: {type: string, mu: 0.01 kg/m, tension: 40 N}}
+resonators: {r: {type: string, on: s, length: 1 m, ends: [fixed, fixed]}}
+observe:
+  a: "speed(s) in m/s"
+  b: "speed(s) in km/s"
+  c: "wavelength(r, harmonic=1) in cm in m"
+  d: "speed(s) in 1/s"
+  e: "speed(s) > 1[m/s] in m/s"
+  f: "frequencies_in(r, lo=0[Hz], hi=100[Hz]) in kHz"
+  g: "count(frequencies_in(r, lo=0[Hz], hi=100[Hz])) in deg"
+  h: "frequencies_in(r, lo=0[Hz], hi=100[Hz]) in m"
+  i: "speed(s) in cm/ms"
+  j: "speed(s) in   km/s  "
+  k: "speed(s)in km/s"
+  l: "1/frequency(r, harmonic=1) in ms"
+  m: "speed(s) in kg"

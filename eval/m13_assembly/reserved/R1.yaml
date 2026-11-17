@@ -1,0 +1,13 @@
+id: R1
+type: integer
+statement: >
+  A sonometer wire of linear mass density 10 g/m is stretched over two bridges
+  50 cm apart. Its tension is provided by a solid block of mass 10 kg and density
+  2500 kg/m^3 hanging from the free end of the wire over a pulley. With the block
+  hanging in air, the wire vibrating in its fundamental mode produces 16 beats per
+  second with a tuning fork. When the block is completely immersed in oil of density
+  900 kg/m^3 (the block not touching the container), the wire in its fundamental
+  mode produces 4 beats per second with the same fork. Find the frequency of the
+  tuning fork in Hz. (Take g = 10 m/s^2; neglect the mass of the wire hanging
+  beyond the bridges.)
+options: null

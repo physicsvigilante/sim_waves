@@ -1,0 +1,2 @@
+media: {s: {type: string, mu: 0.01 kg/m, tension: {weight: {mass: 4 kg, g: 10 m/s^2, buoyancy: {fluid_density: 1 g/cm^3, load_density: 4 g/cm^3, fraction: 3/2}}}}}
+observe: {T: "tension(s)"}

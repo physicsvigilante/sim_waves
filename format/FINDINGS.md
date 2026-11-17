@@ -565,3 +565,37 @@ regressions in sound Doppler.
 - **Fixed after the run:** `c: 3e8 m/s` for the book's rounded c, `speed(em)`, and the
   units `us` and `ns`. The author's own R1 scene then gives 4200 Hz, option B (r161).
 - **Candidate for later:** `nearest` over paired options.
+
+## Milestone 13: tension from mechanics, frequency bands, output units (before freeze)
+- **String tension from mechanics:** `tension: {weight: ...}` (a load, with optional
+  buoyancy; a floating load is refused) and `{stretch: ...}` (Y A ΔL/L0, or k ΔL).
+- **`frequencies_in(resonator, lo=, hi=)`** lists the mode frequencies in a band.
+- **`"expr in cm"`** reports a result in a stated unit, with the dimension checked.
+- **Docs:** a radar-beat example.
+
+Tests: r162–r167.
+
+### Milestone 13 review (Opus, standing in for Fable 5.2, which needed usage credits; eval/review13/REPORT.md)
+
+**Four silent wrong answers and a test-harness flaw, all fixed with tests r168–r173:**
+1. **`in degC` ignored the offset.** The offset is now applied.
+2. **Frequency and angular frequency were confused.** Radians have no dimension, so the
+   check could not tell them apart. Angle units are now refused after `in`, and so is
+   `omega(...) in Hz`.
+3. **A negative spring constant or Young's modulus gave a negative tension.** k, Y, mass,
+   g and lengths must now be positive, and unknowns get these as conditions.
+4. **An unknown immersed fraction was solved to 3/2.** 0 < x ≤ 1 is now a condition.
+5. **Harness:** an expected value written with a unit is now converted to the
+   observable's `in` unit. Before, "200 m" passed against 200 cm.
+
+**Smaller findings, all fixed:**
+- Lists, `item` and `spacing`, and solved unknowns can now be converted with `in`.
+- The book's rounded π in an area is accepted within 1%.
+- `frequencies_in` starts near lo, so the mode cap no longer counts the modes below the
+  band.
+
+### Milestone 13 frozen run (eval/m13_assembly/RESULT.md)
+- **All 3 reserved problems matched.**
+- **Fixed after the run:** `period(resonator, harmonic=)`, and the dimension of an unknown
+  in `in <unit>`, now taken from its facts.
+- **Candidate for later:** `resonant_at(resonator, f=)`.

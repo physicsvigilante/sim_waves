@@ -1,0 +1,16 @@
+id: R3
+assume:
+  - "Pipe closed at one end, open at other, end correction 0 (stated); loudspeaker frequency swept 300-1200 Hz inclusive."
+symbols: {fs: positive}
+media:
+  air: {type: gas, v: 330 m/s}
+resonators:
+  p: {type: pipe, on: air, length: 55 cm, ends: [closed, open], end_correction: 0 m}
+observe:
+  modes: "frequencies_in(p, lo=300[Hz], hi=1200[Hz])"
+  n: "count(frequencies_in(p, lo=300[Hz], hi=1200[Hz]))"
+  spacing: "spacing(frequencies_in(p, lo=300[Hz], hi=1200[Hz]))"
+  f_450: "at(count(resonances(p, f=fs, vary=fs, lo=450[Hz], hi=450[Hz])), fs=450[Hz])"
+  r_600: "count(resonances(p, f=fs, vary=fs, lo=600[Hz], hi=600[Hz]))"
+  r_750: "count(resonances(p, f=fs, vary=fs, lo=750[Hz], hi=750[Hz]))"
+  r_450: "count(resonances(p, f=fs, vary=fs, lo=450[Hz], hi=450[Hz]))"

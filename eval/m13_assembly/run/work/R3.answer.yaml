@@ -1,0 +1,9 @@
+answer: [A, B, D]
+final_scene: R3.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "Loudspeaker coupling and resonance strength; only mode frequencies. End correction zero (stated)."
+missing_in_source: "Whether 300 and 1200 Hz endpoints are inclusive (irrelevant: no mode at the endpoints)."
+reasoning: "frequencies_in lists 450, 750, 1050 Hz: count 3 (A), 450 and 750 present (B), spacing 300 Hz (D); resonances at 600 Hz = 0 so C false."
+friction: "none"

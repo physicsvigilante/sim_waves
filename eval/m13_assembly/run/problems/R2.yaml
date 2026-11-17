@@ -1,0 +1,10 @@
+id: R2
+type: integer
+statement: >
+  A steel wire of natural length 1.0 m and cross-sectional area 1.0 mm^2 is
+  stretched by 0.4 mm and then clamped between two rigid supports. Young's modulus
+  of steel is 2.0 x 10^11 N/m^2 and its density is 8000 kg/m^3. Neglecting the
+  change in length and cross-section of the wire for the purpose of the vibrations,
+  find the time period, in milliseconds, of the fundamental mode of transverse
+  vibration of the wire.
+options: null
