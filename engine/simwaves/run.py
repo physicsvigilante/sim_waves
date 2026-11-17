@@ -226,6 +226,71 @@ def evaluate(sc, timeout=120):
     return _evaluate_once(sc, timeout)
 
 
+def _split_unit(sc, name, text):
+    """'expr in cm' -> ('expr', ('cm', factor)) after checking the dimension; else (text, None)."""
+    import re
+    from .expr import dimension_of, show_dim
+    from .units import split_quantity
+    m = re.match(r"^(.*\S)\s+in\s+([A-Za-z][A-Za-z0-9/^*]*)\s*$", str(text))
+    if not m:
+        return text, None
+    expr_text, unit = m.groups()
+    try:
+        _, u, factor, udim = split_quantity("1 " + unit)
+    except SceneError:
+        udim = None
+    if udim is None:
+        raise SceneError(f"observe.{name}: unknown unit '{unit}' after 'in'")
+    if "rad" in unit or "deg" in unit.replace("degC", ""):
+        # radians carry no dimension, so a frequency and an angular frequency (or a count and
+        # an angle) cannot be told apart: angle units are not offered
+        raise SceneError(f"observe.{name}: 'in {unit}': angle units cannot be checked (radians have no "
+                         f"dimension); give the result in SI")
+    import re as _re
+    if udim == (0, 0, -1, 0) and _re.search(r"\b(omega|k)\s*\(", expr_text):
+        raise SceneError(f"observe.{name}: 'in {unit}' converts frequencies (cycles per second), not angular "
+                         f"frequencies; ask frequency(...) instead of omega(...)")
+    offset = 0
+    if unit == "degC":
+        from .units import CELSIUS_OFFSET
+        offset = CELSIUS_OFFSET
+    got = dimension_of(expr_text, sc)
+    if got is None:
+        # a bare symbol or unknown: use its recorded dimension
+        sym = sc.names.get(expr_text.strip())
+        if isinstance(sym, sp.Symbol):
+            got = sc.symbol_dims.get(sym)
+    if got is None and isinstance(sc.names.get(expr_text.strip()), sp.Symbol):
+        got = _dim_from_facts(sc, expr_text.strip(), unit, udim)
+    if got is None:
+        raise SceneError(f"observe.{name}: cannot check that '{expr_text}' is measured in {unit}; give the "
+                         f"result in SI (drop 'in {unit}')")
+    if got != udim:
+        raise SceneError(f"observe.{name}: '{expr_text}' has dimension {show_dim(got)}, not that of {unit}")
+    return expr_text, (unit, factor, offset)
+
+
+def _dim_from_facts(sc, sym_name, unit, udim):
+    """The dimension of an unknown that no field fixes: put one unit of the asked kind in its
+    place in every given fact that uses it. If at least one fact then checks and none
+    fails, the unit fits."""
+    import re
+    fits, used = False, False
+    for item in sc.data.get("given") or []:
+        text = item if isinstance(item, str) else (item.get("fact") if isinstance(item, dict) else None)
+        if not isinstance(text, str) or not re.search(rf"\b{re.escape(sym_name)}\b", text):
+            continue
+        used = True
+        trial = re.sub(rf"\b{re.escape(sym_name)}\b", f"(1[{unit}])", text)
+        try:
+            sc.expr(trial, allow_rel=True, check_dims=True)
+            fits = True
+        except SceneError as exc:
+            if "dimension" in str(exc):
+                return None
+    return udim if (used and fits) else None
+
+
 def _decide_cases(d, op):
     """d op 0 through abs/max/min: split into sign cases (piecewise); decided only if every
     feasible case gives the same truth. A case is checked on its own condition when one
@@ -345,8 +410,10 @@ def _evaluate_inner(sc):
     check_solution(sc, sol)
     sc.solution = sol
     results, sc.basis, errors = {}, {}, []
+    sc.units = {}
     for name, text in (sc.data.get("observe") or {}).items():
         try:
+            text, unit = _split_unit(sc, name, text)
             parsed = sc.expr(text, allow_rel=True, check_dims=True)
             if isinstance(parsed, list):
                 v, basis = _decide_comparison(sc, text, parsed, sol)
@@ -371,6 +438,16 @@ def _evaluate_inner(sc):
                     v.has(sp.zoo, sp.oo, -sp.oo, sp.nan, sp.AccumBounds):
                 errors.append((name, SceneError(f"observe.{name} is infinite or undefined ({v})")))
                 continue
+        if unit is not None:
+            if isinstance(v, sp.logic.boolalg.BooleanAtom):
+                errors.append((name, SceneError(f"observe.{name}: a True/False result has no unit")))
+                continue
+            u, factor, offset = unit
+            conv = lambda x: sp.simplify((x - offset) / factor)
+            v = sp.Tuple(*[conv(x) for x in v]) if isinstance(v, sp.Tuple) else conv(v)
+            sc.units[name] = u
+            sc.unit_conv = getattr(sc, "unit_conv", {})
+            sc.unit_conv[name] = (factor, offset)
         results[name], sc.basis[name] = sc.show_back(v), basis
     why = harmonic_problem(sc, sol, final=True)
     if why:                                   # a whole-scene contradiction, not one observable

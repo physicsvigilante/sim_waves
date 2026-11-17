@@ -315,6 +315,12 @@ class Scene:
                 if a_ != "obj":
                     chk.same(a_, D_FREQ, "the arguments of beat_frequency() (frequencies in Hz, "
                                          "not angular frequencies)")
+        if fname in ("item", "spacing") and args:
+            return args[0]
+        if fname == "frequencies_in":
+            for key in ("lo", "hi"):
+                if key in kwargs:
+                    chk.same(kwargs[key], D_FREQ, f"argument {key}= of frequencies_in() (a frequency)")
         if fname == "nearest" and len(args) >= 2:
             for a_ in args[1:]:
                 chk.same(args[0], a_, "the value and the options of nearest()")
@@ -633,6 +639,93 @@ class Open3D:
         self.name = name
 
 
+def _must_be_positive(sc, q, where):
+    """A number must be positive now; a symbol becomes an implicit condition (checked when
+    the facts are solved)."""
+    q = sp.sympify(q)
+    if q.is_number:
+        if not q > 0:
+            raise SceneError(f"{where} must be positive (got {q})")
+    elif q.is_positive is not True:
+        sc.implicit_ineqs[where] = (f"{where} > 0", ">", q)
+
+
+def _load_tension(sc, spec, w):
+    """T = M g (a hanging load), less the buoyancy of the immersed part: T = M g - rho_f V g."""
+    if not isinstance(spec, dict):
+        raise SceneError(f"{w}: {{mass: M, g: g, buoyancy: {{...}}}} (buoyancy optional)")
+    _keys(spec, {"mass", "g", "buoyancy"}, w)
+    if "mass" not in spec or "g" not in spec:
+        raise SceneError(f"{w}: give mass and g (g as the problem states it, e.g. 9.8 m/s^2 or 10 m/s^2)")
+    M = sc.quantity(spec["mass"], MASS, f"{w}.mass")
+    _must_be_positive(sc, M, f"{w}.mass")
+    g = sc.quantity(spec["g"], D_ACC, f"{w}.g")
+    _must_be_positive(sc, g, f"{w}.g")
+    T = M * g
+    b = spec.get("buoyancy")
+    if b is not None:
+        if not isinstance(b, dict):
+            raise SceneError(f"{w}.buoyancy: {{fluid_density, volume}} or {{fluid_density, load_density, fraction}}")
+        _keys(b, {"fluid_density", "volume", "load_density", "fraction"}, f"{w}.buoyancy")
+        if "fluid_density" not in b:
+            raise SceneError(f"{w}.buoyancy: needs fluid_density")
+        rf = sc.quantity(b["fluid_density"], D_DENS, f"{w}.buoyancy.fluid_density")
+        if ("volume" in b) == ("load_density" in b):
+            raise SceneError(f"{w}.buoyancy: give exactly one of volume (immersed) or load_density "
+                             f"(with fraction immersed, default 1)")
+        if "volume" in b:
+            if "fraction" in b:
+                raise SceneError(f"{w}.buoyancy: fraction goes with load_density, not with volume")
+            V = sc.quantity(b["volume"], dim(L=3), f"{w}.buoyancy.volume")
+        else:
+            rb = sc.quantity(b["load_density"], D_DENS, f"{w}.buoyancy.load_density")
+            x = sc.quantity(b.get("fraction", 1), DIMLESS, f"{w}.buoyancy.fraction")
+            if x.is_number and not (0 < x <= 1):
+                raise SceneError(f"{w}.buoyancy.fraction: between 0 and 1")
+            if not x.is_number:
+                _must_be_positive(sc, x, f"{w}.buoyancy.fraction")
+                sc.implicit_ineqs[f"{w}.buoyancy.fraction<=1"] = (f"{w}.buoyancy.fraction <= 1", "<=", x - 1)
+            V = x * M / rb
+        T = M * g - rf * V * g
+    T = sp.simplify(T)
+    if T.is_positive is False or (T.is_number and not T > 0):
+        raise SceneError(f"{w}: the buoyancy is at least the weight (T = {T}): the load floats and the string "
+                         f"is slack")
+    return T
+
+
+def _stretch_tension(sc, spec, w, area):
+    """T = Y A dL/L0 (a stretched wire) or T = k dL (a spring)."""
+    if not isinstance(spec, dict):
+        raise SceneError(f"{w}: {{Y, area, extension, length}} or {{k, extension}}")
+    _keys(spec, {"Y", "area", "extension", "length", "k"}, w)
+    if "extension" not in spec:
+        raise SceneError(f"{w}: needs extension")
+    dL = sc.quantity(spec["extension"], LENGTH, f"{w}.extension")
+    if dL.is_positive is False or (dL.is_number and not dL > 0):
+        raise SceneError(f"{w}.extension must be positive")
+    if "k" in spec:
+        if {"Y", "area", "length"} & set(spec):
+            raise SceneError(f"{w}: give k (a spring) or Y, area, length (a wire), not both")
+        k = sc.quantity(spec["k"], dim(M=1, T=-2), f"{w}.k")
+        _must_be_positive(sc, k, f"{w}.k")
+        return k * dL
+    if "Y" not in spec or "length" not in spec:
+        raise SceneError(f"{w}: a stretched wire needs Y, length (unstretched) and area (here or on the string)")
+    Y = sc.quantity(spec["Y"], D_PRESS, f"{w}.Y")
+    _must_be_positive(sc, Y, f"{w}.Y")
+    L0 = sc.quantity(spec["length"], LENGTH, f"{w}.length")
+    _must_be_positive(sc, L0, f"{w}.length")
+    A = sc.quantity(spec["area"], dim(L=2), f"{w}.area") if "area" in spec else area
+    if A is None:
+        raise SceneError(f"{w}: needs area (here, or area/diameter on the string)")
+    if "area" in spec and area is not None and A.is_number and sp.sympify(area).is_number:
+        # books round pi (3.14 mm^2 for a 2 mm wire): allow 1 %; use the stated area
+        if abs(float(sp.N(A / area)) - 1) > 0.01:
+            raise SceneError(f"{w}.area differs from the string's own area (more than 1 %)")
+    return Y * A * dL / L0
+
+
 class StringMedium:
     KEYS = {"type", "mu", "mass", "length", "density", "area", "diameter", "Y", "alpha",
             "tension", "coordinate", "ends"}
@@ -719,8 +812,17 @@ class StringMedium:
                 self.kind = "thermal"
                 self.stress = Y * alpha * dT
                 self.T = self.stress * area if area is not None else None
+            elif set(ten) == {"weight"}:
+                self.kind = "uniform"
+                self.T = _load_tension(sc, ten["weight"], f"{w}.tension.weight")
+            elif set(ten) == {"stretch"}:
+                self.kind = "uniform"
+                self.T = _stretch_tension(sc, ten["stretch"], f"{w}.tension.stretch", area)
+                if self.T.is_positive is False or (self.T.is_number and not self.T > 0):
+                    raise SceneError(f"{w}.tension: must be positive (got {self.T})")
             else:
-                raise SceneError(f"{w}.tension: use a value, {{hanging: ...}}, {{thermal: ...}} or free")
+                raise SceneError(f"{w}.tension: use one of a value, {{weight: ...}}, {{stretch: ...}}, "
+                                 f"{{hanging: ...}}, {{thermal: ...}} or free")
         else:
             self.kind = "uniform"
             self.T = sc.quantity(ten, FORCE, f"{w}.tension")
@@ -1775,6 +1877,44 @@ def _item(_sc, items, n=None):
     return items[n - 1]
 
 
+def _frequencies_in(sc, r, lo=None, hi=None):
+    """The allowed mode frequencies of a resonator in [lo, hi] (a band of a variable source)."""
+    res = _resonator(r, "frequencies_in")
+    if lo is None or hi is None:
+        raise SceneError("frequencies_in(resonator, lo=..., hi=...): give the band")
+    known = getattr(sc, "solution", None) or {}
+    lo, hi = sp.sympify(lo).xreplace(known), sp.sympify(hi).xreplace(known)
+    if not (lo.is_number and hi.is_number):
+        raise UndeterminedError("frequencies_in(): the band and the resonator need numbers")
+    if not lo <= hi:
+        raise SceneError("frequencies_in(): lo must not exceed hi")
+    out = []
+    f1 = sp.sympify(res.frequency(1)).xreplace(known)
+    step = 2 if res.mixed else 1
+    start = 1
+    if f1.is_number and f1 > 0 and lo > f1:
+        start = max(1, int(sp.floor(lo / f1)) - 2)
+        if res.mixed and start % 2 == 0:
+            start -= 1
+        start = max(1, start)
+        # the modes are n f1: check that the start is not above lo (else begin at 1)
+        if not sp.sympify(res.frequency(start)).xreplace(known) <= lo:
+            start = 1
+    count = 0
+    for n in range(start, 10 ** 9, step):
+        count += 1
+        f = sp.sympify(res.frequency(n)).xreplace(known)
+        if not f.is_number:
+            raise UndeterminedError(f"frequencies_in(): the mode frequencies of '{res.name}' need numbers ({f})")
+        if f > hi * (1 + sp.Rational(1, 10 ** 12)):
+            break
+        if f >= lo * (1 - sp.Rational(1, 10 ** 12)):
+            out.append(sp.simplify(f))
+        if count > 100000:
+            raise SceneError("frequencies_in(): more than 100000 modes; narrow the band")
+    return sp.Tuple(*out)
+
+
 def _spacing(_sc, items):
     """The common difference of an equally spaced list (refused otherwise)."""
     if not isinstance(items, sp.Tuple) or len(items) < 2:
@@ -2142,7 +2282,7 @@ OBS_DIMS = {
     "is_travelling": None, "wrap": DIMLESS,
     "harmonic": DIMLESS, "node_spacing": LENGTH, "beat_frequency": D_FREQ, "resonances": None,
     "peak": LENGTH, "travel_time": TIME, "peak_position": LENGTH,
-    "count": DIMLESS, "frequency_of": None, "item": None, "spacing": None, "nearest": DIMLESS,
+    "count": DIMLESS, "frequency_of": None, "item": None, "spacing": None, "nearest": DIMLESS, "frequencies_in": D_FREQ,
 }
 
 def _is_travelling(_sc, w):
@@ -2268,6 +2408,7 @@ OBSERVABLES = {
     "wrap": _wrap,
     "harmonic": _harmonic, "node_spacing": _node_spacing, "beat_frequency": _beat_frequency,
     "resonances": _resonances, "count": _count, "item": _item, "spacing": _spacing, "nearest": _nearest,
+    "frequencies_in": _frequencies_in,
     "frequency_of": _frequency_of, "limit": _limit,
     "min": lambda sc, *a: _minmax(sp.Min, a), "max": lambda sc, *a: _minmax(sp.Max, a),
     # waves
@@ -2279,7 +2420,8 @@ OBSERVABLES = {
     "offset": lambda sc, w: _obj(w, WAVES, "offset").offset(),
     "frequency": _frequency,
     "omega": lambda sc, w: _obj(w, WAVES, "omega").ang_freq(),
-    "period": lambda sc, w: TWO_PI / _obj(w, WAVES, "period").ang_freq(),
+    "period": lambda sc, w, harmonic=None: (1 / _frequency(sc, w, harmonic=harmonic))
+    if (isinstance(w, Ref) and isinstance(w.obj, Resonator)) else TWO_PI / _obj(w, WAVES, "period").ang_freq(),
     "wavelength": _wavelength,
     "k": lambda sc, w, at=None: (_check_wave_x(_obj(w, WAVES, "k"), at) if at is not None else None,
                                  _obj(w, WAVES, "k").wavenumber(at))[1],

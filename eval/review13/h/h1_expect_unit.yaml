@@ -1,0 +1,4 @@
+media: {s: {type: string, mu: 0.01 kg/m, tension: 40 N}}
+resonators: {r: {type: string, on: s, length: 1 m, ends: [fixed, fixed]}}
+observe: {L_cm: "wavelength(r, harmonic=1) in cm"}
+expect: {L_cm: "200 m"}

@@ -1,0 +1,24 @@
+# m13: tension from a load (with buoyancy), from strain and from a spring; a frequency band; output units
+media:
+  air: {type: gas, v: 340 m/s}
+  air_w: {type: string, mu: 0.01 kg/m, tension: {weight: {mass: 4 kg, g: 10 m/s^2}}}
+  wet_w: {type: string, mu: 0.01 kg/m, tension: {weight: {mass: 4 kg, g: 10 m/s^2, buoyancy: {fluid_density: 1000 kg/m^3, load_density: 4000 kg/m^3}}}}
+  half: {type: string, mu: 0.01 kg/m, tension: {weight: {mass: 4 kg, g: 10 m/s^2, buoyancy: {fluid_density: 1000 kg/m^3, volume: 0.0005 m^3}}}}
+  wire: {type: string, mu: 0.01 kg/m, diameter: 1 mm, tension: {stretch: {Y: 2e11 Pa, extension: 1 mm, length: 2 m}}}
+  spring: {type: string, mu: 0.01 kg/m, tension: {stretch: {k: 400 N/m, extension: 10 cm}}}
+resonators:
+  r1: {type: string, on: air_w, length: 1 m, ends: [fixed, fixed]}
+  r2: {type: string, on: wet_w, length: 1 m, ends: [fixed, fixed]}
+  p: {type: pipe, on: air, length: 85 cm, ends: [closed, open], end_correction: 0 m}
+observe:
+  T1: "tension(air_w)"
+  T2: "tension(wet_w)"
+  T3: "tension(half)"
+  T4: "tension(wire)"
+  T5: "tension(spring)"
+  ratio: "frequency(r2, harmonic=1)/frequency(r1, harmonic=1)"
+  band: "frequencies_in(p, lo=200[Hz], hi=800[Hz])"
+  nb: "count(frequencies_in(p, lo=200[Hz], hi=800[Hz]))"
+  L_cm: "wavelength(r1, harmonic=1) in cm"
+  f_khz: "frequency(r1, harmonic=1) in kHz"
+expect: {T1: 40, T2: 30, T3: 35, T4: "25*pi", T5: 40, ratio: "sqrt(3)/2", nb: 3, L_cm: 200, f_khz: "sqrt(10)/100"}

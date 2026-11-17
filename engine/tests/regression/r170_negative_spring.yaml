@@ -1,0 +1,4 @@
+# m13 review: a negative spring constant is refused (it gave a negative tension)
+media: {s: {type: string, mu: 0.01 kg/m, tension: {stretch: {k: -400 N/m, extension: 10 cm}}}}
+observe: {T: "tension(s)"}
+expect: {error: rejected, message: "must be positive"}

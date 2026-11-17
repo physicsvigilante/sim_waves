@@ -1,0 +1,23 @@
+media:
+  air: {type: gas, v: 340 m/s}
+  steel: {type: rod, Y: 2e11 Pa, density: 8000 kg/m^3}
+resonators:
+  p1: {type: pipe, on: air, length: 84 cm, ends: [closed, open], end_correction: 1 cm}
+  p2: {type: pipe, on: air, length: 83 cm, ends: [open, open], end_correction: 1 cm}
+  b: {type: rod, on: steel, length: 1 m, ends: [clamped, free]}
+  pc: {type: pipe, on: air, length: 85 cm, ends: [closed, closed], end_correction: 0 m}
+observe:
+  c1: "frequencies_in(p1, lo=100[Hz], hi=500[Hz])"
+  c2: "frequencies_in(p2, lo=400[Hz], hi=1000[Hz])"
+  c3: "frequencies_in(b, lo=1000[Hz], hi=6000[Hz])"
+  c4: "frequencies_in(p1, lo=300[Hz], hi=300[Hz])"
+  c5: "frequencies_in(p1, lo=301[Hz], hi=399[Hz])"
+  c6: "count(frequencies_in(p1, lo=301[Hz], hi=399[Hz]))"
+  c7: "spacing(frequencies_in(p2, lo=400[Hz], hi=1000[Hz]))"
+  c8: "item(frequencies_in(b, lo=1000[Hz], hi=6000[Hz]), 2)"
+  c9: "count(frequencies_in(p1, lo=1[Hz], hi=1e9[Hz]))"
+  c10: "frequencies_in(pc, lo=100[Hz], hi=500[Hz])"
+  c11: "frequencies_in(p1, lo=-100[Hz], hi=150[Hz])"
+  c12: "frequencies_in(p1, lo=0.1[kHz], hi=0.5[kHz])"
+  c13: "frequencies_in(p1, lo=100[m], hi=500[Hz])"
+  c14: "frequencies_in(p1, lo=1e6[Hz], hi=1.0000001e6[Hz])"

@@ -1,0 +1,6 @@
+unknowns: {dL: positive}
+media:
+  s: {type: string, diameter: 1 mm, density: 8000 kg/m^3, tension: {stretch: {Y: 2e11 Pa, extension: dL, length: 2 m}}}
+resonators: {r: {type: string, on: s, length: 1 m, ends: [fixed, fixed]}}
+given: [{fact: "frequency(r, harmonic=1) == 50[Hz]", source: stated}]
+observe: {dL: "dL in mm", T: "tension(s)"}

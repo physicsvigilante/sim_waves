@@ -1,0 +1,4 @@
+media:
+  s1: {type: string, density: 8 g/cm^3, diameter: 2 mm, tension: {stretch: {Y: 2e11 Pa, extension: 1 mm, length: 200 cm}}}
+  s2: {type: string, density: 8 g/cm^3, area: 2 mm^2, tension: {weight: {mass: 2000 g, g: 9.8 m/s^2, buoyancy: {fluid_density: 0.8 g/cm^3, load_density: 8 g/cm^3}}}}
+observe: {T1: "tension(s1)", v1: "speed(s1)", T2: "tension(s2)", mu2: "mu(s2) in g/cm"}

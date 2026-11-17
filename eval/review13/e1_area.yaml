@@ -1,0 +1,3 @@
+media:
+  s1: {type: string, mu: 0.01 kg/m, diameter: 2 mm, tension: {stretch: {Y: 2e11 Pa, area: 3.14 mm^2, extension: 1 mm, length: 2 m}}}
+observe: {T: "tension(s1)"}

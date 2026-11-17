@@ -17,9 +17,12 @@ ERRORS = {"inconsistent": InconsistentError, "ambiguous": AmbiguousError,
           "undetermined": UndeterminedError, "rejected": SceneError}
 
 
-def _parse_expected(sc, value):
-    text, _, factor, _ = split_quantity(value)
-    return sp.sympify(sc.expr(text)) * factor
+def _parse_expected(sc, value, conv=None):
+    text, unit, factor, _ = split_quantity(value)
+    v = sp.sympify(sc.expr(text)) * factor
+    if conv is not None and unit is not None:
+        v = (v - conv[1]) / conv[0]
+    return v
 
 
 def _tol(spec):
@@ -29,8 +32,10 @@ def _tol(spec):
     return float(s[:-1]) / 100 if s.endswith("%") else float(s)
 
 
-def check(sc, got, exp):
-    """Return (ok, detail)."""
+def check(sc, got, exp, conv=None):
+    """Return (ok, detail). conv: (factor, offset) of an observable reported 'in <unit>': an
+    expected value written with a unit is converted to that unit; a bare number is taken as
+    already in it."""
     tol = None
     if isinstance(exp, dict):
         tol, exp = exp.get("tol"), exp.get("value")
@@ -45,12 +50,12 @@ def check(sc, got, exp):
         items = [i for i in s[1:-1].split(",") if i.strip()]
         if not isinstance(got, sp.Tuple) or len(got) != len(items):
             return False, f"want {s}"
-        return all(check(sc, g, i)[0] for g, i in zip(got, items)), f"want {s}"
+        return all(check(sc, g, i, conv)[0] for g, i in zip(got, items)), f"want {s}"
     if s[:1] in "<>":
-        target = _parse_expected(sc, s[1:])
+        target = _parse_expected(sc, s[1:], conv)
         d = sp.simplify(got - target)
         return bool(d.is_positive if s[0] == ">" else d.is_negative), ""
-    want = _parse_expected(sc, s)
+    want = _parse_expected(sc, s, conv)
     if isinstance(got, sp.logic.boolalg.BooleanAtom):
         return False, "got a truth value"
     if got.is_number and want.is_number:
@@ -111,7 +116,7 @@ def run_file(path):
             status = "FAIL"
             continue
         try:
-            ok, detail = check(sc, res[key], exp)
+            ok, detail = check(sc, res[key], exp, getattr(sc, "unit_conv", {}).get(key))
         except SceneError as exc:
             ok, detail = False, f"(expected value unreadable: {exc})"
         disputed = isinstance(exp, dict) and exp.get("status") == "disputed"

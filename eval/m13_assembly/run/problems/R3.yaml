@@ -1,0 +1,13 @@
+id: R3
+type: multiple_correct
+statement: >
+  A pipe of length 55 cm is closed at one end and open at the other. A loudspeaker
+  whose frequency can be varied continuously from 300 Hz to 1200 Hz is held near the
+  open end. The speed of sound in air is 330 m/s; neglect end correction. As the
+  frequency is swept over this range, which of the following statements is/are
+  correct?
+options:
+  A: The air column resonates at exactly three frequencies in this range.
+  B: Resonance occurs at 450 Hz and at 750 Hz.
+  C: Resonance occurs at 600 Hz.
+  D: Successive resonant frequencies in this range differ by 300 Hz.

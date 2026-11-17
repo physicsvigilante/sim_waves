@@ -1,0 +1,5 @@
+# m13 review: a narrow band far above the fundamental is not refused for counting the modes below it
+media: {air: {type: gas, v: 340 m/s}}
+resonators: {p: {type: pipe, on: air, length: 85 cm, ends: [closed, open], end_correction: 0 m}}
+observe: {n: "count(frequencies_in(p, lo=50000000[Hz], hi=50000300[Hz]))"}
+expect: {n: 2}

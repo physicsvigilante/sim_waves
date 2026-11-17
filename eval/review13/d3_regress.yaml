@@ -1,0 +1,7 @@
+symbols: {sv: positive}
+media:
+  hang: {type: string, mu: 0.1 kg/m, length: 2 m, coordinate: {origin: lower_end, direction: up, variable: sv}, tension: {hanging: {load: 1 kg, g: 10 m/s^2}}}
+  th: {type: string, Y: 2e11 Pa, alpha: 1e-5 1/K, density: 8000 kg/m^3, area: 1 mm^2, tension: {thermal: {slack_at: 30 degC, now: 10 degC}}}
+  fr: {type: string, mu: 0.01 kg/m, tension: free}
+waves: {w: {harmonic: {on: fr, A: 1 cm, f: 10 Hz, v: 20 m/s, dir: +x, phase: 0}}}
+observe: {vh: "speed(hang, at=1[m])", Tth: "tension(th)", vth: "speed(th) in km/s", vfr: "speed(w)"}

@@ -1,0 +1,9 @@
+answer: 84 Hz
+final_scene: R1.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "Pulley, oil container, and the wire beyond the bridges (stated neglected); tension modelled as the block's apparent weight."
+missing_in_source: none
+reasoning: "Engine gives f_air = 100 Hz (T=100 N) and f_oil = 80 Hz (buoyancy-reduced tension); the two beat facts, with the fork an unknown, leave a unique root f0 = 84 Hz (other candidates 116, 76 rejected)."
+friction: "'f0 in Hz' for a solved unknown is refused (must be SI); the solved value is printed anyway. Otherwise none."

@@ -1,0 +1,4 @@
+# m13: an unknown unit after 'in' is refused
+media: {s: {type: string, mu: 0.01 kg/m, tension: 40 N}}
+observe: {bad: "tension(s) in furlongs"}
+expect: {error: rejected, message: "unknown unit"}

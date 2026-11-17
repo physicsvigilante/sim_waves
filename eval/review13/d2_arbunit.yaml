@@ -1,0 +1,3 @@
+arbitrary: {T0: 40 N}
+media: {s: {type: string, mu: 0.01 kg/m, tension: T0}, s4: {type: string, mu: 0.01 kg/m, tension: 4*T0}}
+observe: {r: "speed(s4)/speed(s) in rad", v: "speed(s) in cm/s"}

@@ -1,0 +1,2 @@
+media: {s: {type: string, mu: 0.01 kg/m, tension: {stretch: {k: 4 N/cm, extension: 10 mm}}}}
+observe: {T: "tension(s)"}

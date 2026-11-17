@@ -1,0 +1,7 @@
+# m13 review: an immersed fraction solved above 1 is inconsistent
+unknowns: {xf: positive}
+media:
+  s: {type: string, mu: 0.01 kg/m, tension: {weight: {mass: 4 kg, g: 10 m/s^2, buoyancy: {fluid_density: 1000 kg/m^3, load_density: 2000 kg/m^3, fraction: xf}}}}
+given: [{fact: "tension(s) == 10[N]", source: stated}]
+observe: {xf: "xf"}
+expect: {error: rejected, message: "fraction <= 1"}

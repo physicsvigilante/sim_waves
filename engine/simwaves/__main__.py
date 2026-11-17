@@ -71,7 +71,8 @@ def main(argv):
         print(f"solved {k} = {show(sc.show_back(v))}{note}")
     for k, v in res.items():
         basis = getattr(sc, "basis", {}).get(k, "exact")
-        print(f"{k} = {show(v)}" + ("" if basis == "exact" else f"  <{basis}>"))
+        unit = getattr(sc, "units", {}).get(k)
+        print(f"{k} = {show(v)}" + (f" {unit}" if unit else "") + ("" if basis == "exact" else f"  <{basis}>"))
     errs = getattr(sc, "obs_errors", {})
     for k, e in errs.items():
         print(f"{k}: NOT AVAILABLE ({type(e).__name__}: {e})")

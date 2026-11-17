@@ -1,0 +1,2 @@
+media: {a: {type: gas, gamma: 7/5, temperature: 300 K, molar_mass: 29 g/mol}}
+observe: {c1: "300[K] in degC", c2: "speed(a)**2*29[g]/(7/5*8.314[J/K]) in degC", c3: "300[K] in K", c4: "speed(a)**2*29[g]/(7/5*8.314[J/K]) in K"}
