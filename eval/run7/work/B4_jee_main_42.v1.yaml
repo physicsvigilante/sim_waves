@@ -1,0 +1,20 @@
+id: B4/jee_main/42
+assume:
+  - "Joint O is a node, so each segment is an independent fixed-fixed string of equal length (O midway between bridges)."
+  - "Same radius -> same area (arbitrary value); same tension; rho2 = 4 rho1."
+  - "Both segments vibrate at the same frequency (one wire, one source). The family (n1,n2) is infinite; fix n1 = 1 (lowest mode) as assumption: the ratio does not depend on this choice."
+unknowns: {n1: integer, n2: integer}
+arbitrary: {rho: 8000 kg/m^3, a: 1e-6 m^2, T: 50 N, L: 0.5 m}
+media:
+  w1: {type: string, density: rho, area: a, tension: T}
+  w2: {type: string, density: 4*rho, area: a, tension: T}
+resonators:
+  r1: {type: string, on: w1, length: L, ends: [fixed, fixed]}
+  r2: {type: string, on: w2, length: L, ends: [fixed, fixed]}
+given:
+  - {fact: "frequency(r1, harmonic=n1) == frequency(r2, harmonic=n2)", source: stated}
+  - {fact: "n1 == 1", source: assumption, note: "lowest mode; ratio is same for n1 = k, n2 = 2k"}
+observe:
+  n1: n1
+  n2: n2
+  ratio: n1/n2

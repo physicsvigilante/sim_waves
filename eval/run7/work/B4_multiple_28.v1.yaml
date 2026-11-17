@@ -1,0 +1,18 @@
+id: B4/multiple/28
+assume:
+  - "Modelled with a string wave crossing a junction (only transmission model available for medium change); mu2 = 4 mu1 arbitrary. Normal incidence."
+arbitrary: {mu: 10 g/m}
+media:
+  s1: {type: string, mu: mu, tension: 50 N}
+  s2: {type: string, mu: "4*mu", tension: 50 N}
+junctions:
+  J: {at: 0 m, left: s1, right: s2}
+waves:
+  w: {harmonic: {on: s1, A: 2 cm, f: 10 Hz, dir: +x, phase: 0}}
+given: []
+observe:
+  v_same: "speed(w) == speed(w_transmitted)"
+  A_same: "amplitude(w) == amplitude(w_transmitted)"
+  f_same: "frequency(w) == frequency(w_transmitted)"
+  lam_same: "wavelength(w) == wavelength(w_transmitted)"
+  A_t: "amplitude(w_transmitted)/amplitude(w)"

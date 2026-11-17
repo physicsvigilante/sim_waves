@@ -1,0 +1,24 @@
+id: B4/comprehension/20
+assume:
+  - "The tube is a path: the two parts travel arcs of length pi*R/2 (shorter, S to D quarter circle) and 3*pi*R/2 (longer). Arc lengths are geometry read from the figure (holes at right angles)."
+  - "Sound speed, frequency and R are not given: arbitrary. 'Maximum intensity' means the frequency is tuned to constructive interference; I fix f to the single constructive value in 100-200 Hz as a selector."
+  - "Wave intensity I0 divided equally: each part is represented by a ray of equal amplitude from the same coherent source; I0 is the sum of the two parts' intensities (taken from two incoherent copies N1,N2 of the same amplitude)."
+arbitrary: {R: 1 m}
+unknowns: {f: positive}
+media: {air: {type: gas, v: 340 m/s}}
+sources:
+  S: {on: air, f: f, A: 1, phase: 0, spreading: none}
+  N1: {on: air, f: f, A: 1, phase: random, spreading: none}
+  N2: {on: air, f: f, A: 1, phase: random, spreading: none}
+rays:
+  short: {from: S, length: "pi*R/2"}
+  long: {from: S, length: "3*pi*R/2"}
+  n1: {from: N1, length: "pi*R/2"}
+  n2: {from: N2, length: "3*pi*R/2"}
+given:
+  - {fact: "wrap(phase_difference(short, long)) == 0", source: assumption, note: "maximum intensity: constructive"}
+  - {fact: "f > 100[Hz]", source: assumption, note: "selector for one constructive frequency"}
+  - {fact: "f < 200[Hz]", source: assumption, note: "selector"}
+observe:
+  Imax_over_I0: "relative_intensity(short, long) / relative_intensity(n1, n2)"
+  pathdiff: "path_difference(long, short)"

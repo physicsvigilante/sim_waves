@@ -1,0 +1,11 @@
+answer: [B]
+final_scene: B4_jee_advanced_20.v1.yaml
+engine_fit: partial
+hand_steps:
+  - "Equated 'successive pulses interfere constructively' with dt being a whole number of the string's fundamental periods (round trip 2L/v, two inversions at the clamped ends); engine cannot launch a train of pulses with multiple reflections."
+  - "Chose B as the smallest such interval; by the same reasoning 0.20 s and 0.40 s (multiples of 0.1 s) would also give in-phase overlap, while 0.05 s gives inverted overlap."
+coverage: partial
+not_represented: "Pulse train, repeated reflections, the launcher at one end."
+missing_in_source: "How the pulses are launched at the clamped end (driven end boundary condition); key is single-valued but 0.10, 0.20 and 0.40 s all qualify under simple reasoning."
+reasoning: "Engine: v = 8 m/s, fundamental period 0.100 s, 1/dt is an allowed mode frequency for 0.05 s and 0.10 s only. Answer B is the intended one but the engine does not decide it."
+friction: "No repeated-pulse source or multi-reflection; 'constructive interference between successive pulses' cannot be stated as a fact."

@@ -1,0 +1,6 @@
+solved T1 = 2809/25  (= 112.360)  (depends on the arbitrary values)
+A_T2_decreased_beat_gt_6 = True  <decided; same at 14 values of the arbitrary values, including near the ends of every range (sampled, not proved)>
+D_T1_increased_beat_gt_6 = True  <decided; same at 14 values of the arbitrary values, including near the ends of every range (sampled, not proved)>
+f1_gt_f2 = True  <decided; same at 14 values of the arbitrary values, including near the ends of every range (sampled, not proved)>
+B_T2_increased_beat_lt_6: NOT AVAILABLE (SceneError: depends on the arbitrary value(s) ['mu', 'L', 'T2']: the problem does not fix this result)
+C_T1_decreased_beat_lt_6: NOT AVAILABLE (SceneError: depends on the arbitrary value(s) ['mu', 'L', 'T2']: the problem does not fix this result)

@@ -1,0 +1,24 @@
+id: B4/single/55
+number: 55
+source: book p.86 (answer key p.122)
+format: single_correct
+statement: Two stretched wires are in unison. If the tension in one of the wires is increased by 1%, 3
+  beats are produced in 2 s. The initial frequency of each wire is
+figure: null
+options:
+  A: 150 Hz
+  B: 200 Hz
+  C: 300 Hz
+  D: 450 Hz
+answer: C
+answer_value: C
+units: null
+verified: 'f ~ sqrt(T): a 1% rise in T raises f by 0.5%. Beats = 0.005 f = 3/2 = 1.5 Hz, f = 300 Hz. Matches
+  key.'
+kinds:
+- inverse_condition
+physics:
+- beats
+- sonometer
+- tension
+notes: Consistent.

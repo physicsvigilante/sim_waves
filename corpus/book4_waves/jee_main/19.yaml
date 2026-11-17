@@ -1,0 +1,25 @@
+id: B4/jee_main/19
+number: 19
+source: book p.109 (answer key p.123)
+format: single_correct
+statement: '[Online April 2019] Two cars A and B are moving away from each other in opposite directions.
+  Both the cars are moving with a speed of 20 ms^-1 with respect to the ground. If an observer in car
+  A detects a frequency 2000 Hz of the sound coming from car B, what is the natural frequency of the sound
+  source in car B? (speed of sound in air = 340 ms^-1)'
+figure: null
+options:
+  A: 2150 Hz
+  B: 2300 Hz
+  C: 2060 Hz
+  D: 2250 Hz
+answer: D
+answer_value: D
+units: null
+verified: 'Source and observer recede: 2000 = f0 (340 - 20)/(340 + 20), f0 = 2000 x 360/320 = 2250 Hz.
+  Matches key.'
+kinds:
+- inverse_condition
+physics:
+- doppler_effect
+- moving_source_and_observer
+notes: Consistent.

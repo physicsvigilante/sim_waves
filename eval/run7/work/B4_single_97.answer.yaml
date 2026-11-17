@@ -1,0 +1,9 @@
+answer: [D]
+final_scene: B4_single_97.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "none"
+missing_in_source: "Isotropic spreading is not stated (assumed)."
+reasoning: "Spherical spreading of 10 W at 10 m gives displacement amplitude 0.959 um, nearest 0.96 um."
+friction: "No unit um; options converted in the scene as 1e-6[m]."

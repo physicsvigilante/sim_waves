@@ -1,0 +1,11 @@
+id: B4/single/85
+format: single_correct
+statement: The fundamental frequency of a sonometer wire is n. If its length, diameter and tension of
+  the wire are doubled, the material of the wire remaining the same, the new fundamental frequency will
+  be
+figure: null
+options:
+  A: n
+  B: n/√2
+  C: n/2
+  D: n/(2√2)

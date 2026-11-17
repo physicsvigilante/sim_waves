@@ -1,0 +1,13 @@
+id: B4/jee_advanced/23
+assume:
+  - "Hooke string: T = k*extension (stretch route). Linear density is taken as unchanged by the extra extension (standard textbook reading); original length is not given so mu(x) change is not modelled."
+  - "x, k, mu are arbitrary."
+arbitrary: {k: 400 N/m, ext: 1 cm, mu: 10 g/m}
+media:
+  s1: {type: string, mu: mu, tension: {stretch: {k: k, extension: ext}}}
+  s2: {type: string, mu: mu, tension: {stretch: {k: k, extension: "1.5*ext"}}}
+waves: {}
+given: []
+observe:
+  ratio: "speed(s2)/speed(s1)"
+  pick: "nearest(speed(s2)/speed(s1), 1.22, 0.61, 1.5, 0.75)"

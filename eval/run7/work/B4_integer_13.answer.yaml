@@ -1,0 +1,11 @@
+answer: {a: 2500 Hz, b: "320 m (50*sqrt(41) = 320.16 m)"}
+final_scene: B4_integer_13.v1.yaml
+engine_fit: partial
+hand_steps:
+  - "Reception time at which the source is closest was written by me as t = D/(0.8*v) (path length over speed)."
+  - "Reading (b): 'no change in frequency' taken as the sound emitted when the source is closest (900 Hz = f0); asked distance S-O at the reception time of that sound."
+coverage: full
+not_represented: nothing
+missing_in_source: "Speed of sound (arbitrary, answer independent). Part (b) wording is ambiguous: distance could mean l (250 m, at emission) or source-observer distance at reception (320 m)."
+reasoning: "Engine: frequency received when source is at closest point = 2500 Hz, same at all scalings; sound emitted at closest point is heard at 900 Hz and the source is then 320.16 m from O."
+friction: "No way to say 'at the instant the source is closest' without computing a time by hand; had to start source far away with arbitrary D. Source velocity as multiple of unstated v needed an arbitrary v."

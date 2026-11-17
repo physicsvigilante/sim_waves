@@ -1,0 +1,5 @@
+solved T1 = 2809/25  (= 112.360)
+solved a1 = 2209/2809  (= 0.786401)
+solved a2 = 784/625  (= 1.25440)
+a2v: NOT AVAILABLE (SceneError: with other arbitrary values the scene fails (no situation satisfies the facts; contradiction appears at given[5] 'a1 < 1'); the answer depends on them)
+a1v: NOT AVAILABLE (SceneError: with other arbitrary values the scene fails (no situation satisfies the facts; contradiction appears at given[5] 'a1 < 1'); the answer depends on them)

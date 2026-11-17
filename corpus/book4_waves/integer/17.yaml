@@ -1,0 +1,22 @@
+id: B4/integer/17
+number: 17
+source: book p.107 (answer key p.123)
+format: numerical
+statement: A long glass tube is held vertically, dipping into water, while a tuning fork of frequency
+  500 Hz is repeatedly struck and held over the open end. Strong resonance is obtained, when the length
+  of the tube above the surface of water is 60 cm and again 85 cm, but not at any intermediate point.
+  Find the speed of sound in air, in ms^-1.
+figure: null
+options: null
+answer: '350'
+answer_value: 350
+units: m/s
+verified: 'DISPUTED. Consecutive resonances of a closed air column are λ/2 apart: λ/2 = 85 - 60 = 25 cm,
+  λ = 50 cm, v = fλ = 500 x 0.50 = 250 m/s (end correction cancels). The key 350 does not follow from
+  these data.'
+kinds:
+- inverse_condition
+physics:
+- resonance_tube
+- closed_pipe
+notes: Key 350 inconsistent with stated lengths (gives 250). DISPUTED.

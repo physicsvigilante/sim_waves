@@ -1,0 +1,9 @@
+answer: [D]
+final_scene: B4_jee_main_30.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "nothing"
+missing_in_source: "hall length (arbitrary, runner starts 100 m away)"
+reasoning: "Open pipe 2nd harmonic gives 660 Hz; runner approaching at 10 km/h hears 665.56 Hz, nearest option 666 Hz (nearest -> 4 = D)."
+friction: "km/h is not a unit: written as 10[km]/3600[s] (hour = 3600 s)."

@@ -1,0 +1,11 @@
+answer: A
+final_scene: B4_comprehension_47.v1.yaml
+engine_fit: partial
+hand_steps: 
+  - "mu2 = 4*mu1 expressed as mass 4m on equal length L (mass ratio and equal length read from text)"
+  - "identified the signed ratio via y at the junction (y_ratio) rather than an amplitude observable, since amplitude() is positive"
+coverage: full
+not_represented: "nothing"
+missing_in_source: "none"
+reasoning: "Reflected/incident y ratio at B = -1/3 and amplitude ratio 1/3 with a pi phase jump -> -A_i/3."
+friction: "Signed reflected amplitude has no direct observable; had to read it from y ratio / phase."

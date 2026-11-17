@@ -1,0 +1,11 @@
+id: B4/reasoning/14
+format: single_correct
+statement: |-
+  Statement-1: The change in air pressure at constant temperature effects the speed of sound.
+  Statement-2: The speed of sound in gases is proportional to the square root of absolute temperature.
+figure: null
+options:
+  A: Both statements are TRUE and STATEMENT 2 is the correct explanation of STATEMENT 1.
+  B: Both statements are TRUE but STATEMENT 2 is not the correct explanation of STATEMENT 1.
+  C: STATEMENT 1 is TRUE and STATEMENT 2 is FALSE.
+  D: STATEMENT 1 is FALSE but STATEMENT 2 is TRUE.

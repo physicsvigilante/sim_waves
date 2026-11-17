@@ -1,0 +1,29 @@
+id: B4/jee_advanced/13
+assume:
+  - "Sound speed not given; arbitrary 340 m/s (ratio of train speeds should not depend on it)."
+  - "Siren stationary at origin; each train is a listener on the line moving toward it, starting far away (1 km)."
+  - "Same siren and same sound speed for both trains."
+arbitrary:
+  v: 340 m/s
+unknowns: {uA: positive, uB: positive}
+media:
+  air: {type: gas, v: v}
+sources:
+  S: {on: air, at: [0 m, 0 m], f: 5 kHz, A: 1, phase: 0, spreading: none}
+points:
+  A: {at: [-1000 m, 0 m], velocity: [uA, 0 m/s]}
+  B: {at: [-1000 m, 0 m], velocity: [uB, 0 m/s]}
+rays:
+  rA: {from: S, to: A}
+  rB: {from: S, to: B}
+given:
+  - {fact: "frequency(rA, emitted=0[s]) == 5.5[kHz]", source: stated}
+  - {fact: "frequency(rB, emitted=0[s]) == 6[kHz]", source: stated}
+  - {fact: "uA < v", source: assumption, note: "subsonic trains"}
+  - {fact: "uB < v", source: assumption, note: "subsonic trains"}
+observe:
+  ratio: "uB/uA"
+  opt_A: "uB/uA == 242/252"
+  opt_B: "uB/uA == 2"
+  opt_C: "uB/uA == 5/6"
+  opt_D: "uB/uA == 11/6"

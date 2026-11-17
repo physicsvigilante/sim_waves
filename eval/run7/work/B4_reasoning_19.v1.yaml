@@ -1,0 +1,17 @@
+id: B4/reasoning/19
+assume:
+  - "Two same-frequency waves of equal amplitude on one string, same direction; relative phase phi unknown, taken in (0, pi] (the sign of a phase difference is immaterial for the resultant amplitude)."
+arbitrary: {A: 1 cm}
+unknowns: {phi: phase}
+media: {s: {type: string, mu: 10 g/m, tension: 40 N}}
+waves:
+  w1: {harmonic: {on: s, A: A, f: 5 Hz, dir: +x, phase: 0}}
+  w2: {harmonic: {on: s, A: A, f: 5 Hz, dir: +x, phase: phi}}
+  tot: {sum: [w1, w2]}
+given:
+  - {fact: "amplitude(tot) == A", source: stated, note: "statement 1: resultant has the same amplitude"}
+  - {fact: "wrap(phi) > 0", source: assumption, note: "removes the +-phi mirror"}
+observe:
+  phi: "wrap(phi)"
+  phi_is_120deg: "wrap(phi) == 2*pi/3"
+  S2_sum_rule: "amplitude(tot) == 2*A"

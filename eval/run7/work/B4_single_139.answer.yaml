@@ -1,0 +1,9 @@
+answer: [B]
+final_scene: B4_single_139.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "nothing"
+missing_in_source: "end correction (assumed zero)"
+reasoning: "Smallest resonance length for 350 Hz in an open-open pipe is 0.5 m (nearest option index 2 = B)."
+friction: "none"

@@ -1,0 +1,26 @@
+id: B4/integer/4
+number: 4
+source: book p.106 (answer key p.123)
+format: numerical
+statement: At t = 0, a source of sonic oscillations S and an observer O start moving along x and y axes
+  with velocity 5 ms^-1 and 10 ms^-1 respectively. The figure gives their position at t = 0. The frequency
+  of sonic oscillations of source is 1000 Hz. Obtain the frequency of signals, in Hz, received by the
+  observer after 5 seconds. Speed of sound is 330 ms^-1.
+figure: x and y axes drawn through the origin. S is a point on the negative x-axis, 100 m to the left
+  of the origin (dimension arrow labelled 100 m). O is a point on the negative y-axis, 100 m below the
+  origin (dimension arrow labelled 100 m). The source moves along +x and the observer along +y.
+options: null
+answer: '1030'
+answer_value: 1030
+units: Hz
+verified: 'At t = 5 s: S = (-75, 0), O = (0, -50), line S->O unit vector (0.832, -0.555). Source component
+  toward O: 5(0.832) = 4.16 m/s; observer component toward S: 10(0.555) = 5.55 m/s. f'' = 1000 (330 +
+  5.55)/(330 - 4.16) = 1030 Hz. A full retarded-time calculation gives 1029.6 Hz, also 1030. Matches key.'
+kinds:
+- graph_read
+- inverse_condition
+physics:
+- doppler_effect
+- moving_source_and_observer
+- vector_components
+notes: Source and observer both move; use positions at the reception instant.

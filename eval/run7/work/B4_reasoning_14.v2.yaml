@@ -1,0 +1,13 @@
+id: B4/reasoning/14
+assume:
+  - "Air as an ideal gas with gamma = 7/5, M = 29 g/mol (arbitrary, answer is about dependence only). Pressure doubled at fixed temperature; temperature quadrupled at fixed pressure."
+arbitrary: {P0: 1e5 Pa, T0: 300 K}
+media:
+  base: {type: gas, gamma: 7/5, pressure: P0, temperature: T0, molar_mass: 29 g/mol}
+  highP: {type: gas, gamma: 7/5, pressure: "2*P0", temperature: T0, molar_mass: 29 g/mol}
+  hotter: {type: gas, gamma: 7/5, pressure: P0, temperature: "4*T0", molar_mass: 29 g/mol}
+observe:
+  S1_speed_unchanged_when_P_doubled: "speed(highP) == speed(base)"
+  S2_speed_ratio_when_T_x4: "speed(hotter)/speed(base)"
+  S2_sqrt_T: "speed(hotter)/speed(base) == 2"
+

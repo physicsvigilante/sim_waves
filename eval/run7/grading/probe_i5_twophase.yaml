@@ -1,0 +1,11 @@
+id: probe/i5_twophase
+unknowns: {kk: positive, ph: phase}
+media: {rope: {type: string, mu: 10 g/m, tension: 50 N}}
+waves:
+  w: {harmonic: {on: rope, A: 8 cm, k: kk, dir: +x, phase: ph}}
+given:
+  - {fact: "kk < 5[1/m]", source: assumption}
+  - {fact: "y(w, x=0[cm], t=0[s]) == 6[cm]", source: stated}
+  - {fact: "y(w, x=15[cm], t=0[s]) == 4[cm]", source: stated}
+observe:
+  lam: "wavelength(w) in cm"

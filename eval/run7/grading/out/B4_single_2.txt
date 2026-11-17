@@ -1,0 +1,5 @@
+solved fn = 105
+solved mu = 1/400  (= 0.00250000)  (depends on the arbitrary values)
+fork = 105  <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>
+f_a = 100  <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>
+option: NOT AVAILABLE (SceneError: comparison not allowed here: 'nearest(fn in Hz, 105, 95, 210, 190)')

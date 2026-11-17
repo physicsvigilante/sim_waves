@@ -1,0 +1,10 @@
+answer: [A, B, D]
+final_scene: B4_multiple_28.v1.yaml
+engine_fit: partial
+hand_steps: 
+  - "amplitude change on transmission is generic (equal only when impedances match); options mapping by me"
+coverage: partial
+not_represented: "only a string-junction model of 'medium change', no general sound/light interface"
+missing_in_source: "type of waves unspecified in problem"
+reasoning: "Engine: speed, amplitude and wavelength differ across the junction, frequency same -> A, B, D. Textbook key may differ on amplitude."
+friction: "Statement is generic; chose string junction as the one supported medium-change model; refracted/oblique cases not expressible."

@@ -1,0 +1,9 @@
+answer: D
+final_scene: B4_single_85.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "nothing"
+missing_in_source: "none"
+reasoning: "frequency ratio = sqrt(2)/4 = 1/(2 sqrt2) proved -> n/(2 sqrt 2)."
+friction: "none"

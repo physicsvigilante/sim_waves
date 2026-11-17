@@ -1,0 +1,9 @@
+answer: A
+final_scene: B4_comprehension_42.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "nothing (point-source spreading irrelevant: only the plane-wave form and pressure amplitude used)"
+missing_in_source: "none"
+reasoning: "rho solved = 1 kg/m^3 from bulk modulus, omega, k, pressure amplitude (cross-checked with speed 400 m/s)."
+friction: "none"

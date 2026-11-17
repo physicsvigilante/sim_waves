@@ -1,0 +1,23 @@
+id: B4/single/110
+number: 110
+source: book p.90 (answer key p.122)
+format: single_correct
+statement: If the tension in a string stretched between two fixed points is made four times, the frequency
+  of the second harmonic will become
+figure: null
+options:
+  A: two times
+  B: three times
+  C: four times
+  D: six times
+answer: A
+answer_value: A
+units: null
+verified: 'f ~ sqrt(T): tension x4 gives f x2 for any harmonic. Matches key.'
+kinds:
+- ratio
+physics:
+- string
+- harmonics
+- tension
+notes: Consistent.

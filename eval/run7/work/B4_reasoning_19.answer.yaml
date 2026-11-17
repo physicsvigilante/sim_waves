@@ -1,0 +1,11 @@
+answer: C
+final_scene: B4_reasoning_19.v1.yaml
+engine_fit: partial
+hand_steps: 
+  - "Statement-2 judged against 'sum of amplitudes': engine gave amplitude(tot)==2A False for the 120 deg case; the generic conclusion 'sum only when in phase' is mine"
+  - "A/B/C/D mapping of statements is mine"
+coverage: full
+not_represented: "nothing"
+missing_in_source: "none"
+reasoning: "phi = 2pi/3 solved from amplitude(tot)==A (S1 true); amplitude(tot)==2A is False there (S2 false) -> C."
+friction: "Sign of phi ambiguity needed an extra fact; statement-2 as a general claim needs a symbolic phi sweep that I did not run."

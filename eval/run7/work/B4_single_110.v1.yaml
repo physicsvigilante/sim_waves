@@ -1,0 +1,13 @@
+id: B4/single/110
+assume:
+  - "Same wire, same length; tension T then 4T. T, mu, L arbitrary."
+arbitrary: {T: 50 N, mu: 10 g/m, L: 1 m}
+media:
+  w1: {type: string, mu: mu, tension: T}
+  w2: {type: string, mu: mu, tension: "4*T"}
+resonators:
+  r1: {type: string, on: w1, length: L, ends: [fixed, fixed]}
+  r2: {type: string, on: w2, length: L, ends: [fixed, fixed]}
+given: []
+observe:
+  ratio: "frequency(r2, harmonic=2)/frequency(r1, harmonic=2)"

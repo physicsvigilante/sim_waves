@@ -1,0 +1,10 @@
+id: B4/integer/25
+assume:
+  - "Gases given by bulk modulus and density are modelled as type fluid (format says a fluid works like a gas)."
+media:
+  oxygen: {type: fluid, bulk_modulus: 1.41e5 Pa, density: 1.43 kg/m^3}
+  helium: {type: fluid, bulk_modulus: 1.7e5 Pa, density: 0.18 kg/m^3}
+given: []
+observe:
+  v_oxygen: speed(oxygen)
+  v_helium: speed(helium)

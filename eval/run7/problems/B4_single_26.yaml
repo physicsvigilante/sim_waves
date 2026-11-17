@@ -1,0 +1,10 @@
+id: B4/single/26
+format: single_correct
+statement: A car, sounding a horn of frequency 1000 Hz, is moving directly towards a huge wall at a speed
+  of 15 ms^-1. If speed of sound is 340 ms^-1, then the frequency of the echo heard by the driver is
+figure: null
+options:
+  A: 1046 Hz
+  B: 954 Hz
+  C: 1092 Hz
+  D: 908 Hz

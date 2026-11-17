@@ -1,0 +1,11 @@
+id: B4/single/10
+format: single_correct
+statement: At t = 0, a transverse wave pulse in a wire is described by the function y = 6/(x² - 3) where
+  x and y are in metre. The function y(x, t) that describes this wave equation if it is travelling in
+  the positive x direction with a speed of 4.5 ms^-1 is
+figure: null
+options:
+  A: y = 6/((x + 4.5t)² - 3)
+  B: y = 6/((x - 4.5t)² + 3)
+  C: y = 6/((x + 4.5t)² + 3)
+  D: y = 6/((x - 4.5t)² - 3)

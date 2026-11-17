@@ -1,0 +1,4 @@
+solved d = sqrt(2)/(2*sqrt(pi))  (= 0.398942)
+d_plain = sqrt(2)/(2*sqrt(pi))  (= 0.398942)  <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>
+d_cmp = True  <proved for every allowed arbitrary value>
+d_in_cm: NOT AVAILABLE (SceneError: cannot be shown to hold for all arbitrary values: near the ends of the ranges it fails (media.air: a speed of 340000 m/s is not sound in a gas or fluid; for light, radar or radio use a medium of type: em); give the arbitrary values a range (below:/above:) that keeps the scene valid)

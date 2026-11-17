@@ -1,0 +1,16 @@
+id: B4/jee_main/36
+assume:
+  - "Tube closed by the water, open at top; first resonance is fundamental of closed-open pipe."
+  - "Water mark depth below reference mark is taken as the air-column length; unknown end correction e (jagged end) is the same for both forks."
+unknowns: {vs: positive, e: positive}
+media: {air: {type: gas, v: vs}}
+resonators:
+  p1: {type: pipe, on: air, length: 11 cm, ends: [closed, open], end_correction: e}
+  p2: {type: pipe, on: air, length: 27 cm, ends: [closed, open], end_correction: e}
+given:
+  - {fact: "frequency(p1, harmonic=1) == 512[Hz]", source: stated}
+  - {fact: "frequency(p2, harmonic=1) == 256[Hz]", source: stated}
+observe:
+  v: vs
+  e_cm: "e in cm"
+  option: nearest(vs, 322[m/s], 341[m/s], 328[m/s], 335[m/s])

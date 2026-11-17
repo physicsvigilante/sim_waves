@@ -1,0 +1,10 @@
+answer: "not determined by the problem as printed; engine reports a family (infinite periodic). With the extra guess that the points are less than half a wavelength apart, the branches still give two wavelengths (hand reading ~290 cm or ~53 cm, not engine-checked)"
+final_scene: B4_integer_5.v3.yaml
+engine_fit: none
+hand_steps:
+  - "Enumeration of the branches under the half-wavelength guess (arcsin(3/4), arcsin(1/2) branches) was done by hand and is not engine output"
+coverage: full
+not_represented: "nothing"
+missing_in_source: "Which branch (sign of slope or the phase relation) of the two displacements applies; the problem fixes only two displacements at one instant, which allows many wavelengths"
+reasoning: "v2 and v3 both end in AmbiguousError: 'kk' only fixed up to a period; the facts do not fix the wavelength."
+friction: "v1 refused: unknown wavelength inside a sine (non-numeric coefficient); k as unknown works but the ambiguity is genuine. Cannot add 'branch' constraints honestly."

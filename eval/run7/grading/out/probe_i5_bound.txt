@@ -1,0 +1,1 @@
+AmbiguousError: 'kk' is only fixed up to a period 20*pi that depends on symbols

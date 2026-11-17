@@ -1,0 +1,5 @@
+solved X = 80*sqrt(3)/3  (= 46.1880)
+solved u = 100
+X_m = 80*sqrt(3)/3  (= 46.1880)
+u_ms = 100
+th_deg = 60

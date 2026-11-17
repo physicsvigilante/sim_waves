@@ -1,0 +1,20 @@
+id: B4/multiple/1
+assume:
+  - "g = 9.8 m/s^2 is not stated; assumed (consistent with mu = 9.8e-3)."
+  - "Equilibrium on the incline: the wire tension equals the pull on each end. Hanging mass M: T = M g (engine: weight). The incline is not in the format, so m's balance m g sin(30 deg) = T is written as a given fact (equilibrium, hand-supplied)."
+symbols: {}
+unknowns: {M: positive, m: positive}
+media:
+  wire: {type: string, mu: 9.8e-3 kg/m, tension: {weight: {mass: M, g: 9.8 m/s^2}}}
+waves:
+  w: {harmonic: {on: wire, A: 1 mm, f: 50 Hz, v: 100 m/s, dir: +x, phase: 0}}
+given:
+  - {fact: "m*9.8[m/s^2]*sin(30[deg]) == tension(wire)", source: assumption, note: "frictionless incline equilibrium, supplied by hand"}
+observe:
+  T: "tension(wire)"
+  M: "M"
+  m: "m"
+  opt_A: "m == 20[kg]"
+  opt_B: "M == 5[kg]"
+  opt_C: "m/M == 1/2"
+  opt_D: "m/M == 2"

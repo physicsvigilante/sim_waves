@@ -1,0 +1,7 @@
+solved uA = 34  (depends on the arbitrary values)
+solved uB = 68  (depends on the arbitrary values)
+ratio = 2  <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>
+opt_A = False  <proved for every allowed arbitrary value>
+opt_B = True  <proved for every allowed arbitrary value>
+opt_C = False  <proved for every allowed arbitrary value>
+opt_D = False  <proved for every allowed arbitrary value>

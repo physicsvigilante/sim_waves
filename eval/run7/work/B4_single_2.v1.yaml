@@ -1,0 +1,19 @@
+id: B4/single/2
+assume:
+  - "Same string (mass per length mu unknown, length arbitrary) at two tensions; fundamental of a fixed-fixed string."
+  - "Options are printed with unit N, a typo; the asked quantity is a frequency."
+unknowns: {mu: positive, fn: positive}
+arbitrary: {L: 1 m}
+media:
+  wa: {type: string, mu: mu, tension: 100 N}
+  wb: {type: string, mu: mu, tension: 121 N}
+resonators:
+  ra: {type: string, on: wa, length: L, ends: [fixed, fixed]}
+  rb: {type: string, on: wb, length: L, ends: [fixed, fixed]}
+given:
+  - {fact: "beat_frequency(frequency(ra, harmonic=1), fn) == 5[Hz]", source: stated}
+  - {fact: "beat_frequency(frequency(rb, harmonic=1), fn) == 5[Hz]", source: stated}
+observe:
+  fork: fn
+  f_a: frequency(ra, harmonic=1)
+  option: nearest(fn, 105[Hz], 95[Hz], 210[Hz], 190[Hz])

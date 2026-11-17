@@ -1,0 +1,2 @@
+solved d = sqrt(2)/(2*sqrt(pi))  (= 0.398942)
+d_cm = 50*sqrt(2)/sqrt(pi)  (= 39.8942) cm  <decided; same at 14 values of the arbitrary values, including near the ends of every range (sampled, not proved)>

@@ -1,0 +1,14 @@
+id: B4/comprehension/42
+assume:
+  - "Plane-wave reading of y = A sin(15 pi x - 6000 pi t): longitudinal wave on +x, written as A sin(omega t - k x + pi)."
+  - "Bulk modulus, k, omega and the pressure amplitude are stated; density is the unknown."
+unknowns: {rho: positive}
+media:
+  m: {type: fluid, bulk_modulus: 1.6e5 Pa, density: rho}
+waves:
+  w: {harmonic: {on: m, omega: 6000*pi rad/s, k: 15*pi 1/m, pressure_amplitude: 24*pi Pa, dir: +x, phase: pi}}
+given: []
+observe:
+  rho: "rho"
+  v: "speed(w)"
+  A: "displacement_amplitude(w)"

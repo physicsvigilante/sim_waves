@@ -1,0 +1,24 @@
+id: B4/reasoning/19
+number: 19
+source: book p.98 (answer key p.123)
+format: single_correct
+statement: |-
+  Statement-1: If two waves of same amplitude, produce a resultant wave of same amplitude, then the phase difference between them will be 120°.
+  Statement-2: The resultant amplitude of two waves is equal to sum of amplitude of two waves.
+figure: null
+options:
+  A: Both statements are TRUE and STATEMENT 2 is the correct explanation of STATEMENT 1.
+  B: Both statements are TRUE but STATEMENT 2 is not the correct explanation of STATEMENT 1.
+  C: STATEMENT 1 is TRUE and STATEMENT 2 is FALSE.
+  D: STATEMENT 1 is FALSE but STATEMENT 2 is TRUE.
+answer: C
+answer_value: C
+units: null
+verified: A_res = 2a cos(φ/2) = a gives φ = 120°, so S1 true. Resultant amplitude equals the sum only
+  for φ = 0, in general it does not, so S2 false. Matches key.
+kinds:
+- conceptual
+physics:
+- superposition
+- phase_difference
+notes: Consistent.

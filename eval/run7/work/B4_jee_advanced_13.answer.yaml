@@ -1,0 +1,9 @@
+answer: [B]
+final_scene: B4_jee_advanced_13.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: nothing
+missing_in_source: "Speed of sound (arbitrary 340 m/s; ratio uB/uA = 2 proved for every allowed value)."
+reasoning: "Listener speeds solved from 5.5 and 6.0 kHz; uB/uA = 2."
+friction: "Needed arbitrary v and a far starting position; unknown listener speeds work well."

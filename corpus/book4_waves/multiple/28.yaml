@@ -1,0 +1,25 @@
+id: B4/multiple/28
+number: 28
+source: book p.97 (answer key p.122)
+format: multiple_correct
+statement: When a wave goes from one medium to another, there is a change in the
+figure: null
+options:
+  A: velocity
+  B: amplitude
+  C: frequency
+  D: wavelength
+answer: A, B, D
+answer_value:
+- A
+- B
+- D
+units: null
+verified: At a boundary frequency is fixed by the source; speed, wavelength (v/f) and amplitude (transmission
+  coefficient) change. Matches key.
+kinds:
+- conceptual
+physics:
+- refraction
+- transmission
+notes: Consistent.

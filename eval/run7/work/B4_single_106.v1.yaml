@@ -1,0 +1,20 @@
+id: B4/single/106
+assume:
+  - "Two coherent point sources at the same spot feed one listening point; powers 16 W and 1 W give an intensity ratio 16:1 at the same distance. Frequency and distance arbitrary. Maxima: phases equal; minima: phases opposite."
+arbitrary: {f: 500 Hz, d: 10 m}
+media: {air: {type: gas, v: 340 m/s, density: 1.29 kg/m^3}}
+sources:
+  S1: {on: air, at: [0 m, 0 m], power: 16 W, f: f, phase: 0, spreading: spherical}
+  S2: {on: air, at: [0 m, 0 m], power: 1 W, f: f, phase: 0, spreading: spherical}
+  S3: {on: air, at: [0 m, 0 m], power: 1 W, f: f, phase: pi, spreading: spherical}
+points: {P: [d, 0 m]}
+rays:
+  r1: {from: S1, to: P}
+  r2: {from: S2, to: P}
+  r3: {from: S3, to: P}
+observe:
+  ratio_in: "intensity(r1)/intensity(r2)"
+  Imax: "intensity(r1, r2)"
+  Imin: "intensity(r1, r3)"
+  Imax_over_Imin: "intensity(r1, r2)/intensity(r1, r3)"
+  nearest_option: "nearest(intensity(r1, r2)/intensity(r1, r3), 25/16, 9, 4, 25/9)"

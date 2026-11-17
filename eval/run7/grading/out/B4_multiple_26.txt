@@ -1,0 +1,8 @@
+solved ph = pi/2  (= 1.57080)
+y_B = 0  <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>
+ABC_slope_negative = True  <proved for every allowed arbitrary value>
+CDE_slope_positive = True  <proved for every allowed arbitrary value>
+slope_AB: NOT AVAILABLE (SceneError: depends on the arbitrary value(s) ['Aw']: the problem does not fix this result)
+slope_BC: NOT AVAILABLE (SceneError: depends on the arbitrary value(s) ['Aw']: the problem does not fix this result)
+slope_CD: NOT AVAILABLE (SceneError: depends on the arbitrary value(s) ['Aw']: the problem does not fix this result)
+slope_DE: NOT AVAILABLE (SceneError: depends on the arbitrary value(s) ['Aw']: the problem does not fix this result)

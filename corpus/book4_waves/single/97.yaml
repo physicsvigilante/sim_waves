@@ -1,0 +1,24 @@
+id: B4/single/97
+number: 97
+source: book p.89 (answer key p.122)
+format: single_correct
+statement: A 10 watt source of sound of frequency 1000 Hz sends out waves in air. The displacement amplitude
+  at a distance of 10 m from the source is (speed of sound in air = 340 ms^-1 and density of air = 1.29
+  kgm^-3)
+figure: null
+options:
+  A: 0.62 μm
+  B: 4.2 μm
+  C: 1.6 μm
+  D: 0.96 μm
+answer: D
+answer_value: D
+units: null
+verified: I = P/(4πr²) = 10/(4π x 100) = 7.96e-3 W/m². I = 2π² f² A² ρ v gives A² = 7.96e-3/(2π² x 1e6
+  x 1.29 x 340) = 9.19e-13, A = 0.96e-6 m. Matches key.
+kinds:
+- derived_medium
+physics:
+- sound_intensity
+- displacement_amplitude
+notes: Consistent.

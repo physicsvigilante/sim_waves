@@ -1,0 +1,26 @@
+id: B4/jee_main/30
+number: 30
+source: book p.110 (answer key p.123)
+format: single_correct
+statement: '[Online January 2019] A musician using an open flute of length 50 cm produces second harmonic
+  sound waves. A person runs towards the musician from another end of a hall at a speed of 10 km h^-1.
+  If the wave speed is 330 ms^-1, the frequency heard by the running person shall be close to'
+figure: null
+options:
+  A: 500 Hz
+  B: 753 Hz
+  C: 333 Hz
+  D: 666 Hz
+answer: D
+answer_value: D
+units: null
+verified: 'Open pipe second harmonic f = v/L = 330/0.5 = 660 Hz. Observer speed 10 km/h = 2.78 m/s: f''
+  = 660 (330 + 2.78)/330 = 665.6 ~ 666 Hz. Matches key.'
+kinds:
+- derived_medium
+physics:
+- open_pipe
+- harmonics
+- doppler_effect
+- moving_observer
+notes: Consistent.

@@ -1,0 +1,47 @@
+id               att fit      ok   answer -> key
+B4/comprehension/20   2 partial  Y    C -> C
+B4/comprehension/42   1 full     Y    A -> A
+B4/comprehension/47   1 partial  Y    A -> A
+B4/integer/1       2 partial  Y    60 degrees -> 60
+B4/integer/13      1 partial  Y    {'a': '2500 Hz', 'b': '320 m (50*sqrt(41) = 320.16 m)'} -> (a) 2500, (b) 320
+B4/integer/17      1 full     n    250 m/s -> 350
+B4/integer/25      1 full     n    {'oxygen': '314 m/s', 'helium': '972 m/s'} -> (a) 314, (b) 972
+B4/integer/4       1 full     Y    1029.65 Hz (about 1030 Hz) -> 1030
+B4/integer/5       3 none     n    not determined by the problem as printed; engine reports a family (infinite periodic). With the extra guess that the points are less than half a wavelength apart, the branches still give two wavelengths (hand reading ~290 cm or ~53 cm, not engine-checked) -> 250
+B4/jee_advanced/13   1 full     Y    ['B'] -> B
+B4/jee_advanced/2   1 full     Y    ['B'] -> B
+B4/jee_advanced/20   1 partial  Y    ['B'] -> B
+B4/jee_advanced/23   1 partial  Y    A -> A
+B4/jee_advanced/49   1 partial  Y    ['B', 'C'] -> B, C
+B4/jee_main/19     3 partial  Y    D -> D
+B4/jee_main/23     1 full     Y    ['D'] -> D
+B4/jee_main/26     3 full     Y    ['B'] -> B
+B4/jee_main/30     1 full     Y    ['D'] -> D
+B4/jee_main/36     1 full     Y    ['C'] -> C
+B4/jee_main/42     1 full     Y    ['B'] -> B
+B4/jee_main/44     1 full     Y    ['D'] -> D
+B4/jee_main/7      1 partial  Y    ['D'] -> D
+B4/matrix/7        1 partial  Y    {'A': 'q', 'B': 'p', 'C': 'p', 'D': 'r'} -> {'A': ['q'], 'B': ['p'], 'C': ['p'], 'D': ['r']}
+B4/multiple/1      1 partial  Y    ['A', 'D'] -> A, D
+B4/multiple/26     1 partial  Y    ['A', 'D'] -> A, D
+B4/multiple/28     1 partial  Y    ['A', 'B', 'D'] -> A, B, D
+B4/reasoning/14    2 full     Y    ['D'] -> D
+B4/reasoning/19    1 partial  Y    C -> C
+B4/single/10       1 full     Y    D -> D
+B4/single/106      1 full     Y    ['D'] -> D
+B4/single/110      1 full     Y    A -> A
+B4/single/130      2 partial  n    ['B'] -> C
+B4/single/139      1 full     Y    ['B'] -> B
+B4/single/147      2 partial  n    ['A'] -> C
+B4/single/156      3 partial  Y    B -> B
+B4/single/159      1 partial  Y    ['D'] -> D
+B4/single/166      1 full     Y    ['C'] -> C
+B4/single/182      2 full     Y    ['C'] -> C
+B4/single/2        2 full     Y    ['A'] -> A
+B4/single/26       2 full     Y    C -> C
+B4/single/52       3 none     n    D -> A
+B4/single/55       2 partial  Y    ['C'] -> C
+B4/single/85       1 full     Y    D -> D
+B4/single/97       1 full     Y    ['D'] -> D
+
+correct 38/44; correct on first attempt 28/44

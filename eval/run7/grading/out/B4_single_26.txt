@@ -1,0 +1,2 @@
+f = 14200/13  (= 1092.31)  <exact; same at 5 values of each arbitrary value (ranged ones spread across their ranges, others x0.01 to x89; sampled)>
+pick = 3  <exact; same at 5 values of each arbitrary value (ranged ones spread across their ranges, others x0.01 to x89; sampled)>

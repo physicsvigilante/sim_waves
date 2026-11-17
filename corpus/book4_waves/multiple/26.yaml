@@ -1,0 +1,30 @@
+id: B4/multiple/26
+number: 26
+source: book p.97 (answer key p.122)
+format: multiple_correct
+statement: The figure represents a longitudinal wave travelling in positive x-direction. Then
+figure: A displacement curve plotted against a horizontal x-axis (drawn as a horizontal line with an arrow
+  labelled x). The curve starts at point A at the top (crest) on the left, falls through point B on the
+  axis to a trough at point C below the axis, rises through point D on the axis to point E at the top
+  (crest) on the right. No numbers on the figure.
+options:
+  A: part ABC represents compression
+  B: part ABC represents rarefaction
+  C: part CDE represents compression
+  D: part CDE represents rarefaction
+answer: A, D
+answer_value:
+- A
+- D
+units: null
+verified: 'The plotted quantity is particle displacement along x. Pressure change = -B d(xi)/dx: where
+  the displacement curve has negative slope (ABC, falling from crest to trough) neighbours converge, compression;
+  where it has positive slope (CDE) it is rarefaction. Matches key.'
+kinds:
+- graph_read
+- conceptual
+physics:
+- longitudinal_wave
+- compression
+- rarefaction
+notes: Consistent.

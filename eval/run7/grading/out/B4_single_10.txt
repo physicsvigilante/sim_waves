@@ -1,0 +1,8 @@
+vA = -9/2  (= -4.50000)  <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>
+vB = 9/2  (= 4.50000)  <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>
+vC = -9/2  (= -4.50000)  <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>
+vD = 9/2  (= 4.50000)  <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>
+tA = True  <proved; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>
+tB = False  <counterexample; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>
+tC = False  <counterexample; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>
+tD = True  <proved; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>

@@ -1,0 +1,27 @@
+id: B4/integer/13
+number: 13
+source: book p.106 (answer key p.123)
+format: numerical
+statement: A source of sound of frequency 900 Hz moves uniformly along a straight line with velocity 0.8
+  times velocity of sound. An observer is located at a distance l = 250 m from the line. Find the (a)
+  frequency of the sound, in Hz, at the instant when the source is closest to the observer, (b) distance
+  of the source, in metre, when he observes no change in the frequency.
+figure: null
+options: null
+answer: (a) 2500, (b) 320
+answer_value:
+  a: 2500
+  b: 320
+units: (a) Hz, (b) m
+verified: '(a) Sound heard when the source is closest was emitted at distance x back along the line: x/(0.8c)
+  = sqrt(x²+l²)/c gives x = l/0.75, cosθ = 0.8; f'' = 900/(1 - 0.8x0.8) = 2500 Hz. (b) No shift when the
+  heard sound was emitted from the closest point; the source has meanwhile moved 0.8c(l/c) = 200 m on,
+  so its distance from the observer is sqrt(200² + 250²) = 320 m. Matches key.'
+kinds:
+- inverse_condition
+- two_part
+physics:
+- doppler_effect
+- moving_source
+- retardation
+notes: Two-part answer. Source-observer distance in (b) is measured at the reception instant.

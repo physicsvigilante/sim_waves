@@ -1,0 +1,10 @@
+answer: [D]
+final_scene: B4_single_159.v1.yaml
+engine_fit: partial
+hand_steps:
+  - "Chose D by using the problem's v_s << v approximation (change on recession approximately equals change on approach, 10 %) because the exact result is not among the options."
+coverage: full
+not_represented: nothing
+missing_in_source: "The exact answer is not an option; the problem's own 'v_s << v' approximation is needed."
+reasoning: "Engine: exact Doppler gives v_s = v/11 and a 8.33 % decrease on recession (nearest option 10 %); with v_s << v the change is 10 %."
+friction: "Format has no way to state 'v_s << v' as an approximation; exact result differs from every printed option."

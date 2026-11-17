@@ -1,0 +1,30 @@
+id: B4/jee_advanced/49
+number: 49
+source: book p.117 (answer key p.124)
+format: multiple_correct
+statement: '[IIT-JEE 1991] Two identical straight wires are stretched so as to produce 6 beats per second
+  when vibrating simultaneously. On changing the tension slightly in one of them, the beat frequency remains
+  unchanged. Denoting by T1, T2 the higher and the lower initial tension in the strings, then it could
+  be said that while making the above changes in tension'
+figure: null
+options:
+  A: T2 was decreased
+  B: T2 was increased
+  C: T1 was decreased
+  D: T1 was increased
+answer: B, C
+answer_value:
+- B
+- C
+units: null
+verified: f1 > f2 by 6 Hz. Beat frequency stays 6 only if the lower one is raised until it passes the
+  higher by 6 Hz (T2 increased) or the higher one is lowered until it falls 6 Hz below the lower (T1 decreased).
+  Decreasing T2 or increasing T1 would raise the beat frequency. Matches key.
+kinds:
+- conceptual
+- inverse_condition
+physics:
+- beats
+- sonometer
+- tension
+notes: Consistent.

@@ -1,0 +1,10 @@
+id: probe/zero_quoted
+media: {air: {type: gas, v: 330 m/s}}
+sources:
+  S: {on: air, at: ["0[m]", "0[m]"], f: 100 Hz, A: 1, phase: 0, spreading: none}
+points:
+  P: ["5[m]", 0 m]
+rays:
+  r: {from: S, to: P}
+observe:
+  L: "path_length(r)"

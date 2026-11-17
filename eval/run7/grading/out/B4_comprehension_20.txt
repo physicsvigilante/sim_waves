@@ -1,0 +1,3 @@
+solved f = 340/pi  (= 108.225)  (depends on the arbitrary values)
+Imax_over_I0 = 2  <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>
+pathdiff: NOT AVAILABLE (SceneError: depends on the arbitrary value(s) ['R']: the problem does not fix this result)

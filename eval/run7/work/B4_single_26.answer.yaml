@@ -1,0 +1,9 @@
+answer: C
+final_scene: B4_single_26.v2.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "nothing"
+missing_in_source: "wall distance arbitrary"
+reasoning: "echo frequency 14200/13 = 1092.3 Hz; nearest option C."
+friction: "First attempt: nearest() needed units on the options."

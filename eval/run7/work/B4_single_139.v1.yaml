@@ -1,0 +1,11 @@
+id: B4/single/139
+assume:
+  - "End correction neglected (not stated)."
+symbols: {L: positive}
+media: {air: {type: gas, v: 350 m/s}}
+resonators:
+  p: {type: pipe, on: air, length: L, ends: [open, open], end_correction: 0 m}
+given: []
+observe:
+  Lmin: min(resonances(p, f=350[Hz], vary=L, lo=0.01[m], hi=10[m]))
+  option: nearest(min(resonances(p, f=350[Hz], vary=L, lo=0.01[m], hi=10[m])), 0.25[m], 0.5[m], 1[m], 2[m])

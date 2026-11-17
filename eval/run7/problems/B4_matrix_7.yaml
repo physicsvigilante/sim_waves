@@ -1,0 +1,18 @@
+id: B4/matrix/7
+format: matrix_match
+statement: 'From a single source, two wave trains are sent in two different strings. String 2 is 4 times
+  heavy than string 1. The two wave equations are: (area of cross-sectional and tension of both strings
+  are same) y1 = A sin(ω1 t - k1 x) and y2 = 2A sin(ω2 t - k2 x). Suppose u = energy density, P = power
+  transmitted, I = intensity of the wave and v be velocity of the wave, then match the following'
+figure: null
+options:
+  column_i:
+    A: u1/u2 =
+    B: P1/P2 =
+    C: I1/I2 =
+    D: v1/v2 =
+  column_ii:
+    p: 1/8
+    q: 1/16
+    r: '2'
+    s: 1/4

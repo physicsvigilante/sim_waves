@@ -1,0 +1,12 @@
+id: probe/s52_ratio
+symbols: {e: positive}
+arbitrary: {mu: 10 g/m, L: 1 m}
+media: {w: {type: string, mu: mu, tension: 100 N}}
+resonators:
+  r0: {type: string, on: w, length: L, ends: [fixed, fixed]}
+  r1: {type: string, on: w, length: "L*(1/2 + e)", ends: [fixed, fixed]}
+  r2: {type: string, on: w, length: "L*(1/2 - e)", ends: [fixed, fixed]}
+given:
+  - {fact: "e < 1/2", source: assumption}
+observe:
+  coeff: "limit(beat_frequency(frequency(r1, harmonic=1), frequency(r2, harmonic=1))/(frequency(r0, harmonic=1)*e), e, 0)"

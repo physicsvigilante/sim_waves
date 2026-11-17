@@ -1,0 +1,7 @@
+v = 8
+T1 = 1/10  (= 0.100000)
+f1 = 10
+dt005_is_mode = 1
+dt010_is_mode = 1
+dt020_is_mode = 0
+dt040_is_mode = 0

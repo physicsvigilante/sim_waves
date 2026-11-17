@@ -1,0 +1,4 @@
+solved phi = 2*pi/3  (= 2.09440)
+phi = 2*pi/3  (= 2.09440)  <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>
+phi_is_120deg = True  <proved for every allowed arbitrary value>
+S2_sum_rule = False  <proved for every allowed arbitrary value>

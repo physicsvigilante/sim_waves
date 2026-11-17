@@ -1,0 +1,31 @@
+id: B4/comprehension/47
+number: 47
+source: book p.103 (answer key p.123)
+format: single_correct
+statement: |-
+  Passage (Comprehension 16): The speed of a transverse wave depends on the linear mass density of the string and the tension in the string. Consider two strings of equal lengths to be joined at B. The mass of the string BC is four times the mass of string AB. If a wave pulse is generated in string AB, which travels towards boundary at B with speed v and the equation of incident pulse is given by y_i = A_i sin(ωt - kx). Based on above information, answer the following questions.
+
+  Q47. Amplitude of wave reflected back after incident on boundary at point B
+figure: Label 'Tension = constant'. String AB on the left (thin, linear density μ1) and string BC on the
+  right (drawn thicker, linear density μ2) joined at B; A at x = 0 at the left end, B at x = L (dashed
+  vertical line through B), C at x = 2L at the right end. A small pulse drawn near A with an arrow labelled
+  v pointing towards B.
+options:
+  A: -A_i/3
+  B: -2A_i/3
+  C: A_i/3
+  D: 2A_i/3
+answer: A
+answer_value: A
+units: null
+verified: 'Equal lengths so mass ratio gives μ2 = 4μ1, v2 = v/2. Reflection coefficient from light to
+  heavy string: (sqrt(μ1) - sqrt(μ2))/(sqrt(μ1) + sqrt(μ2)) = (1 - 2)/(1 + 2) = -1/3, so A_r = -A_i/3.
+  Matches key.'
+kinds:
+- given_wavefunction
+- ratio
+physics:
+- reflection
+- transmission
+- string_junction
+notes: Book numbers this question 47 (Comprehension 16).

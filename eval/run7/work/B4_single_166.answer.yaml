@@ -1,0 +1,9 @@
+answer: [C]
+final_scene: B4_single_166.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "End corrections (taken 0, assumption)."
+missing_in_source: "none"
+reasoning: "Closed-pipe length solves to 3/4 of the open pipe's; only n = 9, m = 6 gives equal frequencies."
+friction: "none"

@@ -1,0 +1,9 @@
+answer: [D]
+final_scene: B4_jee_main_44.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "nothing"
+missing_in_source: "mass per length (arbitrary, answer independent)"
+reasoning: "travel_time on a hanging string with zero load over 20 m, g = 10: 2*sqrt(2) s = 2.828 s (option index 4 = D)."
+friction: "String length is given only by the travel_time end point (strings have no length field in this setup); zero load was accepted."

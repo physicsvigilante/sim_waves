@@ -1,0 +1,5 @@
+solved e = 1/20  (= 0.0500000)
+solved vs = 8192/25  (= 327.680)
+v = 8192/25  (= 327.680)
+e_cm = 5 cm
+option: NOT AVAILABLE (UndeterminedError: nearest(): needs numbers (the value and every option))

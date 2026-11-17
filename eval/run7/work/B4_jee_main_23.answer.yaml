@@ -1,0 +1,9 @@
+answer: [D]
+final_scene: B4_jee_main_23.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: nothing
+missing_in_source: "none"
+reasoning: "Source frequency solved from 1000 Hz heard on approach (857.14 Hz); receding after crossing gives 750 Hz."
+friction: "Had to place the source far away and choose emission times 0 s and 40 s so that 'before' and 'after crossing' are explicit."

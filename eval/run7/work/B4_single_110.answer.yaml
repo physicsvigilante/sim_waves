@@ -1,0 +1,9 @@
+answer: A
+final_scene: B4_single_110.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "nothing"
+missing_in_source: "none"
+reasoning: "frequency ratio of harmonic 2 for T -> 4T is 2."
+friction: "none"

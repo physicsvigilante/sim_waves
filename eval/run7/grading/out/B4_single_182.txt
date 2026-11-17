@@ -1,0 +1,3 @@
+solved vs = 378
+v = 378  <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>
+option: NOT AVAILABLE (SceneError: comparison not allowed here: 'nearest(vs in m/s, 338, 350, 378, 400)')

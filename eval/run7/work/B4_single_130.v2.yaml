@@ -1,0 +1,19 @@
+id: B4/single/130
+assume:
+  - "Ear persistence 0.1 s per syllable, so two syllables need 0.2 s: the echo must arrive after the call ends (0.2 s round trip). NOT stated in the problem."
+  - "Listener and speaker at the same place; wall plane, rigid."
+unknowns: {d: positive}
+media: {air: {type: gas, v: 330 m/s}}
+sources:
+  S: {on: air, at: [0 m, 0 m], f: 100 Hz, A: 1, phase: 0, spreading: none}
+reflectors:
+  wall: {point: ["d", 0 m], normal: [-1, 0], boundary: rigid}
+points:
+  P: [0 m, 0 m]
+rays:
+  echo: {from: S, to: P, via: wall}
+given:
+  - {fact: "arrives_at(echo, emitted=0[s]) == 0.2[s]", source: assumption, note: "2 syllables x 0.1 s persistence"}
+observe:
+  d: d
+  option: nearest(d in m, 16.5, 33, 66, 330)

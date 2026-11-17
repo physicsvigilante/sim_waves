@@ -1,0 +1,23 @@
+id: B4/integer/1
+assume:
+  - "Speed of sound is not stated; it is arbitrary (answer must not depend on it)."
+  - "Perpendicular distance d of the road from the man is not stated; arbitrary."
+  - "Truck has constant acceleration (the problem only says 'some acceleration'); engine cannot model accelerating motion, so the Doppler shift is taken from the truck's instantaneous velocity at the emission instant (emitted=0)."
+  - "Hand-derived kinematic link (not engine): sound emitted at angle th reaches the man when the truck is at closest approach, with speed doubled. Mean speed 1.5u over the delay d/(vs*sin th) gives u = (2/3)*vs*cos(th). Supplied as a fact tagged assumption."
+unknowns: {u: positive, th: positive}
+arbitrary: {d: 50 m, vs: 340 m/s}
+media: {air: {type: gas, v: vs}}
+sources:
+  truck: {on: air, at: ["-d/tan(th)", "d"], velocity: [u, 0 m/s], f: 500 Hz, A: 1, phase: 0, spreading: none}
+points:
+  man: [0 m, 0 m]
+rays:
+  heard: {from: truck, to: man}
+given:
+  - {fact: "frequency(heard, emitted=0[s]) == 600[Hz]", source: stated, note: "heard when truck is closest; engine uses the emission instant"}
+  - {fact: "u == (2/3)*vs*cos(th)", source: assumption, note: "hand-derived from uniform acceleration, speed doubling and sound delay; not an engine result"}
+  - {fact: "tan(th) > 0", source: assumption, note: "acute angle"}
+observe:
+  th_rad: th
+  cos_th: cos(th)
+  th_deg: "th/1[deg]"

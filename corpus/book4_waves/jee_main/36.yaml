@@ -1,0 +1,27 @@
+id: B4/jee_main/36
+number: 36
+source: book p.110 (answer key p.123)
+format: single_correct
+statement: '[Online January 2019] A resonance tube is old and has jagged end. It is still used in the
+  laboratory to determine velocity of sound in air. A tuning fork of frequency 512 Hz produces first resonance
+  when the tube is filled with water to a mark 11 cm below a reference mark, near the open end of the
+  tube. The experiment is repeated with another fork of frequency 256 Hz which produces first resonance
+  when water reaches a mark 27 cm below the reference mark. The velocity of sound in air, obtained in
+  the experiment, is close to'
+figure: null
+options:
+  A: 322 ms^-1
+  B: 341 ms^-1
+  C: 328 ms^-1
+  D: 335 ms^-1
+answer: C
+answer_value: C
+units: null
+verified: 'Let the unknown end offset be e: λ1/4 = 11 + e, λ2/4 = 27 + e, with λ2 = 2 λ1 (half the frequency):
+  27 + e = 2(11 + e), e = 5 cm. λ1 = 4 x 16 = 64 cm, v = 512 x 0.64 = 327.7 ~ 328 m/s. Matches key.'
+kinds:
+- inverse_condition
+physics:
+- resonance_tube
+- end_correction
+notes: Consistent.

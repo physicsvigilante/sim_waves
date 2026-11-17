@@ -1,0 +1,11 @@
+id: B4/jee_advanced/23
+format: single_correct
+statement: '[IIT-JEE 1996] The extension in a string, obeying Hooke''s Law, is x. The speed of sound in
+  the stretched string is v. If the extension in the string is increased to 1.5x, the speed of sound will
+  be'
+figure: null
+options:
+  A: 1.22 v
+  B: 0.61 v
+  C: 1.50 v
+  D: 0.75 v

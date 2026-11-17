@@ -1,0 +1,26 @@
+id: B4/single/159
+number: 159
+source: book p.93 (answer key p.122)
+format: single_correct
+statement: The frequency changes by 10% as the source approaches a stationary observer with constant speed
+  v_s. What would be the percentage change in frequency as the source recedes the observer with the same
+  speed. Given that v_s << v (v = speed of sound in air)
+figure: null
+options:
+  A: 14.3%
+  B: 20%
+  C: 16.7%
+  D: 10%
+answer: D
+answer_value: D
+units: null
+verified: 'Approaching: f''/f = v/(v - v_s) ~ 1 + v_s/v = 1.10, so v_s/v ~ 0.10. Receding: f''/f = v/(v
+  + v_s) ~ 1 - v_s/v = 0.90, a 10% fall. Matches key under the v_s << v approximation (exact ratios would
+  give 8.3%, which is not an option).'
+kinds:
+- ratio
+- comparison
+physics:
+- doppler_effect
+- moving_source
+notes: Answer relies on the stated v_s << v approximation.

@@ -1,0 +1,11 @@
+solved d = 33
+n_plain = 2
+n_sqrt_opts = 4
+n_sqrt_units = 4
+d_in = 3300 cm
+n_unknown_units: NOT AVAILABLE (UndeterminedError: nearest(): needs numbers (the value and every option))
+n_unknown_plain: NOT AVAILABLE (UndeterminedError: nearest(): needs numbers (the value and every option))
+n_unknown_in: NOT AVAILABLE (SceneError: comparison not allowed here: 'nearest(d in m, 16.5, 33, 66, 330)')
+n_unknown_times1: NOT AVAILABLE (UndeterminedError: nearest(): needs numbers (the value and every option))
+n_obs_units: NOT AVAILABLE (UndeterminedError: nearest(): needs numbers (the value and every option))
+n_obs_in: NOT AVAILABLE (SceneError: comparison not allowed here: 'nearest(arrives_at(echo, emitted=0[s]) in ms, 100, 200, 300, 400)')

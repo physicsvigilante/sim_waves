@@ -1,0 +1,11 @@
+id: B4/jee_advanced/20
+format: single_correct
+statement: '[IIT-JEE 1998] A string of length 0.4 m and mass 10^-2 kg is tightly clamped at its ends.
+  The tension in the string is 1.6 N. Identical wave pulses are produced at one end at equal intervals
+  of time Δt. The value of Δt which allows constructive interference between successive pulses is'
+figure: null
+options:
+  A: 0.05 s
+  B: 0.10 s
+  C: 0.20 s
+  D: 0.40 s

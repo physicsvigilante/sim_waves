@@ -1,0 +1,9 @@
+answer: "1029.65 Hz (about 1030 Hz)"
+final_scene: B4_integer_4.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: nothing
+missing_in_source: "none"
+reasoning: "Moving source and moving listener on perpendicular axes; engine frequency(heard, t=5 s) = 1029.65 Hz."
+friction: "none (exact result is an ugly closed form with sqrt(3539); decimal shown)."

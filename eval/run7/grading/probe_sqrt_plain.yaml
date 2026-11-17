@@ -1,0 +1,7 @@
+id: probe/sqrt_plain
+media: {w1: {type: string, mu: 10 g/m, tension: 904.494 N}}
+resonators:
+  r1: {type: string, on: w1, length: 0.5 m, ends: [fixed, fixed]}
+observe:
+  n_plain_sqrt: "nearest(150 + 15*sqrt(101), 150, 200, 300, 450)"
+  n_freq_known_T: "nearest(frequency(r1, harmonic=1), 150[Hz], 200[Hz], 300[Hz], 450[Hz])"

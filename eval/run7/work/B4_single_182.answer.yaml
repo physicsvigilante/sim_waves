@@ -1,0 +1,9 @@
+answer: [C]
+final_scene: B4_single_182.v2.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "nothing"
+missing_in_source: "amplitude (arbitrary)"
+reasoning: "6 beats between wavelengths 50 and 50.4 cm in the same gas solves vs = 378 m/s (C)."
+friction: "nearest() cannot take dimensional or 'in unit' values; option matched by reading."

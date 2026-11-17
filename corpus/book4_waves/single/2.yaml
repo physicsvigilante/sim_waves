@@ -1,0 +1,26 @@
+id: B4/single/2
+number: 2
+source: book p.82 (answer key p.122)
+format: single_correct
+statement: A string under a tension of 100 N, emitting its fundamental note, gives 5 bps with a tuning
+  fork. When the tension is increased to 121 N, again 5 beats per second are heard. The frequency of the
+  fork is
+figure: null
+options:
+  A: 105 N
+  B: 95 N
+  C: 210 N
+  D: 190 N
+answer: A
+answer_value: A
+units: null
+verified: 'f_string ~ sqrt(T): f(121) = 1.1 f(100). Beats 5 both times means f_fork - f1 = 5 and 1.1 f1
+  - f_fork = 5 (string passes through the fork), so 0.1 f1 = 10, f1 = 100 Hz and fork = 105 Hz. Matches
+  key (the option unit ''N'' is a misprint for Hz).'
+kinds:
+- inverse_condition
+physics:
+- sonometer
+- beats
+- tension
+notes: Options are printed with unit N in the book (misprint for Hz); transcribed as printed.

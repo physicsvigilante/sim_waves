@@ -1,0 +1,23 @@
+id: B4/integer/25
+number: 25
+source: book p.107 (answer key p.123)
+format: numerical
+statement: Calculate the speed of longitudinal waves, in ms^-1, in the following gases at 0 °C and 1 atm
+  (= 10^5 Pa). (a) Oxygen for which the Bulk's modulus is 1.41 x 10^5 Pa and density is 1.43 kgm^-3. (b)
+  Helium for which the Bulk's modulus is 1.7 x 10^5 Pa and the density is 0.18 kgm^-3.
+figure: null
+options: null
+answer: (a) 314, (b) 972
+answer_value:
+  a: 314
+  b: 972
+units: m/s
+verified: 'v = sqrt(B/ρ): (a) sqrt(1.41e5/1.43) = 314 m/s; (b) sqrt(1.7e5/0.18) = 971.8 ~ 972 m/s. Matches
+  key.'
+kinds:
+- derived_medium
+- two_part
+physics:
+- bulk_modulus
+- wave_speed
+notes: Two-part answer.

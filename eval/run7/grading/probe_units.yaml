@@ -1,0 +1,6 @@
+id: probe/units
+media: {air: {type: gas, v: 340 m/s}}
+points:
+  runner: {at: [100 m, 0 m], velocity: [10 km/h, 0 m/s]}
+observe:
+  a: "1[um]"

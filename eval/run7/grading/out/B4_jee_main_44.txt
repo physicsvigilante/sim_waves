@@ -1,0 +1,2 @@
+t = 2*sqrt(2)  (= 2.82843)  <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>
+option = 4  <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>

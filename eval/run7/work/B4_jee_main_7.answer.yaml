@@ -1,0 +1,10 @@
+answer: [D]
+final_scene: B4_jee_main_7.v1.yaml
+engine_fit: partial
+hand_steps:
+  - "Converted option speeds from km/h to m/s (x1000/3600) inside the option comparisons; engine has no km/h unit."
+coverage: full
+not_represented: nothing
+missing_in_source: "none"
+reasoning: "Echo heard by the moving driver at 480 Hz from a 440 Hz horn gives u = 15 m/s = 54 km/h."
+friction: "km/h not available as a unit."

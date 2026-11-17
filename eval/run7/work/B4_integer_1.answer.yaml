@@ -1,0 +1,11 @@
+answer: 60 degrees
+final_scene: B4_integer_1.v2.yaml
+engine_fit: partial
+hand_steps:
+  - "Kinematics of the accelerating truck (uniform acceleration, speed doubles u->2u, mean speed 1.5u, sound delay d/(vs sin th)) giving u = (2/3) vs cos(th); supplied to the scene as an assumption-tagged fact"
+  - "Conversion of th in rad to degrees was done by the engine (th_deg = 60)"
+coverage: partial
+not_represented: "Accelerated motion of the truck (engine has only uniform velocities); the delay between emission and reception is not modelled, the Doppler shift uses the instantaneous velocity at emission"
+missing_in_source: "Speed of sound and the road-to-man distance (both shown irrelevant: engine used 340 m/s and 50 m as numbers); constant acceleration is an assumption"
+reasoning: "With the hand link u = (2/3) vs cos th, the engine's Doppler shift f=600 Hz at emission solved X = 28.87 m, u = 113.3 m/s, th = 60 degrees."
+friction: "No accelerating sources; relation between emission geometry and arrival at closest approach had to be hand-derived; symbolic angle in an oblique ray geometry is refused (v1), had to use a coordinate unknown plus numeric d and v (v2)."

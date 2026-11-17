@@ -1,0 +1,19 @@
+id: B4/jee_main/23
+assume:
+  - "Source starts 1000 m before the observer on a line through him, moving at 50 m/s; crosses at t=20 s. Observer at origin."
+  - "Approach case: sound emitted at t=0 (source approaching). Recede case: sound emitted at t=40 s (source 1000 m past the observer)."
+unknowns: {f0: positive}
+media:
+  air: {type: gas, v: 350 m/s}
+sources:
+  S: {on: air, at: [-1000 m, 0 m], velocity: [50 m/s, 0 m/s], f: f0, A: 1, phase: 0, spreading: none}
+points:
+  O: [0 m, 0 m]
+rays:
+  heard: {from: S, to: O}
+given:
+  - {fact: "frequency(heard, emitted=0[s]) == 1000[Hz]", source: stated}
+observe:
+  f0: "f0"
+  f_receding: "frequency(heard, emitted=40[s])"
+  nearest_option: "nearest(frequency(heard, emitted=40[s]), 857[Hz], 1143[Hz], 807[Hz], 750[Hz])"

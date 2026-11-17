@@ -1,0 +1,29 @@
+id: B4/single/147
+number: 147
+source: book p.92 (answer key p.122)
+format: single_correct
+statement: Speed of sound wave is v. If a reflector moves towards a stationary source emitting waves of
+  frequency f with speed u, the wavelength of reflected wave will be
+figure: null
+options:
+  A: (v - u)/(v + u) f
+  B: (v + u)/v f
+  C: (v + u)/(v - u) f
+  D: (v - u)/v f
+answer: C
+answer_value: C
+units: null
+verified: 'DISPUTED. Reflector (moving observer) receives f1 = f(v+u)/v, re-emits as a source moving toward
+  the stationary source''s side at speed u, so the reflected frequency is f'' = f(v+u)/(v-u), which is
+  option C. But the question asks for the wavelength: lambda'' = v/f'' = v(v-u)/(f(v+u)), which is none
+  of the options (all options have the dimensions of a frequency). Key C only matches if ''wavelength''
+  is read as ''frequency''.'
+kinds:
+- symbolic
+- ratio
+physics:
+- doppler_effect
+- reflection
+- moving_reflector
+notes: Book wording asks for wavelength but the options are frequency expressions; key C equals the reflected
+  frequency. DISPUTED.

@@ -1,0 +1,4 @@
+solved fs = 660
+f_source = 660
+f_heard = 5990/9  (= 665.556)
+option = 4
