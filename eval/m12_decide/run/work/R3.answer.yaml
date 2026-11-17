@@ -1,0 +1,9 @@
+answer: A
+final_scene: R3.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "nothing"
+missing_in_source: "separation (arbitrary; answer same at 5 scalings)"
+reasoning: "wave_speed_seen = 355 m/s, heard frequency = 3550/7 = 507.14 Hz; matches option A (the pair; options A and D share 507 Hz, speeds distinguish)."
+friction: "nearest() refuses when two options are equally close, so speed and frequency had to be matched to the option pair by reading the two results"

@@ -57,8 +57,9 @@ class Source:
         _keys(spec, self.KEYS_, w)
         self.name = name
         m = sc.objects.get(spec.get("on"))
-        if not isinstance(m, GasMedium):
-            raise SceneError(f"{w}.on: point sources need a gas or fluid medium (sound)")
+        from .scene import EMMedium
+        if not isinstance(m, (GasMedium, EMMedium)):
+            raise SceneError(f"{w}.on: point sources need a gas, fluid (sound) or em (light, radio) medium")
         self.medium = m
         self.at = _vector(sc, spec["at"], f"{w}.at") if "at" in spec else None
         moves = any(k in spec for k in _dop.Motion.KEYS)
@@ -263,11 +264,13 @@ class Ray:
         return TWO_PI * s.f * t - s.k * self.L + phi + self.dphi
 
     def pressure_amplitude(self):
+        _not_em(self, "pressure amplitude")
         if self.source.A_kind != D_PRESS:
             raise SceneError(f"ray '{self.name}': its source amplitude is not a pressure (give A in Pa, or power)")
         return self.amplitude()
 
     def sqrt_intensity(self):
+        _not_em(self, "intensity")
         """sqrt of this ray's own intensity (W/m^2): from power and spreading directly, or p0/sqrt(2 rho v)."""
         src = self.source
         if src.power is not None:
@@ -277,12 +280,19 @@ class Ray:
         return self.pressure_amplitude() / sp.sqrt(2 * rho * src.medium.speed())
 
     def displacement_amplitude(self):
+        _not_em(self, "displacement amplitude")
         rho = acoustic_density(self.source.medium, f"displacement amplitude of ray '{self.name}'")
         return self.pressure_amplitude() / (rho * self.source.medium.speed() * TWO_PI * self.source.f)
 
     def phasor_key(self):
         """Rays with the same key add as amplitudes; different keys add as intensities."""
         return ("random", self.source.name) if self.source.random else ("coherent",)
+
+
+def _not_em(ray, what):
+    if getattr(ray.source.medium, "kind", None) == "em":
+        raise SceneError(f"ray '{ray.name}': {what.replace('_', ' ')} is a sound quantity; light, radar and radio "
+                         f"(type: em) have no pressure, displacement or acoustic intensity in v0")
 
 
 class Point:
@@ -574,6 +584,8 @@ _wrap_obs("k", lambda o, at=None: _still(o, "k").k)
 _wrap_obs("phase", _ray_phase)
 
 OBSERVABLES.update({
+    "wave_speed_seen": lambda _sc, r, t=None, emitted=None: _dop.wave_speed_seen(
+        _obj(r, (Ray,), "wave_speed_seen"), t, emitted),
     "emitted_at": lambda _sc, r, t=None: _dop.emitted_at(_obj(r, (Ray,), "emitted_at"), t),
     "arrives_at": lambda _sc, r, emitted=None: _dop.arrives_at(_obj(r, (Ray,), "arrives_at"), emitted),
     "length": _length, "distance": _distance, "path_difference": _path_difference,
@@ -582,7 +594,7 @@ OBSERVABLES.update({
     "maxima": _extrema("maxima"), "minima": _extrema("minima"),
 })
 OBS_DIMS.update({
-    "emitted_at": TIME, "arrives_at": TIME,
+    "emitted_at": TIME, "arrives_at": TIME, "wave_speed_seen": D_SPEED,
     "length": LENGTH, "distance": LENGTH, "path_difference": LENGTH, "phase_difference": DIMLESS,
     "resultant_amplitude": None, "relative_intensity": None, "maxima": None, "minima": None,
 })

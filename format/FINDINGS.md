@@ -522,3 +522,46 @@ Tests: r136–r142.
   an electromagnetic medium.
 - **Next gaps:** deciding and comparing services (8), format limits (7), physics outside
   the model (6), and arbitrary values with time-dependent results (5).
+
+## Milestone 12: deciding services and electromagnetic waves (before review)
+- **Deciding:**
+  - comparisons through `abs`, `max` and `min` are decided by sign cases;
+  - `nearest()` picks the option nearest to a value;
+  - lists gain `item()` and `spacing()`.
+- **Light, radar and radio:** a new medium, `type: em`. Its Doppler effect is
+  relativistic: f0 (γ_R/γ_S) dte/dt.
+- **Guard:** a gas or fluid medium with v ≥ 1e5 m/s is refused (the run 6
+  misrepresentation).
+- **`wave_speed_seen`:** a new observable, and the units MHz and GHz were added.
+
+Tests: r148–r155.
+
+### Milestone 12 review (Fable 5.2, medium; eval/review12/REPORT.md)
+
+**Three silent wrong answers, all in the new light paths and all fixed with tests
+r156–r160:**
+1. **The gas guard was bypassed by a speed solved from facts.** Media are now checked
+   after solving.
+2. **Light Doppler in a material used c/n for time dilation.** It now uses the vacuum c.
+   `wave_speed_seen` for light now uses relativistic velocity addition.
+3. **`wavelength` on light dropped 1/γ_source.** It is now included.
+
+**Medium findings, both fixed:**
+- Sound quantities on light are now refused.
+- Light faster than c (v or n solved from facts) is now inconsistent.
+
+**Low findings:**
+- The message for light now names the speed of light.
+- `_decide_cases` is narrower than the docs said. The docs now say that several-symbol or
+  compound cases may be refused.
+
+**Verified correct:** relativistic vacuum cases at β = 0.6, about 45 `abs`, `max` and
+`min` comparisons, `nearest`, `item` and `spacing`, `wave_speed_seen` for sound, and
+regressions in sound Doppler.
+
+### Milestone 12 frozen run (eval/m12_decide/RESULT.md)
+- **R2–R4 matched,** engine-derived. **R1 (radar) was answered by hand,** because three
+  gaps blocked it.
+- **Fixed after the run:** `c: 3e8 m/s` for the book's rounded c, `speed(em)`, and the
+  units `us` and `ns`. The author's own R1 scene then gives 4200 Hz, option B (r161).
+- **Candidate for later:** `nearest` over paired options.

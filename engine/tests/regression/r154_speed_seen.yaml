@@ -1,0 +1,7 @@
+# m12: speed of sound relative to a listener running toward the source, wind from source to listener
+media: {air: {type: gas, v: 340 m/s, wind: [5 m/s, 0 m/s]}}
+sources: {S: {on: air, at: [0 m, 0 m], f: 500 Hz, A: 1, phase: 0, spreading: none}}
+points: {L: {at: [100 m, 0 m], velocity: [-10 m/s, 0 m/s]}}
+rays: {r: {from: S, to: L}}
+observe: {seen: "wave_speed_seen(r, emitted=0[s])", f: "frequency(r, emitted=0[s])"}
+expect: {seen: 355, f: "35500/69"}

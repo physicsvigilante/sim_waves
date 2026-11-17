@@ -1,0 +1,13 @@
+id: R3
+type: single_correct
+statement: >
+  A stationary siren emits sound of frequency 500 Hz. A steady wind blows at 10 m/s
+  from the siren towards an observer, who runs towards the siren at 5 m/s along the
+  line joining them. The speed of sound in still air is 340 m/s. The speed of the sound
+  waves as measured by the observer, and the frequency heard by the observer, are
+  respectively closest to
+options:
+  A: 355 m/s and 507 Hz
+  B: 345 m/s and 493 Hz
+  C: 355 m/s and 522 Hz
+  D: 350 m/s and 507 Hz

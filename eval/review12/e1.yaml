@@ -1,0 +1,23 @@
+media: {space: {type: em}}
+sources:
+  A: {on: space, at: [1000 m, 0 m], velocity: ["-0.6*299792458[m/s]", 0 m/s], f: 1 GHz, A: 1, phase: 0, spreading: none}
+  B: {on: space, at: [1000 m, 0 m], velocity: ["0.6*299792458[m/s]", 0 m/s], f: 1 GHz, A: 1, phase: 0, spreading: none}
+  S: {on: space, at: [0 m, 1000 m], f: 1 GHz, A: 1, phase: 0, spreading: none}
+  M: {on: space, at: [0 m, 1000 m], velocity: ["0.6*299792458[m/s]", 0 m/s], f: 1 GHz, A: 1, phase: 0, spreading: none}
+points:
+  O: [0 m, 0 m]
+  P: {at: [0 m, 0 m], velocity: ["0.6*299792458[m/s]", 0 m/s]}
+  Q: {at: [0 m, 0 m], velocity: ["-0.6*299792458[m/s]", 0 m/s]}
+rays: {app: {from: A, to: O}, rec: {from: B, to: O}, tr: {from: S, to: P}, both: {from: B, to: P}, both2: {from: A, to: P}, both3: {from: B, to: Q}, mm: {from: M, to: P}, mo: {from: M, to: O}}
+observe:
+  app: "frequency(app, emitted=0[s])"
+  rec: "frequency(rec, emitted=0[s])"
+  tr_recv: "frequency(tr, t=0[s])"
+  tr_emit0: "frequency(tr, emitted=0[s])"
+  both_comoving: "frequency(both, emitted=0[s])"
+  both_approach: "frequency(both2, emitted=0[s])"
+  both_recede: "frequency(both3, emitted=0[s])"
+  mm: "frequency(mm, t=0[s])"
+  mo_t0: "frequency(mo, t=0[s])"
+  wl_app: "wavelength(app, emitted=0[s])"
+  c_seen: "wave_speed_seen(tr, t=0[s])"

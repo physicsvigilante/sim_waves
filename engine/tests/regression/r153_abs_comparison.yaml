@@ -1,0 +1,11 @@
+# m12: a for-all comparison through abs decided by sign cases (run 6 single/169)
+# beat between a 256 Hz fork and a string whose length increases from its unison length
+symbols: {L: positive}
+given: [{fact: "L > 1[m]", source: stated}]
+media: {s: {type: string, mu: 0.01 kg/m, tension: "(512[m/s])**2*0.01[kg/m]"}}
+resonators: {r: {type: string, on: s, length: L, ends: [fixed, fixed]}}
+observe:
+  f1: "frequency(r, harmonic=1)"
+  below: "beat_frequency(frequency(r, harmonic=1), 256[Hz]) < 256[Hz]"
+  pos: "beat_frequency(frequency(r, harmonic=1), 256[Hz]) > 0[Hz]"
+expect: {below: true, pos: true}

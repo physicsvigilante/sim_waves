@@ -18,11 +18,11 @@ _R = sp.Rational
 
 UNITS = {
     "m": (1, LENGTH), "cm": (_R(1, 100), LENGTH), "mm": (_R(1, 1000), LENGTH), "km": (1000, LENGTH),
-    "s": (1, TIME), "ms": (_R(1, 1000), TIME),
+    "s": (1, TIME), "ms": (_R(1, 1000), TIME), "us": (_R(1, 10 ** 6), TIME), "ns": (_R(1, 10 ** 9), TIME),
     "kg": (1, MASS), "g": (_R(1, 1000), MASS),
     "N": (1, FORCE), "Pa": (1, dim(-1, 1, -2)), "J": (1, dim(2, 1, -2)), "mJ": (_R(1, 1000), dim(2, 1, -2)),
     "W": (1, dim(2, 1, -3)), "mW": (_R(1, 1000), dim(2, 1, -3)), "kW": (1000, dim(2, 1, -3)),
-    "kHz": (1000, dim(T=-1)), "kPa": (1000, dim(-1, 1, -2)), "Hz": (1, dim(T=-1)),
+    "kHz": (1000, dim(T=-1)), "MHz": (10 ** 6, dim(T=-1)), "GHz": (10 ** 9, dim(T=-1)), "kPa": (1000, dim(-1, 1, -2)), "Hz": (1, dim(T=-1)),
     "rad": (1, DIMLESS), "deg": (sp.pi / 180, DIMLESS),
     "K": (1, TEMP), "degC": (1, TEMP),
     "mol": (1, DIMLESS),      # amount of substance is treated as a pure count

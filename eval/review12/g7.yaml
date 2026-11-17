@@ -1,0 +1,7 @@
+unknowns: {Tt: positive}
+media: {air: {type: gas, gamma: 1.4, temperature: Tt, molar_mass: 0.029 kg}}
+sources: {S: {on: air, at: [0 m, 0 m], f: 10 GHz, A: 1, phase: 0, spreading: none}}
+points: {O: [10 m, 0 m]}
+rays: {r: {from: S, to: O}}
+given: [{fact: "wavelength(r) == 0.03[m]", source: stated}]
+observe: {Tt: "Tt"}

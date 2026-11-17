@@ -1,0 +1,19 @@
+id: R4
+assume:
+  - "Wire fundamental compared with a 210 Hz fork; beat = |f_wire - 210 Hz|."
+  - "Tension T is a free symbol over the closed range [400 N, 484 N] (endpoints included, 'range 400 N to 484 N')."
+  - "Wire is fixed at both ends over the vibrating length 0.50 m."
+symbols: {T: positive}
+media:
+  w: {type: string, mu: 0.010 kg/m, tension: T}
+resonators:
+  r: {type: string, on: w, length: 0.50 m, ends: [fixed, fixed]}
+observe:
+  fmin: "at(frequency(r, harmonic=1), T=400[N])"
+  fmax: "at(frequency(r, harmonic=1), T=484[N])"
+  maxbeat: "max_in(T, abs(frequency(r, harmonic=1) - 210[Hz]), 400[N], 484[N])"
+  a: "max_in(T, abs(frequency(r, harmonic=1) - 210[Hz]), 400[N], 484[N]) <= 10[Hz]"
+  b: "max_in(T, abs(frequency(r, harmonic=1) - 210[Hz]), 400[N], 484[N]) <= 5[Hz]"
+  c: "max_in(T, abs(frequency(r, harmonic=1) - 210[Hz]), 400[N], 484[N]) < 12[Hz]"
+  d: "at(beat_frequency(frequency(r, harmonic=1), 210[Hz]), T=484[N]) == 20[Hz]"
+  d_val: "at(beat_frequency(frequency(r, harmonic=1), 210[Hz]), T=484[N])"

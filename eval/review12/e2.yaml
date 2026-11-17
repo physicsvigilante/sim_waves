@@ -1,0 +1,16 @@
+media: {space: {type: em}}
+sources:
+  G: {on: space, at: [0 m, 0 m], f: 1 GHz, A: 1, phase: 0, spreading: none}
+  H: {on: space, at: [0 m, 0 m], velocity: ["0.2*299792458[m/s]", 0 m/s], f: 1 GHz, A: 1, phase: 0, spreading: none}
+points:
+  cop: [0 m, 0 m]
+  mcop: {at: [0 m, 0 m], velocity: ["0.2*299792458[m/s]", 0 m/s]}
+reflectors:
+  mir: {point: [1000 m, 0 m], normal: [-1, 0], boundary: rigid, velocity: ["-0.6*299792458[m/s]", 0 m/s]}
+  car: {point: [1000 m, 0 m], normal: [-1, 0], boundary: rigid, velocity: ["-0.5*299792458[m/s]", 0 m/s]}
+  away: {point: [1000 m, 0 m], normal: [-1, 0], boundary: rigid, velocity: ["0.6*299792458[m/s]", 0 m/s]}
+rays: {e: {from: G, to: cop, via: mir}, g: {from: H, to: mcop, via: car}, a: {from: G, to: cop, via: away}}
+observe:
+  mirror4: "frequency(e, emitted=0[s])"
+  gun4p5: "frequency(g, emitted=0[s])"
+  away_quarter: "frequency(a, emitted=0[s])"

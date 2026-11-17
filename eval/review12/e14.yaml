@@ -1,0 +1,6 @@
+symbols: {u: positive}
+media: {space: {type: em}}
+sources: {S: {on: space, at: [0 m, 0 m], velocity: [u, 0 m/s], f: 1 GHz, A: 1, phase: 0, spreading: none}}
+points: {O: [1000 m, 0 m]}
+rays: {r: {from: S, to: O}}
+observe: {f: "frequency(r, emitted=0[s])", cmp: "frequency(r, emitted=0[s]) > 1[GHz]"}

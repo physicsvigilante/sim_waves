@@ -1,0 +1,2 @@
+media: {air: {type: gas, gamma: 1.4, pressure: 1e17 Pa, density: 1.2 kg/m^3}}
+observe: {a: "1"}

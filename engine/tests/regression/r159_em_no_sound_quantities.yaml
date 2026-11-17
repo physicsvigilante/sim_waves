@@ -1,0 +1,7 @@
+# m12 review: sound quantities on light are refused
+media: {space: {type: em}}
+sources: {S: {on: space, at: [0 m, 0 m], f: 1 GHz, power: 1 W, phase: 0, spreading: spherical}}
+points: {O: [10 m, 0 m]}
+rays: {w: {from: S, to: O}}
+observe: {i: "intensity(w)"}
+expect: {error: rejected, message: "sound quantity"}

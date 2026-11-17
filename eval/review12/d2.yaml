@@ -1,0 +1,14 @@
+symbols: {q: positive, y: positive, n: integer}
+given: [{fact: "q > 2", source: stated}, {fact: "y < 2", source: stated}, {fact: "n >= 1", source: stated}]
+observe:
+  t1: "abs(q - 1) > 1"
+  u1: "abs(q - 3) < 1"
+  f1: "abs(q - 1) < 0.5"
+  t2: "abs(y - 3) > 1"
+  t3: "abs(y - 1) < 1"
+  u3: "abs(y - 1) < 0.9"
+  t4: "abs(n - 0.5) >= 0.5"
+  u4: "abs(n - 1.5) > 0.5"
+  t5: "abs(n - 1.5) >= 0.5"
+  u6: "abs(q - 2) > 0"
+  t6: "abs(q - 2) + abs(y - 2) > 0"

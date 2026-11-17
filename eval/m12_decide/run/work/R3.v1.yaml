@@ -1,0 +1,18 @@
+id: R3
+assume:
+  - "Siren at origin; observer ahead at +x at t=0, running toward the siren (-x); wind blows +x (siren toward observer)."
+  - "Initial separation is not stated; arbitrary, the answer must not depend on it."
+  - "Quantities evaluated for sound emitted at t=0."
+arbitrary: {D: 200 m}
+media: {air: {type: gas, v: 340 m/s, wind: [10 m/s, 0 m/s]}}
+sources:
+  siren: {on: air, at: [0 m, 0 m], f: 500 Hz, A: 1, phase: 0, spreading: none}
+points:
+  obs: {at: [D, 0 m], velocity: [-5 m/s, 0 m/s]}
+rays:
+  r: {from: siren, to: obs}
+observe:
+  seen: "wave_speed_seen(r, emitted=0[s])"
+  fh: "frequency(r, emitted=0[s])"
+  pick: "nearest(frequency(r, emitted=0[s]), 507[Hz], 493[Hz], 522[Hz], 507[Hz])"
+  pickspeed: "nearest(wave_speed_seen(r, emitted=0[s]), 355[m/s], 345[m/s], 355[m/s], 350[m/s])"

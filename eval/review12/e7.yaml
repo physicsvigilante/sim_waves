@@ -1,0 +1,2 @@
+media: {space: {type: em, wind: [1 m/s, 0 m/s]}}
+observe: {a: "1"}

@@ -1,0 +1,23 @@
+symbols: {L: positive, vs: positive, ff: positive}
+media: {air: {type: gas, v: 343.2 m/s}, gas2: {type: gas, v: vs}}
+resonators:
+  p: {type: pipe, on: air, length: L, ends: [closed, open], end_correction: 0 m}
+  pe: {type: pipe, on: air, length: L, ends: [closed, open], end_correction: 0.01 m}
+  sy: {type: pipe, on: gas2, length: L, ends: [closed, open], end_correction: 0 m}
+  c: {type: pipe, on: air, length: 0.5 m, ends: [closed, open], end_correction: 0 m}
+sources:
+  A: {on: air, at: [0 m, 0 m], f: 3432 Hz, A: 1, phase: 0, spreading: none}
+  B: {on: air, at: [0 m, 0.3 m], f: 3432 Hz, A: 1, phase: 0, spreading: none}
+points: {P: ["xx", 2 m]}
+arbitrary: {xx: 1 m}
+rays: {a: {from: A, to: P}, b: {from: B, to: P}}
+observe:
+  flt: "spacing(resonances(p, f=512.3[Hz], vary=L, lo=0.1[m], hi=1.5[m]))"
+  ec: "spacing(resonances(pe, f=512.3[Hz], vary=L, lo=0.1[m], hi=1.5[m]))"
+  ec1: "item(resonances(pe, f=512.3[Hz], vary=L, lo=0.1[m], hi=1.5[m]), 1)"
+  sym: "spacing(resonances(sy, f=500[Hz], vary=L, lo=0.1[m], hi=1.2[m]))"
+  hs: "spacing(harmonics(c))"
+  h3: "item(harmonics(c), 2)"
+  mx: "spacing(maxima(a, b, vary=xx, lo=-3[m], hi=3[m]))"
+  mxc: "count(maxima(a, b, vary=xx, lo=-3[m], hi=3[m]))"
+  two: "spacing(maxima(a, b, vary=xx, lo=-0.1[m], hi=1[m]))"

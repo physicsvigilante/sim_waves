@@ -1,0 +1,9 @@
+unknowns: {u: positive}
+media: {space: {type: em}}
+sources: {gun: {on: space, at: [0 m, 0 m], f: 10 GHz, A: 1, phase: 0, spreading: none}}
+points: {cop: [0 m, 0 m]}
+reflectors: {car: {point: [1000 m, 0 m], normal: [-1, 0], boundary: rigid, velocity: ["-u", 0 m/s]}}
+rays: {echo: {from: gun, to: cop, via: car}}
+given:
+  - {fact: "frequency(echo, emitted=0[s]) - 10[GHz] == 2000[Hz]", source: stated}
+observe: {u: "u"}

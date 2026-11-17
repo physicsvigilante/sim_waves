@@ -1,0 +1,12 @@
+# m12: radar echo from an approaching car (exact relativistic); nearest option; c seen by the receiver
+media: {space: {type: em}}
+sources: {gun: {on: space, at: [0 m, 0 m], f: 10 GHz, A: 1, phase: 0, spreading: none}}
+points: {cop: [0 m, 0 m]}
+reflectors: {car: {point: [1000 m, 0 m], normal: [-1, 0], boundary: rigid, velocity: [-30 m/s, 0 m/s]}}
+rays: {echo: {from: gun, to: cop, via: car}, direct: {from: gun, to: cop}}
+observe:
+  shift: "frequency(echo, emitted=0[s]) - 10[GHz]"
+  beats: "beat_frequency(echo, direct, t=1e-5[s])"
+  pick: "nearest(frequency(echo, emitted=0[s]) - 10[GHz], 1000[Hz], 2000[Hz], 3000[Hz])"
+  c_seen: "wave_speed_seen(echo, emitted=0[s])"
+expect: {shift: "150000000000/74948107", beats: "150000000000/74948107", pick: 2, c_seen: 299792458}

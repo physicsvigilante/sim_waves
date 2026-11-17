@@ -1,0 +1,21 @@
+id: R1
+assume:
+  - "Road is the scene frame; patrol car at origin moving +x, target car ahead moving -x (approaching head-on), modelled as a rigid plane reflector moving along its normal."
+  - "Initial separation is not stated; it is arbitrary (answer must not depend on it)."
+  - "The mixed transmitted signal has the radar's own emitted frequency 10.5 GHz."
+  - "Echo is heard at t = 1 us (separation is large enough that the echo exists)."
+arbitrary: {D: 3 km}
+media: {space: {type: em}}
+sources:
+  gun: {on: space, at: [0 m, 0 m], velocity: [25 m/s, 0 m/s], f: 10.5 GHz, A: 1, phase: 0, spreading: none}
+points:
+  P: {at: [0 m, 0 m], velocity: [25 m/s, 0 m/s]}
+reflectors:
+  car: {point: [D, 0 m], normal: [-1, 0], boundary: rigid, velocity: [-35 m/s, 0 m/s]}
+rays:
+  echo: {from: gun, to: P, via: car}
+given:
+  - {fact: "speed(space) == 3e8[m/s]", source: convention, note: "problem says take c = 3e8"}
+observe:
+  fe: "frequency(echo, t=100[us])"
+  beat: "beat_frequency(frequency(echo, t=100[us]), frequency(gun))"

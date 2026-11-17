@@ -1,0 +1,14 @@
+id: R1
+type: single_correct
+statement: >
+  A highway patrol car moves at 25 m/s along a straight road. Its radar gun emits
+  microwaves of frequency 10.5 GHz straight ahead towards a car approaching it head-on
+  at 35 m/s (speed relative to the road). The microwaves reflect off the approaching car
+  and return to the patrol car, where the received echo is mixed with the transmitted
+  signal. The beat frequency detected at the patrol car is closest to
+  (take the speed of light as 3 x 10^8 m/s)
+options:
+  A: 2.1 kHz
+  B: 4.2 kHz
+  C: 8.4 kHz
+  D: 1.4 kHz

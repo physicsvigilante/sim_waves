@@ -1,0 +1,13 @@
+id: R2
+type: multiple_correct
+statement: >
+  A vertical resonance tube of internal radius 2.0 cm and length 1.00 m is open at the
+  top; the length of its air column is adjusted by slowly lowering the water level from
+  the top. A tuning fork of frequency 480 Hz is held over the open end. The speed of
+  sound in air is 336 m/s and the end correction is 0.6 times the radius. Which of the
+  following statements is/are correct?
+options:
+  A: The difference between the air-column lengths of two successive resonances is 35.0 cm.
+  B: The air-column length at the third resonance is 86.3 cm.
+  C: Four resonances are observed as the water level falls from the top to the bottom of the tube.
+  D: The air-column length at the second resonance is 52.5 cm.

@@ -315,6 +315,9 @@ class Scene:
                 if a_ != "obj":
                     chk.same(a_, D_FREQ, "the arguments of beat_frequency() (frequencies in Hz, "
                                          "not angular frequencies)")
+        if fname == "nearest" and len(args) >= 2:
+            for a_ in args[1:]:
+                chk.same(args[0], a_, "the value and the options of nearest()")
         if fname in ("min", "max") and len(args) == 2 and "obj" not in args:
             chk.same(args[0], args[1], f"the two arguments of {fname}()")
         if fname in ("maxima", "minima"):
@@ -428,7 +431,60 @@ def make_medium(sc, name, spec):
         return FluidMedium(sc, name, spec)
     if spec["type"] == "rod":
         return RodMedium(sc, name, spec)
-    raise SceneError(f"media.{name}: type '{spec['type']}' not supported yet (string, gas, fluid, rod, open3d)")
+    if spec["type"] == "em":
+        return EMMedium(sc, name, spec)
+    raise SceneError(f"media.{name}: type '{spec['type']}' not supported yet (string, gas, fluid, rod, em, open3d)")
+
+
+SPEED_OF_LIGHT = sp.Integer(299792458)          # m/s, exact SI
+SOUND_SPEED_LIMIT = 10 ** 5                      # m/s: no sound in matter is this fast
+
+
+def _not_light(v, w):
+    """Refuse a gas or fluid whose 'speed of sound' is that of light (radar, radio)."""
+    if sp.sympify(v).is_number and float(sp.N(v)) >= SOUND_SPEED_LIMIT:
+        raise SceneError(f"{w}: a speed of {sp.N(v, 6)} m/s is not sound in a gas or fluid; for light, radar or "
+                         f"radio use a medium of type: em")
+
+
+class EMMedium:
+    """Light, radar or radio waves: no material medium. Speed c (exact SI) unless v or a
+    refractive index n is given. The Doppler effect is relativistic (see doppler.py)."""
+    KEYS = {"type", "v", "n", "c"}
+
+    def __init__(self, sc, name, spec):
+        w = f"media.{name}"
+        _keys(spec, self.KEYS, w)
+        self.name, self.kind, self.mu, self.extent, self.rho, self.wind = name, "em", None, None, None, None
+        if "v" in spec and "n" in spec:
+            raise SceneError(f"{w}: give v or n (refractive index), not both")
+        # the problem's value of c (books often take 3e8 m/s): used for travel and for time
+        # dilation alike; default the exact SI value
+        self.c = sc.quantity(spec["c"], D_SPEED, f"{w}.c") if "c" in spec else SPEED_OF_LIGHT
+        if "c" in spec and self.c.is_number and abs(float(sp.N(self.c / SPEED_OF_LIGHT)) - 1) > 0.01:
+            raise SceneError(f"{w}.c: the speed of light is about 3e8 m/s; c sets the problem's rounded value only")
+        if "n" in spec:
+            n = sc.quantity(spec["n"], DIMLESS, f"{w}.n")
+            if n.is_number and not n >= 1:
+                raise SceneError(f"{w}.n: a refractive index is at least 1")
+            if not n.is_number:
+                sc.implicit_ineqs = getattr(sc, "implicit_ineqs", {})
+                sc.implicit_ineqs[f"{w}.n"] = (f"{w}.n >= 1 (a refractive index)", ">=", n - 1)
+            self.v = self.c / n
+        elif "v" in spec:
+            self.v = sc.quantity(spec["v"], D_SPEED, f"{w}.v")
+            if self.v.is_number and self.v > self.c:
+                raise SceneError(f"{w}.v: faster than light in vacuum (c = {self.c} m/s; for a book's rounded "
+                                 f"c = 3e8 m/s write c: 3e8 m/s instead of v)")
+        else:
+            self.v = self.c
+
+    @property
+    def uniform(self):
+        return True
+
+    def speed(self, at=None):
+        return self.v
 
 
 def _wind(sc, spec, w):
@@ -479,6 +535,7 @@ class GasMedium:
                              f"sound (v; gamma + pressure + density; gamma + temperature + molar_mass "
                              f"[+ gas_constant]) or to the density (pressure + temperature + molar_mass)")
         self.v = _pick(sc, cands, "speed of sound", w)
+        _not_light(self.v, w)
         if self.v.is_positive is False:
             raise SceneError(f"{w}: speed must be positive")
         self.rho = rho
@@ -516,6 +573,7 @@ class FluidMedium(GasMedium):
             if val is not None and val.is_positive is False:
                 raise SceneError(f"{w}: {label} must be positive")
         self.v = _pick(sc, cands, "speed of sound", w)
+        _not_light(self.v, w)
         if self.v.is_positive is False:
             raise SceneError(f"{w}: speed must be positive")
         self.rho = rho
@@ -1705,6 +1763,56 @@ def _count(_sc, items):
     return sp.Integer(len(items))
 
 
+def _item(_sc, items, n=None):
+    """The n-th entry (1-based) of a list result."""
+    if not isinstance(items, sp.Tuple):
+        raise SceneError("item(list, n): needs a list result such as resonances(...)")
+    if n is None or not sp.sympify(n).is_Integer:
+        raise SceneError("item(list, n): n is a whole number, 1 for the first entry")
+    n = int(n)
+    if not 1 <= n <= len(items):
+        raise SceneError(f"item(): the list has {len(items)} entries; n = {n} is out of range")
+    return items[n - 1]
+
+
+def _spacing(_sc, items):
+    """The common difference of an equally spaced list (refused otherwise)."""
+    if not isinstance(items, sp.Tuple) or len(items) < 2:
+        raise SceneError("spacing(list): needs a list result with at least 2 entries")
+    diffs = [sp.simplify(b - a) for a, b in zip(items, items[1:])]
+    for d in diffs[1:]:
+        same = _same(d, diffs[0])
+        if same is None:
+            raise UndeterminedError("spacing(): cannot tell whether the entries are equally spaced")
+        if not same:
+            raise SceneError(f"spacing(): the entries are not equally spaced (differences {list(diffs)})")
+    return diffs[0]
+
+
+def _nearest(_sc, x, *options):
+    """The position (1 for the first) of the option nearest to x, by relative distance.
+    Refused when the two nearest options are about equally close."""
+    if len(options) < 2:
+        raise SceneError("nearest(x, a, b, ...): give at least two options")
+    vals = []
+    for o in (x,) + options:
+        o = sp.sympify(o)
+        if isinstance(o, sp.Tuple) or not o.is_number:
+            raise UndeterminedError("nearest(): needs numbers (the value and every option)")
+        c = complex(sp.N(o, 30))
+        if abs(c.imag) > 1e-20:
+            raise SceneError("nearest(): a value is not real")
+        vals.append(c.real)
+    xv, opts = vals[0], vals[1:]
+    dist = [abs(xv - o) / max(abs(o), abs(xv), 1e-300) for o in opts]
+    order = sorted(range(len(opts)), key=lambda i: dist[i])
+    best, second = order[0], order[1]
+    if dist[second] <= 2 * dist[best]:
+        raise SceneError(f"nearest(): options {best + 1} and {second + 1} are about equally close to {xv:.6g} "
+                         f"(relative distances {dist[best]:.3g} and {dist[second]:.3g}); no single nearest option")
+    return sp.Integer(best + 1)
+
+
 # ============================== observables ===================================
 def _obj(arg, kinds, fname):
     if not isinstance(arg, Ref) or not isinstance(arg.obj, kinds):
@@ -1756,7 +1864,7 @@ def _phase(_sc, w, x=None, t=None):
 
 
 def _speed(_sc, obj, at=None):
-    if isinstance(obj, Ref) and isinstance(obj.obj, (StringMedium, GasMedium, RodMedium)):
+    if isinstance(obj, Ref) and isinstance(obj.obj, (StringMedium, GasMedium, RodMedium, EMMedium)):
         return obj.obj.speed(at)
     if isinstance(obj, Ref) and isinstance(obj.obj, Resonator):
         return obj.obj.medium.speed()
@@ -1764,7 +1872,7 @@ def _speed(_sc, obj, at=None):
         if at is not None:
             raise SceneError("speed(wave) takes no at=")
         return obj.obj.speed()
-    raise SceneError("speed(): argument must be a wave, a resonator, a string or a gas medium")
+    raise SceneError("speed(): argument must be a wave, a resonator, or a medium (string, gas, fluid, rod, em)")
 
 
 
@@ -2034,7 +2142,7 @@ OBS_DIMS = {
     "is_travelling": None, "wrap": DIMLESS,
     "harmonic": DIMLESS, "node_spacing": LENGTH, "beat_frequency": D_FREQ, "resonances": None,
     "peak": LENGTH, "travel_time": TIME, "peak_position": LENGTH,
-    "count": DIMLESS, "frequency_of": None,
+    "count": DIMLESS, "frequency_of": None, "item": None, "spacing": None, "nearest": DIMLESS,
 }
 
 def _is_travelling(_sc, w):
@@ -2159,7 +2267,7 @@ OBSERVABLES = {
     "peak_position": _peak_position,
     "wrap": _wrap,
     "harmonic": _harmonic, "node_spacing": _node_spacing, "beat_frequency": _beat_frequency,
-    "resonances": _resonances, "count": _count,
+    "resonances": _resonances, "count": _count, "item": _item, "spacing": _spacing, "nearest": _nearest,
     "frequency_of": _frequency_of, "limit": _limit,
     "min": lambda sc, *a: _minmax(sp.Min, a), "max": lambda sc, *a: _minmax(sp.Max, a),
     # waves

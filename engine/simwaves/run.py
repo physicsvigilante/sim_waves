@@ -226,6 +226,48 @@ def evaluate(sc, timeout=120):
     return _evaluate_once(sc, timeout)
 
 
+def _decide_cases(d, op):
+    """d op 0 through abs/max/min: split into sign cases (piecewise); decided only if every
+    feasible case gives the same truth. A case is checked on its own condition when one
+    symbol is involved."""
+    from .solver import _sign_ok
+    pw = sp.piecewise_fold(d.rewrite(sp.Piecewise))
+    pieces = pw.args if isinstance(pw, sp.Piecewise) else [(pw, sp.true)]
+    truths = set()
+    prior = sp.false
+    for expr, cond in pieces:
+        cond_eff = sp.And(cond, sp.Not(prior))
+        prior = sp.Or(prior, cond)
+        if cond_eff.simplify() is sp.false:
+            continue
+        ok = _sign_ok(expr, op)
+        if ok is None:
+            syms = (expr.free_symbols | cond_eff.free_symbols)
+            if len(syms) != 1:
+                return None
+            x = next(iter(syms))
+            try:
+                dom = sp.Interval.open(0, sp.oo) if x.is_positive else (
+                    sp.Interval(0, sp.oo) if x.is_nonnegative else sp.Reals)
+                region = dom.intersect(sp.solveset(cond_eff, x, sp.Reals) if cond_eff is not sp.true else dom)
+                if region.is_empty:
+                    continue
+                rel = {"<": sp.Lt, "<=": sp.Le, ">": sp.Gt, ">=": sp.Ge}[op](expr, 0)
+                good = sp.solveset(rel, x, sp.Reals)
+                if region.is_subset(good):
+                    ok = True
+                elif region.intersect(good).is_empty:
+                    ok = False
+                else:
+                    return None
+            except (NotImplementedError, TypeError, ValueError):
+                return None
+        truths.add(bool(ok))
+    if len(truths) == 1:
+        return truths.pop()
+    return None
+
+
 def _decide_comparison(sc, text, rels, sol):
     """observe: 'a > b' (or a chain): True or False when decided for all symbol values."""
     from .solver import _sign_ok
@@ -256,6 +298,8 @@ def _decide_comparison(sc, text, rels, sol):
                 ok = None
         else:
             ok = _sign_ok(d, r.op)
+            if ok is None and d.has(sp.Abs, sp.Max, sp.Min):
+                ok = _decide_cases(d, r.op)
         if ok is None:
             raise UndeterminedError(f"cannot decide {text!r} for all symbol values ({sc.show_back(d)} {r.op} 0)")
         truths.append(bool(ok))
@@ -296,7 +340,8 @@ def _evaluate_inner(sc):
     from .errors import InconsistentError
     from .scene import harmonic_problem
     sol = solve_given(sc)
-    from .doppler import check_solution
+    from .doppler import check_media, check_solution
+    check_media(sc, sol)
     check_solution(sc, sol)
     sc.solution = sol
     results, sc.basis, errors = {}, {}, []

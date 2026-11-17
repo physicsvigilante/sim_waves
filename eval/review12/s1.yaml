@@ -1,0 +1,26 @@
+symbols: {L: positive, vs: positive}
+media: {air: {type: gas, v: 340 m/s}, gas2: {type: gas, v: vs}}
+resonators:
+  p: {type: pipe, on: air, length: L, ends: [closed, open], end_correction: 0 m}
+  o: {type: pipe, on: air, length: 0.5 m, ends: [open, open], end_correction: 0 m}
+  c: {type: pipe, on: air, length: 0.5 m, ends: [closed, open], end_correction: 0 m}
+  sy: {type: pipe, on: gas2, length: L, ends: [closed, open], end_correction: 0 m}
+observe:
+  one: "spacing(resonances(p, f=500[Hz], vary=L, lo=0.1[m], hi=0.4[m]))"
+  cnt: "count(resonances(p, f=500[Hz], vary=L, lo=0.1[m], hi=0.4[m]))"
+  it1: "item(resonances(p, f=500[Hz], vary=L, lo=0.1[m], hi=0.4[m]), 1)"
+  it2: "item(resonances(p, f=500[Hz], vary=L, lo=0.1[m], hi=0.4[m]), 2)"
+  it0: "item(resonances(p, f=500[Hz], vary=L, lo=0.1[m], hi=1.2[m]), 0)"
+  itneg: "item(resonances(p, f=500[Hz], vary=L, lo=0.1[m], hi=1.2[m]), -1)"
+  itf: "item(resonances(p, f=500[Hz], vary=L, lo=0.1[m], hi=1.2[m]), 2.0)"
+  itfr: "item(resonances(p, f=500[Hz], vary=L, lo=0.1[m], hi=1.2[m]), 1.5)"
+  it4: "item(resonances(p, f=500[Hz], vary=L, lo=0.1[m], hi=1.2[m]), 4)"
+  itn: "item(3, 1)"
+  spn: "spacing(3)"
+  empty: "spacing(resonances(p, f=500[Hz], vary=L, lo=0.01[m], hi=0.02[m]))"
+  fo: "spacing(resonances(o, vary=f, lo=100[Hz], hi=2000[Hz]))"
+  fc: "spacing(resonances(c, vary=f, lo=100[Hz], hi=2000[Hz]))"
+  fc1: "item(resonances(c, vary=f, lo=100[Hz], hi=2000[Hz]), 1)"
+  near: "nearest(spacing(resonances(p, f=500[Hz], vary=L, lo=0.1[m], hi=1.2[m])), 0.17[m], 0.34[m], 0.68[m])"
+  cmp: "spacing(resonances(p, f=500[Hz], vary=L, lo=0.1[m], hi=1.2[m])) == 0.34[m]"
+  itlist: "item(resonances(p, f=500[Hz], vary=L, lo=0.1[m], hi=1.2[m]), 2) - item(resonances(p, f=500[Hz], vary=L, lo=0.1[m], hi=1.2[m]), 1)"

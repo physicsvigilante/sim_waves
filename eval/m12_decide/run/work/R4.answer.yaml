@@ -1,0 +1,9 @@
+answer: [A, C]
+final_scene: R4.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "nothing"
+missing_in_source: "none (range endpoints assumed inclusive)"
+reasoning: "Fundamental runs 200 to 220 Hz over the range; max |f-210| = 10 Hz, so A true, B false, C true; at 484 N beat is 10 Hz, so D false."
+friction: "none (range as max_in over the symbol worked)"

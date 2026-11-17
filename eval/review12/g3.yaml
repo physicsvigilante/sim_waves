@@ -1,0 +1,2 @@
+media: {air: {type: gas, gamma: 1.4, temperature: 1e12 K, molar_mass: 0.029 kg}}
+observe: {a: "1"}

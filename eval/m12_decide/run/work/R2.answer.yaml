@@ -1,0 +1,9 @@
+answer: [A, B]
+final_scene: R2.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "nothing"
+missing_in_source: "none (end correction 0.6*r given; applied once at the open end by the engine)"
+reasoning: "resonances() gives column lengths 16.3, 51.3, 86.3 cm in [0,1 m]: spacing 35.0 cm (A true), third 86.3 cm (B true), 3 resonances not 4 (C false), second 51.3 cm not 52.5 (D false)."
+friction: "none (stating end correction as 0.6*radius needed an expression with unit brackets, which worked)"

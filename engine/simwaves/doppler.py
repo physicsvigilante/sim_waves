@@ -410,18 +410,22 @@ class ImageMotion:
         return [(lo, hi, (lambda f: lambda tau: self.ref.image(f(tau)))(fn)) for lo, hi, fn in self.m.segments()]
 
 
-def _check_subsonic(m, v, w, what):
+def _check_subsonic(m, v, w, what, light=False):
+    if light:
+        msg = (f"{what}: moves at or above the speed of light in the medium; v0 does not model this "
+               f"(Cherenkov radiation, superluminal motion)")
+    else:
+        msg = (f"{what}: moves at or above the speed of sound relative to the air; v0 handles subsonic "
+               f"motion only (shock waves are not modelled)")
     if getattr(m, "kind", "static") == "circle":
         ok = _decide(v - m.speed - sp.sqrt(_norm2(w)))
         if ok in ("neg", "zero"):
-            raise Supersonic(f"{what}: moves at or above the speed of sound relative to the air; v0 handles "
-                             f"subsonic motion only")
+            raise Supersonic(msg)
         return
     for vel in (m.speeds() if hasattr(m, "speeds") else []):
         ok = _decide(v ** 2 - _norm2([a - b for a, b in zip(vel, w)]))
         if ok in ("neg", "zero"):
-            raise Supersonic(f"{what}: moves at or above the speed of sound relative to the air; v0 handles "
-                             f"subsonic motion only (shock waves are not modelled)")
+            raise Supersonic(msg)
 
 
 def legs(ray, air_listener_at=None):
@@ -438,7 +442,7 @@ def legs(ray, air_listener_at=None):
     v, w = sp.sympify(v).xreplace(sol), [sp.sympify(c).xreplace(sol) for c in w]
     E, R = SubsMotion(src.motion, sol), SubsMotion(to.motion, sol)
     for m, who in ((E, f"source '{src.name}'"), (R, f"point '{to.name}'")):
-        _check_subsonic(m, v, w, who)
+        _check_subsonic(m, v, w, who, light=getattr(src.medium, "kind", None) == "em")
     if ref is None:
         return [Leg(E, R, v, w, what, _line([E, R], w))]
     if ref.moving:
@@ -528,6 +532,11 @@ def trace(ray, t=None, emitted=None):
             cur, r = leg.emit(cur)
             rate = rate * r
         arrival = cur
+    if getattr(ray.source.medium, "kind", None) == "em":
+        # light: the phase is counted in the source's own time and read in the receiver's
+        # own time, so f = f0 (gamma_receiver / gamma_source) dte/dt (special relativity)
+        c = ray.source.medium.c             # time dilation uses light's speed in vacuum
+        rate = rate * _gamma(ray.to.motion, arrival, c, ray) / _gamma(ray.source.motion, te, c, ray)
     if _decide(rate) in ("neg", "zero"):
         raise SceneError(f"ray '{ray.name}': the sound cannot reach the listener this way (heard frequency "
                          f"{rate} x f); something moves at or above the speed of sound relative to the air")
@@ -618,11 +627,30 @@ def air_wavelength(ray, t=None, emitted=None):
             leg = Leg(leg.E, air, leg.v, leg.w, leg.what, leg.line)
         cur, r = leg.receive(cur)
         rate = rate * r
+    if getattr(ray.source.medium, "kind", None) == "em":
+        rate = rate / _gamma(ray.source.motion, te, ray.source.medium.c, ray)
     return sp.simplify(ray.source.medium.speed() / (_sol(ray, ray.source.f) * rate))
 
 
 class Supersonic(SceneError):
     """Motion at or above the speed of sound."""
+
+
+def check_media(sc, sol):
+    """After solving: a gas or fluid speed solved to light's range is refused; an em medium
+    solved faster than light, or with n < 1, is inconsistent."""
+    from .errors import InconsistentError
+    from .scene import EMMedium, GasMedium, SOUND_SPEED_LIMIT, SPEED_OF_LIGHT
+    for name, m in sc.objects.items():
+        if isinstance(m, EMMedium):
+            v = sp.sympify(m.v).xreplace(sol)
+            if v.is_number and _decide(v - m.c) == "pos":
+                raise InconsistentError(f"media.{name}: the facts make light faster than c ({sp.N(v, 6)} m/s)")
+        elif isinstance(m, GasMedium):
+            v = sp.sympify(m.v).xreplace(sol)
+            if v.is_number and float(sp.N(v)) >= SOUND_SPEED_LIMIT:
+                raise SceneError(f"media.{name}: the facts make the speed {sp.N(v, 6)} m/s: that is not sound in a "
+                                 f"gas or fluid; for light, radar or radio use a medium of type: em")
 
 
 def check_solution(sc, sol):
@@ -644,3 +672,40 @@ def check_solution(sc, sol):
                                             f"no situation that v0 models fits them")
     finally:
         sc.solution = old
+
+
+def _velocity(motion, time, ray):
+    x = sp.Dummy("x", real=True)
+    sol = getattr(ray.sc, "solution", None) or {}
+    seg = _seg_at(SubsMotion(motion, sol).segments(), time, f"ray '{ray.name}'", True)
+    return [sp.diff(c, x).xreplace({x: time}) for c in seg[2](x)]
+
+
+def _gamma(motion, time, c, ray):
+    u2 = _norm2(_velocity(motion, time, ray))
+    if _decide(c ** 2 - u2) in ("neg", "zero"):
+        raise Supersonic(f"ray '{ray.name}': something moves at or above the speed of light")
+    return 1 / sp.sqrt(1 - u2 / c ** 2)
+
+
+def wave_speed_seen(ray, t=None, emitted=None):
+    """Speed of the arriving wave relative to the listener, along the direction it travels:
+    v + (wind - listener velocity) . k for sound; c for light (relativity)."""
+    te, arrival, _ = trace(ray, t, emitted)
+    medium = ray.source.medium
+    chain = legs(ray)
+    if not chain:
+        raise SceneError(f"ray '{ray.name}': the listener carries the source; no travelling wave reaches it")
+    last = chain[-1]
+    t_emit, _ = last.receive(arrival)
+    Eseg = _seg_at(last.E.segments(), t_emit, last.what, True)
+    Rseg = _seg_at(last.R.segments(), arrival, last.what, True)
+    d = [r - e - wi * (arrival - t_emit) for r, e, wi in zip(Rseg[2](arrival), Eseg[2](t_emit), last.w)]
+    k = [c_ / (last.v * (arrival - t_emit)) for c_ in d]
+    uL = _velocity(ray.to.motion, arrival, ray)
+    if getattr(medium, "kind", None) == "em":
+        # relativistic velocity addition along the direction of travel (medium frame)
+        c, w_ = medium.c, last.v
+        u = sum(ui * ki for ui, ki in zip(uL, k))
+        return sp.simplify((w_ - u) / (1 - w_ * u / c ** 2))
+    return sp.simplify(last.v + sum((wi - ui) * ki for wi, ui, ki in zip(last.w, uL, k)))

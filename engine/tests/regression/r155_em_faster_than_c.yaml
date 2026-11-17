@@ -1,0 +1,4 @@
+# m12: an em medium faster than light is refused
+media: {glass: {type: em, v: 4e8 m/s}}
+observe: {a: "1"}
+expect: {error: rejected, message: "faster than light"}
