@@ -1,0 +1,4 @@
+# m14 review round 10 (K7): asin(1 + q^2): the argument is above 1 for every q != 0: refused
+symbols: {q: real}
+observe: {asin_out: "limit(asin(1 + q**2), q, 0)"}
+expect: {error: rejected, message: "cannot be shown to stay inside"}

@@ -1,0 +1,7 @@
+# m14 review round 10 (K6): a wave given as sqrt(x - t): y(p, x=q, t=0) is sqrt(q), undefined for q < 0; two of
+# them cancel, but the root inside the value is now checked first: refused (before: 0)
+symbols: {q: real}
+waves:
+  p: {given: "sqrt(x-t)", units: {x: m, t: s, y: m}}
+observe: {invalid: "limit(q + y(p,x=q,t=0[s]) - y(p,x=q,t=0[s]), q, 0)"}
+expect: {error: rejected, message: "q must be positive near q -> 0 (from below)"}

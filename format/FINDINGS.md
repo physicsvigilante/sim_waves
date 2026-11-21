@@ -724,6 +724,12 @@ Tests r214–r218.
   0). Every written log, root, power, asin/acos and division is now checked to be defined
   near the point on each side approached. Tests r236–r241.
 
+### Milestone 14 review, round 10 (ChatGPT Astra, on PR #14; eval/review14/REPORT.md)
+- **The round 9 domain checker had three gaps:** the sign check used the wrong side for an
+  upper bound (`sqrt(q - 1)`, q < 1, gave 0); conditions inside a call's value were missed (a
+  wave given as `sqrt(x - t)`); and asin/acos refused an argument that tends to ±1 from inside
+  (asin(1 − q²) → π/2). All fixed. Tests r241 (rewritten), r242–r247.
+
 **Not fixed (tooling):** on Windows, r84 (peak of a sum of Gaussians) and r93 run for
 minutes, and r96 grows past 4.6 GB of memory; all three do so on the engine before m14
 as well. The wall-clock limit uses SIGALRM, which Windows lacks, so nothing stops a slow

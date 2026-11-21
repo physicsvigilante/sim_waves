@@ -1,0 +1,6 @@
+# m14 review round 10 (K5): q < 1, so q - 1 < 0 on the only side approached (from below); sqrt(q - 1) has no
+# real values there: refused (before: 0, the sign was checked on the wrong side of the bound's offset)
+symbols: {q: real}
+given: ["q < 1"]
+observe: {invalid: "limit(sqrt(q - 1), q, 1)"}
+expect: {error: rejected, message: "q - 1 must be positive near q -> 1 (from below)"}

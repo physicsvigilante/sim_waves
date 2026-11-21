@@ -194,6 +194,9 @@ class _Tr:
                     raise SceneError(f"limit(): {name}(...) holds an arbitrary function, which is not a number; "
                                      f"apart from its variable, everything in a limit must be a number")
                 syms.update(v.free_symbols)
+                # the conditions held inside the call's value (a wave given as sqrt(x - t) puts a
+                # root inside y(p, ...)), before it can cancel against another part
+                obligations.extend(_value_obligations(v))
                 if name in ("log", "ln") and x.args:
                     obligations.append(("positive", value(x.args[0])))
                 elif name == "sqrt" and x.args:
@@ -260,6 +263,24 @@ def _no_celsius(unit_node, src):
         raise SceneError(f"degC inside unit brackets is ambiguous (a temperature or a temperature "
                          f"difference) in {src!r}: write temperatures in K, e.g. 293.15[K], or a "
                          f"difference as 20[K]; results can still be given 'in degC'")
+
+
+def _value_obligations(v):
+    """The conditions a computed value needs to be real and finite, read from its SymPy
+    tree: a positive base for a fractional or symbolic power, a nonzero base for a negative
+    integer power, a positive log argument, and an asin/acos argument inside (-1, 1)."""
+    out = []
+    for node in sp.preorder_traversal(v):
+        if isinstance(node, sp.Pow):
+            k = node.exp
+            if k.is_integer and k.is_nonnegative:
+                continue
+            out.append(("nonzero", node.base) if (k.is_integer and k.is_negative) else ("positive", node.base))
+        elif isinstance(node, sp.log):
+            out.append(("positive", node.args[0]))
+        elif isinstance(node, (sp.asin, sp.acos)):
+            out.append(("unit", node.args[0]))
+    return out
 
 
 def _is_in(node):

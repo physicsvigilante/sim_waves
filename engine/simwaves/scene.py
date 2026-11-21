@@ -2240,13 +2240,19 @@ def _limit(_sc, e, var, value, _written=(), _obligations=()):
     lim_var = p_off if bv is not None else var
     lim_at = sp.simplify(sgn * (value - base)) if bv is not None else value
 
+    def in_offset(side):                       # a side of var as a side of the computed variable
+        return side if (bv is None or sgn == 1) else ("-" if side == "+" else "+")
+
     def toward(g, side):                       # the one-sided limit of g at the point, in var
-        p_side = side if (bv is None or sgn == 1) else ("-" if side == "+" else "+")
-        return sp.limit(sp.sympify(g), lim_var, lim_at, dir=p_side)
+        return sp.limit(sp.sympify(g), lim_var, lim_at, dir=in_offset(side))
+
+    def sign_near(g, side):                    # sign of a polynomial g just to that side of var
+        return _poly_sign_near(sp.sympify(g), lim_var, lim_at, in_offset(side))
     # each function, power and division as written must be defined near the point on every
     # side approached (cancellation must not hide this: log(q) - log(q) is not 0 for q < 0)
     for kind, g in _obligations:
         g = sp.sympify(g)
+        g_shown = _sc.show_back(g)              # in the declared symbol, not its offset
         if kind == "positive" and g.is_positive:
             continue
         if kind == "nonzero" and g.is_nonzero:
@@ -2254,19 +2260,26 @@ def _limit(_sc, e, var, value, _written=(), _obligations=()):
         for side in sides:
             lv = toward(g, side)
             word = "above" if side == "+" else "below"
-            if kind == "positive" and lv.is_zero and _poly_sign_near(g, lim_var, lim_at, side) == 1:
+            if kind == "positive" and lv.is_zero and sign_near(g, side) == 1:
                 continue                       # a polynomial that leaves 0 upward on this side
             if kind == "positive" and lv.is_positive is not True:
-                raise SceneError(f"limit(): {g} must be positive near {shown} -> {value} (from {word}) for the "
+                raise SceneError(f"limit(): {g_shown} must be positive near {shown} -> {value} (from {word}) for the "
                                  f"logarithm, root or power written there, but it tends to {lv}")
-            if kind == "unit" and (sp.Abs(lv) < 1) is not sp.true:
-                raise SceneError(f"limit(): {g} must stay strictly between -1 and 1 near {shown} -> {value} "
-                                 f"(from {word}) for asin/acos, but it tends to {lv}")
+            if kind == "unit":
+                if (sp.Abs(lv) < 1) is sp.true:
+                    continue
+                # tending to an end of [-1, 1] is fine if it stays inside: 1 - g > 0 near +1,
+                # 1 + g > 0 near -1 (asin(1 - q^2) -> pi/2)
+                if (lv == 1 and sign_near(1 - g, side) == 1) or (lv == -1 and sign_near(1 + g, side) == 1):
+                    continue
+                raise SceneError(f"limit(): {g_shown} must stay strictly between -1 and 1 near {shown} -> {value} "
+                                 f"(from {word}) for asin/acos; it tends to {lv}, and cannot be shown to stay "
+                                 f"inside")
             if kind == "nonzero" and lv.is_nonzero is not True:
                 # a polynomial in the variable that is not identically 0 vanishes only at
                 # isolated points, so it is nonzero near the point (q/q, sin(q)/q, (f-f0)/dl)
                 if not (lv.is_zero and g.is_polynomial(lim_var) and sp.simplify(g) != 0):
-                    raise SceneError(f"limit(): the denominator {g} may be 0 near {shown} -> {value} (from "
+                    raise SceneError(f"limit(): the denominator {g_shown} may be 0 near {shown} -> {value} (from "
                                      f"{word}); tends to {lv}")
     vals = {}
     for side in sides:
