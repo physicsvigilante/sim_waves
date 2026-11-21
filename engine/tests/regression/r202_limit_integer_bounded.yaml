@@ -1,0 +1,5 @@
+# m14 review R3: a limit in a whole-number symbol (here bounded, n > 2) is not defined: refused
+symbols: {n: integer}
+given: ["n > 2"]
+observe: {l: "limit(1/n, n, 5)"}
+expect: {error: rejected, message: "whole-number"}

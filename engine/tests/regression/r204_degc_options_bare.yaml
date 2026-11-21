@@ -1,0 +1,7 @@
+# m14 review R4: the unambiguous form: options as bare numbers in degC; 293.15 K = 20 degC, 293 K = 19.85 degC;
+# nearest(293.15 K in degC, 20, 19.85) has 20 exact, so 1; and 300 K in degC = 26.85 (offset applied)
+observe:
+  pick: "nearest(293.15[K] in degC, 20, 30)"
+  pick_k: "nearest(293.15[K] in degC, 293[K], 20)"
+  c: "300[K] in degC"
+expect: {pick: 1, pick_k: 2, c: 26.85}

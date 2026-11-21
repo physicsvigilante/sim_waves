@@ -276,6 +276,10 @@ def _panel(sc, spec, sol, illus, missing, fixed):
                       {k: v for k, v in illus.items() if k != var}, {var}, missing, f"plot {target}")
     if e is None:
         return None, {}
+    from .scene import Nearest
+    if e.has(Nearest):
+        raise ViewError(f"view plot {target}: nearest() picks one of the printed options; it is not a "
+                        f"curve and cannot be plotted (plot the value it compares instead)")
     from .doppler import HeardFrequency
     if e.has(HeardFrequency):          # each instant solved on its own (emission time)
         fn = lambda v_: sp.N(e.xreplace({var: sp.Float(v_, 20)}), 15)

@@ -68,6 +68,9 @@ Write YAML booleans only as `true`/`false`; `on`, `yes`, `no` are plain words.
     (`2[h]`). A lone `h` after a value (`3 h`) is not read as hours: it is too often a
     height.
   - A written zero takes its bracket's unit: `"0[m]"` is a length (and `"0[s]"` is not).
+  - `degC` is not allowed inside brackets: `20[degC]` could be a temperature or a
+    difference. Write temperatures in K (`293.15[K]`) and differences as `20[K]`. A
+    field (`now: 30 degC`) and a result `in degC` are fine.
 - **Internals:** the engine works in exact SI.
 
 ## Media
@@ -570,11 +573,14 @@ pl:   {on: air, geometry: plane, intensity: I}
   a) of the option nearest to x by relative distance. It is refused when the two nearest
   options are about equally close.
   - x (or an option) may depend on solved unknowns; the option is picked after the solve.
-    If it still depends on something unfixed, it is refused; with arbitrary values, the
-    pick must be the same at every scaling.
+    If it still depends on something unfixed, it is refused. With arbitrary values, the
+    value and options it compares (not only the pick) must be the same at every scaling.
   - **Options printed in a unit:** `nearest(x in km/h, 36, 54, 72)` converts x to that
-    unit (its dimension is checked, as for `in` in `observe`). A bare-number option is
-    read in that unit; an option with a unit (`15[m/s]`) is converted to it.
+    unit (its dimension is checked, as for `in` in `observe`). A printed number is read
+    in that unit; an option with a unit (`15[m/s]`) or an unknown is converted to it by
+    its own dimension, and refused if that cannot be checked.
+  - `nearest()` is for `observe` only, on its own: not in `given`, not inside a
+    comparison, and not plotted.
 - **Lists:** `item(list, n)` (1 for the first), `spacing(list)` (the common difference of
   an equally spaced list; otherwise refused), and `count(list)`.
 - **A band of frequencies** (a source of variable frequency):
@@ -698,8 +704,11 @@ never `omega(w)`: both are 1/s, so the dimension check cannot catch it.
     oscillation is at the difference frequency.
 - `limit(expr, var, value)` is for approximations; e.g. a small `dl` gives
   `limit(f/dl, dl, 0)`.
+  - At an interior point both one-sided limits are taken and must agree; otherwise it is
+    refused ("from above ..., from below ..."). At the edge of the variable's domain (0
+    for a positive symbol, or a stated bound) it is approached from inside only.
   - It accepts a symbol with a stated bound (`dl < 0.5[m]`). The value must be inside
-    the bound or on its edge (then approached from inside); outside, it is refused.
+    the bound or on its edge; outside, it is refused. A whole-number symbol is refused.
 - Lists cannot be indexed (`[1]` is read as a unit and refused); use `min`, `max` or
   `count`.
 - `min(a, b)` and `max(a, b)` take two values of the same dimension, or one list

@@ -1946,15 +1946,10 @@ def _spacing(_sc, items):
 
 
 class Nearest(sp.Function):
-    """nearest() whose value or options still hold unknowns: it picks the option itself as
-    soon as every argument is a number (when the solved values are put in). One left
-    unevaluated after that is refused by resolve_deferred."""
-
-    @classmethod
-    def eval(cls, *args):
-        if all(sp.sympify(a).is_number for a in args):
-            return _pick_nearest(args[0], args[1:])
-        return None
+    """nearest(), kept unevaluated until resolve_deferred, after the solved values are put
+    in. resolve_deferred picks the option and records the numbers compared, so that with
+    arbitrary values the run can require those numbers (not only the pick) to be the same
+    at every scaling. Anything still symbolic then is refused."""
 
 
 def _nearest(_sc, x, *options):
@@ -2142,6 +2137,8 @@ def _frequency_of(_sc, var, e):
 
 def _limit(_sc, e, var, value):
     bv = None if isinstance(var, sp.Symbol) else _sc.bound_variable(var)
+    flip = bv is not None and bv[2] == -1      # n = base - offset: 'above' in n is 'below' in offset
+    shown = bv[0] if bv is not None else var   # messages name the declared symbol, not its offset
     if bv is not None:
         # a bounded symbol n = base + s*offset (offset >= 0): take the limit in the offset,
         # at the offset that matches the value; a point outside the bound is refused
@@ -2151,13 +2148,30 @@ def _limit(_sc, e, var, value):
             raise SceneError(f"limit(): {sym} -> {value} is outside the stated bound on {sym}")
         if at.is_nonnegative is not True:
             raise SceneError(f"limit(): cannot check that {sym} -> {value} is inside the stated bound on {sym}")
-        var, value = p_off, at                 # at the bound itself: approached from inside (offset -> 0+)
+        var, value = p_off, at                 # the offset is >= 0; its domain edge is 0
     if not isinstance(var, sp.Symbol):
         raise SceneError("limit(expr, var, value): second argument must be a variable")
-    v = sp.limit(e, var, value)
-    if v.has(sp.AccumBounds, sp.zoo, sp.nan) or v in (sp.oo, -sp.oo):
-        raise SceneError(f"limit(): the limit does not exist as a finite value (got {v})")
-    return v
+    if var.is_integer:
+        raise SceneError(f"limit(): {shown} takes whole-number values only, so a limit in it is not defined")
+    value = sp.sympify(value)
+    # one side only at the edge of the variable's domain (approached from inside); both sides,
+    # which must agree, at an interior point
+    if value.is_zero and var.is_nonnegative:
+        sides = ["+"]
+    elif value.is_zero and var.is_nonpositive:
+        sides = ["-"]
+    else:
+        sides = ["+", "-"]
+    vals = []
+    for side in sides:
+        v = sp.limit(e, var, value, dir=side)
+        if v.has(sp.AccumBounds, sp.zoo, sp.nan) or v in (sp.oo, -sp.oo) or isinstance(v, sp.Limit):
+            raise SceneError(f"limit(): the limit does not exist as a finite value (from the {side} side: {v})")
+        vals.append(v)
+    if len(vals) == 2 and sp.simplify(vals[0] - vals[1]) != 0:
+        above, below = (vals[1], vals[0]) if flip else (vals[0], vals[1])
+        raise SceneError(f"limit(): the limit does not exist: from above it is {above}, from below {below}")
+    return vals[0]
 
 
 def _diff(_sc, e, var, n=sp.Integer(1)):
@@ -2220,8 +2234,17 @@ def _equivalent(_sc, a, b):
     return Equivalent(a, b)
 
 
-def resolve_deferred(v):
-    """Return (value, basis). Ordinary engine results are exact ('exact')."""
+def resolve_deferred(v, record=None):
+    """Return (value, basis). Ordinary engine results are exact ('exact'). Each nearest()
+    with numeric arguments is decided here; its arguments are appended to `record`."""
+    if isinstance(v, sp.Basic) and v.has(Nearest):
+        picks = {}
+        for n in sorted(v.atoms(Nearest), key=sp.default_sort_key):
+            if all(a.is_number for a in n.args):
+                picks[n] = _pick_nearest(n.args[0], n.args[1:])
+                if record is not None:
+                    record.append(tuple(n.args))
+        v = v.xreplace(picks)
     if isinstance(v, Equivalent):
         truth, basis = equivalent(*v.args)
         if truth is None:
@@ -2230,9 +2253,10 @@ def resolve_deferred(v):
     if v.has(Equivalent):
         raise SceneError("equivalent() must be the whole observe expression")
     if isinstance(v, sp.Basic) and v.has(Nearest):
-        left = sorted(str(s) for n in v.atoms(Nearest) for s in n.free_symbols)
-        raise UndeterminedError(f"nearest(): the value or an option still depends on {', '.join(left)} after "
-                                f"the solve, so no option can be picked")
+        left = sorted({str(s) for n in v.atoms(Nearest) for s in n.free_symbols})
+        raise UndeterminedError(f"nearest(): the value or an option still depends on "
+                                f"{', '.join(left) or 'something unfixed'} after the solve, so no option can "
+                                f"be picked")
     return v, "exact"
 
 

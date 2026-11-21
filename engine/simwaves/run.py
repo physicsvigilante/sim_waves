@@ -115,6 +115,18 @@ def _evaluate_arbitrary(sc, timeout):
                                              f"below the speed of sound)")
             res.pop(name)
             continue
+        # nearest(): the pick is discrete, so agreeing picks prove little; the numbers it
+        # compared must themselves be the same at every scaling (as any value must)
+        args0 = getattr(sc, "nearest_args", {}).get(name)
+        if args0 is not None and not all(
+                len(getattr(sc2, "nearest_args", {}).get(name, ())) == len(args0) and
+                all(len(a) == len(b) and all(_same_result(x, y) for x, y in zip(a, b))
+                    for a, b in zip(args0, sc2.nearest_args[name]))
+                for _, _, sc2, _ in others):
+            sc.obs_errors[name] = SceneError(f"nearest(): the value it compares depends on the arbitrary "
+                                             f"value(s) {names}, so the problem does not fix the option")
+            res.pop(name)
+            continue
         if all(name in r2 and _same_result(res[name], r2[name]) for _, r2, _, _ in others):
             how = ("same at 5 values of each arbitrary value (ranged ones spread across their ranges, others "
                    "x0.01 to x89; sampled)" if sc.arbitrary_ranges else
@@ -251,13 +263,15 @@ def _split_unit(sc, name, text):
     """'expr in cm' -> ('expr', ('cm', factor)) after checking the dimension; else (text, None)."""
     import re
     from .expr import dimension_of, show_dim
-    from .units import split_quantity
+    from .units import parse_unit
     m = re.match(r"^(.*\S)\s+in\s+([A-Za-zµμ][A-Za-z0-9/^*µμ]*)\s*$", str(text))
     if not m:
         return text, None
     expr_text, unit = m.groups()
     try:
-        _, u, factor, udim = split_quantity("1 " + unit)
+        # the unit is named explicitly after 'in', so parse it directly (split_quantity's
+        # rule against a lone trailing 'h' is for field values only)
+        factor, udim = parse_unit(unit)
     except SceneError:
         udim = None
     if udim is None:
@@ -436,10 +450,18 @@ def _evaluate_inner(sc):
         try:
             text, unit = _split_unit(sc, name, text)
             parsed = sc.expr(text, allow_rel=True, check_dims=True)
+            from .scene import Nearest
             if isinstance(parsed, list):
+                if any(sp.sympify(side).has(Nearest) for r in parsed for side in (r.lhs, r.rhs)):
+                    raise SceneError(f"observe.{name}: nearest() picks an option; observe it on its own, "
+                                     f"not inside a comparison")
                 v, basis = _decide_comparison(sc, text, parsed, sol)
             else:
-                v, basis = resolve_deferred(sp.sympify(parsed).xreplace(sol).doit())
+                rec = []
+                v, basis = resolve_deferred(sp.sympify(parsed).xreplace(sol).doit(), record=rec)
+                if rec:
+                    sc.nearest_args = getattr(sc, "nearest_args", {})
+                    sc.nearest_args[name] = rec
         except SceneError as exc:
             errors.append((name, exc))
             continue

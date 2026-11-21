@@ -118,6 +118,7 @@ class _Tr:
             if isinstance(n.slice, ast.Constant):
                 raise SceneError(f"indexing such as [1] is not supported in {self.src!r}; "
                                  f"brackets hold units. Use min(...), max(...) or count(...) on lists")
+            _no_celsius(n.slice, self.src)
             factor, _ = unit_from_ast(n.slice)
             base = self.val(n.value)
             if isinstance(base, sp.Tuple):
@@ -129,6 +130,8 @@ class _Tr:
             if any(k.arg is None for k in n.keywords) or any(isinstance(a, ast.Starred) for a in n.args):
                 raise SceneError("*args / **kwargs not allowed")
             if n.func.id == "nearest" and n.args and _is_in(n.args[0]):
+                if n.keywords:
+                    raise SceneError("nearest() takes no keyword arguments")
                 return self.ctx.call("nearest", self._nearest_in(n.args), {})
             args = [self.node(a) for a in n.args]
             kwargs = {k.arg: self.node(k.value) for k in n.keywords}
@@ -160,14 +163,28 @@ class _Tr:
                                  "or quantities with units")
             d = _Dim(self.src, self.ctx).node(o)
             v = self.val(o)
-            if d in (None, DIMLESS):
+            o_src = ast.get_source_segment(self.src, o)
+            if d is None and not sp.sympify(v).is_number:
+                # an unknown or symbol whose unit no field fixes: check it as 'x in u' would
+                # (its recorded dimension, or the facts that use it); never read it as a number in u
+                f_o, off_o, _ = self.ctx.unit_for_nearest(o_src, u_src)
+                out.append((v - off_o) / f_o)
+            elif d in (None, DIMLESS):
                 out.append(v)                      # a printed number, read in the unit u
             elif d != udim:
-                raise SceneError(f"nearest(): option {ast.get_source_segment(self.src, o)!r} has dimension "
-                                 f"{_show(d)}, not that of {u_src}")
+                raise SceneError(f"nearest(): option {o_src!r} has dimension {_show(d)}, not that of {u_src}")
             else:
                 out.append((v - offset) / factor)
         return out
+
+
+def _no_celsius(unit_node, src):
+    """degC in a unit bracket is ambiguous: 20[degC] could be a temperature (293.15 K) or a
+    difference (20 K). It is refused; a scene field ('30 degC') and 'x in degC' are not."""
+    if any(isinstance(x, ast.Name) and x.id == "degC" for x in ast.walk(unit_node)):
+        raise SceneError(f"degC inside unit brackets is ambiguous (a temperature or a temperature "
+                         f"difference) in {src!r}: write temperatures in K, e.g. 293.15[K], or a "
+                         f"difference as 20[K]; results can still be given 'in degC'")
 
 
 def _is_in(node):
@@ -215,6 +232,7 @@ class _Dim:
             return self.node(n.operand)
         if isinstance(n, ast.Subscript):
             v = self.node(n.value)
+            _no_celsius(n.slice, self.src)
             _, ud = unit_from_ast(n.slice)
             if v is None and _pure_number(n.value):
                 v = DIMLESS                # '0[m]': a written zero takes the bracket's unit

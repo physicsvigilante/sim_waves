@@ -1,0 +1,5 @@
+# m14 review R2: the value 1 + a/(a + 100000) picks option 1 at every sampled scaling but option 2 at a = 1e7;
+# the value nearest() compares is not fixed, so it is refused (the pick alone is not evidence)
+arbitrary: {a: 1}
+observe: {pick: "nearest(1 + a/(a + 100000), 1, 2)"}
+expect: {error: rejected, message: "depends on the arbitrary"}

@@ -1,0 +1,4 @@
+# m14 review R4: 20[degC] in an expression is ambiguous (293.15 K or a 20 K difference): refused.
+# Before, nearest(293.15[K] in degC, 20[degC], 293[K]) read it as 20 K and picked 2; the right pick is 1
+observe: {pick: "nearest(293.15[K] in degC, 20[degC], 293[K])"}
+expect: {error: rejected, message: "degC inside unit brackets is ambiguous"}

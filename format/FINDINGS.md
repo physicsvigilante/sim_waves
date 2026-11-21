@@ -611,7 +611,7 @@ Tests: r162–r167.
   and the units km/h and μm.
 - **The light and radar part of H1 was not tested:** no such problem was in the sample.
 
-## Milestone 14: service repairs (before review)
+## Milestone 14: service repairs (before freeze)
 The seven run 7 defects, and one tooling defect:
 - **`nearest()` after the solve:** a value or option that depends on solved unknowns is
   picked once they are put in; one that still depends on something unfixed is refused.
@@ -644,6 +644,24 @@ Tests: r176–r195.
 engine gave changed. Six options refused before are now picked (jee_advanced/2,
 jee_main/19, jee_main/36, single/130, single/182, single/2); integer/5's refusal now lists
 its two branches.
+
+### Milestone 14 review, round 1 (ChatGPT Astra, on PR #14; eval/review14/REPORT.md)
+
+**Four silent wrong answers, a wrong refusal and an export crash, all fixed with tests
+r196–r208:**
+1. **`nearest(x in u, ...)` read an unknown option as a number in u** (1 m read as 1 cm).
+   Such an option is now converted by its own dimension, or refused.
+2. **`nearest` with arbitrary values was accepted when the sampled picks agreed,** although
+   the value moved, and a far value picks another option. The numbers it compares must now
+   be the same at every scaling, as any value must.
+3. **A bounded `limit()` took one side at an interior point.** Both sides are now taken
+   and must agree; one side, from inside, only at a domain edge. Whole-number symbols are
+   refused.
+4. **`20[degC]` in brackets was a 20 K difference,** then shifted by the offset. `degC`
+   inside brackets is now refused as ambiguous.
+5. `in h` was refused; an explicit unit after `in` is now parsed directly.
+6. Plotting `nearest()` crashed export; it is now a clear error. Also refused: `nearest`
+   in `given` facts and inside comparisons, and keyword arguments in `nearest(x in u, ...)`.
 
 **Not fixed (tooling):** on Windows, r84 (peak of a sum of Gaussians) and r93 run for
 minutes, and r96 grows past 4.6 GB of memory; all three do so on the engine before m14

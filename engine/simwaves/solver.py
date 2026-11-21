@@ -51,8 +51,11 @@ def _relations(sc):
         rels = sc.expr(text, allow_rel=True, check_dims=True)
         if not isinstance(rels, list):
             raise SceneError(f"given[{i}] must be an equation (==) or inequality: {text!r}")
+        from .scene import Nearest
         for r in rels:
             lhs, rhs = sp.sympify(r.lhs).doit(), sp.sympify(r.rhs).doit()
+            if (lhs - rhs).has(Nearest):
+                raise SceneError(f"given[{i}]: nearest() picks an option; use it in observe only")
             if (lhs - rhs).has(X):
                 raise SceneError(f"given[{i}] has a free x; evaluate at a point with x=...")
             out.append((i, text, r.op, lhs, rhs))
