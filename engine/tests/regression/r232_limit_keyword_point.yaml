@@ -1,0 +1,4 @@
+# m14 review round 8 (K1): a keyword point bypassed the check too: refused (before: 0)
+symbols: {q: real, c: real}
+observe: {invalid: "limit(q, q, value=log(c)-log(c))"}
+expect: {error: rejected, message: "without keywords"}

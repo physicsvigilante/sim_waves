@@ -710,6 +710,12 @@ Tests r214–r218.
   a dedicated symbolic-approximation service, if runs show it is needed. Tests r228–r230;
   r213, r219–r227 updated.
 
+### Milestone 14 review, round 8 (ChatGPT Astra, on PR #14; eval/review14/REPORT.md)
+- **Gaps in the numbers-only rule:** keyword arguments bypassed the written-text check (now
+  refused: `limit(expr, var, value)` only); arbitrary functions such as `F(0)` passed as numbers
+  (now refused); a unit in brackets was read as a same-named symbol (now skipped).
+  Tests r231–r235.
+
 **Not fixed (tooling):** on Windows, r84 (peak of a sum of Gaussians) and r93 run for
 minutes, and r96 grows past 4.6 GB of memory; all three do so on the engine before m14
 as well. The wall-clock limit uses SIGALRM, which Windows lacks, so nothing stops a slow

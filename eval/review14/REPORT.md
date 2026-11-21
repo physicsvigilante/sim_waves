@@ -100,3 +100,15 @@
 - **Cost:** a formula can no longer be read off a limit. The FORMAT example `23_05_asc_004` now uses v = 340 m/s and l = 1 m, which gives 170 per metre (by hand: v/(2l(l + dl)) → v/(2l²) = 170).
 - **Tests:** r228 (N7) and r229 (N8) are refused; r230 shows that a limit over an arbitrary length works (ratio 1). r213, r219 and r221–r227 now expect the numbers-only refusal, or became numeric controls.
 - **Run 7 is unaffected:** its single limit scene, single/52, uses an arbitrary length and still gives 8.
+
+## Round 8
+- **Reviewer:** ChatGPT (Astra), posted on PR #14 on 2026-11-21. An inline N5 note was carried over from round 5; the review itself marks N5 resolved.
+- **Commit reviewed:** `7e9140c50e888472eb9511ee61e998bff5149631`.
+- **Verdict:** FAIL on three findings in the numbers-only rule. N7 and N8 are marked resolved, and Astra accepts the narrowing as the owner's choice. All earlier fixes are unchanged.
+- **Reproduction:** all five scenes reproduced as predicted: 0, 0, 0, `F(1)`, and a wrong refusal.
+
+| # | Severity | Finding | Reproduced | Fix | Tests |
+|---|---|---|---|---|---|
+| K1 | silent wrong answer | The keyword form `limit(e=..., var=..., value=...)`, and a keyword point, bypassed the written-text check. `log(c) - log(c)` cancelled, giving 0. | yes: 0 and 0 | `limit` takes exactly three positional arguments; keywords are refused. (`expr.py`) | r231 (all keywords), r232 (keyword point) |
+| K2 | silent wrong answer | A call to an arbitrary function from `functions:` has no free symbols, so it passed as a number. `F(0) - F(0)` cancelled to 0, and `limit(F(1), q, 0)` returned `F(1)`. | yes: 0 and `F(1)` | Any call to an arbitrary function in the expression or the point, as written, is refused. As a second guard, `_limit` refuses an expression or point that still holds an undefined function (`AppliedUndef`). (`expr.py`, `scene.py`) | r233 (cancelled F(0)), r234 (F(1)) |
+| K3 | wrong refusal | The written-name scan visited unit brackets, so `2[m]` was read as a symbol `m` when a symbol named m was declared. | yes: refused | The scan skips the unit inside brackets (the unit parser handles it), and skips function names. (`expr.py` `_Tr._named_symbols`) | r235 (symbols m and s declared: `q/2[m]` → 0, `q*3[s]/3[s]` → 0) |

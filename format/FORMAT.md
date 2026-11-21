@@ -708,9 +708,11 @@ never `omega(w)`: both are 1/s, so the dimension check cannot catch it.
     oscillation is at the difference frequency.
 - `limit(expr, var, value)` is for approximations; e.g. a small `dl` gives
   `limit(f/dl, dl, 0)` (see `examples/23_05_asc_004.yaml`).
-  - **Everything other than the variable must be a number:** no other symbol or unknown
-    in the expression, the point, or anything written in them. Use numbers or
-    `arbitrary:` values (numbers when the engine evaluates). A symbolic limit is refused:
+  - Write it as `limit(expr, var, value)`: three arguments in that order, no keywords.
+  - **Everything other than the variable must be a number:** no other symbol or unknown,
+    and no arbitrary function (`functions:`), in the expression, the point, or anything
+    written in them. Use numbers or `arbitrary:` values (numbers when the engine
+    evaluates). Units in brackets are units (`q/2[m]` is fine). A symbolic limit is refused:
     it is only generic, and can be wrong at some value of the other symbols (|q|/q at
     q → c has no limit at c = 0). So a formula such as v/(2l²) cannot be read off a limit;
     check it with numbers.

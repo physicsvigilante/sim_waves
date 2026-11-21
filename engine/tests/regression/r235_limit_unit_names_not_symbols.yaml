@@ -1,0 +1,7 @@
+# m14 review round 8 (K3): a unit in brackets is a unit even when a symbol has the same name: with symbols m
+# and s declared, q/2[m] -> 0 and q*3[s]/3[s] = q -> 0 (before: refused as 'm is a symbol')
+symbols: {q: real, m: real, s: real}
+observe:
+  per_metre: "limit(q/2[m], q, 0)"
+  seconds: "limit(q*3[s]/3[s], q, 0)"
+expect: {per_metre: 0, seconds: 0}

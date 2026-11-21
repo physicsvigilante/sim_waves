@@ -1,0 +1,6 @@
+# m14 review round 8 (K2): F(0) - F(0) cancels and has no symbols, but F is an arbitrary profile (F(z) = 1/z
+# makes it undefined); an arbitrary function is not a number: refused (before: 0)
+symbols: {q: real}
+functions: [F]
+observe: {invalid: "limit(q + F(0) - F(0), q, 0)"}
+expect: {error: rejected, message: "F is an arbitrary function"}

@@ -135,12 +135,24 @@ class _Tr:
                 return self.ctx.call("nearest", self._nearest_in(n.args), {})
             args = [self.node(a) for a in n.args]
             kwargs = {k.arg: self.node(k.value) for k in n.keywords}
-            if n.func.id == "limit" and n.args:
-                if any(k.arg == "_written" for k in n.keywords):
-                    raise SceneError("limit(): unknown keyword '_written'")
+            if n.func.id == "limit":
+                # positional only, so that the written text of the expression and the point is
+                # always seen (a keyword form would bypass the checks below)
+                if n.keywords or len(n.args) != 3:
+                    raise SceneError("limit(): write it as limit(expr, var, value), three arguments in that "
+                                     "order, without keywords")
+                checked = [n.args[0], n.args[2]]
+                # an arbitrary function (functions:) is not a number, even where it cancels
+                # (F(0) - F(0) -> 0) or has no symbols (F(1))
+                for nd in checked:
+                    for x in ast.walk(nd):
+                        if isinstance(x, ast.Call) and isinstance(x.func, ast.Name) and \
+                                x.func.id in getattr(self.ctx, "functions", {}):
+                            raise SceneError(f"limit(): {x.func.id} is an arbitrary function, not a number; "
+                                             f"apart from its variable, everything in a limit must be a number")
                 # the symbols named in the expression and the point as written: SymPy's
                 # automatic simplification (log(c) - log(c) -> 0) must not hide one
-                kwargs["_written"] = tuple(self._named_symbols([n.args[0]] + n.args[2:3]))
+                kwargs["_written"] = tuple(self._named_symbols(checked))
             return self.ctx.call(n.func.id, args, kwargs)
         if isinstance(n, ast.Compare):
             if not (top and self.allow_rel):
@@ -156,18 +168,30 @@ class _Tr:
         raise SceneError(f"not allowed in expressions: {type(n).__name__} in {self.src!r}")
 
     def _named_symbols(self, nodes):
-        """The free symbols of every name written in these nodes (not function names)."""
-        called = {id(x.func) for nd in nodes for x in ast.walk(nd) if isinstance(x, ast.Call)}
+        """The free symbols of every name written in these nodes: not function names, and not
+        unit names inside brackets (2[m] is two metres, whatever 'm' names elsewhere)."""
         out = set()
+
+        def walk(x):
+            if isinstance(x, ast.Subscript):       # value[unit]: the unit is parsed as a unit
+                walk(x.value)
+                return
+            if isinstance(x, ast.Call):            # the function name is not a value
+                for a in list(x.args) + [k.value for k in x.keywords]:
+                    walk(a)
+                return
+            if isinstance(x, ast.Name):
+                try:
+                    v = self.ctx.name(x.id)
+                except SceneError:
+                    return
+                if isinstance(v, sp.Basic):
+                    out.update(v.free_symbols)
+                return
+            for child in ast.iter_child_nodes(x):
+                walk(child)
         for nd in nodes:
-            for x in ast.walk(nd):
-                if isinstance(x, ast.Name) and id(x) not in called:
-                    try:
-                        v = self.ctx.name(x.id)
-                    except SceneError:
-                        continue
-                    if isinstance(v, sp.Basic):
-                        out |= v.free_symbols
+            walk(nd)
         return out
 
     def _nearest_in(self, nodes):

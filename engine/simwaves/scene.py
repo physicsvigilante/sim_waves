@@ -2168,6 +2168,9 @@ def _limit(_sc, e, var, value, _written=()):
     erase a symbol together with its domain (log(c) - log(c) -> 0, c*q/(c*q) -> 1). Numbers
     (arbitrary: values) have neither problem."""
     bv = None if isinstance(var, sp.Symbol) else _sc.bound_variable(var)
+    if any(sp.sympify(x).atoms(AppliedUndef) for x in (e, value)):
+        raise SceneError("limit(): the expression or the point contains an arbitrary function, which is not "
+                         "a number; apart from its variable, everything in a limit must be a number")
     own = {bv[0], bv[1]} if bv is not None else ({var} if isinstance(var, sp.Symbol) else set())
     others = (sp.sympify(e).free_symbols | sp.sympify(value).free_symbols | set(_written)) - own
     if others:
