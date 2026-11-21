@@ -682,6 +682,10 @@ Tests r209–r213.
 
 Tests r214–r218.
 
+### Milestone 14 review, round 4 (ChatGPT Astra, on PR #14; eval/review14/REPORT.md)
+- **A limit point of unknown reality was accepted** (b real: `limit(1, q, sqrt(b))` gave 1,
+  though b = −1 makes the point i). The point must now be proved real. Tests r219–r220.
+
 **Not fixed (tooling):** on Windows, r84 (peak of a sum of Gaussians) and r93 run for
 minutes, and r96 grows past 4.6 GB of memory; all three do so on the engine before m14
 as well. The wall-clock limit uses SIGALRM, which Windows lacks, so nothing stops a slow

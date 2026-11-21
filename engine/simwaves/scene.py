@@ -2176,10 +2176,15 @@ def _limit(_sc, e, var, value):
             raise SceneError(f"limit(): {var} takes whole-number values only, so a limit in it is not defined")
         shown, domain = var, _kind_interval(var)
     value = sp.sympify(value)
-    if value.is_real is False:
-        raise SceneError(f"limit(): the point {value} is not a real value")
     if not isinstance(domain, sp.Interval) or domain.measure == 0:
         raise SceneError(f"limit(): {shown} has no range of values to approach {value} in {_show_interval(domain)}")
+    # a real variable can approach only real points: the point must be proved real (infinity
+    # cannot be written in expressions, so every point here is meant to be finite)
+    if value.is_real is False:
+        raise SceneError(f"limit(): the point {value} is not a real value")
+    if value.is_real is not True:
+        raise SceneError(f"limit(): cannot check that the point {value} is real for every allowed value of "
+                         f"its symbols; {shown} can approach only real points")
     lo, hi = domain.inf, domain.sup
     at_edge = []
     for end, sign, side in ((lo, 1, "+"), (hi, -1, "-")):

@@ -1,0 +1,7 @@
+# m14 review round 4 (N4), controls: points proved real are accepted. b positive: sqrt(b) is real, and
+# limit(q, q, sqrt(b)) = sqrt(b); c real: limit(q^2, q, c) = c^2
+symbols: {q: real, b: positive, c: real}
+observe:
+  sqrt_pos: "limit(q, q, sqrt(b))"
+  real_sym: "limit(q**2, q, c)"
+expect: {sqrt_pos: "sqrt(b)", real_sym: "c**2"}

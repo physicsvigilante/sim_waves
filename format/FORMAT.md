@@ -714,7 +714,8 @@ never `omega(w)`: both are 1/s, so the dimension check cannot catch it.
   - The point must be one the variable can approach: within the values it can take, i.e.
     its kind (0 or more for a positive symbol) together with any stated bound (`q < 1`
     with q positive allows (0, 1)), or on an edge. Outside, or when this cannot be
-    checked, it is refused. A whole-number symbol is refused.
+    checked, it is refused. The point must be proved real: `sqrt(b)` needs b declared
+    positive. A whole-number symbol is refused.
 - Lists cannot be indexed (`[1]` is read as a unit and refused); use `min`, `max` or
   `count`.
 - `min(a, b)` and `max(a, b)` take two values of the same dimension, or one list
