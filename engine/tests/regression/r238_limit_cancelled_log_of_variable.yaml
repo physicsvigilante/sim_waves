@@ -1,0 +1,5 @@
+# m14 review round 9 (same class as N8, for the variable itself): log(q) - log(q) cancels to 0, but for q < 0
+# (q real, interior point 0) neither log exists, so there is no limit from below: refused (before: 0)
+symbols: {q: real}
+observe: {logq: "limit(q + log(q) - log(q), q, 0)"}
+expect: {error: rejected, message: "q must be positive near q -> 0 (from below)"}

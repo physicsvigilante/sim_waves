@@ -1,0 +1,7 @@
+# m14 review round 9 (K4), control: a wave with a stated profile is a number at a point:
+# 0.1 cos(x - 2t) at x = t = 0 is 0.1, so q + 0.1 -> 0.1 as q -> 0
+symbols: {q: real}
+waves:
+  w: {given: "0.1*cos(x - 2*t)", units: {x: m, t: s, y: m}}
+observe: {wave_ok: "limit(q + y(w, x=0[m], t=0[s]), q, 0)"}
+expect: {wave_ok: 0.1}

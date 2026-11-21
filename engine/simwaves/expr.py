@@ -141,18 +141,13 @@ class _Tr:
                 if n.keywords or len(n.args) != 3:
                     raise SceneError("limit(): write it as limit(expr, var, value), three arguments in that "
                                      "order, without keywords")
-                checked = [n.args[0], n.args[2]]
-                # an arbitrary function (functions:) is not a number, even where it cancels
-                # (F(0) - F(0) -> 0) or has no symbols (F(1))
-                for nd in checked:
-                    for x in ast.walk(nd):
-                        if isinstance(x, ast.Call) and isinstance(x.func, ast.Name) and \
-                                x.func.id in getattr(self.ctx, "functions", {}):
-                            raise SceneError(f"limit(): {x.func.id} is an arbitrary function, not a number; "
-                                             f"apart from its variable, everything in a limit must be a number")
-                # the symbols named in the expression and the point as written: SymPy's
-                # automatic simplification (log(c) - log(c) -> 0) must not hide one
-                kwargs["_written"] = tuple(self._named_symbols(checked))
+                # the expression and the point as written, each part on its own, before SymPy's
+                # automatic simplification can cancel anything (log(c) - log(c) -> 0,
+                # y(p, ...) - y(p, ...) -> 0): the symbols they hold, and the conditions each
+                # function, power and division needs near the point
+                syms, obligations = self._limit_scan([n.args[0], n.args[2]])
+                kwargs["_written"] = tuple(syms)
+                kwargs["_obligations"] = tuple(obligations)
             return self.ctx.call(n.func.id, args, kwargs)
         if isinstance(n, ast.Compare):
             if not (top and self.allow_rel):
@@ -167,16 +162,44 @@ class _Tr:
             return rels
         raise SceneError(f"not allowed in expressions: {type(n).__name__} in {self.src!r}")
 
-    def _named_symbols(self, nodes):
-        """The free symbols of every name written in these nodes: not function names, and not
-        unit names inside brackets (2[m] is two metres, whatever 'm' names elsewhere)."""
-        out = set()
+    def _limit_scan(self, nodes):
+        """For limit(): walk the written expression and point, translating each part on its
+        own (so nothing has cancelled yet). Returns (symbols, obligations):
+        - symbols: the free symbols of every name and of every call's value (an observable
+          such as y(p, ...) may hold symbols from its definition);
+        - obligations: (kind, value) pairs the limit must check near the point: 'nonzero' for
+          a denominator or the base of a negative power, 'positive' for a log argument or the
+          base of a fractional power, 'unit' for an asin/acos argument (|value| < 1).
+        A call to an arbitrary function (functions:), or a call whose value holds one, is
+        refused: it is not a number. Unit names inside brackets are units, not names."""
+        from sympy.core.function import AppliedUndef
+        syms, obligations = set(), []
+        funcs = getattr(self.ctx, "functions", {})
+
+        def value(x):
+            v = self.val(x)
+            return sp.sympify(v)
 
         def walk(x):
-            if isinstance(x, ast.Subscript):       # value[unit]: the unit is parsed as a unit
+            if isinstance(x, ast.Subscript):           # value[unit]: the unit is parsed as a unit
                 walk(x.value)
                 return
-            if isinstance(x, ast.Call):            # the function name is not a value
+            if isinstance(x, ast.Call) and isinstance(x.func, ast.Name):
+                name = x.func.id
+                if name in funcs:
+                    raise SceneError(f"limit(): {name} is an arbitrary function, not a number; apart from its "
+                                     f"variable, everything in a limit must be a number")
+                v = value(x)
+                if v.atoms(AppliedUndef):
+                    raise SceneError(f"limit(): {name}(...) holds an arbitrary function, which is not a number; "
+                                     f"apart from its variable, everything in a limit must be a number")
+                syms.update(v.free_symbols)
+                if name in ("log", "ln") and x.args:
+                    obligations.append(("positive", value(x.args[0])))
+                elif name == "sqrt" and x.args:
+                    obligations.append(("positive", value(x.args[0])))
+                elif name in ("asin", "acos") and x.args:
+                    obligations.append(("unit", value(x.args[0])))
                 for a in list(x.args) + [k.value for k in x.keywords]:
                     walk(a)
                 return
@@ -186,13 +209,20 @@ class _Tr:
                 except SceneError:
                     return
                 if isinstance(v, sp.Basic):
-                    out.update(v.free_symbols)
+                    syms.update(v.free_symbols)
                 return
+            if isinstance(x, ast.BinOp) and isinstance(x.op, ast.Div):
+                obligations.append(("nonzero", value(x.right)))
+            if isinstance(x, ast.BinOp) and isinstance(x.op, ast.Pow):
+                k = value(x.right)
+                if not (k.is_integer and k.is_nonnegative):
+                    obligations.append(("nonzero", value(x.left)) if (k.is_integer and k.is_negative)
+                                       else ("positive", value(x.left)))
             for child in ast.iter_child_nodes(x):
                 walk(child)
         for nd in nodes:
             walk(nd)
-        return out
+        return syms, obligations
 
     def _nearest_in(self, nodes):
         """nearest(x in u, a, b, ...): x converted to the unit u (checked as for 'observe ...

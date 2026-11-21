@@ -2135,6 +2135,26 @@ def _frequency_of(_sc, var, e):
     return w / TWO_PI
 
 
+def _poly_sign_near(g, x, a, side):
+    """The sign (+1 or -1) of a polynomial g in x just to one side of a, from its lowest
+    nonzero term c*(x-a)^k: sign(c), times (-1)^k from below. None if g is not a polynomial
+    in x with numeric coefficients, or is identically 0."""
+    if not g.is_polynomial(x):
+        return None
+    h = sp.Dummy("h")
+    try:
+        poly = sp.Poly(sp.expand(g.subs(x, a + h)), h)
+    except sp.PolificationFailed:
+        return None
+    for (k,), c in sorted(poly.terms()):
+        if not c.is_number:
+            return None
+        if c != 0:
+            s = 1 if c > 0 else -1
+            return s if side == "+" else s * (-1) ** k
+    return None
+
+
 def _kind_interval(s):
     """The values a symbol can take, from its sign assumptions."""
     if s.is_positive:
@@ -2154,7 +2174,7 @@ def _show_interval(i):
     return f"{'(' if i.left_open else '['}{i.inf}, {i.sup}{')' if i.right_open else ']'}"
 
 
-def _limit(_sc, e, var, value, _written=()):
+def _limit(_sc, e, var, value, _written=(), _obligations=()):
     """limit(expr, var, value), relative to the values var can take: its kind (positive, ...)
     intersected with any stated bound. The point must lie in the closure of that domain; at
     its edge the limit is taken from inside only, at an interior point from both sides, which
@@ -2217,6 +2237,37 @@ def _limit(_sc, e, var, value, _written=()):
         if gap.is_zero:
             at_edge.append(side)               # at this end: approach from inside only
     sides = at_edge or ["+", "-"]
+    lim_var = p_off if bv is not None else var
+    lim_at = sp.simplify(sgn * (value - base)) if bv is not None else value
+
+    def toward(g, side):                       # the one-sided limit of g at the point, in var
+        p_side = side if (bv is None or sgn == 1) else ("-" if side == "+" else "+")
+        return sp.limit(sp.sympify(g), lim_var, lim_at, dir=p_side)
+    # each function, power and division as written must be defined near the point on every
+    # side approached (cancellation must not hide this: log(q) - log(q) is not 0 for q < 0)
+    for kind, g in _obligations:
+        g = sp.sympify(g)
+        if kind == "positive" and g.is_positive:
+            continue
+        if kind == "nonzero" and g.is_nonzero:
+            continue
+        for side in sides:
+            lv = toward(g, side)
+            word = "above" if side == "+" else "below"
+            if kind == "positive" and lv.is_zero and _poly_sign_near(g, lim_var, lim_at, side) == 1:
+                continue                       # a polynomial that leaves 0 upward on this side
+            if kind == "positive" and lv.is_positive is not True:
+                raise SceneError(f"limit(): {g} must be positive near {shown} -> {value} (from {word}) for the "
+                                 f"logarithm, root or power written there, but it tends to {lv}")
+            if kind == "unit" and (sp.Abs(lv) < 1) is not sp.true:
+                raise SceneError(f"limit(): {g} must stay strictly between -1 and 1 near {shown} -> {value} "
+                                 f"(from {word}) for asin/acos, but it tends to {lv}")
+            if kind == "nonzero" and lv.is_nonzero is not True:
+                # a polynomial in the variable that is not identically 0 vanishes only at
+                # isolated points, so it is nonzero near the point (q/q, sin(q)/q, (f-f0)/dl)
+                if not (lv.is_zero and g.is_polynomial(lim_var) and sp.simplify(g) != 0):
+                    raise SceneError(f"limit(): the denominator {g} may be 0 near {shown} -> {value} (from "
+                                     f"{word}); tends to {lv}")
     vals = {}
     for side in sides:
         if bv is not None:                     # in the offset: n = base + sgn*p

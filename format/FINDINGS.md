@@ -716,6 +716,14 @@ Tests r214–r218.
   (now refused); a unit in brackets was read as a same-named symbol (now skipped).
   Tests r231–r235.
 
+### Milestone 14 review, round 9 (ChatGPT Astra, on PR #14; eval/review14/REPORT.md)
+- **An arbitrary profile hid behind `y(p, ...)` and cancelled** (`F(0) - F(0)` inside a limit
+  gave 0). `limit` now evaluates every written call on its own first, refusing one that holds
+  an arbitrary function.
+- **The same cancellation hid the variable's own domain** (`log(q) - log(q)` with q real gave
+  0). Every written log, root, power, asin/acos and division is now checked to be defined
+  near the point on each side approached. Tests r236–r241.
+
 **Not fixed (tooling):** on Windows, r84 (peak of a sum of Gaussians) and r93 run for
 minutes, and r96 grows past 4.6 GB of memory; all three do so on the engine before m14
 as well. The wall-clock limit uses SIGALRM, which Windows lacks, so nothing stops a slow

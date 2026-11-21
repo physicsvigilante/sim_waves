@@ -1,0 +1,9 @@
+# m14 review round 9 (K4): y(p, x=0, t=0) for a wave given by an arbitrary F(x - t) is F(0); two of them cancel
+# before limit() checks anything, and F(z) = 1/z would leave the expression undefined for every q. Each call is
+# now evaluated on its own first: refused (before: 0)
+symbols: {q: real}
+functions: [F]
+waves:
+  p: {given: "F(x-t)", units: {x: m, t: s, y: m}}
+observe: {invalid: "limit(q + y(p,x=0[m],t=0[s]) - y(p,x=0[m],t=0[s]), q, 0)"}
+expect: {error: rejected, message: "holds an arbitrary function"}

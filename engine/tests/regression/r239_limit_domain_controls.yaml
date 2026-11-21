@@ -1,0 +1,12 @@
+# m14 review round 9, controls for the domain checks: log(1+q)/q -> 1 (1 + q -> 1 > 0); r log r -> 0 and
+# sqrt(r) -> 0 as r -> 0+ (r positive); sin(q)/q -> 1 and asin(q)/q -> 1 (q -> 0 is inside (-1, 1));
+# sqrt(q^2) -> 0 (q^2 > 0 on both sides)
+symbols: {q: real, r: positive}
+observe:
+  log1p: "limit(log(1+q)/q, q, 0)"
+  rlogr: "limit(r*log(r), r, 0)"
+  sqrtr: "limit(sqrt(r), r, 0)"
+  sinq: "limit(sin(q)/q, q, 0)"
+  asinq: "limit(asin(q)/q, q, 0)"
+  sqrtq2: "limit(sqrt(q**2), q, 0)"
+expect: {log1p: 1, rlogr: 0, sqrtr: 0, sinq: 1, asinq: 1, sqrtq2: 0}

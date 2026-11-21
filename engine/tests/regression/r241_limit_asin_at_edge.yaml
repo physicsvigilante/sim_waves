@@ -1,0 +1,4 @@
+# m14 review round 9: asin(1 - q^2) at q -> 0: the argument tends to 1, the edge of asin's domain: refused
+symbols: {q: real}
+observe: {asin_edge: "limit(asin(1 - q**2), q, 0)"}
+expect: {error: rejected, message: "strictly between -1 and 1"}
