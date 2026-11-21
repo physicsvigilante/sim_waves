@@ -1,0 +1,22 @@
+id: B4/jee_main/30
+assume:
+  - "Flute is open at both ends, end correction neglected."
+  - "10 km/h = 10 km per 3600 s."
+  - "Hall length arbitrary: runner starts 100 m away, hears at t = 1 s while still approaching."
+  - "Musician's source frequency equals the flute's second-harmonic frequency."
+unknowns: {fs: positive}
+media: {air: {type: gas, v: 330 m/s}}
+resonators:
+  flute: {type: pipe, on: air, length: 50 cm, ends: [open, open], end_correction: 0 m}
+sources:
+  mus: {on: air, at: [0 m, 0 m], f: fs, A: 1, phase: 0, spreading: none}
+points:
+  runner: {at: [100 m, 0 m], velocity: ["-10[km]/3600[s]", 0 m/s]}
+rays:
+  heard: {from: mus, to: runner}
+given:
+  - {fact: "fs == frequency(flute, harmonic=2)", source: stated}
+observe:
+  f_source: fs
+  f_heard: frequency(heard, t=1[s])
+  option: nearest(frequency(heard, t=1[s]), 500[Hz], 753[Hz], 333[Hz], 666[Hz])

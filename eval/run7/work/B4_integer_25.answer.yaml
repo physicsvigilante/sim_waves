@@ -1,0 +1,9 @@
+answer: {oxygen: 314 m/s, helium: 972 m/s}
+final_scene: B4_integer_25.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "nothing"
+missing_in_source: "none"
+reasoning: "speed of the fluid medium from bulk modulus and density: 314.009 m/s (O2) and 971.825 m/s (He)."
+friction: "type gas does not accept bulk_modulus; modelled as fluid (documented as equivalent)."

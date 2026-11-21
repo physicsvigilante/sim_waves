@@ -1,0 +1,26 @@
+id: B4/jee_advanced/20
+number: 20
+source: book p.114 (answer key p.123)
+format: single_correct
+statement: '[IIT-JEE 1998] A string of length 0.4 m and mass 10^-2 kg is tightly clamped at its ends.
+  The tension in the string is 1.6 N. Identical wave pulses are produced at one end at equal intervals
+  of time Δt. The value of Δt which allows constructive interference between successive pulses is'
+figure: null
+options:
+  A: 0.05 s
+  B: 0.10 s
+  C: 0.20 s
+  D: 0.40 s
+answer: B
+answer_value: B
+units: null
+verified: μ = 0.025 kg/m, v = sqrt(1.6/0.025) = 8 m/s. A pulse returns to the source end after 2L/v =
+  0.1 s (two inversions on reflection); successive pulses reinforce when Δt = 2L/v = 0.10 s (multiples
+  of it would also reinforce). Matches key (smallest value).
+kinds:
+- derived_medium
+physics:
+- string_wave_speed
+- reflection
+- interference
+notes: Larger integer multiples of 0.10 s would also reinforce; key B is the smallest.

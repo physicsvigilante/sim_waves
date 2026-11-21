@@ -1,0 +1,24 @@
+id: B4/single/130
+number: 130
+source: book p.91 (answer key p.122)
+format: single_correct
+statement: An echo repeats two syllables. If the speed of sound is 330 ms^-1, then the minimum distance
+  of reflecting surface is
+figure: null
+options:
+  A: 16.5 m
+  B: 33.0 m
+  C: 66.0 m
+  D: 330 m
+answer: C
+answer_value: C
+units: null
+verified: 'Needs an assumed speaking rate (not stated): ~0.2 s per syllable (5 syllables/s) gives 0.4
+  s for two syllables, 2d = 330 x 0.4, d = 66 m. Matches key under that assumption (0.1 s persistence
+  per syllable would give 33 m).'
+kinds:
+- conceptual
+physics:
+- echo
+- sound_speed
+notes: Key C depends on an unstated assumption of 0.2 s per syllable.

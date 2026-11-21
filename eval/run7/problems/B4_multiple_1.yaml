@@ -1,0 +1,13 @@
+id: B4/multiple/1
+format: multiple_correct
+statement: A wire of 9.8 x 10^-3 kgm^-1 passes over a frictionless light pulley fixed on the top of a
+  frictionless inclined plane which makes an angle of 30° with the horizontal. Masses m and M are tied
+  at the two ends of wire such that m rests on the plane and M hangs freely vertically downwards. The
+  entire system is in equilibrium and a transverse wave propagates along the wire with a velocity of 100
+  ms^-1.
+figure: null
+options:
+  A: m = 20 kg
+  B: M = 5 kg
+  C: m/M = 1/2
+  D: m/M = 2

@@ -1,0 +1,5 @@
+v_same = False  <proved for every allowed arbitrary value>
+A_same = False  <proved for every allowed arbitrary value>
+f_same = True  <proved for every allowed arbitrary value>
+lam_same = False  <proved for every allowed arbitrary value>
+A_t = 2/3  (= 0.666667)  <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>

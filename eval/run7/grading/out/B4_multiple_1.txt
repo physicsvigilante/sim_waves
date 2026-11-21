@@ -1,0 +1,9 @@
+solved M = 10
+solved m = 20
+T = 98
+M = 10
+m = 20
+opt_A = True  <decided>
+opt_B = False  <decided>
+opt_C = False  <decided>
+opt_D = True  <decided>

@@ -1,0 +1,9 @@
+answer: [D]
+final_scene: B4_reasoning_14.v2.yaml
+engine_fit: full
+hand_steps: []
+coverage: partial
+not_represented: "Real (non-ideal) gases; only the ideal-gas model of the format."
+missing_in_source: "none"
+reasoning: "Engine: with pressure doubled at fixed temperature the speed is unchanged (Statement 1 false); with temperature x4 the speed doubles (Statement 2 true)."
+friction: "none (v1 had a meaningless placeholder observable, removed in v2)."

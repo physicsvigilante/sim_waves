@@ -1,0 +1,18 @@
+id: B4/single/156
+assume:
+  - "Both sources start left and right of the observer at equal large distance, moving away along the line; still air. Time of hearing 10 s after start (arbitrary). Exact Doppler is used instead of the v1,v2<<v approximation, so v2 matters slightly: v2 fixed at 0.1 m/s as an assumption (stated only as << v), v1 = v2 + du, du unknown."
+unknowns: {du: positive}
+symbols: {}
+
+media: {air: {type: gas, v: 300 m/s}}
+sources:
+  S1: {on: air, at: [-1000 m, 0 m], velocity: ["-(0.1[m/s] + du)", 0 m/s], f: 900 Hz, A: 1, phase: 0, spreading: none}
+  S2: {on: air, at: [1000 m, 0 m], velocity: [0.1 m/s, 0 m/s], f: 900 Hz, A: 1, phase: 0, spreading: none}
+points: {O: [0 m, 0 m]}
+rays:
+  r1: {from: S1, to: O}
+  r2: {from: S2, to: O}
+given:
+  - {fact: "beat_frequency(frequency(r1, t=10[s]), frequency(r2, t=10[s])) == 6[Hz]", source: stated}
+observe:
+  dv: "du"

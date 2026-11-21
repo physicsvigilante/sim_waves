@@ -1,0 +1,17 @@
+id: B4/comprehension/47
+assume:
+  - "Strings of equal length joined at B, same tension (figure label), BC mass is 4x AB so mu2 = 4 mu1. Mass and length values are arbitrary."
+  - "Incident wave A_i sin(omega t - k x) is a +x harmonic wave, phase 0."
+arbitrary: {m: 10 g, L: 1 m, Ai: 1 cm}
+media:
+  AB: {type: string, mass: m, length: L, tension: 50 N}
+  BC: {type: string, mass: "4*m", length: L, tension: 50 N}
+junctions:
+  B: {at: L, left: AB, right: BC}
+waves:
+  w: {harmonic: {on: AB, A: Ai, f: 10 Hz, dir: +x, phase: 0}}
+given: []
+observe:
+  ratio_amp: "amplitude(w_reflected)/amplitude(w)"
+  dphase: "wrap(phase(w_reflected, x=L, t=0[s]) - phase(w, x=L, t=0[s]))"
+  y_ratio: "y(w_reflected, x=L, t=0.013[s]) / y(w, x=L, t=0.013[s])"

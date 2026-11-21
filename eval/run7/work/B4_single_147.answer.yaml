@@ -1,0 +1,11 @@
+answer: [A]
+final_scene: B4_single_147.v2.yaml
+engine_fit: partial
+hand_steps:
+  - "Read the printed options as wavelength = ratio times the original wavelength (reading option A's 'f' as the original wavelength)."
+  - "Used v = 340 m/s numerically for the problem's symbol v."
+coverage: full
+not_represented: nothing
+missing_in_source: "Options as printed are dimensionally frequencies, not wavelengths; the intended meaning of the 'f' is lost."
+reasoning: "Engine: reflected/original wavelength = (v-u)/(v+u), proved for every allowed u; only option A has that ratio."
+friction: "A symbolic v could not be kept (arbitrary scaling pushed u above v); had to fix v numerically."

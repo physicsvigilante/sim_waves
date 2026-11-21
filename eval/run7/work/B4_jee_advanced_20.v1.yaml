@@ -1,0 +1,16 @@
+id: B4/jee_advanced/20
+assume:
+  - "Pulses are launched at the clamped end at intervals dt; the string is modelled as a fixed-fixed resonator. Constructive interference of successive pulses is taken as dt being a whole number of periods of the string's fundamental (round trip 2L/v, two inversions)."
+  - "Engine cannot launch repeated pulses; check is whether 1/dt is an allowed mode frequency (hand-link, see answer file)."
+media:
+  wire: {type: string, mass: 1e-2 kg, length: 0.4 m, tension: 1.6 N}
+resonators:
+  r: {type: string, on: wire, length: 0.4 m, ends: [fixed, fixed]}
+observe:
+  v: "speed(wire)"
+  T1: "period(r, harmonic=1)"
+  f1: "frequency(r, harmonic=1)"
+  dt005_is_mode: "count(frequencies_in(r, lo=19.99[Hz], hi=20.01[Hz]))"
+  dt010_is_mode: "count(frequencies_in(r, lo=9.99[Hz], hi=10.01[Hz]))"
+  dt020_is_mode: "count(frequencies_in(r, lo=4.99[Hz], hi=5.01[Hz]))"
+  dt040_is_mode: "count(frequencies_in(r, lo=2.49[Hz], hi=2.51[Hz]))"

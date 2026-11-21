@@ -1,0 +1,22 @@
+id: B4/single/139
+number: 139
+source: book p.91 (answer key p.122)
+format: single_correct
+statement: The minimum length of a tube, open at both ends, that resonates with a tuning fork of frequency
+  350 Hz is (velocity of sound in air is 350 ms^-1)
+figure: null
+options:
+  A: 0.25 m
+  B: 0.5 m
+  C: 1 m
+  D: 2 m
+answer: B
+answer_value: B
+units: null
+verified: Open pipe fundamental f = v/2L, so L = 350/(2 x 350) = 0.5 m. Matches key.
+kinds:
+- inverse_condition
+physics:
+- open_pipe
+- resonance
+notes: Consistent.

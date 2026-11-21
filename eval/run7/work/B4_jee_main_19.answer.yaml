@@ -1,0 +1,10 @@
+answer: D
+final_scene: B4_jee_main_19.v3.yaml
+engine_fit: partial
+hand_steps: 
+  - "compared solved f0 = 2250 Hz with the options by eye (nearest() refused an unknown)"
+coverage: full
+not_represented: "nothing"
+missing_in_source: "initial separation (irrelevant, arbitrary)"
+reasoning: "Engine solved natural frequency f0 = 2250 Hz exactly -> D."
+friction: "nearest() does not accept a solved unknown, so option picking had to be done by hand; first attempt failed on arbitrary syntax."

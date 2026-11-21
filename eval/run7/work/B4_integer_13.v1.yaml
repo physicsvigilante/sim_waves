@@ -1,0 +1,22 @@
+id: B4/integer/13
+assume:
+  - "Sound speed is not stated; v is arbitrary (340 m/s) and the source speed is written as 0.8*v, so the answer cannot depend on v."
+  - "(a) read as: the sound received by the observer at the instant the source is closest to him (source path starts far behind, D arbitrary)."
+  - "(b) read as: the frequency heard equals the source frequency; asked as the source-observer distance at the instant this sound is received."
+  - "Observer stands at perpendicular distance l = 250 m from the line (foot of perpendicular at origin); source moves along +x."
+arbitrary:
+  v: 340 m/s
+  D: {value: 100 km, above: 20 km}
+media:
+  air: {type: gas, v: v}
+sources:
+  S: {on: air, at: [-D, 0 m], velocity: ["0.8*v", 0 m/s], f: 900 Hz, A: 1, phase: 0, spreading: none}
+points:
+  O: [0 m, 250 m]
+rays:
+  heard: {from: S, to: O}
+observe:
+  a_f_at_closest: "frequency(heard, t=D/(0.8*v))"
+  b_f_emitted_at_closest: "frequency(heard, emitted=D/(0.8*v))"
+  b_arrival_time: "arrives_at(heard, emitted=D/(0.8*v))"
+  b_dist: "distance(S, O, t=arrives_at(heard, emitted=D/(0.8*v)))"

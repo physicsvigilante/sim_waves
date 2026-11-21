@@ -1,0 +1,10 @@
+id: B4/jee_main/26
+format: single_correct
+statement: '[Online April 2019] A small speaker delivers 2 W of audio output. At what distance from the
+  speaker will one detect 120 dB intensity sound? [Given reference intensity of sound as 10^-12 Wm^-2]'
+figure: null
+options:
+  A: 30 cm
+  B: 40 cm
+  C: 10 cm
+  D: 20 cm

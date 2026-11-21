@@ -17,3 +17,10 @@ B4/jee_advanced/4
 B4/jee_advanced/54
 B4/jee_advanced/55
 B4/jee_advanced/63
+
+# run7: jee_advanced
+- B4/jee_advanced/13
+- B4/jee_advanced/49
+- B4/jee_advanced/20
+- B4/jee_advanced/23
+- B4/jee_advanced/2

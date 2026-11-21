@@ -1,0 +1,10 @@
+answer: [B]
+final_scene: B4_single_130.v2.yaml
+engine_fit: partial
+hand_steps:
+  - "Echo must arrive 0.2 s after emission (0.1 s persistence per syllable x 2) is an external assumption, not in the problem"
+coverage: partial
+not_represented: "ear persistence/syllable duration"
+missing_in_source: "syllable duration / persistence of hearing (0.1 s per syllable)"
+reasoning: "With the assumed 0.2 s delay, the engine's echo path via a wall gives d = 33 m (B)."
+friction: "Perceptual persistence is not representable; used a timing fact as assumption. Position with unknown needed unquoted '0 m' (v1 failed)."

@@ -1,0 +1,9 @@
+answer: [B]
+final_scene: B4_jee_main_26.v3.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "nothing"
+missing_in_source: "radiation pattern (spherical assumed); speed of sound (arbitrary)"
+reasoning: "Spherical source of 2 W with sound level 120 dB gives d = 0.3989 m = 39.9 cm, closest to 40 cm (B); matching to options done by reading."
+friction: "Unknown inside a point position needs a unit-bearing list entry (quoted '0[m]' rejected); sound speed arbitrary needed an explicit range to stay subsonic; nearest() could not take dimensional values."

@@ -1,0 +1,6 @@
+solved u = 15
+u = 15
+opt_A_36kmh = False  <decided>
+opt_B_24kmh = False  <decided>
+opt_C_18kmh = False  <decided>
+opt_D_54kmh = True  <decided>

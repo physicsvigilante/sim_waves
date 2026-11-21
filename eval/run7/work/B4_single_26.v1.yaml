@@ -1,0 +1,17 @@
+id: B4/single/26
+assume:
+  - "Wall plane at an arbitrary distance D ahead, car and driver move together toward it; echo emitted at t=0 and received later."
+arbitrary: {D: {value: 500 m, above: 100 m}}
+media: {air: {type: gas, v: 340 m/s}}
+sources:
+  car: {on: air, at: [0 m, 0 m], velocity: [15 m/s, 0 m/s], f: 1000 Hz, A: 1, phase: 0, spreading: none}
+points:
+  driver: {at: [0 m, 0 m], velocity: [15 m/s, 0 m/s]}
+reflectors:
+  wall: {point: [D, 0 m], normal: [-1, 0], boundary: rigid}
+rays:
+  echo: {from: car, to: driver, via: wall}
+given: []
+observe:
+  f: "frequency(echo, emitted=0[s])"
+  pick: "nearest(frequency(echo, emitted=0[s]), 1046, 954, 1092, 908)"

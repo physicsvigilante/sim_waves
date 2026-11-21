@@ -1,0 +1,18 @@
+id: B4/integer/17
+assume:
+  - "Tube is closed at the water surface and open at the top: closed-open resonator of effective length = air column."
+  - "No intermediate resonance means the two resonances are consecutive modes (2m-1 and 2m+1)."
+  - "End correction e unknown (not stated), same at both lengths."
+unknowns: {vs: positive, e: positive}
+symbols: {m: integer}
+media: {air: {type: gas, v: vs}}
+resonators:
+  p1: {type: pipe, on: air, length: 60 cm, ends: [closed, open], end_correction: e}
+  p2: {type: pipe, on: air, length: 85 cm, ends: [closed, open], end_correction: e}
+given:
+  - {fact: "frequency(p1, harmonic=2*m-1) == 500[Hz]", source: stated}
+  - {fact: "frequency(p2, harmonic=2*m+1) == 500[Hz]", source: stated, note: "next resonance, none between"}
+  - {fact: "m >= 1", source: assumption}
+observe:
+  v: vs
+  e_cm: "e in cm"

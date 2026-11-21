@@ -1,0 +1,10 @@
+answer: D
+final_scene: B4_single_52.v3.yaml
+engine_fit: none
+hand_steps: 
+  - "whole result from own knowledge: fundamentals l/(l+-2dl) and the small-dl beat 4 f0 dl/l"
+coverage: unsupported
+not_represented: "scene could not be run"
+missing_in_source: "none"
+reasoning: "Engine produced no result; answer D from knowledge (beat ~ 4 f0 dl/l)."
+friction: "Could not get a limit(dl->0) beat coefficient: limit() refused with arbitrary scalings (v1), ratio depends on dl/L under scaling (v2), 'dl < L/2' undecidable for symbols (v3)."

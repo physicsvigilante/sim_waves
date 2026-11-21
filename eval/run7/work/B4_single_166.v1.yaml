@@ -1,0 +1,18 @@
+id: B4/single/166
+assume:
+  - "End corrections neglected. Same air for both pipes. Open pipe length arbitrary; closed pipe length is solved from 'first overtone of closed = first overtone of open'."
+  - "First overtone of closed pipe = 3rd harmonic; of open pipe = 2nd harmonic (engine: overtone converts)."
+arbitrary: {Lo: 1 m}
+unknowns: {Lc: positive}
+media: {air: {type: gas, v: 340 m/s}}
+resonators:
+  pc: {type: pipe, on: air, length: Lc, ends: [closed, open], end_correction: 0 m}
+  po: {type: pipe, on: air, length: Lo, ends: [open, open], end_correction: 0 m}
+given:
+  - {fact: "frequency(pc, harmonic=harmonic(pc, overtone=1)) == frequency(po, harmonic=harmonic(po, overtone=1))", source: stated}
+observe:
+  Lc_over_Lo: "Lc/Lo"
+  opt_A_5_4: "frequency(pc, harmonic=5) == frequency(po, harmonic=4)"
+  opt_B_7_5: "frequency(pc, harmonic=7) == frequency(po, harmonic=5)"
+  opt_C_9_6: "frequency(pc, harmonic=9) == frequency(po, harmonic=6)"
+  opt_D_7_3: "frequency(pc, harmonic=7) == frequency(po, harmonic=3)"

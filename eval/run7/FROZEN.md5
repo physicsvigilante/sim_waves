@@ -1,0 +1,17 @@
+19125f36d45daf74c596ede81f4afcba  TASK.md
+4b741ef05adc9d16087d69c59a8dee74  ../../format/FORMAT.md
+d41d8cd98f00b204e9800998ecf8427e  ../../engine/simwaves/__init__.py
+0f5703b6ca18c0cb0e43c216448d069c  ../../engine/simwaves/__main__.py
+094397e2fc05f236c8a7053c8b244911  ../../engine/simwaves/doppler.py
+3547b7de7f3d139cd482e4525ae1c907  ../../engine/simwaves/energy.py
+6c44aa808ccac9e7b1cd04de07c3b498  ../../engine/simwaves/errors.py
+a800ea162223ce44dcaed808ebfd1ef5  ../../engine/simwaves/export.py
+7b0d2447d5e980ae86353be87de281f3  ../../engine/simwaves/expr.py
+50cf21961c5be262fa08b7787fa47449  ../../engine/simwaves/harness.py
+428fc3698ce8bb508fb9b6a99b4156f0  ../../engine/simwaves/modes.py
+1c99c979fd497809fc468bfe09d616b2  ../../engine/simwaves/rays.py
+7c74249dae0a434aca8e10fa0033bfb4  ../../engine/simwaves/run.py
+ff9c2cc12bc52a99dd59e60a7f997f63  ../../engine/simwaves/scene.py
+3ff3e81f1a025acddf36c7ed5a942de8  ../../engine/simwaves/solver.py
+bcefeb586f5462f0e2619da325e9f3a9  ../../engine/simwaves/units.py
+48e863b97981113778b1740b1570f612  format/examples (combined)

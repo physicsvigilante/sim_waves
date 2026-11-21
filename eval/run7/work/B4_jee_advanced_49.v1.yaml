@@ -1,0 +1,29 @@
+id: B4/jee_advanced/49
+assume:
+  - "Two identical wires (same mu, length), fundamentals beat. Initial tensions: T1 higher, T2 lower, beats = 6 Hz. T2 arbitrary (100 N), mu and L arbitrary, T1 solved."
+  - "'Slightly' is modelled as a 1 % change of one tension. Four variants: wire 2 tension decreased/increased, wire 1 decreased/increased."
+arbitrary: {mu: 10 g/m, L: 0.5 m, T2: 100 N}
+unknowns: {T1: positive}
+media:
+  w1: {type: string, mu: mu, tension: T1}
+  w2: {type: string, mu: mu, tension: T2}
+  w2dec: {type: string, mu: mu, tension: "0.99*T2"}
+  w2inc: {type: string, mu: mu, tension: "1.01*T2"}
+  w1dec: {type: string, mu: mu, tension: "0.99*T1"}
+  w1inc: {type: string, mu: mu, tension: "1.01*T1"}
+resonators:
+  r1: {type: string, on: w1, length: L, ends: [fixed, fixed]}
+  r2: {type: string, on: w2, length: L, ends: [fixed, fixed]}
+  r2dec: {type: string, on: w2dec, length: L, ends: [fixed, fixed]}
+  r2inc: {type: string, on: w2inc, length: L, ends: [fixed, fixed]}
+  r1dec: {type: string, on: w1dec, length: L, ends: [fixed, fixed]}
+  r1inc: {type: string, on: w1inc, length: L, ends: [fixed, fixed]}
+given:
+  - {fact: "T1 > T2", source: stated}
+  - {fact: "beat_frequency(frequency(r1, harmonic=1), frequency(r2, harmonic=1)) == 6[Hz]", source: stated}
+observe:
+  A_T2_decreased_beat_gt_6: "beat_frequency(frequency(r1, harmonic=1), frequency(r2dec, harmonic=1)) > 6[Hz]"
+  B_T2_increased_beat_lt_6: "beat_frequency(frequency(r1, harmonic=1), frequency(r2inc, harmonic=1)) < 6[Hz]"
+  C_T1_decreased_beat_lt_6: "beat_frequency(frequency(r1dec, harmonic=1), frequency(r2, harmonic=1)) < 6[Hz]"
+  D_T1_increased_beat_gt_6: "beat_frequency(frequency(r1inc, harmonic=1), frequency(r2, harmonic=1)) > 6[Hz]"
+  f1_gt_f2: "frequency(r1, harmonic=1) > frequency(r2, harmonic=1)"

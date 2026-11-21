@@ -1,0 +1,17 @@
+id: B4/jee_main/19
+assume:
+  - "Cars on a line, B to the right of A, moving apart; A moves -x at 20 m/s, B moves +x at 20 m/s (ground frame). Still air. Initial separation arbitrary."
+unknowns: {f0: positive}
+arbitrary: {d: 100 m}
+media: {air: {type: gas, v: 340 m/s}}
+sources:
+  B: {on: air, at: [d, 0 m], velocity: [20 m/s, 0 m/s], f: f0, A: 1, phase: 0, spreading: none}
+points:
+  carA: {at: [0 m, 0 m], velocity: [-20 m/s, 0 m/s]}
+rays:
+  heard: {from: B, to: carA}
+given:
+  - {fact: "frequency(heard, emitted=0[s]) == 2000[Hz]", source: stated}
+observe:
+  f0: "f0"
+  pick: "nearest(f0, 2150[Hz], 2300[Hz], 2060[Hz], 2250[Hz])"

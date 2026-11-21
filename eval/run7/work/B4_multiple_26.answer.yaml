@@ -1,0 +1,11 @@
+answer: [A, D]
+final_scene: B4_multiple_26.v1.yaml
+engine_fit: partial
+hand_steps: 
+  - "compression <-> displacement slope < 0 (excess pressure ~ -slope): my own relation"
+  - "segment positions A..E at multiples of lam/4 read from figure"
+coverage: partial
+not_represented: "pressure/density not an observable; compression defined via slope"
+missing_in_source: "none"
+reasoning: "Engine: slope negative over A-B-C and positive over C-D-E for a +x wave with crest at x=0 -> ABC compression, CDE rarefaction."
+friction: "No pressure/density-change observable at a point, so compression vs rarefaction needs a hand link to slope."

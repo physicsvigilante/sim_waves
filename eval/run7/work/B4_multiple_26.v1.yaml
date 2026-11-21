@@ -1,0 +1,20 @@
+id: B4/multiple/26
+assume:
+  - "Figure: A crest at x=0, B zero at lam/4, C trough at lam/2, D zero at 3lam/4, E crest at lam; t=0 snapshot of displacement y(x), wave going +x."
+  - "Medium, amplitude, frequency unstated: arbitrary/chosen only to run."
+  - "Compression/rarefaction is judged from the sign of the displacement slope (excess pressure ~ -slope); this link is mine, the engine has no pressure-at-a-point observable."
+arbitrary: {Aw: 1 mm}
+unknowns: {ph: phase}
+media: {air: {type: gas, v: 340 m/s}}
+waves:
+  w: {harmonic: {on: air, A: Aw, f: 340 Hz, dir: +x, phase: ph}}
+given:
+  - {fact: "y(w, x=0[m], t=0[s]) == Aw", source: figure, note: "A is a crest"}
+observe:
+  slope_AB: "slope(w, x=wavelength(w)/8, t=0[s])"
+  slope_BC: "slope(w, x=3*wavelength(w)/8, t=0[s])"
+  slope_CD: "slope(w, x=5*wavelength(w)/8, t=0[s])"
+  slope_DE: "slope(w, x=7*wavelength(w)/8, t=0[s])"
+  y_B: "y(w, x=wavelength(w)/4, t=0[s])"
+  ABC_slope_negative: "slope(w, x=wavelength(w)/8, t=0[s]) < 0"
+  CDE_slope_positive: "slope(w, x=5*wavelength(w)/8, t=0[s]) > 0"

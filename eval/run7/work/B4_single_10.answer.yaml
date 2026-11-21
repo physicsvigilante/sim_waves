@@ -1,0 +1,9 @@
+answer: D
+final_scene: B4_single_10.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "nothing"
+missing_in_source: "y = 6/(x^2-3) has poles at x = +-sqrt3, probably a misprint for x^2+3; I answered the problem as printed"
+reasoning: "Engine: only options A and D match the printed t=0 profile; only B and D move +x at 4.5 m/s -> D."
+friction: "Tension had to be 'free' with arbitrary mu to host a given wave."

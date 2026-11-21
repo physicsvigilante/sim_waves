@@ -1,0 +1,9 @@
+answer: [B]
+final_scene: B4_jee_main_42.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "the pulley, block and bridges as hardware; the node at O is represented by two independent fixed-fixed segments of equal length"
+missing_in_source: "none (n1 = 1 fixed as assumption, ratio family-invariant by construction but only n1=1 was run)"
+reasoning: "Equal frequency on two equal-length fixed-fixed segments with mu2 = 4 mu1 gives n1 = 1, n2 = 2, ratio 1:2."
+friction: "Joint as a node/two strings has no junction mode; used two resonators. Same-frequency family is infinite so one member had to be pinned by assumption."

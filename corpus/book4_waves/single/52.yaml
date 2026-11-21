@@ -1,0 +1,25 @@
+id: B4/single/52
+number: 52
+source: book p.86 (answer key p.122)
+format: single_correct
+statement: The fundamental frequency of a sonometer wire of length l is f0. A bridge is now introduced
+  at a distance of Δl from the centre of the wire (Δl << l). The number of beats heard if both sides of
+  the bridges are set into vibration in their fundamental moves are
+figure: null
+options:
+  A: 8 f0 Δl / l
+  B: f0 Δl / l
+  C: 2 f0 Δl / l
+  D: 4 f0 Δl / l
+answer: A
+answer_value: A
+units: null
+verified: f0 = v/2l. Segments l/2 + Δl and l/2 - Δl vibrate at v/(l + 2Δl) and v/(l - 2Δl), i.e. ~2f0(1
+  -+ 2Δl/l). Difference = 8 f0 Δl/l. Matches key.
+kinds:
+- symbolic
+physics:
+- sonometer
+- beats
+- fundamental_frequency
+notes: Consistent.

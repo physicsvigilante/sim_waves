@@ -1,0 +1,9 @@
+answer: [C]
+final_scene: B4_jee_main_36.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "nothing"
+missing_in_source: "none (same end correction for both forks is an assumption)"
+reasoning: "Two closed-open pipes with a shared unknown end correction solve e = 5 cm and v = 327.68 m/s, nearest 328 m/s (C), matched by reading."
+friction: "nearest() needs unitless numbers."

@@ -1,0 +1,26 @@
+id: B4/single/166
+number: 166
+source: book p.93 (answer key p.122)
+format: single_correct
+statement: First overtone frequency of closed organ pipe is equal to the first overtone frequency of an
+  open organ pipe. Further nth harmonic of closed organic pipe is also equal to the mth harmonic of open
+  pipe, where n and m are
+figure: null
+options:
+  A: 5, 4
+  B: 7, 5
+  C: 9, 6
+  D: 7, 3
+answer: C
+answer_value: C
+units: null
+verified: 'Closed first overtone = 3v/4Lc = open first overtone = v/Lo, so Lo = 4Lc/3. nth closed harmonic
+  n v/4Lc = m v/2Lo = 3m v/8Lc gives n = 3m/2: (n, m) = (9, 6) among the options. Matches key.'
+kinds:
+- inverse_condition
+- ratio
+physics:
+- closed_pipe
+- open_pipe
+- harmonics
+notes: Consistent.

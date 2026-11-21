@@ -1,0 +1,14 @@
+id: B4/jee_main/44
+assume:
+  - "Uniform string, no load at the lower end (load 0); mass per length arbitrary."
+  - "Pulse speed at each height from the hanging tension; time = integral ds/v."
+symbols: {s: positive}
+arbitrary: {mu: 10 g/m}
+media:
+  rope: {type: string, mu: mu, tension: {hanging: {load: 0 kg, g: 10 m/s^2}}, coordinate: {origin: lower_end, direction: up, variable: s}}
+waves:
+  p: {pulse: {on: rope, from: lower_end, toward: up}}
+given: []
+observe:
+  t: travel_time(rope, start=0[m], end=20[m])
+  option: nearest(travel_time(rope, start=0[m], end=20[m]), sqrt(2)[s], 2*pi*sqrt(2)[s], 2[s], 2*sqrt(2)[s])

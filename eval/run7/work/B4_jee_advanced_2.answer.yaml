@@ -1,0 +1,9 @@
+answer: [B]
+final_scene: B4_jee_advanced_2.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "nothing"
+missing_in_source: "pipe end correction (assumed zero)"
+reasoning: "Engine solved mass M = 0.01 kg = 10 g (option B); the nearest() option helper needs unitless numbers, so the option was matched by reading 10 g."
+friction: "nearest() refuses numbers with units; comparison via 'in unit' also refused."

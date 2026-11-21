@@ -1,0 +1,21 @@
+id: probe/i1_other
+assume:
+  - "Speed of sound not stated; 300 m/s used only as a number the engine needs (answer must not depend on it, re-check with v3 if needed)."
+  - "Perpendicular distance of road from the man not stated; 50 m chosen (answer must not depend on it)."
+  - "Truck has constant acceleration; engine cannot model accelerating motion, so Doppler shift is taken from the truck's instantaneous velocity at the emission instant (emitted=0)."
+  - "Hand-derived kinematic link (not engine): sound emitted at angle th reaches the man when the truck is at closest approach with speed doubled; mean speed 1.5u over delay d/(vs sin th) gives u = (2/3) vs cos(th). Supplied as a fact."
+unknowns: {u: positive, X: positive}
+media: {air: {type: gas, v: 300 m/s}}
+sources:
+  truck: {on: air, at: ["-X", "80[m]"], velocity: [u, 0 m/s], f: 500 Hz, A: 1, phase: 0, spreading: none}
+points:
+  man: [0 m, 0 m]
+rays:
+  heard: {from: truck, to: man}
+given:
+  - {fact: "frequency(heard, emitted=0[s]) == 600[Hz]", source: stated, note: "heard when truck is closest; engine uses the emission instant"}
+  - {fact: "u == (2/3)*300[m/s]*X/sqrt(X**2 + 80[m]**2)", source: assumption, note: "hand-derived link, cos(th) = X/sqrt(X^2+d^2)"}
+observe:
+  X_m: X
+  u_ms: u
+  th_deg: "atan(80[m]/X)/1[deg]"

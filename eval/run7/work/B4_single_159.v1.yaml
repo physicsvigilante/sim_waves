@@ -1,0 +1,21 @@
+id: B4/single/159
+assume:
+  - "Frequency f and sound speed v arbitrary. Two sources of the same f: S1 approaches the observer, S2 recedes, both at the same unknown speed us (positive, subsonic) along the line through the observer at origin."
+  - "'Changes by 10 %' read as heard frequency = 1.10 f while approaching (exact Doppler, no approximation yet)."
+arbitrary: {v: 340 m/s, f: 500 Hz}
+unknowns: {us: positive}
+media: {air: {type: gas, v: v}}
+sources:
+  S1: {on: air, at: [-1000 m, 0 m], velocity: [us, 0 m/s], f: f, A: 1, phase: 0, spreading: none}
+  S2: {on: air, at: [1000 m, 0 m], velocity: [us, 0 m/s], f: f, A: 1, phase: 0, spreading: none}
+points: {O: [0 m, 0 m]}
+rays:
+  r1: {from: S1, to: O}
+  r2: {from: S2, to: O}
+given:
+  - {fact: "frequency(r1, emitted=0[s]) == 1.1*f", source: stated}
+  - {fact: "us < v", source: assumption, note: "subsonic"}
+observe:
+  recede_change: "(frequency(r2, emitted=0[s]) - f)/f"
+  recede_percent_option: "nearest(-100*(frequency(r2, emitted=0[s]) - f)/f, 14.3, 20, 16.7, 10)"
+  us_over_v: "us/v"

@@ -1,0 +1,11 @@
+answer: B
+final_scene: B4_single_156.v3.yaml
+engine_fit: partial
+hand_steps: 
+  - "compared du = 2.015 with the options by eye"
+  - "fixed v2 = 0.1 m/s as an assumption (approximate problem << v)"
+coverage: partial
+not_represented: "exact Doppler instead of the problem's small-velocity approximation; v2 value assumed"
+missing_in_source: "v2 not given (only << v)"
+reasoning: "Engine solved v1 - v2 = 2.015 m/s with exact Doppler -> 2 m/s."
+friction: "Single beat equation fixes only a combination; needed an assumed v2; result depends slightly on it so nearest() could not be used; unknown + nearest refused."

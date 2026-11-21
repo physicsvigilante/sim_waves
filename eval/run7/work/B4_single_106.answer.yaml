@@ -1,0 +1,9 @@
+answer: [D]
+final_scene: B4_single_106.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "Real two-slit or geometry; two coherent equal-path sources used."
+missing_in_source: "none"
+reasoning: "Powers 16 W and 1 W give intensity ratio 16; Imax/Imin = 25/9."
+friction: "Intensity ratio had to be built with powers; no direct way to declare an intensity ratio of coherent waves (Imax and Imin alone depend on the arbitrary f, d)."

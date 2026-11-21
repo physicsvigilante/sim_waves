@@ -1,0 +1,5 @@
+ratio_in = 16  <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>
+Imax_over_Imin = 25/9  (= 2.77778)  <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>
+nearest_option = 4  <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>
+Imax: NOT AVAILABLE (SceneError: depends on the arbitrary value(s) ['f', 'd']: the problem does not fix this result)
+Imin: NOT AVAILABLE (SceneError: depends on the arbitrary value(s) ['f', 'd']: the problem does not fix this result)

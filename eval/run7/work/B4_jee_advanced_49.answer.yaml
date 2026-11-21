@@ -1,0 +1,10 @@
+answer: [B, C]
+final_scene: B4_jee_advanced_49.v1.yaml
+engine_fit: partial
+hand_steps:
+  - "Reasoned that only a change that moves the pair past the other wire can restore a 6 Hz difference: T2 increased or T1 decreased (frequencies cross); T2 decreased or T1 increased always raises the beat."
+coverage: partial
+not_represented: "A large change in tension; 'slightly' modelled as 1 %."
+missing_in_source: "'Slightly' conflicts with an unchanged beat frequency: with a small change the beat can only change, so the statement is loose; the answer follows the intended key."
+reasoning: "Engine proved A and D (T2 decreased, T1 increased) give beats > 6 Hz; B and C (small change) came out NOT AVAILABLE because the size of 1 % of f depends on arbitrary values."
+friction: "A 'beat stays unchanged after a change' needs a before/after pair; had to make four extra wires. No way to say 'a tension change of unspecified size'."

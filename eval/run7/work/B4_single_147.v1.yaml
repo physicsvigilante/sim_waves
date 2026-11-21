@@ -1,0 +1,20 @@
+id: B4/single/147
+assume:
+  - "Stationary source at origin, rigid reflector (a wall) at 1000 m moving toward it at u (arbitrary, below v). The 'reflected wave' is heard at a still listener between source and wall."
+  - "Options as printed end in 'f' and are dimensionally frequencies; read option A as ratio (v-u)/(v+u) times the original wavelength v/f (the only option with the correct ratio). Engine checks ratio of wavelengths."
+arbitrary:
+  v: 340 m/s
+  f: 500 Hz
+  u: {value: 20 m/s, below: 340 m/s}
+media: {air: {type: gas, v: v}}
+sources: {S: {on: air, at: [0 m, 0 m], f: f, A: 1, phase: 0, spreading: none}}
+points: {L: [500 m, 0 m]}
+reflectors: {wall: {point: [1000 m, 0 m], normal: [-1, 0], boundary: rigid, velocity: ["-u", 0 m/s]}}
+rays: {echo: {from: S, to: L, via: wall}}
+observe:
+  lam_ratio: "wavelength(echo, emitted=0[s])/wavelength(S)"
+  matches_A: "wavelength(echo, emitted=0[s])/wavelength(S) == (v - u)/(v + u)"
+  matches_B: "wavelength(echo, emitted=0[s])/wavelength(S) == (v + u)/v"
+  matches_C: "wavelength(echo, emitted=0[s])/wavelength(S) == (v + u)/(v - u)"
+  matches_D: "wavelength(echo, emitted=0[s])/wavelength(S) == (v - u)/v"
+  f_ratio: "frequency(echo, emitted=0[s])/frequency(S)"

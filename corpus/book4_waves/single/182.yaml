@@ -1,0 +1,22 @@
+id: B4/single/182
+number: 182
+source: book p.94 (answer key p.122)
+format: single_correct
+statement: The speed of sound in a gas in which two waves of wavelengths 50 cm and 50.4 cm produce 6 beats
+  per second is
+figure: null
+options:
+  A: 338 ms^-1
+  B: 350 ms^-1
+  C: 378 ms^-1
+  D: 400 ms^-1
+answer: C
+answer_value: C
+units: null
+verified: v(1/0.500 - 1/0.504) = 6 gives v = 6/0.015873 = 378 m/s. Matches key.
+kinds:
+- inverse_condition
+physics:
+- beats
+- wave_speed
+notes: Consistent.

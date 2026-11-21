@@ -1,0 +1,10 @@
+answer: A
+final_scene: B4_jee_advanced_23.v1.yaml
+engine_fit: partial
+hand_steps: 
+  - "assumed mu unchanged when the extension rises (textbook reading)"
+coverage: partial
+not_represented: "change of linear density with stretch not modelled (original length not given)"
+missing_in_source: "original length of string (needed to know how mu changes on stretching)"
+reasoning: "speed ratio = sqrt(6)/2 = 1.2247 -> option 1.22 v."
+friction: "Stretch route fixes T = k*ext but cannot update mu with extension; assumption needed."

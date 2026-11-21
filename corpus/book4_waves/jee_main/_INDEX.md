@@ -20,3 +20,13 @@ B4/jee_main/48
 B4/jee_main/49
 B4/jee_main/5
 B4/jee_main/54
+
+# run7: jee_main
+- B4/jee_main/7
+- B4/jee_main/23
+- B4/jee_main/19
+- B4/jee_main/30
+- B4/jee_main/44
+- B4/jee_main/26
+- B4/jee_main/42
+- B4/jee_main/36

@@ -1,0 +1,9 @@
+answer: [A]
+final_scene: B4_single_2.v2.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "nothing"
+missing_in_source: "options are printed in N (typo); read as Hz. mu and L undetermined but not needed"
+reasoning: "Both beat facts at 100 N and 121 N solve fork 105 Hz (fundamental 100 Hz), option A (105)."
+friction: "Option units wrong in source; nearest() refuses dimensional values."

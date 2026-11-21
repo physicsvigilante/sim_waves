@@ -1,0 +1,24 @@
+id: probe/ja49
+assume: ["T2 raised by factor a2, or T1 lowered by factor a1, keeping 6 beats; does a solution exist with a2 > 1 and a1 < 1"]
+arbitrary: {mu: 10 g/m, L: 0.5 m, T2: 100 N}
+unknowns: {T1: positive, a2: positive, a1: positive}
+media:
+  w1: {type: string, mu: mu, tension: T1}
+  w2: {type: string, mu: mu, tension: T2}
+  w2n: {type: string, mu: mu, tension: "a2*T2"}
+  w1n: {type: string, mu: mu, tension: "a1*T1"}
+resonators:
+  r1: {type: string, on: w1, length: L, ends: [fixed, fixed]}
+  r2: {type: string, on: w2, length: L, ends: [fixed, fixed]}
+  r2n: {type: string, on: w2n, length: L, ends: [fixed, fixed]}
+  r1n: {type: string, on: w1n, length: L, ends: [fixed, fixed]}
+given:
+  - {fact: "T1 > T2", source: stated}
+  - {fact: "beat_frequency(frequency(r1, harmonic=1), frequency(r2, harmonic=1)) == 6[Hz]", source: stated}
+  - {fact: "beat_frequency(frequency(r1, harmonic=1), frequency(r2n, harmonic=1)) == 6[Hz]", source: stated}
+  - {fact: "beat_frequency(frequency(r1n, harmonic=1), frequency(r2, harmonic=1)) == 6[Hz]", source: stated}
+  - {fact: "a2 > 1", source: assumption}
+  - {fact: "a1 < 1", source: assumption}
+observe:
+  a2v: a2
+  a1v: a1

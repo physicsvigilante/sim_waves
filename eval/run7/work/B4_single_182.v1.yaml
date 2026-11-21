@@ -1,0 +1,14 @@
+id: B4/single/182
+assume:
+  - "Both waves travel in the same gas at the same speed; amplitude arbitrary (beats don't depend on it)."
+unknowns: {vs: positive}
+arbitrary: {a0: 1e-6 m}
+media: {air: {type: gas, v: vs}}
+waves:
+  w1: {harmonic: {on: air, A: a0, lambda: 50 cm, dir: +x, phase: 0}}
+  w2: {harmonic: {on: air, A: a0, lambda: 50.4 cm, dir: +x, phase: 0}}
+given:
+  - {fact: "beat_frequency(w1, w2) == 6[Hz]", source: stated}
+observe:
+  v: vs
+  option: nearest(vs, 338[m/s], 350[m/s], 378[m/s], 400[m/s])

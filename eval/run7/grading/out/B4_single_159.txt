@@ -1,0 +1,4 @@
+solved us = 340/11  (= 30.9091)  (depends on the arbitrary values)
+recede_change = -1/12  (= -0.0833333)  <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>
+recede_percent_option = 4  <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>
+us_over_v = 1/11  (= 0.0909091)  <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>

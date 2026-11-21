@@ -1,0 +1,6 @@
+matches_A = True  <proved for every allowed arbitrary value>
+matches_B = False  <proved for every allowed arbitrary value>
+matches_C = False  <proved for every allowed arbitrary value>
+matches_D = False  <proved for every allowed arbitrary value>
+lam_ratio: NOT AVAILABLE (SceneError: depends on the arbitrary value(s) ['f', 'u']: the problem does not fix this result)
+f_ratio: NOT AVAILABLE (SceneError: depends on the arbitrary value(s) ['f', 'u']: the problem does not fix this result)

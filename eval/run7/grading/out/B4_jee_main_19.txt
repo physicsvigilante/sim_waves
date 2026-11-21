@@ -1,0 +1,3 @@
+solved f0 = 2250
+f0 = 2250  <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>
+pick: NOT AVAILABLE (UndeterminedError: nearest(): needs numbers (the value and every option))

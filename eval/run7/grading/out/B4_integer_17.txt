@@ -1,0 +1,4 @@
+solved e = m/4 - 29/40
+solved vs = 250
+v = 250
+e_cm = 25*m - 145/2 cm

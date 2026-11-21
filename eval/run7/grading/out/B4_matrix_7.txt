@@ -1,0 +1,4 @@
+u_ratio = 1/16  (= 0.0625000)  <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>
+P_ratio = 1/8  (= 0.125000)  <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>
+I_ratio = 1/8  (= 0.125000)  <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>
+v_ratio = 2  <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>

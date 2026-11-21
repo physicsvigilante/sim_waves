@@ -1,0 +1,14 @@
+id: B4/single/85
+assume:
+  - "Same material (density), round wire; initial values arbitrary; second wire has 2L, 2d, 2T."
+arbitrary: {rho: 7800 kg/m^3, d: 1 mm, T: 50 N, L: 1 m}
+media:
+  w1: {type: string, density: rho, diameter: d, tension: T}
+  w2: {type: string, density: rho, diameter: "2*d", tension: "2*T"}
+resonators:
+  r1: {type: string, on: w1, length: L, ends: [fixed, fixed]}
+  r2: {type: string, on: w2, length: "2*L", ends: [fixed, fixed]}
+given: []
+observe:
+  ratio: "frequency(r2, harmonic=1)/frequency(r1, harmonic=1)"
+  is_opt: "equivalent(frequency(r2, harmonic=1)/frequency(r1, harmonic=1), 1/(2*sqrt(2)))"

@@ -1,0 +1,26 @@
+id: B4/integer/1
+number: 1
+source: book p.106 (answer key p.123)
+format: numerical
+statement: A road passes at some distance from a standing man. A truck is coming on the road with some
+  acceleration. The truck driver blows a whistle of frequency 500 Hz when the line joining the truck and
+  the man makes an angle of θ with the road. The man hears a note having a frequency of 600 Hz when the
+  truck is closest to him. Also, the speed of truck has got doubled during this time. Find the value of
+  θ, in degree.
+figure: null
+options: null
+answer: '60'
+answer_value: 60
+units: degree
+verified: 'Let u = speed at emission, c = speed of sound, h = distance of road from man. Sound emitted
+  at angle θ reaches the man when the truck is at the closest point: travel time h/(c sinθ) equals the
+  truck''s time to cover h cotθ with speed rising u to 2u (average 1.5u): h cotθ = 1.5u h/(c sinθ), so
+  cosθ = 1.5u/c. Doppler: 600 = 500 c/(c - u cosθ), so u cosθ = c/6. Then cos²θ = 1/4, θ = 60 degrees.
+  Matches key.'
+kinds:
+- inverse_condition
+physics:
+- doppler_effect
+- moving_source
+- geometry
+notes: Needs the retardation (travel time of sound) to be taken into account.

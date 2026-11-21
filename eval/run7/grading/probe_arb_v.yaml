@@ -1,0 +1,16 @@
+id: probe/arb_v
+unknowns: {d: positive}
+arbitrary: {vs: 340 m/s}
+media: {air: {type: gas, v: vs}}
+sources:
+  spk: {on: air, at: [0 m, 0 m], power: 2 W, phase: random, spreading: spherical}
+points:
+  P: ["d", 0 m]
+rays:
+  r: {from: spk, to: P}
+given:
+  - {fact: "sound_level(intensity(r)) == 120", source: stated}
+observe:
+  d_plain: "d"
+  d_in_cm: "d in cm"
+  d_cmp: "d < 0.5[m]"

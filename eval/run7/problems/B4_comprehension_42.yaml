@@ -1,0 +1,12 @@
+id: B4/comprehension/42
+format: single_correct
+statement: |-
+  Passage (Comprehension 14): A point sound source is situated in a medium of bulk modulus 1.6 x 10^5 Nm^-2. An observer standing at a distance 10 m from the source, writes down the equation for the wave as y = A sin(15πx - 6000πt), where y and x are in metre and t is in second. The maximum pressure amplitude received by the observer's ear is 24π Pa. Based on the above facts, answer the following questions.
+
+  Q42. The density of the medium is
+figure: null
+options:
+  A: 1 kgm^-3
+  B: 2 kgm^-3
+  C: 3 kgm^-3
+  D: 1/2 kgm^-3

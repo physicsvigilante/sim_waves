@@ -1,0 +1,2 @@
+ratio = sqrt(6)/2  (= 1.22474)  <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>
+pick = 1  <exact; same at 5 scalings of the arbitrary values (x0.01 to x89; sampled)>

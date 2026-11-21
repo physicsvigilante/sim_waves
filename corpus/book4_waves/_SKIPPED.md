@@ -35,3 +35,17 @@ jee_main 19 run6: Doppler effect
 jee_main 30 run6: Doppler effect
 jee_advanced 13 run6: Doppler effect
 jee_advanced 12 run6: duplicate of 23/03/cnt_008 (score 0.93, same numbers)
+single 96 run7: Doppler effect
+single 17 run7: Doppler effect
+single 14 run7: Doppler effect
+single 126 run7: Doppler effect (light from receding star)
+single 181 run7: Doppler effect
+single 51 run7: Doppler effect (moving source, conveyor belt)
+single 168 run7: duplicate of B4/jee_main/45 (score 0.94, same numbers)
+single 158 run7: duplicate of 22/03/cnt_006 (score 0.73, same numbers)
+integer 21 run7: duplicate of 22/03/cnt_006 (same numbers, same problem as single 158)
+reasoning 16 run7: Doppler effect
+comprehension 6 run7: Doppler effect
+jee_advanced 56 run7: Doppler effect
+jee_advanced 53 run7: duplicate of 22/02/bmc_004 (score 0.95, same numbers)
+jee_advanced 69 run7: number does not exist

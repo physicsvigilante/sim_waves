@@ -1,0 +1,15 @@
+id: B4/comprehension/20
+format: single_correct
+statement: |-
+  Passage (Comprehension 7): A narrow tube is bent in the form of circle of radius R as shown. Two small holes S and D are made in the tube at the positions right angles to each other. A source placed at S generates a wave of intensity I0 which is equally divided into two parts. One part travels along the longer path, while the other travels along the shorter path. Both the part waves meet at point D where a detector is placed. Based on above information, answer the following questions.
+
+  Q20. Maximum intensity produced at D is given by
+figure: A circular tube drawn as a thick grey ring with centre marked; a dashed horizontal line runs through
+  the centre. A small hole S is at the left end of the horizontal dashed line (leftmost point of the ring)
+  and a small hole D is at the bottom of the ring where a dashed vertical line through the centre meets
+  it. An arrow from the centre to the ring in the upper right is labelled R.
+options:
+  A: 4I0
+  B: 3I0
+  C: 2I0
+  D: I0

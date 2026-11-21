@@ -1,0 +1,23 @@
+id: B4/jee_main/7
+assume:
+  - "Wall at x=1000 m, rigid, car starts at origin moving toward it at u (unknown); horn frequency 440 Hz is the source frequency; the driver (a listener moving with the car) hears the echo at 480 Hz."
+  - "Air still."
+unknowns: {u: positive}
+media:
+  air: {type: gas, v: 345 m/s}
+sources:
+  horn: {on: air, at: [0 m, 0 m], velocity: [u, 0 m/s], f: 440 Hz, A: 1, phase: 0, spreading: none}
+points:
+  driver: {at: [0 m, 0 m], velocity: [u, 0 m/s]}
+reflectors:
+  wall: {point: [1000 m, 0 m], normal: [-1, 0], boundary: rigid}
+rays:
+  echo: {from: horn, to: driver, via: wall}
+given:
+  - {fact: "frequency(echo, emitted=0[s]) == 480[Hz]", source: stated}
+observe:
+  u: "u"
+  opt_A_36kmh: "u == (36*1000/3600)[m/s]"
+  opt_B_24kmh: "u == (24*1000/3600)[m/s]"
+  opt_C_18kmh: "u == (18*1000/3600)[m/s]"
+  opt_D_54kmh: "u == (54*1000/3600)[m/s]"

@@ -1,0 +1,9 @@
+answer: 250 m/s
+final_scene: B4_integer_17.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "nothing"
+missing_in_source: "end correction value (solved as unknown e = 25m - 72.5 cm, m a free integer >= 3; speed independent of it)"
+reasoning: "Consecutive odd harmonics (2m-1, 2m+1) of a closed-open pipe resonating at 500 Hz at 60 and 85 cm solve vs = 250 m/s."
+friction: "Consecutive-mode condition had to be expressed through an integer symbol m; end correction left a one-parameter family (harmless here)."

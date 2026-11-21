@@ -1,0 +1,10 @@
+id: probe/i5_onek
+unknowns: {kk: positive}
+media: {rope: {type: string, mu: 10 g/m, tension: 50 N}}
+waves:
+  w: {harmonic: {on: rope, A: 8 cm, k: kk, dir: +x, phase: 0}}
+given:
+  - {fact: "kk < 5[1/m]", source: assumption}
+  - {fact: "y(w, x=25[cm], t=0[s]) == -4[cm]", source: stated}
+observe:
+  lam: "wavelength(w) in cm"

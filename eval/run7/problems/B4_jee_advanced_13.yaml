@@ -1,0 +1,12 @@
+id: B4/jee_advanced/13
+format: single_correct
+statement: '[IIT-JEE 2002] A siren placed at a railway platform is emitting sound of frequency 5 kHz.
+  A passenger sitting in a moving train A records a frequency of 5.5 kHz while the train approaches the
+  siren. During his return journey in a different train B he records a frequency of 6.0 kHz while approaching
+  the same siren. The ratio of the velocity of train B to that of train A is'
+figure: null
+options:
+  A: 242/252
+  B: '2'
+  C: 5/6
+  D: 11/6

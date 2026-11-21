@@ -1,0 +1,25 @@
+id: probe/nearest
+assume: ["echo from a wall at unknown distance d; probes of nearest() forms"]
+unknowns: {d: positive}
+media: {air: {type: gas, v: 330 m/s}}
+sources:
+  S: {on: air, at: [0 m, 0 m], f: 100 Hz, A: 1, phase: 0, spreading: none}
+reflectors:
+  wall: {point: ["d", 0 m], normal: [-1, 0], boundary: rigid}
+points:
+  P: [0 m, 0 m]
+rays:
+  echo: {from: S, to: P, via: wall}
+given:
+  - {fact: "arrives_at(echo, emitted=0[s]) == 0.2[s]", source: assumption}
+observe:
+  n_unknown_units: "nearest(d, 16.5[m], 33[m], 66[m], 330[m])"
+  n_unknown_plain: "nearest(d, 16.5, 33, 66, 330)"
+  n_unknown_in: "nearest(d in m, 16.5, 33, 66, 330)"
+  n_unknown_times1: "nearest(1*d, 16.5[m], 33[m], 66[m], 330[m])"
+  n_obs_units: "nearest(arrives_at(echo, emitted=0[s])*165[m/s], 16.5[m], 33[m], 66[m], 330[m])"
+  n_obs_in: "nearest(arrives_at(echo, emitted=0[s]) in ms, 100, 200, 300, 400)"
+  n_plain: "nearest(2.1, 1, 2, 3, 4)"
+  n_sqrt_opts: "nearest(2.83, sqrt(2), 2*pi*sqrt(2), 2, 2*sqrt(2))"
+  n_sqrt_units: "nearest(2.83[s], sqrt(2)[s], 2*pi*sqrt(2)[s], 2[s], 2*sqrt(2)[s])"
+  d_in: "d in cm"

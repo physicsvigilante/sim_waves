@@ -599,3 +599,14 @@ Tests: r162–r167.
 - **Fixed after the run:** `period(resonator, harmonic=)`, and the dimension of an unknown
   in `in <unit>`, now taken from its facts.
 - **Candidate for later:** `resonant_at(resonator, f=)`.
+
+## Run 7: broad blind test after m12–m13 (eval/run7/SCORECARD.md)
+- **Scale:** 44 problems, 12 of them Doppler. Graded by Opus standing in for Fable.
+- **Results:** no wrong value, and no misrepresentation. Full coverage rose to 77%, but
+  answers decided by hand rose to 14%. Four of those six came from physics outside the
+  model.
+- **Seven verified service defects,** all refusals: `nearest` on solved unknowns,
+  `nearest` with `in`, a quoted zero in positions, the comparison-check scaling tripping
+  the sound guard, `limit` with a bounded symbol, unknown k and phase off the origin,
+  and the units km/h and μm.
+- **The light and radar part of H1 was not tested:** no such problem was in the sample.

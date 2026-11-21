@@ -1,0 +1,16 @@
+id: B4/integer/5
+assume:
+  - "Displacement units are unspecified; taken as cm (any unit gives the same wavelength)."
+  - "Wave carried by a string with arbitrary mu and tension; only the snapshot t=0 matters."
+  - "Wave y = A sin(omega t - k x + phase), travelling +x; wavenumber k and phase unknown."
+unknowns: {kk: positive, ph: phase}
+arbitrary: {mu: 10 g/m, T: 50 N}
+media: {rope: {type: string, mu: mu, tension: T}}
+waves:
+  w: {harmonic: {on: rope, A: 8 cm, k: kk, dir: +x, phase: ph}}
+given:
+  - {fact: "kk*15[cm] < pi", source: assumption, note: "the two points are less than half a wavelength apart (a guess, not stated); tests how many branches remain"}
+  - {fact: "y(w, x=10[cm], t=0[s]) == 6[cm]", source: stated}
+  - {fact: "y(w, x=25[cm], t=0[s]) == 4[cm]", source: stated}
+observe:
+  wavelength_cm: "wavelength(w) in cm"

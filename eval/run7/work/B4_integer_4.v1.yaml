@@ -1,0 +1,14 @@
+id: B4/integer/4
+assume:
+  - "Origin at the crossing of the axes; S at (-100 m, 0) moves along +x at 5 m/s; O at (0, -100 m) moves along +y at 10 m/s (figure)."
+  - "Air still. Frequency asked at reception time t = 5 s."
+media:
+  air: {type: gas, v: 330 m/s}
+sources:
+  S: {on: air, at: [-100 m, 0 m], velocity: [5 m/s, 0 m/s], f: 1000 Hz, A: 1, phase: 0, spreading: none}
+points:
+  O: {at: [0 m, -100 m], velocity: [0 m/s, 10 m/s]}
+rays:
+  heard: {from: S, to: O}
+observe:
+  f5: "frequency(heard, t=5[s])"

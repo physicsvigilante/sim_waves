@@ -1,0 +1,10 @@
+answer: [C]
+final_scene: B4_single_55.v2.yaml
+engine_fit: partial
+hand_steps:
+  - "Compared the engine's 300.75 Hz with the options by eye; nearest() refused (needs numbers, got an exact value with sqrt)."
+coverage: full
+not_represented: nothing
+missing_in_source: "none"
+reasoning: "3 beats in 2 s = 1.5 Hz solves for the frequency: 150 + 15*sqrt(101) = 300.75 Hz, nearest option 300 Hz."
+friction: "nearest() refused an exact sqrt expression; had to read the option by hand."

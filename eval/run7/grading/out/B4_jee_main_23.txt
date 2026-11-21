@@ -1,0 +1,4 @@
+solved f0 = 6000/7  (= 857.143)
+f0 = 6000/7  (= 857.143)
+f_receding = 750
+nearest_option = 4

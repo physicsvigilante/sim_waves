@@ -1,0 +1,10 @@
+id: B4/integer/4
+format: numerical
+statement: At t = 0, a source of sonic oscillations S and an observer O start moving along x and y axes
+  with velocity 5 ms^-1 and 10 ms^-1 respectively. The figure gives their position at t = 0. The frequency
+  of sonic oscillations of source is 1000 Hz. Obtain the frequency of signals, in Hz, received by the
+  observer after 5 seconds. Speed of sound is 330 ms^-1.
+figure: x and y axes drawn through the origin. S is a point on the negative x-axis, 100 m to the left
+  of the origin (dimension arrow labelled 100 m). O is a point on the negative y-axis, 100 m below the
+  origin (dimension arrow labelled 100 m). The source moves along +x and the observer along +y.
+options: null

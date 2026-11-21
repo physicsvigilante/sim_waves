@@ -1,0 +1,11 @@
+answer: {A: q, B: p, C: p, D: r}
+final_scene: B4_matrix_7.v1.yaml
+engine_fit: partial
+hand_steps:
+  - "Intensity as power divided by the common area (no intensity observable on strings)"
+  - "Energy density per volume taken as the per-length density (areas equal)"
+coverage: full
+not_represented: "nothing"
+missing_in_source: "same frequency of the two trains is an assumption from 'single source'"
+reasoning: "Engine gave u1/u2 = 1/16, P1/P2 = 1/8, I1/I2 = 1/8, v1/v2 = 2."
+friction: "No intensity observable for strings; energy density per volume not available (per length only)."

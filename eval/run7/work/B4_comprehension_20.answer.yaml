@@ -1,0 +1,10 @@
+answer: C
+final_scene: B4_comprehension_20.v2.yaml
+engine_fit: partial
+hand_steps: 
+  - "I0 (total) = sum of the two parts' intensities, represented as two incoherent copies; Imax chosen with path difference = one wavelength (n=1); arc lengths pi*R/2 and 3*pi*R/2 from figure geometry written by me"
+coverage: partial
+not_represented: "tube is represented as two stated-length rays; no spreading/tube losses"
+missing_in_source: "none (R, f, v not given; result scale-free)"
+reasoning: "Engine: relative_intensity(short,long)/relative_intensity(n1,n2)=2 at constructive tuning -> 2 I0 (option C)."
+friction: "Path lengths of tube arcs had to be typed by me; splitting I0 equally needed a workaround with incoherent twin sources; open-ended 'constructive for some f' (ceiling) was refused by the solver in v1."

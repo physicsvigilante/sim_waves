@@ -1,0 +1,22 @@
+id: B4/integer/5
+number: 5
+source: book p.106 (answer key p.123)
+format: numerical
+statement: A simple harmonic wave of amplitude 8 units travels along positive x-axis. At any given instant
+  of time, for a particle at a distance of 10 cm from the origin, the displacement is +6 units and for
+  a particle at a distance of 25 cm from the origin, the displacement is +4 units. Calculate the wavelength,
+  in cm.
+figure: null
+options: null
+answer: '250'
+answer_value: 250
+units: cm
+verified: 'DISPUTED. At the instant, y = 8 sin(φ0 + kx): sin θ1 = 6/8 (θ1 = 48.6°) and sin θ2 = 4/8 (θ2
+  = 30° or 150°). Taking the nearest phases, |Δθ| = 18.6° over 15 cm gives λ = 15 x 360/18.6 = 290 cm
+  (the other branch, Δθ = 101.4°, gives 53 cm). Neither is 250 cm; I cannot reproduce the key.'
+kinds:
+- inverse_condition
+physics:
+- wave_equation
+- phase
+notes: Key 250 not reproducible; also branch-ambiguous (290 or 53 cm). DISPUTED.

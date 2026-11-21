@@ -1,0 +1,11 @@
+id: B4/reasoning/19
+format: single_correct
+statement: |-
+  Statement-1: If two waves of same amplitude, produce a resultant wave of same amplitude, then the phase difference between them will be 120°.
+  Statement-2: The resultant amplitude of two waves is equal to sum of amplitude of two waves.
+figure: null
+options:
+  A: Both statements are TRUE and STATEMENT 2 is the correct explanation of STATEMENT 1.
+  B: Both statements are TRUE but STATEMENT 2 is not the correct explanation of STATEMENT 1.
+  C: STATEMENT 1 is TRUE and STATEMENT 2 is FALSE.
+  D: STATEMENT 1 is FALSE but STATEMENT 2 is TRUE.

@@ -1,0 +1,11 @@
+answer: [A, D]
+final_scene: B4_multiple_1.v1.yaml
+engine_fit: partial
+hand_steps:
+  - "Equilibrium of m on the frictionless incline: m*g*sin(30 deg) = T, written by me as a given fact (the format has no incline or pulley)."
+  - "g = 9.8 m/s^2 (assumed, not stated)."
+coverage: partial
+not_represented: "Incline, pulley and the mass m; only the wire with tension from M and the equilibrium relation."
+missing_in_source: "g not stated."
+reasoning: "Engine: v = 100 m/s and mu give T = 98 N; M = 10 kg from M g = T and m = 20 kg from the incline balance; so m = 20 kg and m/M = 2."
+friction: "Statics of masses on an incline cannot be expressed; tension from the hanging mass works only for a plain hanging load."

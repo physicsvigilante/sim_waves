@@ -1,0 +1,4 @@
+a_f_at_closest = 2500  <exact; same at 5 values of each arbitrary value (ranged ones spread across their ranges, others x0.01 to x89; sampled)>
+b_f_emitted_at_closest = 900  <exact; same at 5 values of each arbitrary value (ranged ones spread across their ranges, others x0.01 to x89; sampled)>
+b_dist = 50*sqrt(41)  (= 320.156)  <exact; same at 5 values of each arbitrary value (ranged ones spread across their ranges, others x0.01 to x89; sampled)>
+b_arrival_time: NOT AVAILABLE (SceneError: depends on the arbitrary value(s) ['v', 'D']: the problem does not fix this result)

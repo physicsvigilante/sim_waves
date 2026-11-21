@@ -1,0 +1,6 @@
+id: probe/units2
+media: {air: {type: gas, v: 340 m/s}}
+observe:
+  a: "1[um] in m"
+  b: "1[m] in um"
+  c: "(10[km]/3600[s]) in km/h"

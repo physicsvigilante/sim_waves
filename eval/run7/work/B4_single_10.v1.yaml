@@ -1,0 +1,25 @@
+id: B4/single/10
+assume:
+  - "t=0 profile y=6/(x^2-3) as PRINTED (it has poles at x=+-sqrt3; probably a typo for x^2+3, which I do not substitute)."
+  - "Each option is a given wave on its own string with tension free (speed set by the wave); linear density arbitrary."
+arbitrary: {mu: 10 g/m}
+media:
+  sA: {type: string, mu: mu, tension: free}
+  sB: {type: string, mu: mu, tension: free}
+  sC: {type: string, mu: mu, tension: free}
+  sD: {type: string, mu: mu, tension: free}
+waves:
+  oA: {given: "6/((x + 4.5*t)**2 - 3)", units: {x: m, t: s, y: m}, on: sA}
+  oB: {given: "6/((x - 4.5*t)**2 + 3)", units: {x: m, t: s, y: m}, on: sB}
+  oC: {given: "6/((x + 4.5*t)**2 + 3)", units: {x: m, t: s, y: m}, on: sC}
+  oD: {given: "6/((x - 4.5*t)**2 - 3)", units: {x: m, t: s, y: m}, on: sD}
+given: []
+observe:
+  vA: "velocity(oA)"
+  vB: "velocity(oB)"
+  vC: "velocity(oC)"
+  vD: "velocity(oD)"
+  tA: "equivalent(y(oA, x=x, t=0[s]), 6/(x**2 - 3))"
+  tB: "equivalent(y(oB, x=x, t=0[s]), 6/(x**2 - 3))"
+  tC: "equivalent(y(oC, x=x, t=0[s]), 6/(x**2 - 3))"
+  tD: "equivalent(y(oD, x=x, t=0[s]), 6/(x**2 - 3))"

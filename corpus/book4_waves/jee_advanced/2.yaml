@@ -1,0 +1,26 @@
+id: B4/jee_advanced/2
+number: 2
+source: book p.112 (answer key p.123)
+format: single_correct
+statement: '[IIT-JEE 2010] A hollow pipe of length 0.8 m is closed at one end. At its open end a 0.5 m
+  long uniform string is vibrating in its second harmonic and it resonates with the fundamental frequency
+  of the pipe. If the tension in the wire is 50 N and the speed of sound is 320 ms^-1, the mass of the
+  string is'
+figure: null
+options:
+  A: 5 gram
+  B: 10 gram
+  C: 20 gram
+  D: 40 gram
+answer: B
+answer_value: B
+units: null
+verified: Closed pipe fundamental f = 320/(4 x 0.8) = 100 Hz. String second harmonic f = v/L so v = 100
+  x 0.5 = 50 m/s. μ = T/v² = 50/2500 = 0.02 kg/m, mass = 0.02 x 0.5 = 0.01 kg = 10 g. Matches key.
+kinds:
+- inverse_condition
+physics:
+- closed_pipe
+- string_wave_speed
+- resonance
+notes: Consistent.

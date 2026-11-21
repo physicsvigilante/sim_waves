@@ -1,0 +1,24 @@
+id: B4/jee_main/23
+number: 23
+source: book p.109 (answer key p.123)
+format: single_correct
+statement: '[Online April 2019] A source of sound S is moving with a velocity of 50 ms^-1 towards a stationary
+  observer. The observer measures the frequency of the source as 1000 Hz. What will be the apparent frequency
+  of the source when it is moving away from the observer after crossing him? (Take velocity of sound in
+  air is 350 ms^-1)'
+figure: null
+options:
+  A: 857 Hz
+  B: 1143 Hz
+  C: 807 Hz
+  D: 750 Hz
+answer: D
+answer_value: D
+units: null
+verified: f0 = 1000 x 300/350 = 857.1 Hz; after crossing f = 857.1 x 350/400 = 750 Hz. Matches key.
+kinds:
+- ratio
+physics:
+- doppler_effect
+- moving_source
+notes: Consistent.
