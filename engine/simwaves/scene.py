@@ -2255,14 +2255,18 @@ def _limit(_sc, e, var, value, _written=(), _obligations=()):
         g_shown = _sc.show_back(g)              # in the declared symbol, not its offset
         if kind == "positive" and g.is_positive:
             continue
+        if kind == "nonneg" and (g.is_nonnegative or sp.simplify(g) == 0):
+            continue                           # sqrt(0) = 0: a root needs only a nonnegative argument
+        if kind == "unit" and g.is_number and (sp.Abs(g) <= 1) is sp.true:
+            continue                           # a constant inside [-1, 1], ends included: asin(1) = pi/2
         if kind == "nonzero" and g.is_nonzero:
             continue
         for side in sides:
             lv = toward(g, side)
             word = "above" if side == "+" else "below"
-            if kind == "positive" and lv.is_zero and sign_near(g, side) == 1:
+            if kind in ("positive", "nonneg") and lv.is_zero and sign_near(g, side) == 1:
                 continue                       # a polynomial that leaves 0 upward on this side
-            if kind == "positive" and lv.is_positive is not True:
+            if kind in ("positive", "nonneg") and lv.is_positive is not True:
                 raise SceneError(f"limit(): {g_shown} must be positive near {shown} -> {value} (from {word}) for the "
                                  f"logarithm, root or power written there, but it tends to {lv}")
             if kind == "unit":

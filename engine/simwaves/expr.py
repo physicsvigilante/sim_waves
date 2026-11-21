@@ -168,8 +168,9 @@ class _Tr:
         - symbols: the free symbols of every name and of every call's value (an observable
           such as y(p, ...) may hold symbols from its definition);
         - obligations: (kind, value) pairs the limit must check near the point: 'nonzero' for
-          a denominator or the base of a negative power, 'positive' for a log argument or the
-          base of a fractional power, 'unit' for an asin/acos argument (|value| < 1).
+          a denominator or the base of a negative integer power, 'nonneg' for a sqrt argument
+          or the base of a positive fractional power, 'positive' for a log argument or the
+          base of a negative fractional power, 'unit' for an asin/acos argument (in [-1, 1]).
         A call to an arbitrary function (functions:), or a call whose value holds one, is
         refused: it is not a number. Unit names inside brackets are units, not names."""
         from sympy.core.function import AppliedUndef
@@ -200,7 +201,7 @@ class _Tr:
                 if name in ("log", "ln") and x.args:
                     obligations.append(("positive", value(x.args[0])))
                 elif name == "sqrt" and x.args:
-                    obligations.append(("positive", value(x.args[0])))
+                    obligations.append(("nonneg", value(x.args[0])))
                 elif name in ("asin", "acos") and x.args:
                     obligations.append(("unit", value(x.args[0])))
                 for a in list(x.args) + [k.value for k in x.keywords]:
@@ -219,8 +220,7 @@ class _Tr:
             if isinstance(x, ast.BinOp) and isinstance(x.op, ast.Pow):
                 k = value(x.right)
                 if not (k.is_integer and k.is_nonnegative):
-                    obligations.append(("nonzero", value(x.left)) if (k.is_integer and k.is_negative)
-                                       else ("positive", value(x.left)))
+                    obligations.append(_power_obligation(k, value(x.left)))
             for child in ast.iter_child_nodes(x):
                 walk(child)
         for nd in nodes:
@@ -265,6 +265,17 @@ def _no_celsius(unit_node, src):
                          f"difference as 20[K]; results can still be given 'in degC'")
 
 
+def _power_obligation(k, base):
+    """What base**k needs to be real and finite: a nonzero base for a negative integer k, a
+    nonnegative base for a positive fractional k (0**(1/2) = 0), and a positive base for a
+    negative fractional or a symbolic k."""
+    if k.is_integer and k.is_negative:
+        return ("nonzero", base)
+    if k.is_positive:
+        return ("nonneg", base)
+    return ("positive", base)
+
+
 def _value_obligations(v):
     """The conditions a computed value needs to be real and finite, read from its SymPy
     tree: a positive base for a fractional or symbolic power, a nonzero base for a negative
@@ -275,7 +286,7 @@ def _value_obligations(v):
             k = node.exp
             if k.is_integer and k.is_nonnegative:
                 continue
-            out.append(("nonzero", node.base) if (k.is_integer and k.is_negative) else ("positive", node.base))
+            out.append(_power_obligation(k, node.base))
         elif isinstance(node, sp.log):
             out.append(("positive", node.args[0]))
         elif isinstance(node, (sp.asin, sp.acos)):

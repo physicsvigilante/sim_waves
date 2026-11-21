@@ -730,6 +730,15 @@ Tests r214–r218.
   wave given as `sqrt(x - t)`); and asin/acos refused an argument that tends to ±1 from inside
   (asin(1 − q²) → π/2). All fixed. Tests r241 (rewritten), r242–r247.
 
+### Milestone 14 review, round 11 (ChatGPT Astra, on PR #14; eval/review14/REPORT.md)
+- **Two wrong refusals from the round 9–10 checks fixed:** asin/acos of a constant at an edge of
+  [−1, 1] (asin(1) = π/2), and a root of exactly 0 (√0 = 0; a root needs only a nonnegative
+  argument). Tests r248–r250.
+- **Known issue, scoped out (pre-existing, engine-wide):** a scene definition is simplified as it
+  is read, so its domain is lost. A wave given as `log(x-t) - log(x-t)` is 0 everywhere, even at
+  x − t < 0, where `y(p, ...)` should be undefined; the engine before m14 does the same. Candidate
+  milestone: keep the conditions of written scene definitions (profiles, fields) through parsing.
+
 **Not fixed (tooling):** on Windows, r84 (peak of a sum of Gaussians) and r93 run for
 minutes, and r96 grows past 4.6 GB of memory; all three do so on the engine before m14
 as well. The wall-clock limit uses SIGALRM, which Windows lacks, so nothing stops a slow

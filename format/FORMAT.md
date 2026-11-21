@@ -715,9 +715,10 @@ never `omega(w)`: both are 1/s, so the dimension check cannot catch it.
     evaluates). Units in brackets are units (`q/2[m]` is fine). A wave whose profile is
     an arbitrary function cannot be used inside a limit.
   - **Every part as written must be defined near the point**, even one that cancels, and
-    including what a call returns (a wave given as `sqrt(x - t)`): a log or root needs a
-    positive argument there, asin/acos an argument inside (−1, 1) (it may tend to ±1 from
-    inside: asin(1 - q²) → π/2), and a division a denominator that is nonzero near the
+    including what a call returns (a wave given as `sqrt(x - t)`): a log needs a positive
+    argument there, a root a nonnegative one (`sqrt(0)` is fine), asin/acos an argument in
+    [−1, 1] (it may tend to ±1 from inside: asin(1 - q²) → π/2; asin(1) is fine), and a
+    division a denominator that is nonzero near the
     point (it may be 0 at the point itself, as in sin(q)/q). So
     `limit(log(q) - log(q), q, 0)` with q real is refused (no log below 0), while with q
     positive it is approached from above. A symbolic limit is refused:

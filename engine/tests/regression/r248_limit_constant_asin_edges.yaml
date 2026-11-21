@@ -1,0 +1,7 @@
+# m14 review round 11 (K9): a constant asin/acos argument at an end of [-1, 1] is defined: asin(1) = pi/2,
+# acos(-1) = pi, so the limits of these constants are pi/2 and pi (round 10 wrongly refused them)
+symbols: {q: real}
+observe:
+  asin_one: "limit(asin(1), q, 0)"
+  acos_minus_one: "limit(acos(-1), q, 0)"
+expect: {asin_one: "pi/2", acos_minus_one: "pi"}

@@ -1,0 +1,7 @@
+# m14 review round 11 (K10): a root needs only a nonnegative argument: sqrt(0) = 0 and 0**0.5 = 0, so
+# q + sqrt(0) -> 0 and q + 0**0.5 -> 0 (round 9 wrongly refused them)
+symbols: {q: real}
+observe:
+  sqrt_zero: "limit(q + sqrt(0), q, 0)"
+  half_power_zero: "limit(q + 0**0.5, q, 0)"
+expect: {sqrt_zero: 0, half_power_zero: 0}
