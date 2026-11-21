@@ -707,22 +707,20 @@ never `omega(w)`: both are 1/s, so the dimension check cannot catch it.
   - Use `beat_frequency(...)` for the rate of the loudness maxima. The envelope's own
     oscillation is at the difference frequency.
 - `limit(expr, var, value)` is for approximations; e.g. a small `dl` gives
-  `limit(f/dl, dl, 0)`.
+  `limit(f/dl, dl, 0)` (see `examples/23_05_asc_004.yaml`).
+  - **Everything other than the variable must be a number:** no other symbol or unknown
+    in the expression, the point, or anything written in them. Use numbers or
+    `arbitrary:` values (numbers when the engine evaluates). A symbolic limit is refused:
+    it is only generic, and can be wrong at some value of the other symbols (|q|/q at
+    q → c has no limit at c = 0). So a formula such as v/(2l²) cannot be read off a limit;
+    check it with numbers.
   - At an interior point both one-sided limits are taken and must agree; otherwise it is
     refused ("from above ..., from below ..."). At the edge of the variable's domain (0
     for a positive symbol, or a stated bound) it is approached from inside only.
   - The point must be one the variable can approach: within the values it can take, i.e.
     its kind (0 or more for a positive symbol) together with any stated bound (`q < 1`
-    with q positive allows (0, 1)), or on an edge. Outside, or when this cannot be
-    checked, it is refused. The point must be proved real: `sqrt(b)` needs b declared
-    positive. A whole-number symbol is refused.
-  - **With other symbols** in the expression or the point (e.g. `v`, `l`, or a point `c`),
-    the limit must hold for every allowed value of them. The engine proves it (the
-    expression, after cancelling a removable 0/0, must be continuous at the point) or
-    refuses. So `limit(abs(q)/q, q, c)` with c real is refused (no limit at c = 0), but with
-    c positive it is 1. Numbers (`arbitrary:` values) have no such issue.
-  - Every denominator as written counts, even one that cancels: `limit(c*q/(c*q), q, 0)`
-    with c real is refused (at c = 0 it is 0/0 for every q); with c positive it is 1.
+    with q positive allows (0, 1)), or on an edge. Outside, it is refused. A whole-number
+    variable is refused.
 - Lists cannot be indexed (`[1]` is read as a unit and refused); use `min`, `max` or
   `count`.
 - `min(a, b)` and `max(a, b)` take two values of the same dimension, or one list

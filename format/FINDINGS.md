@@ -697,6 +697,19 @@ Tests r214–r218.
   real gave 1, though c = 0 makes it 0/0 everywhere). The denominators as written are now
   collected before translation and checked by the proof. Tests r225–r227.
 
+### Milestone 14 review, round 7 (ChatGPT Astra, on PR #14; eval/review14/REPORT.md)
+- **Two more symbolic-limit cases** (`c*q*(c*q)**(0-1)` and `q + log(c) - log(c)` with c real
+  gave 1 and 0). Rounds 3 to 7 all found ways for a symbol and its domain to be lost in
+  SymPy's simplification before `limit` sees it.
+- **Decision (the user's): narrow `limit()` instead of patching further.** Apart from its
+  variable, everything in a limit must now be a number. The symbols written in the text are
+  collected before SymPy simplifies, so nothing can hide; numbers and `arbitrary:` values
+  are allowed. The continuity proof (round 5) and the denominator collector (round 6) were
+  removed. Cost: a formula can no longer be read off a limit; the FORMAT example
+  23_05_asc_004 now uses numbers (170 per metre instead of v/(2l²)). Candidate for later:
+  a dedicated symbolic-approximation service, if runs show it is needed. Tests r228–r230;
+  r213, r219–r227 updated.
+
 **Not fixed (tooling):** on Windows, r84 (peak of a sum of Gaussians) and r93 run for
 minutes, and r96 grows past 4.6 GB of memory; all three do so on the engine before m14
 as well. The wall-clock limit uses SIGALRM, which Windows lacks, so nothing stops a slow

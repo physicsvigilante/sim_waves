@@ -1,0 +1,5 @@
+# m14 review round 7 (N7): c*q*(c*q)**(0-1) is 1 for c != 0, but with c real, c = 0 gives 0*0**(-1) for every
+# q; the symbol c, written in the text, is refused (before: 1)
+symbols: {q: real, c: real}
+observe: {invalid: "limit(c*q*(c*q)**(0-1), q, 0)"}
+expect: {error: rejected, message: "apart from its variable q, everything in a limit must be a number, but c is a symbol"}

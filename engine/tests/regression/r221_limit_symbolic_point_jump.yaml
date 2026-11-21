@@ -2,4 +2,4 @@
 # c = 0, where the sides are +1 and -1; existence for every c cannot be proved: refused
 symbols: {q: real, c: real}
 observe: {jump: "limit(abs(q)/q, q, c)"}
-expect: {error: rejected, message: "cannot prove that the limit exists for every allowed value of c"}
+expect: {error: rejected, message: "apart from its variable"}

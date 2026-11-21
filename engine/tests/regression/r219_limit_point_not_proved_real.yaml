@@ -1,5 +1,5 @@
 # m14 review round 4 (N4): with b real, sqrt(b) is imaginary for b < 0 (b = -1 gives i), and a real q cannot
-# approach it; the point is not proved real, so refused (before: limit(1, q, sqrt(b)) = 1)
+# approach it; since round 7 a symbol other than the variable is refused outright (before: limit(1, q, sqrt(b)) = 1)
 symbols: {q: real, b: real}
 observe: {invalid: "limit(1, q, sqrt(b))"}
-expect: {error: rejected, message: "cannot check that the point sqrt(b) is real"}
+expect: {error: rejected, message: "apart from its variable"}

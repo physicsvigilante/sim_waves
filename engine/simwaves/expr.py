@@ -136,11 +136,11 @@ class _Tr:
             args = [self.node(a) for a in n.args]
             kwargs = {k.arg: self.node(k.value) for k in n.keywords}
             if n.func.id == "limit" and n.args:
-                if any(k.arg == "_dens" for k in n.keywords):
-                    raise SceneError("limit(): unknown keyword '_dens'")
-                # the denominators as written, each translated on its own so that SymPy's
-                # automatic cancellation (c*q/(c*q) -> 1) cannot hide one that may vanish
-                kwargs["_dens"] = tuple(self.val(d) for d in _written_denominators(n.args[0]))
+                if any(k.arg == "_written" for k in n.keywords):
+                    raise SceneError("limit(): unknown keyword '_written'")
+                # the symbols named in the expression and the point as written: SymPy's
+                # automatic simplification (log(c) - log(c) -> 0) must not hide one
+                kwargs["_written"] = tuple(self._named_symbols([n.args[0]] + n.args[2:3]))
             return self.ctx.call(n.func.id, args, kwargs)
         if isinstance(n, ast.Compare):
             if not (top and self.allow_rel):
@@ -154,6 +154,21 @@ class _Tr:
                 left = r
             return rels
         raise SceneError(f"not allowed in expressions: {type(n).__name__} in {self.src!r}")
+
+    def _named_symbols(self, nodes):
+        """The free symbols of every name written in these nodes (not function names)."""
+        called = {id(x.func) for nd in nodes for x in ast.walk(nd) if isinstance(x, ast.Call)}
+        out = set()
+        for nd in nodes:
+            for x in ast.walk(nd):
+                if isinstance(x, ast.Name) and id(x) not in called:
+                    try:
+                        v = self.ctx.name(x.id)
+                    except SceneError:
+                        continue
+                    if isinstance(v, sp.Basic):
+                        out |= v.free_symbols
+        return out
 
     def _nearest_in(self, nodes):
         """nearest(x in u, a, b, ...): x converted to the unit u (checked as for 'observe ...
@@ -191,32 +206,6 @@ def _no_celsius(unit_node, src):
         raise SceneError(f"degC inside unit brackets is ambiguous (a temperature or a temperature "
                          f"difference) in {src!r}: write temperatures in K, e.g. 293.15[K], or a "
                          f"difference as 20[K]; results can still be given 'in degC'")
-
-
-def _written_denominators(node):
-    """The denominators written in an expression's text: the right side of every '/', and
-    the base of every power with a negative constant exponent. Unit brackets (2[m/s]) are
-    units, not denominators, and are skipped."""
-    out = []
-
-    def neg_const(x):
-        return (isinstance(x, ast.UnaryOp) and isinstance(x.op, ast.USub) and isinstance(x.operand, ast.Constant)
-                and not isinstance(x.operand.value, bool) and x.operand.value > 0) or \
-               (isinstance(x, ast.Constant) and not isinstance(x.value, bool) and
-                isinstance(x.value, (int, float)) and x.value < 0)
-
-    def walk(x):
-        if isinstance(x, ast.Subscript):          # value[unit]: only the value can hold denominators
-            walk(x.value)
-            return
-        if isinstance(x, ast.BinOp) and isinstance(x.op, ast.Div):
-            out.append(x.right)
-        if isinstance(x, ast.BinOp) and isinstance(x.op, ast.Pow) and neg_const(x.right):
-            out.append(x.left)
-        for child in ast.iter_child_nodes(x):
-            walk(child)
-    walk(node)
-    return out
 
 
 def _is_in(node):

@@ -81,3 +81,22 @@
 | N6 | silent wrong answer | SymPy cancels `c*q/(c*q)` to 1 as the expression is read. The other symbol c disappears, so the round 5 proof never ran. With c real, c = 0 makes the expression 0/0 for every q, so there is no limit; the engine gave 1. | yes: 1 | The parser collects the denominators written in `limit`'s first argument (the right side of each `/`, and the base of each negative constant power; unit brackets are skipped). Each is translated on its own, so nothing can cancel it, and passed to `_limit`. Their symbols count toward whether other symbols are present. The continuity proof checks each one: a denominator in q must be nonzero near the point, vanishing at most through (q − a); one without q (e.g. `c` in `q/c`) must be proved nonzero. (`expr.py` `_written_denominators`; `scene.py` `_limit`, `_limit_by_continuity`) | r225 (`c*q/(c*q)`, c real: refused), r226 (controls: `q/q` → 1; `c*q/(c*q)` with c positive → 1; `q/2[m]` → 0, a unit bracket is not a denominator), r227 (`q/c`, c real: refused) |
 
 **Checked:** the FORMAT example (v/(2l²)) and run 7's single/52 probe (8) are unchanged, as are the controls from rounds 4 and 5.
+
+## Round 7
+- **Reviewer:** ChatGPT (Astra), posted on PR #14 on 2026-11-21.
+- **Commit reviewed:** `aeffa2fc9f8fdb05d92568bf4f61145871a5c850`.
+- **Verdict:** FAIL on two new findings. N6 is marked resolved for its case, and every earlier fix is unchanged.
+- **Reproduction:** both reproduced on the engine as predicted (1 and 0).
+
+| # | Severity | Finding | Reproduced | Resolution | Tests |
+|---|---|---|---|---|---|
+| N7 | silent wrong answer | `limit(c*q*(c*q)**(0-1), q, 0)` with c real gave 1. The denominator collector recognised only a literal negative exponent, not `0-1`, so c was cancelled away; at c = 0 the expression is undefined for every q. | yes: 1 | Covered by the decision below: c is written in the text, so the limit is refused. | r228 |
+| N8 | silent wrong answer | `limit(q + log(c) - log(c), q, 0)` with c real gave 0. `log(c) - log(c)` cancels as it is read, so c and its domain (c > 0) are lost. | yes: 0 | Covered by the decision below. | r229 |
+
+**Decision (the user's, after round 7): narrow `limit()` rather than keep patching.** Rounds 3 to 7 all found a way for a symbol, or its domain, to be lost in SymPy's automatic simplification before `limit` sees the expression. Each patch (proof by continuity, written denominators) closed one form and left the next.
+- **The rule:** apart from its variable, everything in a limit must be a number. No other symbol may appear in the expression or the point, and none may be written in the text. The text is collected by the parser before SymPy simplifies anything (`expr.py` `_Tr._named_symbols`), so a symbol that cancels is still seen.
+- **What still works:** numbers and `arbitrary:` values (numbers when the engine evaluates) are allowed. The exact two-sided check, domain edges, stated bounds and the real-point check all apply unchanged.
+- **Removed:** `_limit_by_continuity`, `_SMOOTH` and `_written_denominators`.
+- **Cost:** a formula can no longer be read off a limit. The FORMAT example `23_05_asc_004` now uses v = 340 m/s and l = 1 m, which gives 170 per metre (by hand: v/(2l(l + dl)) → v/(2l²) = 170).
+- **Tests:** r228 (N7) and r229 (N8) are refused; r230 shows that a limit over an arbitrary length works (ratio 1). r213, r219 and r221–r227 now expect the numbers-only refusal, or became numeric controls.
+- **Run 7 is unaffected:** its single limit scene, single/52, uses an arbitrary length and still gives 8.

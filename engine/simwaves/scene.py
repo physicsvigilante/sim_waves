@@ -2154,13 +2154,28 @@ def _show_interval(i):
     return f"{'(' if i.left_open else '['}{i.inf}, {i.sup}{')' if i.right_open else ']'}"
 
 
-def _limit(_sc, e, var, value, _dens=()):
+def _limit(_sc, e, var, value, _written=()):
     """limit(expr, var, value), relative to the values var can take: its kind (positive, ...)
     intersected with any stated bound. The point must lie in the closure of that domain; at
     its edge the limit is taken from inside only, at an interior point from both sides, which
     must agree. A bounded symbol appears in expressions as base + s*offset, so the limit is
-    computed in the offset, with each side mapped across (s = -1 reverses it)."""
+    computed in the offset, with each side mapped across (s = -1 reverses it).
+
+    Apart from var, everything must be a number: no other symbol in the expression, in the
+    point, or written in the text (`_written`, collected before SymPy simplified anything).
+    A symbolic limit is only generic: it can hide values of the other symbols where no limit
+    exists (|q|/q at q -> c is wrong at c = 0), and simplification as the text is read can
+    erase a symbol together with its domain (log(c) - log(c) -> 0, c*q/(c*q) -> 1). Numbers
+    (arbitrary: values) have neither problem."""
     bv = None if isinstance(var, sp.Symbol) else _sc.bound_variable(var)
+    own = {bv[0], bv[1]} if bv is not None else ({var} if isinstance(var, sp.Symbol) else set())
+    others = (sp.sympify(e).free_symbols | sp.sympify(value).free_symbols | set(_written)) - own
+    if others:
+        names = ", ".join(sorted(str(_sc.show_back(s)) for s in others))
+        shown_var = bv[0] if bv is not None else var
+        raise SceneError(f"limit(): apart from its variable {shown_var}, everything in a limit must be a number, "
+                         f"but {names} {'is a symbol' if len(others) == 1 else 'are symbols'}; give "
+                         f"{'it a value' if len(others) == 1 else 'them values'} (a number, or arbitrary:)")
     if bv is not None:
         shown, p_off, sgn, base = bv           # messages name the declared symbol
         if shown.is_integer or p_off.is_integer:
@@ -2199,18 +2214,6 @@ def _limit(_sc, e, var, value, _dens=()):
         if gap.is_zero:
             at_edge.append(side)               # at this end: approach from inside only
     sides = at_edge or ["+", "-"]
-    lim_var = p_off if bv is not None else var
-    lim_at = sp.simplify(sgn * (value - base)) if bv is not None else value
-    dens = [sp.sympify(d) for d in _dens]       # denominators as written, before any cancellation
-    params = (sp.sympify(e).free_symbols | lim_at.free_symbols |
-              set().union(*(d.free_symbols for d in dens))) - {lim_var}
-    if params:
-        # other symbols: SymPy's limit is generic and can hide values of them where the limit
-        # does not exist (|q|/q at q -> c gives sign(c), wrong at c = 0), and automatic
-        # cancellation can hide them altogether (c*q/(c*q) -> 1, but c = 0 gives 0/0 for every
-        # q). Instead, prove the limit for every allowed value of them, written denominators
-        # included
-        return _limit_by_continuity(sp.sympify(e), lim_var, lim_at, params, shown, dens)
     vals = {}
     for side in sides:
         if bv is not None:                     # in the offset: n = base + sgn*p
@@ -2226,70 +2229,6 @@ def _limit(_sc, e, var, value, _dens=()):
         raise SceneError(f"limit(): the limit does not exist: from above it is {vals['+']}, "
                          f"from below {vals['-']}")
     return vals[sides[0]]
-
-
-_SMOOTH = (sp.sin, sp.cos, sp.exp, sp.Abs, sp.Min, sp.Max)    # continuous wherever their arguments are
-
-
-def _limit_by_continuity(e, x, a, params, shown, dens=()):
-    """The limit of e as x -> a when e or a contains other symbols (params), valid for every
-    allowed value of them, or a SceneError. Sound, not complete:
-    1. every denominator of e is nonzero near a (it may vanish at a only through a factor
-       (x - a)), so e is defined on a punctured neighbourhood for every value of params;
-    2. after simplification (cancelling such factors), the expression is continuous at a for
-       every value of params: built from + * , powers with a nonzero base where the power is
-       negative and a positive base where it is fractional or symbolic, log of a positive
-       value, and sin, cos, exp, Abs, Min, Max;
-    then the limit is the simplified expression's value at a."""
-    who = ", ".join(sorted(str(s) for s in params))
-
-    def refuse(why):
-        raise SceneError(f"limit(): cannot prove that the limit exists for every allowed value of {who} "
-                         f"({why}); give them values (arbitrary:) or a sign, or ask for the expression itself")
-
-    # step 1: denominators of the expression and those written in it (before SymPy cancelled
-    # any): each must be nonzero near the point for every value of params
-    bases = [p.base for p in e.atoms(sp.Pow) if p.exp.is_negative and p.base.has(x)]
-    for d in list(dens) + bases:
-        if not d.has(x):
-            if sp.simplify(d).is_nonzero is not True:
-                refuse(f"the denominator {d} may be 0, which leaves the expression undefined for every {shown}")
-            continue
-        b = d
-        for _ in range(6):
-            b0 = sp.simplify(b.subs(x, a))
-            if b0.is_zero is not True:
-                break
-            b = sp.cancel(b / (x - a))
-        if b0.is_nonzero is not True:
-            refuse(f"the denominator {d} may vanish near {shown} -> {a}")
-    g = sp.simplify(sp.cancel(sp.together(e)))      # step 2: simplified form, continuous at a?
-    for node in sp.preorder_traversal(g):
-        if node.is_Atom or isinstance(node, (sp.Add, sp.Mul)):
-            continue
-        if isinstance(node, sp.Pow):
-            b0 = sp.simplify(node.base.subs(x, a))
-            k = node.exp
-            if k.is_integer and k.is_nonnegative:
-                continue
-            if k.is_integer and k.is_negative:
-                if b0.is_nonzero is not True:
-                    refuse(f"{node} may be infinite at {shown} -> {a}")
-                continue
-            if b0.is_positive is not True:
-                refuse(f"{node} needs a positive base at {shown} -> {a}")
-            continue
-        if isinstance(node, sp.log):
-            if sp.simplify(node.args[0].subs(x, a)).is_positive is not True:
-                refuse(f"{node} needs a positive argument at {shown} -> {a}")
-            continue
-        if isinstance(node, _SMOOTH):
-            continue
-        refuse(f"{type(node).__name__} is not known to be continuous there")
-    v = sp.simplify(g.subs(x, a))
-    if v.has(sp.zoo, sp.nan, sp.oo, -sp.oo):
-        refuse(f"the value at {shown} -> {a} is {v}")
-    return v
 
 
 def _diff(_sc, e, var, n=sp.Integer(1)):

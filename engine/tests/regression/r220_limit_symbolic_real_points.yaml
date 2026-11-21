@@ -1,7 +1,7 @@
-# m14 review round 4 (N4), controls: points proved real are accepted. b positive: sqrt(b) is real, and
-# limit(q, q, sqrt(b)) = sqrt(b); c real: limit(q^2, q, c) = c^2
-symbols: {q: real, b: positive, c: real}
+# m14 review rounds 4 and 7: under the numbers-only rule a point is a number, proved real: sqrt(2) is real,
+# so limit(q, q, sqrt(2)) = sqrt(2); limit(q^2, q, 3) = 9 (a symbolic point such as sqrt(b) is refused: r219)
+symbols: {q: real}
 observe:
-  sqrt_pos: "limit(q, q, sqrt(b))"
-  real_sym: "limit(q**2, q, c)"
-expect: {sqrt_pos: "sqrt(b)", real_sym: "c**2"}
+  sqrt_two: "limit(q, q, sqrt(2))"
+  square: "limit(q**2, q, 3)"
+expect: {sqrt_two: "sqrt(2)", square: 9}

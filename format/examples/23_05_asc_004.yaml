@@ -1,11 +1,14 @@
 id: 23/05/asc_004
-symbols: {v: positive, l: positive, dl: positive}
+# Small-quantity approximation with limit(): everything other than the limit variable dl is a number
+# (a symbolic limit is refused; use numbers or arbitrary: values). Open pipes, v = 340 m/s, lengths
+# 1 m and 1 m + dl: beat/dl = v/(2 l (l + dl)) -> v/(2 l^2) = 170 per metre as dl -> 0.
+symbols: {dl: positive}
 media:
-  air: {type: gas, v: v}
+  air: {type: gas, v: 340 m/s}
 resonators:
-  p1: {type: pipe, on: air, length: l, ends: [open, open], end_correction: 0 m}
-  p2: {type: pipe, on: air, length: l + dl, ends: [open, open], end_correction: 0 m}
+  p1: {type: pipe, on: air, length: 1 m, ends: [open, open], end_correction: 0 m}
+  p2: {type: pipe, on: air, length: "1[m] + dl", ends: [open, open], end_correction: 0 m}
 observe:
   beats: "beat_frequency(frequency(p1, harmonic=1), frequency(p2, harmonic=1))"
   per_dl_small: "limit(beat_frequency(frequency(p1, harmonic=1), frequency(p2, harmonic=1))/dl, dl, 0)"
-expect: {per_dl_small: "v/(2*l**2)"}
+expect: {per_dl_small: 170}
