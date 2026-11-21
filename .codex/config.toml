@@ -1,0 +1,6 @@
+# Codex settings for this project only (sim_waves).
+# Reviews by the Codex plugin for Claude Code (/codex:review, /codex:adversarial-review)
+# use GPT-6.2 Astra at medium reasoning effort.
+model = "gpt-6.2-astra"
+review_model = "gpt-6.2-astra"
+model_reasoning_effort = "medium"
