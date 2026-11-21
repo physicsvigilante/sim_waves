@@ -96,6 +96,16 @@ def _symbolic_scale(sc):
     return {n: mapping(n) for n in sc.arbitrary}, set(syms.values())
 
 
+def _is_bare_nearest(text):
+    """True when the observe text is a single nearest(...) call and nothing around it."""
+    import ast
+    try:
+        body = ast.parse(str(text).replace("^", "**"), mode="eval").body
+    except SyntaxError:
+        return False
+    return isinstance(body, ast.Call) and isinstance(body.func, ast.Name) and body.func.id == "nearest"
+
+
 def _nearest_proved(sc, names, timeout):
     """The names whose nearest() compares numbers proved independent of the arbitrary
     values: the scene is run once with them as symbols, and every recorded argument must
@@ -115,15 +125,20 @@ def _nearest_proved(sc, names, timeout):
     except Exception:                  # noqa: BLE001 - no proof: refused by the caller
         return set()
     proved = set()
+    numeric = getattr(sc, "nearest_args", {})
     for n in names:
-        args = recorded.get(n)
-        if not args:
+        args, ref = recorded.get(n), numeric.get(n)
+        if not args or not ref or len(args) != len(ref):
             continue
         try:
-            free = set().union(*(sp.simplify(a).free_symbols for call in args for a in call))
+            simp = [[sp.simplify(a) for a in call] for call in args]
+            free = set().union(*(a.free_symbols for call in simp for a in call))
+            # the proof must agree with the numbers actually compared in the stated run
+            agree = all(len(c) == len(r) and all(_same_result(x, y) for x, y in zip(c, r))
+                        for c, r in zip(simp, ref))
         except Exception:              # noqa: BLE001
             continue
-        if not free:                   # every compared number is a constant: no arbitrary symbol left
+        if not free and agree:         # every compared number is the same constant: proved
             proved.add(n)
     return proved
 
@@ -186,9 +201,13 @@ def _evaluate_arbitrary(sc, timeout):
                     f"value without them, or read the option from the value")
                 res.pop(name)
                 continue
-            sc.basis[name] = (sc.basis.get(name, "exact") + "; the compared value is proved independent of "
-                              "the arbitrary values")
-            continue
+            if _is_bare_nearest(sc.data["observe"][name]):
+                # the observable is the pick itself, and every compared number is proved fixed
+                sc.basis[name] = (sc.basis.get(name, "exact") + "; the compared value is proved independent "
+                                  "of the arbitrary values")
+                continue
+            # an expression around a nearest() (e.g. a + nearest(...)) still needs its own check
+            # as a whole: the proof covers the pick only
         if all(name in r2 and _same_result(res[name], r2[name]) for _, r2, _, _ in others):
             how = ("same at 5 values of each arbitrary value (ranged ones spread across their ranges, others "
                    "x0.01 to x89; sampled)" if sc.arbitrary_ranges else

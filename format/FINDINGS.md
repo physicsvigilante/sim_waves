@@ -673,6 +673,15 @@ r196–r208:**
 
 Tests r209–r213.
 
+### Milestone 14 review, round 3 (ChatGPT Astra, on PR #14; eval/review14/REPORT.md)
+- **A proof about a `nearest` part had waived the check of the whole result:** `a + nearest(2,1,2)`
+  gave 3. The proof now stands in only for an observable that is a single `nearest` call,
+  and it must agree with the numeric run.
+- **A bounded `limit` lost the symbol's own kind** (q positive, q < 1: q → −1 gave −1, and
+  |q|/q at 0 was refused). The domain is now the kind and the bound together.
+
+Tests r214–r218.
+
 **Not fixed (tooling):** on Windows, r84 (peak of a sum of Gaussians) and r93 run for
 minutes, and r96 grows past 4.6 GB of memory; all three do so on the engine before m14
 as well. The wall-clock limit uses SIGALRM, which Windows lacks, so nothing stops a slow

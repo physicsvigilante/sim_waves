@@ -1,0 +1,4 @@
+# m14 review round 3 (N3): the multiplicative variant, a*nearest(2, 1, 2) = 2a, also depends on a: refused
+arbitrary: {a: 1}
+observe: {value: "a*nearest(2, 1, 2)"}
+expect: {error: rejected, message: "depends on the arbitrary"}

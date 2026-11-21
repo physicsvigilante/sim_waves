@@ -34,3 +34,14 @@
 | N2 | silent wrong answer | `limit(q, q, -1)` with `q` positive returned −1, a point the domain never approaches. | yes: −1 | The point must be in the closure of the variable's domain (≥ 0 for a positive or nonnegative symbol, ≤ 0 for a negative or nonpositive one, and real). Outside, it is refused. If the sign cannot be checked, it is refused. (`scene.py` `_limit`) | r212 (refused), r213 (symbolic point of unknown sign: refused) |
 
 **Effect on run 7 (all 44 final scenes re-run):** no value changed and no pick was lost. Eight picks over arbitrary values are now proved instead of sampled: jee_main/19, single/182 and single/2 (newly decided in m14), and jee_advanced/23, jee_main/44, single/106, single/159 and single/26 (already decided before m14).
+
+## Round 3
+- **Reviewer:** ChatGPT (Astra), posted on PR #14 on 2026-11-21, with two inline comments (`run.py:191`, `scene.py:2160`).
+- **Commit reviewed:** `59acb34e82f2ed1f1cd6f6a426e17d1fc41df6bd`.
+- **Verdict:** FAIL. Resolved: R1, R3–R6, O1 and N1; R2 resolved for its examples. One new finding (N3), and N2 only partly fixed.
+- **Reproduction:** all four scenes reproduced on the engine as predicted.
+
+| # | Severity | Finding | Reproduced | Fix | Tests |
+|---|---|---|---|---|---|
+| N3 | silent wrong answer | A proof that the `nearest` part is constant also skipped the check of the whole observable. `a + nearest(2, 1, 2)` gave 3 with a "proved" basis, although it is a + 2. | yes: 3 (and 2 for `a*nearest(...)`) | The proof replaces the whole-result check only when the observable *is* a single `nearest(...)` call. Anything around it gets the ordinary check of the whole value. The proof must also agree with the numeric run: the constants it finds must equal the numbers actually compared. (`run.py` `_is_bare_nearest`, `_nearest_proved`, `_evaluate_arbitrary`) | r214 (sum: refused), r215 (product: refused), r216 (`nearest(2,1,2) + 1`: still 3) |
+| N2 (rest) | silent wrong answer, and a wrong refusal | With a bound, `limit` checked only the bound's offset and lost the symbol's own kind. With q positive and q < 1, `limit(q, q, -1)` gave −1; `limit(\|q\|/q, q, 0)` was refused, though it is 1. | yes: −1, and refused | `_limit` now works on the variable's domain: its kind (positive, nonnegative, ...) intersected with any stated bound. The point must lie in the closure of that domain. At an edge it is approached from inside only; at an interior point both sides must agree. The sides are chosen for the user's variable, then mapped to the bound's offset (reversed for an upper bound). Messages show the domain, e.g. "(0, 1)". (`scene.py` `_kind_interval`, `_limit`) | r217 (outside (0, 1): refused), r218 (lower edge 1, interior 1/4, upper edge −1); r186's message now names the domain |

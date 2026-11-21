@@ -576,7 +576,8 @@ pl:   {on: air, geometry: plane, intensity: I}
     If it still depends on something unfixed, it is refused. With arbitrary values, the
     value and options it compares must be **proved** free of them (the engine reruns the
     scene with them as symbols); sampled agreement is not enough for a choice of option,
-    so a value that cannot be proved independent is refused.
+    so a value that cannot be proved independent is refused. An expression around a
+    `nearest()` (e.g. `L*nearest(...)`) is still checked as a whole, like any value.
   - A `nearest()` inside another is picked first.
   - **Options printed in a unit:** `nearest(x in km/h, 36, 54, 72)` converts x to that
     unit (its dimension is checked, as for `in` in `observe`). A printed number is read
@@ -710,8 +711,9 @@ never `omega(w)`: both are 1/s, so the dimension check cannot catch it.
   - At an interior point both one-sided limits are taken and must agree; otherwise it is
     refused ("from above ..., from below ..."). At the edge of the variable's domain (0
     for a positive symbol, or a stated bound) it is approached from inside only.
-  - The point must be one the variable can approach: 0 or more for a positive symbol,
-    inside or on a stated bound (`dl < 0.5[m]`). Outside, or when its sign cannot be
+  - The point must be one the variable can approach: within the values it can take, i.e.
+    its kind (0 or more for a positive symbol) together with any stated bound (`q < 1`
+    with q positive allows (0, 1)), or on an edge. Outside, or when this cannot be
     checked, it is refused. A whole-number symbol is refused.
 - Lists cannot be indexed (`[1]` is read as a unit and refused); use `min`, `max` or
   `count`.

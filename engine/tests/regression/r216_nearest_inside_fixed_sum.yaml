@@ -1,0 +1,5 @@
+# m14 review round 3 (N3): an expression around nearest() that is fixed is still decided, by the ordinary check
+# of the whole value: nearest(2, 1, 2) + 1 = 3 whatever a is
+arbitrary: {a: 1}
+observe: {value: "nearest(2, 1, 2) + 1"}
+expect: {value: 3}

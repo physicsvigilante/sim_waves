@@ -2135,54 +2135,80 @@ def _frequency_of(_sc, var, e):
     return w / TWO_PI
 
 
+def _kind_interval(s):
+    """The values a symbol can take, from its sign assumptions."""
+    if s.is_positive:
+        return sp.Interval.open(0, sp.oo)
+    if s.is_nonnegative:
+        return sp.Interval(0, sp.oo)
+    if s.is_negative:
+        return sp.Interval.open(-sp.oo, 0)
+    if s.is_nonpositive:
+        return sp.Interval(-sp.oo, 0)
+    return sp.Interval(-sp.oo, sp.oo)
+
+
+def _show_interval(i):
+    if not isinstance(i, sp.Interval):
+        return str(i)
+    return f"{'(' if i.left_open else '['}{i.inf}, {i.sup}{')' if i.right_open else ']'}"
+
+
 def _limit(_sc, e, var, value):
+    """limit(expr, var, value), relative to the values var can take: its kind (positive, ...)
+    intersected with any stated bound. The point must lie in the closure of that domain; at
+    its edge the limit is taken from inside only, at an interior point from both sides, which
+    must agree. A bounded symbol appears in expressions as base + s*offset, so the limit is
+    computed in the offset, with each side mapped across (s = -1 reverses it)."""
     bv = None if isinstance(var, sp.Symbol) else _sc.bound_variable(var)
-    flip = bv is not None and bv[2] == -1      # n = base - offset: 'above' in n is 'below' in offset
-    shown = bv[0] if bv is not None else var   # messages name the declared symbol, not its offset
     if bv is not None:
-        # a bounded symbol n = base + s*offset (offset >= 0): take the limit in the offset,
-        # at the offset that matches the value; a point outside the bound is refused
-        sym, p_off, sgn, base = bv
-        at = sp.simplify(sgn * (sp.sympify(value) - base))
-        if at.is_negative:
-            raise SceneError(f"limit(): {sym} -> {value} is outside the stated bound on {sym}")
-        if at.is_nonnegative is not True:
-            raise SceneError(f"limit(): cannot check that {sym} -> {value} is inside the stated bound on {sym}")
-        var, value = p_off, at                 # the offset is >= 0; its domain edge is 0
-    if not isinstance(var, sp.Symbol):
-        raise SceneError("limit(expr, var, value): second argument must be a variable")
-    if var.is_integer:
-        raise SceneError(f"limit(): {shown} takes whole-number values only, so a limit in it is not defined")
+        shown, p_off, sgn, base = bv           # messages name the declared symbol
+        if shown.is_integer or p_off.is_integer:
+            raise SceneError(f"limit(): {shown} takes whole-number values only, so a limit in it is not defined")
+        strict = bool(p_off.is_positive)
+        bound = sp.Interval(base, sp.oo, left_open=strict) if sgn == 1 else \
+            sp.Interval(-sp.oo, base, right_open=strict)
+        domain = _kind_interval(shown).intersect(bound)
+    else:
+        if not isinstance(var, sp.Symbol):
+            raise SceneError("limit(expr, var, value): second argument must be a variable")
+        if var.is_integer:
+            raise SceneError(f"limit(): {var} takes whole-number values only, so a limit in it is not defined")
+        shown, domain = var, _kind_interval(var)
     value = sp.sympify(value)
-    # the point must be in the closure of the variable's domain (its sign from its kind)
     if value.is_real is False:
         raise SceneError(f"limit(): the point {value} is not a real value")
-    for inside, outside, word in ((var.is_nonnegative, value.is_negative, "0 or more"),
-                                  (var.is_nonpositive, value.is_positive, "0 or less")):
-        if inside:
-            if outside:
-                raise SceneError(f"limit(): {shown} -> {value} is outside the values {shown} can take ({word})")
-            if (value.is_nonnegative if word == "0 or more" else value.is_nonpositive) is not True:
-                raise SceneError(f"limit(): cannot check that {shown} -> {value} stays within the values "
-                                 f"{shown} can take ({word})")
-    # one side only at the edge of the variable's domain (approached from inside); both sides,
-    # which must agree, at an interior point
-    if value.is_zero and var.is_nonnegative:
-        sides = ["+"]
-    elif value.is_zero and var.is_nonpositive:
-        sides = ["-"]
-    else:
-        sides = ["+", "-"]
-    vals = []
+    if not isinstance(domain, sp.Interval) or domain.measure == 0:
+        raise SceneError(f"limit(): {shown} has no range of values to approach {value} in {_show_interval(domain)}")
+    lo, hi = domain.inf, domain.sup
+    at_edge = []
+    for end, sign, side in ((lo, 1, "+"), (hi, -1, "-")):
+        if not end.is_finite:
+            continue
+        gap = sp.simplify(sign * (value - end))          # >= 0 inside the closure
+        if gap.is_negative:
+            raise SceneError(f"limit(): {shown} -> {value} is outside the values {shown} can take {_show_interval(domain)}")
+        if gap.is_nonnegative is not True:
+            raise SceneError(f"limit(): cannot check that {shown} -> {value} is within the values {shown} "
+                             f"can take {_show_interval(domain)}")
+        if gap.is_zero:
+            at_edge.append(side)               # at this end: approach from inside only
+    sides = at_edge or ["+", "-"]
+    vals = {}
     for side in sides:
-        v = sp.limit(e, var, value, dir=side)
+        if bv is not None:                     # in the offset: n = base + sgn*p
+            p_side = side if sgn == 1 else ("-" if side == "+" else "+")
+            v = sp.limit(e, p_off, sp.simplify(sgn * (value - base)), dir=p_side)
+        else:
+            v = sp.limit(e, var, value, dir=side)
         if v.has(sp.AccumBounds, sp.zoo, sp.nan) or v in (sp.oo, -sp.oo) or isinstance(v, sp.Limit):
-            raise SceneError(f"limit(): the limit does not exist as a finite value (from the {side} side: {v})")
-        vals.append(v)
-    if len(vals) == 2 and sp.simplify(vals[0] - vals[1]) != 0:
-        above, below = (vals[1], vals[0]) if flip else (vals[0], vals[1])
-        raise SceneError(f"limit(): the limit does not exist: from above it is {above}, from below {below}")
-    return vals[0]
+            word = "above" if side == "+" else "below"
+            raise SceneError(f"limit(): the limit does not exist as a finite value (from {word}: {v})")
+        vals[side] = v
+    if len(vals) == 2 and sp.simplify(vals["+"] - vals["-"]) != 0:
+        raise SceneError(f"limit(): the limit does not exist: from above it is {vals['+']}, "
+                         f"from below {vals['-']}")
+    return vals[sides[0]]
 
 
 def _diff(_sc, e, var, n=sp.Integer(1)):

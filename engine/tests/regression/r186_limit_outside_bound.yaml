@@ -3,4 +3,4 @@ symbols: {y: positive}
 media: {air: {type: gas, v: 330 m/s}}
 given: [{fact: "y > 2[m]", source: stated}]
 observe: {l: "limit(y/1[m], y, 1[m])"}
-expect: {error: rejected, message: "outside the stated bound"}
+expect: {error: rejected, message: "outside the values y can take (2, oo)"}

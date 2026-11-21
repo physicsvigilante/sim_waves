@@ -1,0 +1,9 @@
+# m14 review round 3 (N2): q in (0, 1). Lower edge 0 from above: |q|/q = 1 (before: wrongly refused);
+# interior 0.5: q^2 -> 1/4 from both sides; upper edge 1 from below: |q - 1|/(q - 1) = -1
+symbols: {q: positive}
+given: ["q < 1"]
+observe:
+  lower_edge: "limit(abs(q)/q, q, 0)"
+  interior: "limit(q**2, q, 0.5)"
+  upper_edge: "limit(abs(q - 1)/(q - 1), q, 1)"
+expect: {lower_edge: 1, interior: 0.25, upper_edge: -1}
