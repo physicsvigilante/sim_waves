@@ -686,6 +686,12 @@ Tests r214–r218.
 - **A limit point of unknown reality was accepted** (b real: `limit(1, q, sqrt(b))` gave 1,
   though b = −1 makes the point i). The point must now be proved real. Tests r219–r220.
 
+### Milestone 14 review, round 5 (ChatGPT Astra, on PR #14; eval/review14/REPORT.md)
+- **A limit with other symbols used SymPy's generic answer**, which can hide values where
+  no limit exists (|q|/q at q → c with c real gave Abs(c)/c, wrong at c = 0). With other
+  symbols present, the limit is now proved by continuity after cancellation, or refused.
+  The FORMAT approximation example (beat/dl as dl → 0) still gives v/(2l²). Tests r221–r224.
+
 **Not fixed (tooling):** on Windows, r84 (peak of a sum of Gaussians) and r93 run for
 minutes, and r96 grows past 4.6 GB of memory; all three do so on the engine before m14
 as well. The wall-clock limit uses SIGALRM, which Windows lacks, so nothing stops a slow

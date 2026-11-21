@@ -57,3 +57,15 @@
 | N4 | silent wrong answer | A limit point whose reality is unknown was accepted. Only points known to be non-real were refused. With b real, `limit(1, q, sqrt(b))` gave 1 although b = −1 makes the point i, which a real q cannot approach. | yes: 1 (and `sqrt(b)` for `limit(q, q, sqrt(b))`) | The point must be proved real (`is_real is True`); otherwise the limit is refused with a clear message. (`scene.py` `_limit`) | r219 (refused), r220 (controls: `sqrt(b)` with b positive, and a real symbol c, are accepted) |
 
 **Checked while fixing:** infinity cannot be written in scene expressions (`oo` is an unknown name), so limits toward infinity were never available to authors. Requiring a real point removes no capability.
+
+## Round 5
+- **Reviewer:** ChatGPT (Astra), posted on PR #14 on 2026-11-21, with one inline comment (`scene.py:2213`).
+- **Commit reviewed:** `cf3b180bcc2e37e0af1d0a21ee1d318a0045debf`.
+- **Verdict:** FAIL on one new finding. N4 is marked resolved, and every earlier fix is unchanged.
+- **Reproduction:** reproduced on the engine as predicted, along with the pole variant, and a third case with the same cause: `q/(c*q)` at q → 0 gave 1/c.
+
+| # | Severity | Finding | Reproduced | Fix | Tests |
+|---|---|---|---|---|---|
+| N5 | silent wrong answer | With other symbols in the point or the expression, SymPy's limit is generic. Two agreeing one-sided results can hide values of those symbols where no limit exists. `limit(\|q\|/q, q, c)` with c real gave `Abs(c)/c`, although at c = 0 the sides are +1 and −1. `limit(1/q, q, c)` gave 1/c. | yes: `Abs(c)/c`, and `1/c` (also `1/c` for `q/(c*q)` at 0) | When any symbol other than the variable appears, SymPy's limit is not used. Instead the engine proves the limit for every allowed value of those symbols, or refuses: (1) every denominator of the original expression must be nonzero near the point, vanishing at most through a factor (x − a); (2) the simplified expression must be continuous at the point: negative powers need a nonzero base, fractional or symbolic powers and logs a positive one, and the only functions allowed are sin, cos, exp, Abs, Min and Max. The limit is then its value there. With no other symbols, the exact two-sided check is unchanged. (`scene.py` `_limit_by_continuity`) | r221 (jump: refused), r222 (pole: refused), r223 (`q/(c*q)`: refused), r224 (controls with c positive: 1/c, 1, 1) |
+
+**Checked:** the documented small-quantity use still works, in the FORMAT example 23_05_asc_004 (beat/dl as dl → 0 with v and l symbols gives v/(2l²)). So do run 7's single/52 probes (the coefficient 8, key A).

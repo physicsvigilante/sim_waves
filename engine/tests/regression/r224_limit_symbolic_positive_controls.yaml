@@ -1,0 +1,9 @@
+# m14 review round 5 (N5), controls with c positive (never 0): 1/q -> 1/c; |q|/q -> 1 (q near c > 0 is
+# positive); c*q/(c*q) = 1 for q != 0, so 1 at q -> 0. The FORMAT example 23_05_asc_004 (beat/dl as dl -> 0
+# with v, l positive: v/(2 l^2)) also stays decided
+symbols: {q: real, c: positive}
+observe:
+  pos_pole: "limit(1/q, q, c)"
+  pos_jump: "limit(abs(q)/q, q, c)"
+  cancel: "limit(c*q/(c*q), q, 0)"
+expect: {pos_pole: "1/c", pos_jump: 1, cancel: 1}

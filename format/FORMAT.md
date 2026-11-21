@@ -716,6 +716,11 @@ never `omega(w)`: both are 1/s, so the dimension check cannot catch it.
     with q positive allows (0, 1)), or on an edge. Outside, or when this cannot be
     checked, it is refused. The point must be proved real: `sqrt(b)` needs b declared
     positive. A whole-number symbol is refused.
+  - **With other symbols** in the expression or the point (e.g. `v`, `l`, or a point `c`),
+    the limit must hold for every allowed value of them. The engine proves it (the
+    expression, after cancelling a removable 0/0, must be continuous at the point) or
+    refuses. So `limit(abs(q)/q, q, c)` with c real is refused (no limit at c = 0), but with
+    c positive it is 1. Numbers (`arbitrary:` values) have no such issue.
 - Lists cannot be indexed (`[1]` is read as a unit and refused); use `min`, `max` or
   `count`.
 - `min(a, b)` and `max(a, b)` take two values of the same dimension, or one list
