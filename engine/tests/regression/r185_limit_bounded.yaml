@@ -1,0 +1,12 @@
+# m14 (run 7 defect 5): limit() on a symbol with a stated bound; inside, and at the edge of the bound
+# f = 50 Hz * 1 m/(1 m - dl); (f - 50)/dl = 50/(1 - dl) -> 50; dl*(0.5-dl)/(0.5-dl) -> 0.5 at the edge
+symbols: {dl: positive, y: positive}
+media: {s: {type: string, mu: 0.01 kg/m, tension: 100 N}}
+resonators:
+  r0: {type: string, on: s, length: 1 m, ends: [fixed, fixed]}
+given: [{fact: "dl < 0.5[m]", source: stated}, {fact: "y > 2[m]", source: stated}]
+observe:
+  coeff: "limit((frequency(r0, harmonic=1)*1[m]/(1[m] - dl) - frequency(r0, harmonic=1))/dl, dl, 0)"
+  edge: "limit(dl*(0.5[m] - dl)/(0.5[m] - dl), dl, 0.5[m])"
+  lower: "limit((y**2 - 4[m**2])/(y - 2[m]), y, 2[m])"
+expect: {coeff: 50, edge: 0.5, lower: 4}

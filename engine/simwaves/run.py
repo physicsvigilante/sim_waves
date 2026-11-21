@@ -134,14 +134,17 @@ COMPARISON_FRACTIONS = (sp.Rational(1, 1000), sp.Rational(1, 100), sp.Rational(1
                         sp.Rational(1, 2), sp.Rational(3, 4), sp.Rational(9, 10), sp.Rational(99, 100),
                         sp.Rational(999, 1000))
 COMPARISON_SCALES = (sp.Rational(1, 1000), sp.Rational(1, 100), sp.Integer(100), sp.Integer(1000))
+MIN_COMPARISON_RUNS = 5        # fewer extra runs that stay physical: the comparison is refused
 
 
 def _is_comparison(text):
     import ast
     try:
-        return isinstance(ast.parse(str(text).replace("^", "**"), mode="eval").body, ast.Compare)
+        body = ast.parse(str(text).replace("^", "**"), mode="eval").body
     except SyntaxError:
         return False
+    # 'x in cm' parses as a comparison but is a unit conversion, not a True/False result
+    return isinstance(body, ast.Compare) and not any(isinstance(op, (ast.In, ast.NotIn)) for op in body.ops)
 
 
 def _check_comparisons(sc, res, timeout):
@@ -195,11 +198,18 @@ def _check_comparisons(sc, res, timeout):
                 f = COMPARISON_SCALES[(k + j) % len(COMPARISON_SCALES)]
                 scale[n] = f if lo is None else (lambda lo_, f_: lambda v: lo_ + (v - lo_) * f_)(lo, f)
         runs.append(scale)
+    from .errors import PhysicalRangeError
+    skipped = []
     for scale in runs:
         try:
             sc2 = Scene(copy.deepcopy(data), scale=scale)
             _, r2 = _evaluate_once(sc2, timeout)
             errs = getattr(sc2, "obs_errors", {})
+        except PhysicalRangeError as exc:
+            # this scaling left the physics (e.g. a sound speed in light's range): the
+            # comparison has no meaning there, so the run is skipped and the basis says so
+            skipped.append(str(exc))
+            continue
         except SceneError as exc:
             r2, errs = {}, {n: exc for n in todo}
         for n in list(todo):
@@ -214,10 +224,21 @@ def _check_comparisons(sc, res, timeout):
                 sc.obs_errors[n] = SceneError(f"depends on the arbitrary value(s) {names}: true for some allowed "
                                               f"values and false for others (not necessarily true)")
                 res.pop(n)
+    done = len(runs) - len(skipped)
+    if done < MIN_COMPARISON_RUNS:
+        for n in todo:
+            if n in res:
+                sc.obs_errors[n] = SceneError(
+                    f"cannot be checked widely enough: only {done} of {len(runs)} extra runs stay physical "
+                    f"({skipped[0]}); give the arbitrary values a range (below:/above:)")
+                res.pop(n)
+        return
+    note = (f"; {len(skipped)} far scalings skipped, outside the physical range ({skipped[0]})"
+            if skipped else "")
     for n in todo:
         if n in res:
-            sc.basis[n] = (f"decided; same at {5 + len(runs)} values of the arbitrary values, including near the "
-                           f"ends of every range (sampled, not proved)")
+            sc.basis[n] = (f"decided; same at {5 + done} values of the arbitrary values, including near the "
+                           f"ends of every range (sampled, not proved){note}")
 
 
 def evaluate(sc, timeout=120):
@@ -231,7 +252,7 @@ def _split_unit(sc, name, text):
     import re
     from .expr import dimension_of, show_dim
     from .units import split_quantity
-    m = re.match(r"^(.*\S)\s+in\s+([A-Za-z][A-Za-z0-9/^*]*)\s*$", str(text))
+    m = re.match(r"^(.*\S)\s+in\s+([A-Za-zµμ][A-Za-z0-9/^*µμ]*)\s*$", str(text))
     if not m:
         return text, None
     expr_text, unit = m.groups()

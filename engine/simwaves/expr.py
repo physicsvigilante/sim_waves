@@ -128,6 +128,8 @@ class _Tr:
                 raise SceneError("only plain function names may be called")
             if any(k.arg is None for k in n.keywords) or any(isinstance(a, ast.Starred) for a in n.args):
                 raise SceneError("*args / **kwargs not allowed")
+            if n.func.id == "nearest" and n.args and _is_in(n.args[0]):
+                return self.ctx.call("nearest", self._nearest_in(n.args), {})
             args = [self.node(a) for a in n.args]
             kwargs = {k.arg: self.node(k.value) for k in n.keywords}
             return self.ctx.call(n.func.id, args, kwargs)
@@ -143,6 +145,40 @@ class _Tr:
                 left = r
             return rels
         raise SceneError(f"not allowed in expressions: {type(n).__name__} in {self.src!r}")
+
+    def _nearest_in(self, nodes):
+        """nearest(x in u, a, b, ...): x converted to the unit u (checked as for 'observe ...
+        in u'); a bare-number option is read in u, an option with a unit is converted to u."""
+        cmp_ = nodes[0]
+        x_src = ast.get_source_segment(self.src, cmp_.left)
+        u_src = ast.get_source_segment(self.src, cmp_.comparators[0])
+        factor, offset, udim = self.ctx.unit_for_nearest(x_src, u_src)
+        out = [(self.val(cmp_.left) - offset) / factor]
+        for o in nodes[1:]:
+            if _is_in(o):
+                raise SceneError("nearest(x in u, ...): only the value takes 'in u'; options are numbers in u "
+                                 "or quantities with units")
+            d = _Dim(self.src, self.ctx).node(o)
+            v = self.val(o)
+            if d in (None, DIMLESS):
+                out.append(v)                      # a printed number, read in the unit u
+            elif d != udim:
+                raise SceneError(f"nearest(): option {ast.get_source_segment(self.src, o)!r} has dimension "
+                                 f"{_show(d)}, not that of {u_src}")
+            else:
+                out.append((v - offset) / factor)
+        return out
+
+
+def _is_in(node):
+    return isinstance(node, ast.Compare) and len(node.ops) == 1 and isinstance(node.ops[0], ast.In)
+
+
+def _pure_number(node):
+    """True for a literal number such as 0, (0), -0 or 2*0: no names, calls or units."""
+    return all(isinstance(x, (ast.Constant, ast.UnaryOp, ast.BinOp, ast.operator, ast.unaryop))
+               and not (isinstance(x, ast.Constant) and isinstance(x.value, bool))
+               for x in ast.walk(node))
 
 
 def _dmul(a, b, sign=1):
@@ -180,6 +216,8 @@ class _Dim:
         if isinstance(n, ast.Subscript):
             v = self.node(n.value)
             _, ud = unit_from_ast(n.slice)
+            if v is None and _pure_number(n.value):
+                v = DIMLESS                # '0[m]': a written zero takes the bracket's unit
             return None if v is None else _dmul(v, ud)
         if isinstance(n, ast.BinOp):
             a, b = self.node(n.left), self.node(n.right)
@@ -199,7 +237,8 @@ class _Dim:
                     raise SceneError(f"a dimensional base needs a numeric exponent in {self.src!r}")
                 return tuple(x * e for x in a)
         if isinstance(n, ast.Call):
-            args = [self.node(a) for a in n.args]
+            # 'x in u' inside nearest() is checked when it is translated (_Tr._nearest_in)
+            args = [None if _is_in(a) else self.node(a) for a in n.args]
             kwargs = {k.arg: self.node(k.value) for k in n.keywords}
             return self.ctx.call_dim(n.func.id, args, kwargs, n, self)
         if isinstance(n, ast.Compare):

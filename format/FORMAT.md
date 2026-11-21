@@ -63,7 +63,11 @@ Write YAML booleans only as `true`/`false`; `on`, `yes`, `no` are plain words.
   - `x` and `t` written freely in a formula count as SI numbers, so book formulas such as
     `0.2*sin(2*pi*(6*t - x/60))` are fine.
   - The `x=`, `t=`, `at=` and `r=` arguments must be lengths or times.
-- **Units:** m, cm, mm, km, s, ms, us, ns, kg, g, N, Pa, kPa, J, mJ, W, mW, kW, Hz, kHz, MHz, GHz, rad, deg, K, degC.
+- **Units:** m, cm, mm, um (also μm), nm, km, s, ms, us, ns, h, kg, g, N, Pa, kPa, J, mJ, W, mW, kW, Hz, kHz, MHz, GHz, rad, deg, K, degC; km/h is `km/h` or `kmph`.
+  - `h` (hour) works inside a compound unit (`36 km/h`, `36[km/h]`) or in brackets
+    (`2[h]`). A lone `h` after a value (`3 h`) is not read as hours: it is too often a
+    height.
+  - A written zero takes its bracket's unit: `"0[m]"` is a length (and `"0[s]"` is not).
 - **Internals:** the engine works in exact SI.
 
 ## Media
@@ -549,7 +553,10 @@ pl:   {on: air, geometry: plane, intensity: I}
     - The engine first tries a proof over every allowed value (basis "proved for every
       allowed arbitrary value").
     - Otherwise it checks 14 values, including values near both ends of every range
-      (basis "sampled, not proved").
+      (basis "sampled, not proved"). An unranged arbitrary value is scaled from x0.001 to
+      x1000 here. A scaling that leaves the physics (a sound speed of 340000 m/s is not
+      sound) is skipped, and the basis names it; with fewer than 5 extra values left, the
+      comparison is refused. Give a range (below:/above:) to avoid that.
     - If the truth changes, the comparison is NOT AVAILABLE ("true for some allowed
       values and false for others"): the option is not necessarily true.
   - `==` between exact numbers needs exact equality; engine decimals use a relative
@@ -562,6 +569,12 @@ pl:   {on: air, geometry: plane, intensity: I}
 - **Options given as rounded numbers:** `nearest(x, a, b, c, d)` gives the position (1 for
   a) of the option nearest to x by relative distance. It is refused when the two nearest
   options are about equally close.
+  - x (or an option) may depend on solved unknowns; the option is picked after the solve.
+    If it still depends on something unfixed, it is refused; with arbitrary values, the
+    pick must be the same at every scaling.
+  - **Options printed in a unit:** `nearest(x in km/h, 36, 54, 72)` converts x to that
+    unit (its dimension is checked, as for `in` in `observe`). A bare-number option is
+    read in that unit; an option with a unit (`15[m/s]`) is converted to it.
 - **Lists:** `item(list, n)` (1 for the first), `spacing(list)` (the common difference of
   an equally spaced list; otherwise refused), and `count(list)`.
 - **A band of frequencies** (a source of variable frequency):
@@ -610,6 +623,11 @@ pl:   {on: air, geometry: plane, intensity: I}
   solved on the unit circle and every branch is enumerated:
   - phases mod 2*pi;
   - other unknowns over the range allowed by their sign and by the inequalities.
+  - **Two points off the origin** (an unknown k, or omega, and an unknown phase, from two
+    displacements): each fact fixes its angle up to two inverse-sine branches and 2*pi*n,
+    so k = k0 + n*2*pi/(x2 - x1). A stated bound (e.g. "less than half a wavelength
+    apart": `kk*15[cm] < pi`) picks the branches; one left is the answer, two or more
+    (or no bound: infinitely many) are reported as ambiguous.
 - **Refused trig cases:** any other unknown inside a trig function is refused rather than
   risk a lost root.
 - **Unknowns inside log, exp, inverse trig or an exponent** (e.g. a power from a level):
@@ -680,6 +698,8 @@ never `omega(w)`: both are 1/s, so the dimension check cannot catch it.
     oscillation is at the difference frequency.
 - `limit(expr, var, value)` is for approximations; e.g. a small `dl` gives
   `limit(f/dl, dl, 0)`.
+  - It accepts a symbol with a stated bound (`dl < 0.5[m]`). The value must be inside
+    the bound or on its edge (then approached from inside); outside, it is refused.
 - Lists cannot be indexed (`[1]` is read as a unit and refused); use `min`, `max` or
   `count`.
 - `min(a, b)` and `max(a, b)` take two values of the same dimension, or one list

@@ -286,6 +286,17 @@ class Scene:
     def expr(self, text, allow_rel=False, check_dims=False):
         return translate(text, self, allow_rel, check_dims)
 
+    def unit_for_nearest(self, x_text, unit_text):
+        """(factor, offset, dimension) for 'nearest(x in unit, ...)', with the same checks as
+        'observe: x in unit' (known unit, matching dimension, no angle units)."""
+        from .run import _split_unit
+        from .units import parse_unit
+        text, unit = _split_unit(self, "nearest", f"{x_text} in {unit_text}")
+        if unit is None:
+            raise SceneError(f"nearest(): cannot read the unit {unit_text!r} after 'in'")
+        _, factor, offset = unit
+        return factor, offset, parse_unit(unit_text)[1]
+
     # ---- dimension checking (used for `given` and `observe`) -----------------
     def name_dim(self, n):
         if n in self.objects:
@@ -323,6 +334,10 @@ class Scene:
                     chk.same(kwargs[key], D_FREQ, f"argument {key}= of frequencies_in() (a frequency)")
         if fname == "nearest" and len(args) >= 2:
             for a_ in args[1:]:
+                if args[0] not in (None, DIMLESS, "obj") and a_ == DIMLESS:
+                    raise SceneError("nearest(): the value has a unit but the options are bare numbers; write "
+                                     "nearest(x in <unit>, ...) to read them in that unit, or give the options "
+                                     "units, e.g. 150[Hz]")
                 chk.same(args[0], a_, "the value and the options of nearest()")
         if fname in ("min", "max") and len(args) == 2 and "obj" not in args:
             chk.same(args[0], args[1], f"the two arguments of {fname}()")
@@ -449,7 +464,8 @@ SOUND_SPEED_LIMIT = 10 ** 5                      # m/s: no sound in matter is th
 def _not_light(v, w):
     """Refuse a gas or fluid whose 'speed of sound' is that of light (radar, radio)."""
     if sp.sympify(v).is_number and float(sp.N(v)) >= SOUND_SPEED_LIMIT:
-        raise SceneError(f"{w}: a speed of {sp.N(v, 6)} m/s is not sound in a gas or fluid; for light, radar or "
+        from .errors import PhysicalRangeError
+        raise PhysicalRangeError(f"{w}: a speed of {sp.N(v, 6)} m/s is not sound in a gas or fluid; for light, radar or "
                          f"radio use a medium of type: em")
 
 
@@ -1929,16 +1945,33 @@ def _spacing(_sc, items):
     return diffs[0]
 
 
+class Nearest(sp.Function):
+    """nearest() whose value or options still hold unknowns: it picks the option itself as
+    soon as every argument is a number (when the solved values are put in). One left
+    unevaluated after that is refused by resolve_deferred."""
+
+    @classmethod
+    def eval(cls, *args):
+        if all(sp.sympify(a).is_number for a in args):
+            return _pick_nearest(args[0], args[1:])
+        return None
+
+
 def _nearest(_sc, x, *options):
     """The position (1 for the first) of the option nearest to x, by relative distance.
-    Refused when the two nearest options are about equally close."""
+    Refused when the two nearest options are about equally close. A value or option that
+    depends on an unknown is decided after the solve (see Nearest)."""
     if len(options) < 2:
         raise SceneError("nearest(x, a, b, ...): give at least two options")
+    if any(isinstance(o, (sp.Tuple, list, tuple)) for o in (x,) + options):
+        raise SceneError("nearest(): the value and every option must be single values, not lists")
+    return Nearest(*[sp.sympify(o) for o in (x,) + options])
+
+
+def _pick_nearest(x, options):
     vals = []
-    for o in (x,) + options:
+    for o in (x,) + tuple(options):
         o = sp.sympify(o)
-        if isinstance(o, sp.Tuple) or not o.is_number:
-            raise UndeterminedError("nearest(): needs numbers (the value and every option)")
         c = complex(sp.N(o, 30))
         if abs(c.imag) > 1e-20:
             raise SceneError("nearest(): a value is not real")
@@ -2108,6 +2141,17 @@ def _frequency_of(_sc, var, e):
 
 
 def _limit(_sc, e, var, value):
+    bv = None if isinstance(var, sp.Symbol) else _sc.bound_variable(var)
+    if bv is not None:
+        # a bounded symbol n = base + s*offset (offset >= 0): take the limit in the offset,
+        # at the offset that matches the value; a point outside the bound is refused
+        sym, p_off, sgn, base = bv
+        at = sp.simplify(sgn * (sp.sympify(value) - base))
+        if at.is_negative:
+            raise SceneError(f"limit(): {sym} -> {value} is outside the stated bound on {sym}")
+        if at.is_nonnegative is not True:
+            raise SceneError(f"limit(): cannot check that {sym} -> {value} is inside the stated bound on {sym}")
+        var, value = p_off, at                 # at the bound itself: approached from inside (offset -> 0+)
     if not isinstance(var, sp.Symbol):
         raise SceneError("limit(expr, var, value): second argument must be a variable")
     v = sp.limit(e, var, value)
@@ -2185,6 +2229,10 @@ def resolve_deferred(v):
         return (sp.true if truth else sp.false), basis
     if v.has(Equivalent):
         raise SceneError("equivalent() must be the whole observe expression")
+    if isinstance(v, sp.Basic) and v.has(Nearest):
+        left = sorted(str(s) for n in v.atoms(Nearest) for s in n.free_symbols)
+        raise UndeterminedError(f"nearest(): the value or an option still depends on {', '.join(left)} after "
+                                f"the solve, so no option can be picked")
     return v, "exact"
 
 

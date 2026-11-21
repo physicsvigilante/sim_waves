@@ -1,0 +1,5 @@
+# m14: nearest() on an unknown that nothing fixes is refused, never a pick
+unknowns: {u: positive}
+media: {air: {type: gas, v: 330 m/s}}
+observe: {pick: "nearest(u, 1, 2, 3)"}
+expect: {error: rejected}

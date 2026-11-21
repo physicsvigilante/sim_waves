@@ -1,0 +1,7 @@
+# m14: nearest(x in u, ...) checks the dimension of x against u
+unknowns: {f0: positive}
+media: {s: {type: string, mu: 0.01 kg/m, tension: 100 N}}
+resonators: {r: {type: string, on: s, length: 1 m, ends: [fixed, fixed]}}
+given: [{fact: "beat_frequency(frequency(r, harmonic=1), f0) == 4[Hz]", source: stated}, "f0 > 50[Hz]"]
+observe: {pick: "nearest(period(r, harmonic=1) in cm, 1, 2, 3)"}
+expect: {error: rejected, message: "not that of cm"}

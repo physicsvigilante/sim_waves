@@ -1,0 +1,7 @@
+# m14: in nearest(x in u, ...), an option with a unit must have u's dimension
+unknowns: {f0: positive}
+media: {s: {type: string, mu: 0.01 kg/m, tension: 100 N}}
+resonators: {r: {type: string, on: s, length: 1 m, ends: [fixed, fixed]}}
+given: [{fact: "beat_frequency(frequency(r, harmonic=1), f0) == 4[Hz]", source: stated}, "f0 > 50[Hz]"]
+observe: {pick: "nearest(f0 in Hz, 45[m], 55, 65)"}
+expect: {error: rejected, message: "has dimension m"}

@@ -610,3 +610,43 @@ Tests: r162–r167.
   the sound guard, `limit` with a bounded symbol, unknown k and phase off the origin,
   and the units km/h and μm.
 - **The light and radar part of H1 was not tested:** no such problem was in the sample.
+
+## Milestone 14: service repairs (before review)
+The seven run 7 defects, and one tooling defect:
+- **`nearest()` after the solve:** a value or option that depends on solved unknowns is
+  picked once they are put in; one that still depends on something unfixed is refused.
+- **`nearest(x in u, ...)`:** x converted to u (dimension checked as for `in`); bare-number
+  options read in u, options with units converted. A value with a unit against
+  bare-number options is refused with a hint to write `in <unit>` (run 7 single/55).
+- **A written zero takes its bracket's unit:** `"0[m]"` is a length; `"0[s]"` is still
+  refused where a length is needed.
+- **`in <unit>` was classed as a comparison.** `x in cm` parses as a Python comparison,
+  so it got the wide comparison check (x1000), which pushed an arbitrary sound speed to
+  340000 m/s and tripped the sound guard. It is now an ordinary result. Real comparisons
+  skip a scaling that leaves the physics (a new `PhysicalRangeError` from the sound
+  guards), say so in the basis, and are refused with fewer than 5 extra runs left.
+- **`limit()` on a bounded symbol,** as `diff()` already did; a point outside the bound is
+  refused.
+- **Unknown k and phase from two points off the origin:** solved branch by branch
+  (k = k0 + n*2*pi/(x2 - x1), the phase from k). The stated bounds pick the branches; two
+  or more are ambiguous, as before. In run 7's integer/5, the author's bound
+  (0.15k < pi) leaves two branches (290.5 cm and 53.2 cm), so the refusal there was
+  right; only its message was wrong. A displacement larger than the amplitude is now
+  reported as inconsistent.
+- **Units:** km/h (`kmph`), h (only inside a compound unit or brackets, never a lone
+  `h`), um/μm, nm.
+- **Harness on Windows:** `simwaves test -j N` used `fork`, which Windows lacks; it now
+  uses `spawn` there.
+
+Tests: r176–r195.
+
+**Run 7 re-check:** the 44 final run 7 scenes re-run on the new engine. No value the old
+engine gave changed. Six options refused before are now picked (jee_advanced/2,
+jee_main/19, jee_main/36, single/130, single/182, single/2); integer/5's refusal now lists
+its two branches.
+
+**Not fixed (tooling):** on Windows, r84 (peak of a sum of Gaussians) and r93 run for
+minutes, and r96 grows past 4.6 GB of memory; all three do so on the engine before m14
+as well. The wall-clock limit uses SIGALRM, which Windows lacks, so nothing stops a slow
+scene there. A limit that works on Windows (a worker process with a timeout) is a
+candidate for later.

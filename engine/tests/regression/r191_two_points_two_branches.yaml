@@ -1,0 +1,11 @@
+# m14: the bound 0.15k < pi leaves two branches (0.15k = asin(3/4) - pi/6 or 5pi/6 - asin(3/4)): refused
+unknowns: {kk: positive, ph: phase}
+media: {rope: {type: string, mu: 10 g/m, tension: 50 N}}
+waves:
+  w: {harmonic: {on: rope, A: 8 cm, k: kk, dir: +x, phase: ph}}
+given:
+  - {fact: "kk*15[cm] < pi", source: stated}
+  - {fact: "y(w, x=10[cm], t=0[s]) == 6[cm]", source: stated}
+  - {fact: "y(w, x=25[cm], t=0[s]) == 4[cm]", source: stated}
+observe: {lam: "wavelength(w) in cm"}
+expect: {error: rejected, message: "2 situations"}

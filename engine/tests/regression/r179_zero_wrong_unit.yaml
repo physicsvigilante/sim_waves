@@ -1,0 +1,6 @@
+# m14: a quoted zero still carries its unit's dimension: 0[s] is not a position
+media: {air: {type: gas, v: 330 m/s}}
+sources:
+  S: {on: air, at: ["0[s]", 0 m], f: 100 Hz, A: 1, phase: 0, spreading: none}
+observe: {f: "100"}
+expect: {error: rejected, message: "has dimension s, expected m"}

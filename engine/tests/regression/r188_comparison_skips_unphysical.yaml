@@ -1,0 +1,7 @@
+# m14 (run 7 defect 4): a sampled comparison over an unranged arbitrary sound speed skips the
+# scalings that leave sound (x1000: 340000 m/s) instead of failing; x + cos x > 0 for x = c/4 > 0
+arbitrary: {c: 340 m/s}
+media: {air: {type: gas, v: c}}
+resonators: {p: {type: pipe, on: air, length: 1 m, ends: [closed, open], end_correction: 0 m}}
+observe: {pos: "frequency(p, harmonic=1)*1[s] + cos(frequency(p, harmonic=1)*1[s]) > 0"}
+expect: {pos: true}

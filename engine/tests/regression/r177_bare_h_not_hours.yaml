@@ -1,0 +1,4 @@
+# m14: a lone trailing 'h' after a value is not read as hours ('3 h' would be 10800 s)
+media: {air: {type: gas, v: "3 h"}}
+observe: {v: "speed(air)"}
+expect: {error: rejected}

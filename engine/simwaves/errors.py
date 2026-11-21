@@ -13,5 +13,11 @@ class AmbiguousError(SceneError):
     """The scene's facts allow more than one situation; an explicit assumption is needed."""
 
 
+class PhysicalRangeError(SceneError):
+    """A value is outside the physical range of its kind (a gas or fluid speed in light's
+    range). In a sampled check, a scaled run that raises this left the physics: it is
+    skipped, and the basis says so."""
+
+
 class UndeterminedError(SceneError):
     """A requested quantity depends on something the scene never fixed."""

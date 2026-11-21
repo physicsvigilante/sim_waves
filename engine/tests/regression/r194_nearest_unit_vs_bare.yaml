@@ -1,0 +1,5 @@
+# m14 (run 7 single/55): a value with a unit against bare-number options is refused with a hint to use 'in <unit>'
+media: {s: {type: string, mu: 0.01 kg/m, tension: 100 N}}
+resonators: {r: {type: string, on: s, length: 1 m, ends: [fixed, fixed]}}
+observe: {bare: "nearest(frequency(r, harmonic=1), 40, 50, 60)"}
+expect: {error: rejected, message: "nearest(x in <unit>"}

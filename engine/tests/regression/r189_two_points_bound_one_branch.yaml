@@ -1,0 +1,16 @@
+# m14 (run 7 defect 6): unknown k and phase from two points off the origin; a stated bound leaves one branch
+# y = 8 sin(ph - k x) cm at t = 0: ph - 0.10k = asin(3/4) or pi - asin(3/4); ph - 0.25k = pi/6 or 5pi/6 (mod 2pi)
+# 0.15k < 1 leaves 0.15k = asin(3/4) - pi/6: k = 20 asin(3/4)/3 - 10pi/9 = 2.1631, ph = 5 asin(3/4)/3 - pi/9
+unknowns: {kk: positive, ph: phase}
+media: {rope: {type: string, mu: 10 g/m, tension: 50 N}}
+waves:
+  w: {harmonic: {on: rope, A: 8 cm, k: kk, dir: +x, phase: ph}}
+given:
+  - {fact: "kk*15[cm] < 1", source: stated}
+  - {fact: "y(w, x=10[cm], t=0[s]) == 6[cm]", source: stated}
+  - {fact: "y(w, x=25[cm], t=0[s]) == 4[cm]", source: stated}
+observe:
+  lam: "wavelength(w) in cm"
+  k: "kk"
+  phase: "ph"
+expect: {lam: "180*pi/(6*asin(3/4) - pi)", k: "20*asin(3/4)/3 - 10*pi/9", phase: "5*asin(3/4)/3 - pi/9"}

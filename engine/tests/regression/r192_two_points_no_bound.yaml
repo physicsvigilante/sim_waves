@@ -1,0 +1,10 @@
+# m14: with no bound, infinitely many k fit two points off the origin: refused
+unknowns: {kk: positive, ph: phase}
+media: {rope: {type: string, mu: 10 g/m, tension: 50 N}}
+waves:
+  w: {harmonic: {on: rope, A: 8 cm, k: kk, dir: +x, phase: ph}}
+given:
+  - {fact: "y(w, x=10[cm], t=0[s]) == 6[cm]", source: stated}
+  - {fact: "y(w, x=25[cm], t=0[s]) == 4[cm]", source: stated}
+observe: {lam: "wavelength(w) in cm"}
+expect: {error: rejected, message: "infinitely many"}

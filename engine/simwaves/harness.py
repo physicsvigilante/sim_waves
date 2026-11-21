@@ -146,7 +146,9 @@ def run_dir(path, jobs=None):
     counts, times = {}, []
     if jobs > 1 and len(files) > 1:
         import multiprocessing as mp
-        with mp.get_context("fork").Pool(jobs, maxtasksperchild=20) as pool:
+        # fork where the platform has it (fast start); spawn elsewhere (Windows)
+        method = "fork" if "fork" in mp.get_all_start_methods() else "spawn"
+        with mp.get_context(method).Pool(jobs, maxtasksperchild=20) as pool:
             out = pool.imap(_timed, files)
             for f, status, lines, dt in out:
                 counts[status] = counts.get(status, 0) + 1
