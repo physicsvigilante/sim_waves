@@ -1,0 +1,8 @@
+# m14 review round 6 (N6), controls: q/q is undefined only at q = 0 itself, so its limit there is 1;
+# with c positive (never 0), c*q/(c*q) -> 1 (also in r224); a unit bracket is not a denominator: q/2[m] -> 0
+symbols: {q: real, c: positive}
+observe:
+  qq: "limit(q/q, q, 0)"
+  cq: "limit(c*q/(c*q), q, 0)"
+  unit: "limit(q/2[m], q, 0)"
+expect: {qq: 1, cq: 1, unit: 0}

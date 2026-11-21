@@ -692,6 +692,11 @@ Tests r214–r218.
   symbols present, the limit is now proved by continuity after cancellation, or refused.
   The FORMAT approximation example (beat/dl as dl → 0) still gives v/(2l²). Tests r221–r224.
 
+### Milestone 14 review, round 6 (ChatGPT Astra, on PR #14; eval/review14/REPORT.md)
+- **Automatic cancellation hid a parameter from the limit proof** (`c*q/(c*q)` read as 1, so c
+  real gave 1, though c = 0 makes it 0/0 everywhere). The denominators as written are now
+  collected before translation and checked by the proof. Tests r225–r227.
+
 **Not fixed (tooling):** on Windows, r84 (peak of a sum of Gaussians) and r93 run for
 minutes, and r96 grows past 4.6 GB of memory; all three do so on the engine before m14
 as well. The wall-clock limit uses SIGALRM, which Windows lacks, so nothing stops a slow

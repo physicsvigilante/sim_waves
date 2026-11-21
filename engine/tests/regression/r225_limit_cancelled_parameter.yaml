@@ -1,0 +1,5 @@
+# m14 review round 6 (N6): c*q/(c*q) is cancelled to 1 as it is read, but with c real, c = 0 makes it 0/0 for
+# every q, so no limit at q -> 0; the denominators as written are checked: refused (before: 1)
+symbols: {q: real, c: real}
+observe: {invalid: "limit(c*q/(c*q), q, 0)"}
+expect: {error: rejected, message: "the denominator c*q may vanish"}

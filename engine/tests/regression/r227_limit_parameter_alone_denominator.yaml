@@ -1,0 +1,4 @@
+# m14 review round 6 (N6): q/c with c real: at c = 0 the expression is undefined for every q: refused
+symbols: {q: real, c: real}
+observe: {qc: "limit(q/c, q, 0)"}
+expect: {error: rejected, message: "the denominator c may be 0"}

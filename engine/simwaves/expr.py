@@ -135,6 +135,12 @@ class _Tr:
                 return self.ctx.call("nearest", self._nearest_in(n.args), {})
             args = [self.node(a) for a in n.args]
             kwargs = {k.arg: self.node(k.value) for k in n.keywords}
+            if n.func.id == "limit" and n.args:
+                if any(k.arg == "_dens" for k in n.keywords):
+                    raise SceneError("limit(): unknown keyword '_dens'")
+                # the denominators as written, each translated on its own so that SymPy's
+                # automatic cancellation (c*q/(c*q) -> 1) cannot hide one that may vanish
+                kwargs["_dens"] = tuple(self.val(d) for d in _written_denominators(n.args[0]))
             return self.ctx.call(n.func.id, args, kwargs)
         if isinstance(n, ast.Compare):
             if not (top and self.allow_rel):
@@ -185,6 +191,32 @@ def _no_celsius(unit_node, src):
         raise SceneError(f"degC inside unit brackets is ambiguous (a temperature or a temperature "
                          f"difference) in {src!r}: write temperatures in K, e.g. 293.15[K], or a "
                          f"difference as 20[K]; results can still be given 'in degC'")
+
+
+def _written_denominators(node):
+    """The denominators written in an expression's text: the right side of every '/', and
+    the base of every power with a negative constant exponent. Unit brackets (2[m/s]) are
+    units, not denominators, and are skipped."""
+    out = []
+
+    def neg_const(x):
+        return (isinstance(x, ast.UnaryOp) and isinstance(x.op, ast.USub) and isinstance(x.operand, ast.Constant)
+                and not isinstance(x.operand.value, bool) and x.operand.value > 0) or \
+               (isinstance(x, ast.Constant) and not isinstance(x.value, bool) and
+                isinstance(x.value, (int, float)) and x.value < 0)
+
+    def walk(x):
+        if isinstance(x, ast.Subscript):          # value[unit]: only the value can hold denominators
+            walk(x.value)
+            return
+        if isinstance(x, ast.BinOp) and isinstance(x.op, ast.Div):
+            out.append(x.right)
+        if isinstance(x, ast.BinOp) and isinstance(x.op, ast.Pow) and neg_const(x.right):
+            out.append(x.left)
+        for child in ast.iter_child_nodes(x):
+            walk(child)
+    walk(node)
+    return out
 
 
 def _is_in(node):

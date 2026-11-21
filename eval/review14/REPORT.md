@@ -69,3 +69,15 @@
 | N5 | silent wrong answer | With other symbols in the point or the expression, SymPy's limit is generic. Two agreeing one-sided results can hide values of those symbols where no limit exists. `limit(\|q\|/q, q, c)` with c real gave `Abs(c)/c`, although at c = 0 the sides are +1 and −1. `limit(1/q, q, c)` gave 1/c. | yes: `Abs(c)/c`, and `1/c` (also `1/c` for `q/(c*q)` at 0) | When any symbol other than the variable appears, SymPy's limit is not used. Instead the engine proves the limit for every allowed value of those symbols, or refuses: (1) every denominator of the original expression must be nonzero near the point, vanishing at most through a factor (x − a); (2) the simplified expression must be continuous at the point: negative powers need a nonzero base, fractional or symbolic powers and logs a positive one, and the only functions allowed are sin, cos, exp, Abs, Min and Max. The limit is then its value there. With no other symbols, the exact two-sided check is unchanged. (`scene.py` `_limit_by_continuity`) | r221 (jump: refused), r222 (pole: refused), r223 (`q/(c*q)`: refused), r224 (controls with c positive: 1/c, 1, 1) |
 
 **Checked:** the documented small-quantity use still works, in the FORMAT example 23_05_asc_004 (beat/dl as dl → 0 with v and l symbols gives v/(2l²)). So do run 7's single/52 probes (the coefficient 8, key A).
+
+## Round 6
+- **Reviewer:** ChatGPT (Astra), posted on PR #14 on 2026-11-21, with an inline comment at `scene.py:2206`. The N5 inline note was carried over from round 5.
+- **Commit reviewed:** `b6a790443764fa437630375fee709efcc36478f4`.
+- **Verdict:** FAIL on one new finding. N5 is marked resolved for its examples, and every earlier fix is unchanged.
+- **Reproduction:** reproduced on the engine as predicted.
+
+| # | Severity | Finding | Reproduced | Fix | Tests |
+|---|---|---|---|---|---|
+| N6 | silent wrong answer | SymPy cancels `c*q/(c*q)` to 1 as the expression is read. The other symbol c disappears, so the round 5 proof never ran. With c real, c = 0 makes the expression 0/0 for every q, so there is no limit; the engine gave 1. | yes: 1 | The parser collects the denominators written in `limit`'s first argument (the right side of each `/`, and the base of each negative constant power; unit brackets are skipped). Each is translated on its own, so nothing can cancel it, and passed to `_limit`. Their symbols count toward whether other symbols are present. The continuity proof checks each one: a denominator in q must be nonzero near the point, vanishing at most through (q − a); one without q (e.g. `c` in `q/c`) must be proved nonzero. (`expr.py` `_written_denominators`; `scene.py` `_limit`, `_limit_by_continuity`) | r225 (`c*q/(c*q)`, c real: refused), r226 (controls: `q/q` → 1; `c*q/(c*q)` with c positive → 1; `q/2[m]` → 0, a unit bracket is not a denominator), r227 (`q/c`, c real: refused) |
+
+**Checked:** the FORMAT example (v/(2l²)) and run 7's single/52 probe (8) are unchanged, as are the controls from rounds 4 and 5.

@@ -2154,7 +2154,7 @@ def _show_interval(i):
     return f"{'(' if i.left_open else '['}{i.inf}, {i.sup}{')' if i.right_open else ']'}"
 
 
-def _limit(_sc, e, var, value):
+def _limit(_sc, e, var, value, _dens=()):
     """limit(expr, var, value), relative to the values var can take: its kind (positive, ...)
     intersected with any stated bound. The point must lie in the closure of that domain; at
     its edge the limit is taken from inside only, at an interior point from both sides, which
@@ -2201,12 +2201,16 @@ def _limit(_sc, e, var, value):
     sides = at_edge or ["+", "-"]
     lim_var = p_off if bv is not None else var
     lim_at = sp.simplify(sgn * (value - base)) if bv is not None else value
-    params = (sp.sympify(e).free_symbols | lim_at.free_symbols) - {lim_var}
+    dens = [sp.sympify(d) for d in _dens]       # denominators as written, before any cancellation
+    params = (sp.sympify(e).free_symbols | lim_at.free_symbols |
+              set().union(*(d.free_symbols for d in dens))) - {lim_var}
     if params:
         # other symbols: SymPy's limit is generic and can hide values of them where the limit
-        # does not exist (|q|/q at q -> c gives sign(c), wrong at c = 0). Instead, prove that
-        # the expression is continuous at the point for every allowed value of them
-        return _limit_by_continuity(sp.sympify(e), lim_var, lim_at, params, shown)
+        # does not exist (|q|/q at q -> c gives sign(c), wrong at c = 0), and automatic
+        # cancellation can hide them altogether (c*q/(c*q) -> 1, but c = 0 gives 0/0 for every
+        # q). Instead, prove the limit for every allowed value of them, written denominators
+        # included
+        return _limit_by_continuity(sp.sympify(e), lim_var, lim_at, params, shown, dens)
     vals = {}
     for side in sides:
         if bv is not None:                     # in the offset: n = base + sgn*p
@@ -2227,7 +2231,7 @@ def _limit(_sc, e, var, value):
 _SMOOTH = (sp.sin, sp.cos, sp.exp, sp.Abs, sp.Min, sp.Max)    # continuous wherever their arguments are
 
 
-def _limit_by_continuity(e, x, a, params, shown):
+def _limit_by_continuity(e, x, a, params, shown, dens=()):
     """The limit of e as x -> a when e or a contains other symbols (params), valid for every
     allowed value of them, or a SceneError. Sound, not complete:
     1. every denominator of e is nonzero near a (it may vanish at a only through a factor
@@ -2243,16 +2247,22 @@ def _limit_by_continuity(e, x, a, params, shown):
         raise SceneError(f"limit(): cannot prove that the limit exists for every allowed value of {who} "
                          f"({why}); give them values (arbitrary:) or a sign, or ask for the expression itself")
 
-    for p in e.atoms(sp.Pow):                       # step 1: denominators of the original
-        if p.exp.is_negative and p.base.has(x):
-            b = p.base
-            for _ in range(6):
-                b0 = sp.simplify(b.subs(x, a))
-                if b0.is_zero is not True:
-                    break
-                b = sp.cancel(b / (x - a))
-            if b0.is_nonzero is not True:
-                refuse(f"the denominator {p.base} may vanish near {shown} -> {a}")
+    # step 1: denominators of the expression and those written in it (before SymPy cancelled
+    # any): each must be nonzero near the point for every value of params
+    bases = [p.base for p in e.atoms(sp.Pow) if p.exp.is_negative and p.base.has(x)]
+    for d in list(dens) + bases:
+        if not d.has(x):
+            if sp.simplify(d).is_nonzero is not True:
+                refuse(f"the denominator {d} may be 0, which leaves the expression undefined for every {shown}")
+            continue
+        b = d
+        for _ in range(6):
+            b0 = sp.simplify(b.subs(x, a))
+            if b0.is_zero is not True:
+                break
+            b = sp.cancel(b / (x - a))
+        if b0.is_nonzero is not True:
+            refuse(f"the denominator {d} may vanish near {shown} -> {a}")
     g = sp.simplify(sp.cancel(sp.together(e)))      # step 2: simplified form, continuous at a?
     for node in sp.preorder_traversal(g):
         if node.is_Atom or isinstance(node, (sp.Add, sp.Mul)):

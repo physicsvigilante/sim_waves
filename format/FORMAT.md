@@ -721,6 +721,8 @@ never `omega(w)`: both are 1/s, so the dimension check cannot catch it.
     expression, after cancelling a removable 0/0, must be continuous at the point) or
     refuses. So `limit(abs(q)/q, q, c)` with c real is refused (no limit at c = 0), but with
     c positive it is 1. Numbers (`arbitrary:` values) have no such issue.
+  - Every denominator as written counts, even one that cancels: `limit(c*q/(c*q), q, 0)`
+    with c real is refused (at c = 0 it is 0/0 for every q); with c positive it is 1.
 - Lists cannot be indexed (`[1]` is read as a unit and refused); use `min`, `max` or
   `count`.
 - `min(a, b)` and `max(a, b)` take two values of the same dimension, or one list
