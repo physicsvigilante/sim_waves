@@ -574,7 +574,10 @@ pl:   {on: air, geometry: plane, intensity: I}
   options are about equally close.
   - x (or an option) may depend on solved unknowns; the option is picked after the solve.
     If it still depends on something unfixed, it is refused. With arbitrary values, the
-    value and options it compares (not only the pick) must be the same at every scaling.
+    value and options it compares must be **proved** free of them (the engine reruns the
+    scene with them as symbols); sampled agreement is not enough for a choice of option,
+    so a value that cannot be proved independent is refused.
+  - A `nearest()` inside another is picked first.
   - **Options printed in a unit:** `nearest(x in km/h, 36, 54, 72)` converts x to that
     unit (its dimension is checked, as for `in` in `observe`). A printed number is read
     in that unit; an option with a unit (`15[m/s]`) or an unknown is converted to it by
@@ -707,8 +710,9 @@ never `omega(w)`: both are 1/s, so the dimension check cannot catch it.
   - At an interior point both one-sided limits are taken and must agree; otherwise it is
     refused ("from above ..., from below ..."). At the edge of the variable's domain (0
     for a positive symbol, or a stated bound) it is approached from inside only.
-  - It accepts a symbol with a stated bound (`dl < 0.5[m]`). The value must be inside
-    the bound or on its edge; outside, it is refused. A whole-number symbol is refused.
+  - The point must be one the variable can approach: 0 or more for a positive symbol,
+    inside or on a stated bound (`dl < 0.5[m]`). Outside, or when its sign cannot be
+    checked, it is refused. A whole-number symbol is refused.
 - Lists cannot be indexed (`[1]` is read as a unit and refused); use `min`, `max` or
   `count`.
 - `min(a, b)` and `max(a, b)` take two values of the same dimension, or one list

@@ -663,6 +663,16 @@ r196–r208:**
 6. Plotting `nearest()` crashed export; it is now a clear error. Also refused: `nearest`
    in `given` facts and inside comparisons, and keyword arguments in `nearest(x in u, ...)`.
 
+### Milestone 14 review, round 2 (ChatGPT Astra, on PR #14; eval/review14/REPORT.md)
+- **`nearest` with arbitrary values needs a proof, not samples.** A narrow bump can agree at
+  all five samples and still pick another option between them. The compared numbers must
+  now simplify to constants in a run with the arbitrary values as symbols; otherwise the
+  pick is refused. The three run 7 picks over arbitrary values are now proved.
+- **Nested `nearest()`** is resolved from the inside out (was an internal error).
+- **`limit()` at a point outside a symbol's domain** (q positive, q → −1) is refused (was −1).
+
+Tests r209–r213.
+
 **Not fixed (tooling):** on Windows, r84 (peak of a sum of Gaussians) and r93 run for
 minutes, and r96 grows past 4.6 GB of memory; all three do so on the engine before m14
 as well. The wall-clock limit uses SIGALRM, which Windows lacks, so nothing stops a slow

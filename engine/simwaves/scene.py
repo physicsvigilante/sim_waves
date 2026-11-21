@@ -2154,6 +2154,17 @@ def _limit(_sc, e, var, value):
     if var.is_integer:
         raise SceneError(f"limit(): {shown} takes whole-number values only, so a limit in it is not defined")
     value = sp.sympify(value)
+    # the point must be in the closure of the variable's domain (its sign from its kind)
+    if value.is_real is False:
+        raise SceneError(f"limit(): the point {value} is not a real value")
+    for inside, outside, word in ((var.is_nonnegative, value.is_negative, "0 or more"),
+                                  (var.is_nonpositive, value.is_positive, "0 or less")):
+        if inside:
+            if outside:
+                raise SceneError(f"limit(): {shown} -> {value} is outside the values {shown} can take ({word})")
+            if (value.is_nonnegative if word == "0 or more" else value.is_nonpositive) is not True:
+                raise SceneError(f"limit(): cannot check that {shown} -> {value} stays within the values "
+                                 f"{shown} can take ({word})")
     # one side only at the edge of the variable's domain (approached from inside); both sides,
     # which must agree, at an interior point
     if value.is_zero and var.is_nonnegative:
@@ -2238,13 +2249,20 @@ def resolve_deferred(v, record=None):
     """Return (value, basis). Ordinary engine results are exact ('exact'). Each nearest()
     with numeric arguments is decided here; its arguments are appended to `record`."""
     if isinstance(v, sp.Basic) and v.has(Nearest):
-        picks = {}
-        for n in sorted(v.atoms(Nearest), key=sp.default_sort_key):
-            if all(a.is_number for a in n.args):
+        # innermost first: a nearest() inside another is picked, then put into the outer one
+        while True:
+            ready = [n for n in v.atoms(Nearest)
+                     if not any(a.has(Nearest) for a in n.args) and all(a.is_number for a in n.args)]
+            if not ready:
+                break
+            picks = {}
+            for n in sorted(ready, key=sp.default_sort_key):
                 picks[n] = _pick_nearest(n.args[0], n.args[1:])
                 if record is not None:
                     record.append(tuple(n.args))
-        v = v.xreplace(picks)
+            v = v.xreplace(picks)
+        if record is not None:                 # what is left (symbolic): kept for the proof run
+            record.extend(tuple(n.args) for n in v.atoms(Nearest) if not any(a.has(Nearest) for a in n.args))
     if isinstance(v, Equivalent):
         truth, basis = equivalent(*v.args)
         if truth is None:

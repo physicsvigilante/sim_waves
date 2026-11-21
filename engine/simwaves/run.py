@@ -82,6 +82,52 @@ def _frac(k, j, fracs):
     return base
 
 
+def _symbolic_scale(sc):
+    """Each arbitrary value as a positive symbol mapped onto its allowed range (all of it):
+    (scale for Scene, the symbols)."""
+    syms = {n: sp.Dummy(n, positive=True) for n in sc.arbitrary}
+
+    def mapping(n):
+        lo, hi = sc.arbitrary_ranges.get(n, (sp.Integer(0), sp.oo))
+        s_ = syms[n]
+        if hi.is_finite:
+            return lambda v: lo + (hi - lo) * s_ / (1 + s_)
+        return lambda v: lo + s_
+    return {n: mapping(n) for n in sc.arbitrary}, set(syms.values())
+
+
+def _nearest_proved(sc, names, timeout):
+    """The names whose nearest() compares numbers proved independent of the arbitrary
+    values: the scene is run once with them as symbols, and every recorded argument must
+    simplify to an expression free of those symbols. A pick is discrete, so agreement at
+    sampled values proves nothing; anything not proved here is refused."""
+    if not names:
+        return set()
+    data = copy.deepcopy(sc.data)
+    data["observe"] = {n: sc.data["observe"][n] for n in names}
+    for key in ("view", "explore", "illustrate"):
+        data.pop(key, None)
+    try:
+        scale, syms = _symbolic_scale(sc)
+        sc_sym = Scene(data, scale=scale)
+        _evaluate_once(sc_sym, min(timeout, 60))
+        recorded = getattr(sc_sym, "nearest_args", {})
+    except Exception:                  # noqa: BLE001 - no proof: refused by the caller
+        return set()
+    proved = set()
+    for n in names:
+        args = recorded.get(n)
+        if not args:
+            continue
+        try:
+            free = set().union(*(sp.simplify(a).free_symbols for call in args for a in call))
+        except Exception:              # noqa: BLE001
+            continue
+        if not free:                   # every compared number is a constant: no arbitrary symbol left
+            proved.add(n)
+    return proved
+
+
 def _evaluate_arbitrary(sc, timeout):
     """Run the scene at the stated arbitrary values and at two other scalings; keep only the
     observables that agree in all three runs."""
@@ -104,6 +150,7 @@ def _evaluate_arbitrary(sc, timeout):
                                                  f"answer depends on them")
                 res.pop(name)
             return sol, res
+    proved_nearest = None
     for name in list(res):
         failed = [(f, sc2.obs_errors[name]) for _, r2, sc2, f in others if name not in r2 and name in
                   getattr(sc2, "obs_errors", {})]
@@ -126,6 +173,21 @@ def _evaluate_arbitrary(sc, timeout):
             sc.obs_errors[name] = SceneError(f"nearest(): the value it compares depends on the arbitrary "
                                              f"value(s) {names}, so the problem does not fix the option")
             res.pop(name)
+            continue
+        if args0 is not None:
+            # agreement at samples is not enough for a discrete pick: it needs a proof
+            if proved_nearest is None:
+                proved_nearest = _nearest_proved(
+                    sc, [n for n in res if n in getattr(sc, "nearest_args", {})], timeout)
+            if name not in proved_nearest:
+                sc.obs_errors[name] = SceneError(
+                    f"nearest(): cannot prove that the value it compares is independent of the arbitrary "
+                    f"value(s) {names} (sampled agreement is not enough for a choice of option); give the "
+                    f"value without them, or read the option from the value")
+                res.pop(name)
+                continue
+            sc.basis[name] = (sc.basis.get(name, "exact") + "; the compared value is proved independent of "
+                              "the arbitrary values")
             continue
         if all(name in r2 and _same_result(res[name], r2[name]) for _, r2, _, _ in others):
             how = ("same at 5 values of each arbitrary value (ranged ones spread across their ranges, others "
@@ -458,10 +520,12 @@ def _evaluate_inner(sc):
                 v, basis = _decide_comparison(sc, text, parsed, sol)
             else:
                 rec = []
-                v, basis = resolve_deferred(sp.sympify(parsed).xreplace(sol).doit(), record=rec)
-                if rec:
-                    sc.nearest_args = getattr(sc, "nearest_args", {})
-                    sc.nearest_args[name] = rec
+                try:
+                    v, basis = resolve_deferred(sp.sympify(parsed).xreplace(sol).doit(), record=rec)
+                finally:                   # kept even when refused: the proof run reads them
+                    if rec:
+                        sc.nearest_args = getattr(sc, "nearest_args", {})
+                        sc.nearest_args[name] = rec
         except SceneError as exc:
             errors.append((name, exc))
             continue
