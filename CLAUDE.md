@@ -37,6 +37,46 @@ Each milestone works on its own branch (`feat/mNN-...`) and one PR:
 **Reserved problems stay out of git until the blind run is done** (they are excluded in
 `.git/info/exclude`), so no reviewer reading the PR can see them. Commit them in stage 2.
 
+## Review policy (supported class)
+Adopted after milestone 14, from Astra's assessment (issue #15).
+1. **Declare the supported class first.** Before implementation, each new service states
+   in its PLAN and in FORMAT.md:
+   - its physical model;
+   - the expression class it accepts;
+   - any variable and domain restrictions;
+   - its result guarantee (exact, proved or sampled);
+   - its resource budget.
+   "Any expression SymPy accepts" is not a support specification.
+2. **What must be fixed.** Within the declared class, any of these is REQUIRED:
+   - an accepted wrong result;
+   - a lost valid branch;
+   - an invented assumption;
+   - an invalid unit or domain transformation;
+   - a regression.
+   A wrong answer in a touched path counts even if it predates the PR.
+3. **How to fix it.** Fix it correctly, **or refuse the affected unsupported class** with
+   a sound, documented rule. Such a rule must:
+   - be checkable before any unbounded work;
+   - cover equivalent ways of writing the same input;
+   - have valid-neighbour controls in the tests.
+   Never blacklist only the reported example. A wrong accepted answer is never waived as
+   "not JEE".
+4. **Extremes and roots.** These need the service's stated completeness guarantee.
+   Unresolved regions, unorderable breakpoints, singularities and unbounded periodic sets
+   must not silently disappear; where the guarantee cannot be met within budget, return a
+   specific error. Sampled agreement never certifies an exact global result or a
+   universal claim.
+5. **Stop patching a repeated cause.** After two successive rounds with the same
+   structural cause, stop patching locally and ask the user for a scope decision: a
+   shared repair, or a declared supported-class reduction with its coverage cost
+   recorded. There is no round cap that approves unresolved wrong answers.
+6. **What a re-review covers:**
+   - the changed paths;
+   - earlier REQUIRED findings;
+   - valid controls;
+   - cross-cutting invariants.
+   Capability outside the agreed class is OPTIONAL or a future milestone.
+
 ## PR contents
 Concise, but enough for independent verification:
 - a summary of the changes, by file;
