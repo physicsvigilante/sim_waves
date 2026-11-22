@@ -1440,6 +1440,49 @@ def _side_value(pairs, var, q, side, breaks):
     raise SceneError(f"cannot find the value just {'right' if side == '+' else 'left'} of {var} = {q}")
 
 
+def _cond_region(c, var, dom, cuts):
+    """Where the condition c holds, within dom. When SymPy cannot turn c into a set
+    (sin(x) < 0), it is found from the places where its relations change (cuts, all of them
+    within dom): between two cuts a relation whose sides are continuous keeps its truth, so
+    one point decides each stretch. Refused when that cannot be certified."""
+    try:
+        return c.as_set().intersect(dom)
+    except Exception:
+        pass
+    from sympy.calculus.util import continuous_domain
+    for rel in ([c] if isinstance(c, sp.Rel) else list(c.atoms(sp.Rel))):
+        try:
+            ok = dom.is_subset(continuous_domain(rel.lhs - rel.rhs, var, dom))
+        except Exception:
+            ok = False
+        if ok is not True:
+            raise SceneError(f"cannot find where {c} holds over {dom}")
+    pts = sorted([q for q in cuts if dom.contains(q) is sp.true], key=lambda q: float(sp.N(q)))
+    edges = [dom.inf] + pts + [dom.sup]
+
+    def truth(u):
+        v = sp.sympify(c).xreplace({var: u})
+        if v not in (sp.true, sp.false):
+            v = sp.sympify(c).xreplace({var: u}).simplify()
+        if v not in (sp.true, sp.false):
+            raise SceneError(f"cannot decide {c} at {var} = {u}")
+        return v is sp.true
+    region = sp.S.EmptySet
+    for a, b in zip(edges, edges[1:]):
+        if (a < b) is not sp.true:
+            continue
+        stretch = sp.Interval.open(a, b)
+        w_ = _witness(stretch)
+        if w_ is None:
+            raise SceneError(f"cannot find where {c} holds over {dom}")
+        if truth(w_):
+            region = region.union(stretch)
+    for q in pts + [u for u in (dom.inf, dom.sup) if u.is_finite and dom.contains(u) is sp.true]:
+        if truth(q):
+            region = region.union(sp.FiniteSet(q))
+    return region.intersect(dom)
+
+
 def _extreme_rows(e, var, dom):
     """Candidates for the extremes of e over the interval dom, as rows (place, value, how):
     - 'at': the value e takes at that place (an interior critical point, a breakpoint of a
@@ -1457,18 +1500,22 @@ def _extreme_rows(e, var, dom):
             continue
         for rel in ([c] if isinstance(c, sp.Rel) else list(c.atoms(sp.Rel))):
             roots = sp.solveset(rel.lhs - rel.rhs, var, sp.S.Reals)
-            if isinstance(roots, sp.FiniteSet):
-                pts.update(roots)
+            if not isinstance(roots, sp.FiniteSet):
+                # infinitely many (sin(x) = 0): only those inside dom matter, and they must be few
+                roots = sp.solveset(rel.lhs - rel.rhs, var, dom)
+            if roots is sp.S.EmptySet:
+                continue
+            if not isinstance(roots, sp.FiniteSet):
+                raise SceneError(f"cannot find every place where {rel} changes over {dom}; give a "
+                                 f"finite range or a simpler shape")
+            pts.update(roots)
     breaks = set(pts)
     rows = []
     taken = sp.S.EmptySet                  # Piecewise: a piece applies where no earlier one did
     for piece, c in pairs:
-        try:
-            cset = c.as_set() if c is not sp.true else sp.S.Reals
-            region = cset.intersect(dom) - taken
-            taken = taken.union(cset)
-        except Exception:
-            region = dom
+        cset = sp.S.Reals if c is sp.true else _cond_region(c, var, dom, breaks)
+        region = cset.intersect(dom) - taken
+        taken = taken.union(cset)
         if region is sp.S.EmptySet:
             continue
         if not piece.has(var):
@@ -1490,9 +1537,9 @@ def _extreme_rows(e, var, dom):
     for q in pts:
         rows.append((q, e.xreplace({var: q}), "at"))       # the value at the place itself
         if q in breaks:                                   # and what is approached on each side
-            for side, inside in (("-", dom.contains(q - sp.Rational(1, 10 ** 12))),
-                                 ("+", dom.contains(q + sp.Rational(1, 10 ** 12)))):
-                if inside is sp.true:
+            # a side counts when dom has points arbitrarily close to q there, however short dom is
+            for side, inside in (("-", (dom.inf < q) is sp.true), ("+", (q < dom.sup) is sp.true)):
+                if inside:
                     rows.append((None, _side_value(pairs, var, q, side, breaks), "near"))
     for end_, side in ((dom.inf, "+"), (dom.sup, "-")):
         open_end = dom.left_open if side == "+" else dom.right_open

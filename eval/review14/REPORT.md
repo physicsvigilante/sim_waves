@@ -287,3 +287,16 @@
 | S3 | wrong refusal (from round 17) | A constant field had only its limits at infinity as candidates, so its peak was refused. | A part constant over a stretch is a value reached there (one point of the stretch is kept as a witness); `peak_position` of such a maximum is ambiguous. | r318 (peak 1), r319 (peak_position: ambiguous) |
 | S4 | wrong refusal | An exponent declared positive, but still a symbol, made a negative base need to be 0 or more before the solve. | Any exponent that is still a symbol and not known to be an integer records the `pow` condition, decided after the solve (`expr.py` `_power_obligation`); `pow` holds outright for a base of 0 or more with a positive exponent. | r320 (q = 2: 4), r321 (q = 1/2: refused) |
 | S5 | wrong refusal | `lo=` and `hi=` given by keyword were ignored by the range check, which then used the whole real line. | They are read like the positional ones (`expr.py` `_over_range`). The variable and the expression must be positional, and only `lo` and `hi` may be keywords, so no part bypasses the check. | r322 (log(x) on [1, 2]: log 2), r323 (on [−1, 2]: refused) |
+
+## Round 19
+- **Reviewer:** ChatGPT (Astra), posted on PR #14 on 2026-11-22. It was found by the 4-minute check on its third try.
+- **Commit reviewed:** `7a68e35ffd3f2f255ba656c58ac487c33d4b5faf`.
+- **Verdict:** FAIL. S1 to S5 are resolved for their cases. Two high findings.
+- **Reproduction:** both reproduced as predicted:
+  - T1: 9999999999999/10000000000000;
+  - T2: 0.
+
+| # | Severity | Finding | Fix | Tests |
+|---|---|---|---|---|
+| T1 | silent wrong answer | Whether a side of a breakpoint lies inside the range was tested with a fixed 10⁻¹² probe, so on a range shorter than that the jump's one-sided limit was left out. | A side counts when the range has points arbitrarily close to the breakpoint there: inf < q for the left, q < sup for the right (`scene.py` `_extreme_rows`). | r324 (your scene: refused), r325 (on [−1, 0], the jump at the closed end: refused) |
+| T2 | silent wrong answer | Breakpoints that SymPy returns as infinitely many (sin x = 0) were dropped, and a condition SymPy cannot turn into a set (sin x < 0) silently became the whole range. | Infinitely many breakpoints are re-solved within the range; if they are still not a finite list, the call is refused. A condition without a set is decided stretch by stretch between its breakpoints (one point each, after checking its sides are continuous on the range), plus each breakpoint itself; if that cannot be certified, the call is refused (`_cond_region`). | r326 (your scene: 1), r327 (min: 0), r328 (`step(-sin(x)**2)` on [1, 7]: 1, reached only at π and 2π), r329 (over the whole line: refused) |

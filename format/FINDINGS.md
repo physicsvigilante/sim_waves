@@ -799,6 +799,12 @@ Tests r214–r218.
   exponent declared positive is decided after the solve; keyword ranges are honoured. Tests
   r312–r323.
 
+### Milestone 14 review, round 19 (ChatGPT Astra, on PR #14; eval/review14/REPORT.md)
+- **A jump inside a very short range is no longer missed, and periodic steps are no longer
+  sampled:** a side of a breakpoint counts whenever the range reaches it, and conditions such as
+  sin(x) < 0 are decided stretch by stretch between their breakpoints within a finite range (or
+  refused over the whole line). Tests r324–r329.
+
 **Not fixed (tooling):** on Windows, r84 (peak of a sum of Gaussians) and r93 run for
 minutes, and r96 grows past 4.6 GB of memory; all three do so on the engine before m14
 as well. The wall-clock limit uses SIGALRM, which Windows lacks, so nothing stops a slow

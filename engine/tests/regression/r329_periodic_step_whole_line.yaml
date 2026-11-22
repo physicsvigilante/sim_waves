@@ -1,0 +1,6 @@
+# m14 review round 19 (T2): over the whole line the breakpoints of step(sin(x - t)) are infinitely many and cannot
+# all be checked: refused clearly rather than sampled
+waves:
+  w: {given: "step(sin(x - t))", units: {x: m, t: s, y: m}}
+observe: {bad: "peak(w, t=0[s])"}
+expect: {error: rejected, message: "cannot find every place"}

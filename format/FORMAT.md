@@ -704,7 +704,8 @@ never `omega(w)`: both are 1/s, so the dimension check cannot catch it.
     largest |y| that is reached: one only approached (beside a jump, toward where the profile
     stops being defined, or at infinity) is refused. Values are compared exactly, not to a
     tolerance. A constant field's peak is its value; its `peak_position` is ambiguous.
-    `max_in` and `min_in` likewise need their extreme value taken somewhere. An energy needs the profile defined over the whole
+    `max_in` and `min_in` likewise need their extreme value taken somewhere. A shape with
+    infinitely many breakpoints (`step(sin(x))`) is handled only over a finite range. An energy needs the profile defined over the whole
     stretch, and `width` needs the shape defined everywhere.
   - At a corner of a shape, `vy` and `slope` are undefined and refused; ask just beside it.
   - Observables can be nested, e.g.
