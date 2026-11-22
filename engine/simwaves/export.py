@@ -409,7 +409,16 @@ def _y_ranges(items):
                     p["y_range"] = [lo, hi]
 
 
-def export(data):
+def export(data, seconds=None, memory_mb=None):
+    """The view data for a scene, bounded: in a contained worker under a time and memory limit
+    (contain.py). A limit raises ResourceLimitError; a scene error is raised as usual."""
+    from . import contain
+    return contain.call_bounded("simwaves.export:_export_local", (data,), seconds or contain.DEFAULT_TIME,
+                                memory_mb or contain.DEFAULT_MEMORY)
+
+
+def _export_local(data):
+    """export() in this process (a contained worker's step)."""
     base, windows, sc = _one(data, None)
     base["variants"] = None
     ex = data.get("explore")

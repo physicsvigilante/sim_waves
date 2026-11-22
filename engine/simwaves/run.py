@@ -24,6 +24,11 @@ _Loader.add_implicit_resolver("tag:yaml.org,2002:bool",
 
 
 def load(path):
+    from .contain import LimitError, check_scene_size
+    try:
+        check_scene_size(path)
+    except LimitError as exc:
+        raise SceneError(str(exc)) from None
     with open(path, encoding="utf-8") as fh:
         try:
             data = yaml.load(fh, Loader=_Loader)
@@ -344,8 +349,14 @@ SIDE_CHECK_SECONDS = 60      # a symbolic proof attempt beside the main run
 
 
 def evaluate(sc, timeout=None):
-    """Solve and evaluate a scene. The time and memory of the whole request are bounded by
-    its container (contain.py); `timeout` is kept for callers and is not used."""
+    """Solve and evaluate a scene, in this process. The CLI, the test harness and export run
+    it inside a contained worker (contain.py), which bounds time and memory. A direct caller
+    may give `timeout` (seconds): the evaluation then raises ResourceLimitError when it runs
+    out. That bounds time only, not memory."""
+    if timeout is not None:
+        from .budget import within
+        from .errors import ResourceLimitError
+        return within(timeout, lambda: evaluate(sc), public=ResourceLimitError("time", f"{timeout:g} s"))
     if getattr(sc, "arbitrary", None):
         return _evaluate_arbitrary(sc, None)
     return _evaluate_once(sc)

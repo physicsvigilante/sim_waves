@@ -43,3 +43,45 @@ def report_pid(_item):
     while time.monotonic() - t0 < 0.5:
         pass
     return os.getpid(), t0, time.monotonic()
+
+
+def _start_descendant(marker):
+    """Start a sleeping child process and record (worker pid, descendant pid) in marker."""
+    import json
+    import os
+    import subprocess
+    import sys
+    child = subprocess.Popen([sys.executable, "-c", "import time; time.sleep(120)"])
+    with open(marker, "w") as fh:
+        json.dump({"worker": os.getpid(), "descendant": child.pid}, fh)
+    return child
+
+
+def spawn_then_spin(marker):
+    """Review 15a R6: start a descendant, then spin until a time limit stops the request."""
+    _start_descendant(marker)
+    while True:
+        pass
+
+
+def spawn_then_c_spin(marker):
+    """Review 15a R6: start a descendant, then block in C until the parent's hard stop."""
+    _start_descendant(marker)
+    return sum(range(10 ** 10))
+
+
+def spawn_then_return(marker):
+    """Review 15a R6: start a descendant and return normally (cleaned when the worker retires)."""
+    _start_descendant(marker)
+    return "returned"
+
+
+def nested_budget(_item=None):
+    """Review 15a R1: an inner budget (0.10 s) around a 0.20 s C call, whose fallback must not
+    replace an earlier whole-request expiry."""
+    from .budget import Budget, within
+    try:
+        within(0.10, lambda: time.sleep(0.20))
+    except Budget:
+        return "normal fallback value"
+    return "inner finished"

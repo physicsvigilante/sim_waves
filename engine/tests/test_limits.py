@@ -109,7 +109,7 @@ if __name__ == "__main__":
         t, m, err, _ = scene_limits(low, 120, 2048)
         check("expect lowers the limits", (t, m, err) == (5, 256, None), str((t, m, err)))
         t, m, err, _ = scene_limits(high, 120, 2048)
-        check("expect cannot raise the limits", err is not None and "never raise" in err, str(err))
+        check("expect cannot raise the limits", err is not None and "may only be lowered" in err, str(err))
 
     time.sleep(1)
     left = workers_now() - before

@@ -33,3 +33,5 @@ jobs:
         run: python tests/test_export.py
       - name: Containment
         run: python tests/test_limits.py
+      - name: Containment (review 15a regressions)
+        run: python tests/test_limits_review.py

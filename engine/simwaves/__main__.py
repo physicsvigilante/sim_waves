@@ -95,6 +95,12 @@ def main(argv):
         return 2
     argv, opts = parsed
     seconds, memory = opts.get("time", DEFAULT_TIME), opts.get("memory", DEFAULT_MEMORY)
+    from .contain import LimitError, check_limits
+    try:
+        check_limits(seconds, memory)
+    except LimitError as exc:
+        print(f"error: {exc}")
+        return 2
     if len(argv) >= 3 and argv[0] == "view":
         r = run_contained("simwaves.__main__:_view_text", (argv[1], argv[2:]), seconds * len(argv[2:]), memory)
     elif len(argv) == 2 and argv[0] == "test":
