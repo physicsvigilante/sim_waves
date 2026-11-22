@@ -1,0 +1,9 @@
+answer: "4 Hz/mm (K = 4)"
+final_scene: R3.v2.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "nothing"
+missing_in_source: "none"
+reasoning: "limit of beat_frequency/(dl/1 mm) as dl->0 gives 4 (v1 without the mm conversion gave 4000 per metre, same result)."
+friction: "Limit variable must be a number elsewhere; dl as a length symbol worked. Choosing the mm unit needed dividing by 1[mm] inside the limit."

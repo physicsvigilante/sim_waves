@@ -1,0 +1,14 @@
+id: R6
+assume:
+  - "Minimum distance along propagation for phase difference pi/3: two points in the same travelling wave."
+symbols: {}
+unknowns: {dx: positive}
+media:
+  tissue: {type: fluid, v: 1540 m/s, density: 1000 kg/m^3}
+waves:
+  w: {harmonic: {on: tissue, A: 1 nm, f: 2.5 MHz, dir: +x, phase: 0}}
+given:
+  - {fact: "phase(w, x=0[m], t=0[s]) - phase(w, x=dx, t=0[s]) == pi/3", source: stated}
+observe:
+  dx: "dx in um"
+  opt: "nearest(dx in um, 51, 103, 205, 308)"

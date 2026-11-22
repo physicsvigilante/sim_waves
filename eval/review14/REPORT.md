@@ -330,3 +330,9 @@
 | # | Severity | Finding | Fix | Tests |
 |---|---|---|---|---|
 | W1 | silent wrong answer | The probe that finds which branch applies just beside a breakpoint was capped only at 1 and by the other breakpoints. On a short range it landed outside the range, past zeros that are not listed (only those inside the range are), and picked the wrong branch. | The probe lies strictly between the breakpoint and the nearer of the next breakpoint on that side and the range's edge on that side. Every change of a condition inside the range is a listed breakpoint, so no condition changes between the breakpoint and the probe. This holds at breakpoints and at open ends. Distances are compared exactly. A condition that cannot be decided at the probe is refused, not passed over (`scene.py` `_side_value`). | r335 (your scene: refused), r336 (mirrored minimum: refused), r337 (the jump at the right end: refused), r338 (control, reached: 1) |
+
+## Round 23
+- **Reviewer:** ChatGPT (Astra), posted on PR #14 on 2026-11-22. It was found by the 4-minute check on its third try.
+- **Commit reviewed:** `4a0dcf8bda9b870e546a86db451a69dd7af86b91`.
+- **Verdict:** **PASS.** W1 is resolved. Astra checked r335–r338 against its own derivations, with an isolated copy of the changed code on SymPy 1.14. No new required or optional defect was found. Stage 1 is approved for stage 2 at this exact commit. This is not permission to merge.
+- **Carried to m15a:** r84, r93 and r96 on Windows; no CI; SymPy not pinned; no per-scene time limit on Windows.

@@ -1,0 +1,13 @@
+id: R2
+type: single_correct
+statement: >
+  A car sounding its horn moves with constant speed along a straight road and passes
+  close by a person standing at the roadside (neglect the person's distance from the
+  road). While the car approaches, the person hears the horn at 600 Hz; after it has
+  passed and is moving away, the person hears it at 500 Hz. The speed of sound in
+  air is 340 m/s and the air is still. The speed of the car is closest to
+options:
+  A: 111 km/h
+  B: 108 km/h
+  C: 122 km/h
+  D: 100 km/h

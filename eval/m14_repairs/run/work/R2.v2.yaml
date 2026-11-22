@@ -1,0 +1,22 @@
+id: R2
+assume:
+  - "Car passes through the line of the listener (distance neglected). Approaching = car on the -x side before passing; receding = car on the +x side after passing."
+  - "Same car and horn, so two copies of the source (car_a before the pass at -1000 m, car_b after the pass at +1000 m) share speed u and rest frequency f0. Positions are arbitrary (the answer must not depend on them)."
+unknowns: {u: positive, f0: positive}
+media:
+  air: {type: gas, v: 340 m/s}
+sources:
+  car_a: {on: air, at: [-1000 m, 0 m], velocity: [u, 0 m/s], f: f0, A: 1, phase: 0, spreading: none}
+  car_b: {on: air, at: [1000 m, 0 m], velocity: [u, 0 m/s], f: f0, A: 1, phase: 0, spreading: none}
+points:
+  P: [0 m, 0 m]
+rays:
+  appr: {from: car_a, to: P}
+  rec: {from: car_b, to: P}
+given:
+  - {fact: "frequency(appr, emitted=0[s]) == 600[Hz]", source: stated}
+  - {fact: "frequency(rec, emitted=0[s]) == 500[Hz]", source: stated}
+observe:
+  u: "u in km/h"
+  f0: "f0"
+  opt: "nearest(u in km/h, 111, 108, 122, 100)"

@@ -1,0 +1,9 @@
+answer: [B]
+final_scene: R6.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "nothing (amplitude 1 nm is an arbitrary value, answer does not depend on it)"
+missing_in_source: "amplitude (not needed)"
+reasoning: "Engine solved dx = 102.67 um for a phase difference of pi/3 and nearest() picks option 2 = B."
+friction: "Minimum distance was taken as the smallest positive solution of phase difference = pi/3, by my own choice (pi/3 itself, not modulo 2 pi); the engine found it unique only because I wrote the fact with the first-branch value directly... no branch enumeration needed."

@@ -1,0 +1,9 @@
+id: R3
+type: integer
+statement: >
+  A pipe open at both ends is 20.0 cm long. A second pipe, also open at both ends, is
+  longer than the first by a small length dl, where 0 < dl <= 5 mm. Both pipes sound
+  their fundamental notes together, and beats are heard. The speed of sound is
+  320 m/s; neglect end corrections. For very small dl the beat frequency is
+  approximately K dl, with dl in millimetres and the beat frequency in Hz. Find K.
+options: null

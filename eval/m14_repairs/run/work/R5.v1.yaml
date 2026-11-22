@@ -1,0 +1,14 @@
+id: R5
+assume:
+  - "Speed of sound unknown but common; arbitrary positive value, answer must be scale free."
+arbitrary: {v: {value: 340 m/s, above: 100 m/s, below: 1000 m/s}}
+media:
+  air: {type: gas, v: v}
+resonators:
+  P: {type: pipe, on: air, length: 60 cm, ends: [open, open], end_correction: 0 m}
+  Q: {type: pipe, on: air, length: 25 cm, ends: [closed, open], end_correction: 0 m}
+observe:
+  A: "frequency(Q, harmonic=1) > frequency(P, harmonic=1)"
+  B_ratio: "frequency(Q, harmonic=1)/frequency(P, harmonic=1)"
+  C: "frequency(P, harmonic=2) < frequency(Q, harmonic=1)"
+  D: "frequency(Q, harmonic=3) < frequency(P, harmonic=3)"

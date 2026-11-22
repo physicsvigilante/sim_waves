@@ -1,0 +1,19 @@
+id: R2
+assume:
+  - "Car passes through the line of the listener (distance neglected); approach and recede frequencies are heard at emission times well before and after the pass."
+  - "Car starts 1000 m from the person (arbitrary; answer must not depend on it)."
+unknowns: {u: positive, f0: positive}
+media:
+  air: {type: gas, v: 340 m/s}
+sources:
+  car: {on: air, at: [-1000 m, 0 m], velocity: [u, 0 m/s], f: f0, A: 1, phase: 0, spreading: none}
+points:
+  P: [0 m, 0 m]
+rays:
+  heard: {from: car, to: P}
+given:
+  - {fact: "frequency(heard, emitted=0[s]) == 600[Hz]", source: stated}
+  - {fact: "u < 340[m/s]", source: stated}
+observe:
+  u: "u in km/h"
+  opt: "nearest(u in km/h, 111, 108, 122, 100)"

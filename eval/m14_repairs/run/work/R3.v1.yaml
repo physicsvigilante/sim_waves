@@ -1,0 +1,11 @@
+id: R3
+assume:
+  - "Fundamentals of open-open pipes with zero end correction (stated); first pipe 20.0 cm."
+symbols: {dl: positive}
+media:
+  air: {type: gas, v: 320 m/s}
+resonators:
+  p1: {type: pipe, on: air, length: 20 cm, ends: [open, open], end_correction: 0 m}
+  p2: {type: pipe, on: air, length: "20[cm] + dl", ends: [open, open], end_correction: 0 m}
+observe:
+  K: "limit(beat_frequency(frequency(p1, harmonic=1), frequency(p2, harmonic=1))/dl, dl, 0)"

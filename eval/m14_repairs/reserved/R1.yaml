@@ -1,0 +1,14 @@
+id: R1
+type: single_correct
+statement: >
+  In a resonance-tube experiment, a tube closed at its lower end by water is excited
+  by a tuning fork of frequency 500 Hz held over its open top. The first resonance
+  occurs when the air column is 16.0 cm long and the second when it is 50.0 cm long.
+  In the same air, a pipe open at both ends is to be cut so that its fundamental
+  frequency is 210 Hz. Each open end of this pipe has the same end correction as the
+  open end of the resonance tube. The required length of the pipe is closest to
+options:
+  A: 81 cm
+  B: 79 cm
+  C: 77 cm
+  D: 83 cm

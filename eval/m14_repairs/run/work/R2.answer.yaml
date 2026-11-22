@@ -1,0 +1,9 @@
+answer: [A]
+final_scene: R2.v2.yaml
+engine_fit: full
+hand_steps: []
+coverage: partial
+not_represented: "one physical car is modelled as two copies of the source (before and after the pass) sharing u and f0, because frequency needs a time and the pass time depends on the unknown u"
+missing_in_source: "none"
+reasoning: "Engine solved u = 340/11 m/s = 111.27 km/h and f0 = 545.45 Hz; nearest() picks option 1 = A (111 km/h)."
+friction: "v1 with one source and one fact: the engine refused an inequality on an unknown (u < 340) as unchecked, and one frequency cannot fix both u and f0. A single car passing the listener cannot be expressed with a fixed emitted time because the pass time depends on the unknown u; used two source copies. Passing the person at zero distance is not a stated geometry, only an assumption."

@@ -1,0 +1,21 @@
+id: R1
+assume:
+  - "Same air for the tube and the open pipe, so one unknown speed v."
+  - "First resonance = harmonic 1 and second = harmonic 3 of the closed-open tube (stated as first and second resonance)."
+  - "The open pipe's end correction e equals the tube's open-end correction (stated)."
+unknowns: {v: positive, e: real, L: positive}
+media:
+  air: {type: gas, v: v}
+resonators:
+  p1: {type: pipe, on: air, length: 16 cm, ends: [closed, open], end_correction: e}
+  p2: {type: pipe, on: air, length: 50 cm, ends: [closed, open], end_correction: e}
+  q:  {type: pipe, on: air, length: L, ends: [open, open], end_correction: e}
+given:
+  - {fact: "frequency(p1, harmonic=1) == 500[Hz]", source: stated}
+  - {fact: "frequency(p2, harmonic=3) == 500[Hz]", source: stated}
+  - {fact: "frequency(q, harmonic=1) == 210[Hz]", source: stated}
+observe:
+  v: "v"
+  e: "e in cm"
+  L: "L in cm"
+  opt: "nearest(L in cm, 81, 79, 77, 83)"

@@ -821,6 +821,14 @@ Tests r214–r218.
   next breakpoint and of the range's edge; it had probed outside, past sign changes that were not
   listed. Tests r335–r338.
 
+### Milestone 14 blind run (reserved R1–R6; eval/m14_repairs/RESULT.md)
+- **6 of 6 matched the keys, all with full engine fit** (no hand steps), on the engine frozen at
+  `4a0dcf8`: nearest on solved values, options in cm, km/h and μm, a limit on a bounded symbol,
+  a wave fixed from two off-origin points with a bounding branch, and statements proved over an
+  arbitrary sound speed. No post-run fixes.
+- **Friction:** a source passing the listener needs two source copies (R2); the refusal for too
+  few facts names an inequality as "cannot be checked"; per-mm limits need `/(dl/1[mm])`.
+
 **Not fixed (tooling):** on Windows, r84 (peak of a sum of Gaussians) and r93 run for
 minutes, and r96 grows past 4.6 GB of memory; all three do so on the engine before m14
 as well. The wall-clock limit uses SIGALRM, which Windows lacks, so nothing stops a slow

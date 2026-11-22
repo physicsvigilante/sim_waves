@@ -1,0 +1,9 @@
+answer: [A]
+final_scene: R4.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "nothing"
+missing_in_source: "none (wavelength > 20 cm bound used to pick one branch; engine found it unique)"
+reasoning: "Engine solved k = 10 pi/3 rad/m, phase = 5 pi/6 in y = A sin(wt - kx + phase), omega = 100 pi: option A."
+friction: "none"
