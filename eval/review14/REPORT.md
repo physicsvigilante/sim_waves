@@ -167,3 +167,24 @@
 | K8 | silent wrong answer (pre-existing) | A wave profile `log(x-t) - log(x-t)` is simplified to 0 as the scene is read, so `y(p, x=-1, t=0)` and a limit through it give 0. | **Conservative refusal at ingestion, targeted.** `GivenWave` reads each condition written in the profile (each log, root, power, division and asin/acos) before SymPy simplifies it, using the same part-by-part scan as `limit`, with arbitrary functions allowed (`expr.py` `written_obligations`). A condition must either hold for every real x and t (proved from the symbols' declared signs), or **still be present** in the simplified profile, where the engine meets it at the point of use (`scene.py` `_check_profile_defined`, `_same_condition`). A condition that is neither, i.e. one simplified away, is refused when the scene is read. A first, stricter version (every condition provable everywhere) also refused valid scenes: FORMAT example `02_cnt_005` (denominator 3(x + 4t)² + 4) and run 7 single/10, a JEE "which is a wave?" question whose options include profiles with poles. So the rule targets exactly the condition that is lost. With it, single/10 matches the grader's output again. **Added with it:** a result that is not real (e.g. `sqrt(x - t)` at x < t gives I) is now refused (`run.py`); before, it was reported as I. | r251 (the cancelled-log profile: refused), r252 (controls: Lorentzian with b positive → 3/b, √(1 + x²)·cos(x − t) → 1, Gaussian → 1), r253 (a profile with poles is accepted: −2 away from the poles), r256 (at the pole: refused as infinite), r257 (√(−1): refused, not real), r258 (√4 = 2) |
 | K11 | wrong refusal (m14 regression) | The sign proofs handled only polynomials, so `sqrt(1 - cos q)` → 0 and `asin(cos q)` → π/2 were refused. | The sign just to one side of the point is read from the lowest-order term of the Taylor series when the expression is entire: built from +, ×, nonnegative integer powers, sin, cos, exp, sinh and cosh, whose series converge everywhere (`scene.py` `_poly_sign_near`, `_entire_in`). 1 − cos q ~ q²/2 > 0. | r254 (√(1 − cos q) → 0, asin(cos q) → π/2, acos(cos q) → 0), r255 (√(cos q − 1): refused) |
 | optional | message | A root's refusal said "must be positive"; a root needs "0 or more". | The message names the condition: "0 or more" for roots, "positive" for logs. | r242, r244, r255 |
+
+## Round 13
+- **Reviewer:** ChatGPT (Astra), posted on PR #14 on 2026-11-22.
+- **Commit reviewed:** `7ec5907e8eaaadbd1e4f724e15e1a5e2ef7f6ef3`.
+- **Verdict:** FAIL. K8 is resolved for its reported scene, and K11 is resolved. Three new findings.
+- **Reproduction:** all three reproduced as predicted:
+  - K12: −log 2 at the invalid point;
+  - K13: refused;
+  - K14: 0.
+
+| # | Severity | Finding | Fix | Tests |
+|---|---|---|---|---|
+| K12 | silent wrong answer | `log(t-x) - log(2*(t-x))` keeps both logs, so round 12 accepted it. At x = 1, t = 0 both arguments are negative, and the complex parts cancel to −log 2. Checking only that the final result is real cannot see this. | **The profile's written conditions are now checked wherever the wave is evaluated at a point**, replacing round 12's check at ingestion. `GivenWave` records each condition its written profile needs, read before simplification (`self.domain`). `_point` (used by `y`, `slope`, `vy`, `ay`) attaches them to the value as a `Defined(value, conditions…)` guard (`scene.py`). It becomes the value when every condition is true, and is refused at once when one is false. A guard still undecided after the solve is refused (`resolve_deferred`). In a `given` fact, the conditions become inequalities for the solver (`solver.py`); inside `limit`, they become domain conditions (`expr.py` `_conditions_of`). A "point" that contains the free coordinates (`y(p, x=x, t=0)`, the profile's shape) is a function, not a value, and is not guarded. | r260 (x = 1: refused), r261 (x = −1: −log 2) |
+| K13 | wrong refusal | `(x-t)**2/(x-t)**3` was refused at ingestion: the written denominator differs from the simplified 1/(x − t) by a non-constant factor. | Covered by the same change: the ingestion check is gone, and the written condition (x − t)³ ≠ 0 is checked at points. | r262 (x − t = 2: 0.5), r263 (at the pole: refused), r264 (a pole that simplification removes, at x − t = 1: refused) |
+| K14 | silent wrong answer | `tan` records no condition, so `tan(x-t) - tan(x-t)` gave 0 at x − t = π/2. | tan and sec now record cos(argument) ≠ 0, and cot and csc record sin(argument) ≠ 0, in the written scan and in computed values. | r265 (refused at π/2), r266 (tan(π/4) = 1) |
+
+**Also:**
+- r259: `log(x-t) - log(x-t)` at x − t = 2 is 0, which is correct.
+- r267: a guarded wave value inside a fact: √d = 2 gives d = 4.
+- r268: a profile's shape is not guarded (run 7 single/10).
+- r251, r256 and r257 now expect "not defined at this point".

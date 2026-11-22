@@ -3,4 +3,4 @@
 waves:
   p: {given: "sqrt(x-t)", units: {x: m, t: s, y: m}}
 observe: {neg: "y(p, x=-1[m], t=0[s])"}
-expect: {error: rejected, message: "is not a real value"}
+expect: {error: rejected, message: "not defined at this point"}

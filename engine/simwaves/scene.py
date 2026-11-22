@@ -1073,45 +1073,46 @@ class _Cancelled(SceneError):
     """The parts of a wave cancel everywhere: amplitude 0, other properties undefined."""
 
 
-_PROFILE_NEEDS = {"positive": ("positive", lambda g: g.is_positive),
-                  "nonneg": ("0 or more", lambda g: g.is_nonnegative or sp.simplify(g) == 0),
-                  "nonzero": ("nonzero", lambda g: g.is_nonzero),
-                  "unit": ("between -1 and 1", lambda g: g.is_number and (sp.Abs(g) <= 1) is sp.true)}
+class Defined(sp.Function):
+    """A wave value at a point, with the conditions its written profile needs there
+    (relationals: g > 0, g >= 0, g != 0, -1 <= g <= 1). It becomes the value as soon as every
+    condition is true, and is refused as soon as one is false; one still undecided after the
+    solve is refused by resolve_deferred. So a profile such as log(t - x) - log(2(t - x)) is
+    not reported at x > t, where its logs are undefined, even though the complex parts would
+    cancel to a real number."""
+
+    @classmethod
+    def eval(cls, value, *conds):
+        if any(c is sp.false for c in conds):
+            raise SceneError("the wave's written profile is not defined at this point (a log, root, division, "
+                             "tan or asin/acos written in it fails there)")
+        left = [c for c in conds if c is not sp.true]
+        if not left:
+            return value
+        if len(left) < len(conds):
+            return cls(value, *left)
+        return None
 
 
-def _check_profile_defined(sc, text, raw, w):
-    """A given profile must not lose, in SymPy's simplification as it is read, a condition
-    its written form needs: log(x - t) - log(x - t) becomes 0, which would then be reported
-    where log is undefined. Each log, root, power, division and asin/acos written in it
-    (read before simplification) must either hold for every real x and t and every allowed
-    value of its symbols, or still be present in the simplified profile `raw`, where the
-    engine meets it at the point it is used (a pole gives an infinite value, refused).
-    A condition that is neither is refused, so the wave is refused when the scene is read."""
-    from .expr import written_obligations, _value_obligations
-    kept = _value_obligations(raw)
-    for kind, g in written_obligations(text, sc):
-        g = sp.sympify(g)
-        word, holds = _PROFILE_NEEDS[kind]
-        if holds(g) is True or any(_same_condition(kind, g, k2, g2) for k2, g2 in kept):
-            continue
-        raise SceneError(f"{w}.given: the profile needs {g} to be {word}, which cannot be shown for every x and t, "
-                         f"and the written profile simplifies that condition away (e.g. log(x - t) - log(x - t) "
-                         f"becomes 0); write the profile in its simplified form")
+def _domain_rel(kind, g):
+    """A written condition as a relational that SymPy decides once g is a number."""
+    if kind == "positive":
+        return sp.StrictGreaterThan(g, 0)
+    if kind == "nonneg":
+        return sp.GreaterThan(g, 0)
+    if kind == "nonzero":
+        return sp.Ne(g, 0)
+    return sp.And(sp.GreaterThan(g, -1), sp.LessThan(g, 1))
 
 
-def _same_condition(kind, g, kind2, g2):
-    """True when condition (kind2, g2) of the simplified profile carries (kind, g) of the
-    written one: the same kind on the same expression, up to a constant factor (positive,
-    except for 'nonzero', where any nonzero factor will do)."""
-    if kind2 != kind:
-        return False
-    try:
-        r = sp.simplify(sp.sympify(g) / sp.sympify(g2))
-    except Exception:                          # noqa: BLE001
-        return False
-    if not r.is_number or r == 0:
-        return False
-    return True if kind == "nonzero" else bool(r.is_positive)
+def _guard(value, rels, x, t):
+    """value, guarded by the profile conditions rels taken at (x, t). A 'point' that still
+    contains the free coordinates (y(w, x=x, t=0) is the shape at t = 0) is a function, not a
+    value at a point: it keeps its own singularities and is not guarded."""
+    if not rels or sp.sympify(x).has(X, T) or sp.sympify(t).has(X, T):
+        return value
+    conds = [sp.sympify(r).xreplace({X: x, T: t}) for r in rels]
+    return Defined(value, *conds)
 
 
 class GivenWave:
@@ -1138,11 +1139,18 @@ class GivenWave:
                 fac[var] = factor
             else:
                 fac[var] = sp.Integer(1)
+        from .expr import written_obligations
+        written = written_obligations(spec["given"], sc)       # read before SymPy simplifies anything
         raw = sc.expr(spec["given"])
-        _check_profile_defined(sc, spec["given"], sp.sympify(raw), w)
         if raw.free_symbols - set(sc.names.values()):
             raise SceneError(f"{w}: formula uses undeclared symbols")
         self.f = fac["y"] * raw.xreplace({X: X / fac["x"], T: T / fac["t"]})
+        # the conditions the written profile needs (each log, root, division, tan, asin/acos),
+        # checked wherever the wave is evaluated at a point, since simplification may have
+        # removed them from f (log(x - t) - log(x - t) -> 0) or the complex parts may cancel
+        self.domain = [_domain_rel(k, sp.sympify(g).xreplace({X: X / fac["x"], T: T / fac["t"]}))
+                       for k, g in written]
+        self.domain = [r for r in self.domain if r is not sp.true]
         self._sin = None
         travelling = True
         if self.medium is not None:
@@ -2058,10 +2066,10 @@ def _point(sc, fname, deriv):
                         raise SceneError(f"{fname}(): x = {xv} m is a corner of the shape at that instant, "
                                          f"where the {'slope' if X in deriv else 'velocity'} is not defined; "
                                          f"ask just beside it")
-            return d.xreplace({X: x, T: t}).doit()
+            return _guard(d.xreplace({X: x, T: t}).doit(), getattr(wave, "domain", ()), x, t)
         for var in deriv:
             e = sp.diff(e, var)
-        return e.xreplace({X: x, T: t}).doit()
+        return _guard(e.xreplace({X: x, T: t}).doit(), getattr(wave, "domain", ()), x, t)
     return f
 
 
@@ -2259,6 +2267,7 @@ def _limit(_sc, e, var, value, _written=(), _obligations=()):
     exists (|q|/q at q -> c is wrong at c = 0), and simplification as the text is read can
     erase a symbol together with its domain (log(c) - log(c) -> 0, c*q/(c*q) -> 1). Numbers
     (arbitrary: values) have neither problem."""
+    e = sp.sympify(e).replace(lambda z: isinstance(z, Defined), lambda z: z.args[0])
     bv = None if isinstance(var, sp.Symbol) else _sc.bound_variable(var)
     if any(sp.sympify(x).atoms(AppliedUndef) for x in (e, value)):
         raise SceneError("limit(): the expression or the point contains an arbitrary function, which is not "
@@ -2454,6 +2463,10 @@ def resolve_deferred(v, record=None):
             v = v.xreplace(picks)
         if record is not None:                 # what is left (symbolic): kept for the proof run
             record.extend(tuple(n.args) for n in v.atoms(Nearest) if not any(a.has(Nearest) for a in n.args))
+    if isinstance(v, sp.Basic) and v.has(Defined):
+        left = sorted({str(c) for g in v.atoms(Defined) for c in g.args[1:]})
+        raise UndeterminedError(f"cannot check that the wave's written profile is defined where it is used: it "
+                                f"needs {', '.join(left)}")
     if isinstance(v, Equivalent):
         truth, basis = equivalent(*v.args)
         if truth is None:

@@ -1,0 +1,5 @@
+# m14 review round 13 (K14), control: tan(x - t) at x - t = pi/4 is 1
+waves:
+  p: {given: "tan(x-t)", units: {x: m, t: s, y: m}}
+observe: {ok: "y(p, x=(pi/4)[m], t=0[s])"}
+expect: {ok: 1}

@@ -105,10 +105,10 @@ ends: {left: driven, right: absorbing}   # for fixed/free ends and joins, use `j
 w: {harmonic: {on: rope, A: 1 cm, f | omega | period, lambda | k, v,
                dir: +x | -x | <direction unknown>   (or  from: left | right | <origin>),
                phase: 0}}
-# 2. given: an explicit y(x,t); units for x, t AND y are required. A log, root, division or
-#    asin/acos written in the profile must not be simplified away: log(x - t) - log(x - t)
-#    is refused (it would read as 0 where log is undefined). A profile with poles is fine;
-#    a value at a pole, or a value that is not real (sqrt(x - t) at x < t), is refused.
+# 2. given: an explicit y(x,t); units for x, t AND y are required. Each log, root, division,
+#    tan or asin/acos written in the profile is checked wherever the wave is evaluated, even
+#    if it cancels: log(x - t) - log(x - t) is refused at x < t (and is 0 at x > t), a
+#    profile with poles is refused at a pole, and sqrt(x - t) at x < t is refused.
 p: {given: "3/(2 + (x - 4*t)**2)", units: {x: m, t: s, y: m}, on: rope}
 # 3. pulse on a string, launched from the coordinate origin (any origin, e.g. a horizontal rope:
 #    coordinate: {origin: left_end, direction: right, variable: s} and from: left_end, toward: right)

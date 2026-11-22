@@ -1,0 +1,6 @@
+# m14 review round 13 (K13), negative: (x - t - 1)/((x - t - 1)(x - t)) simplifies to 1/(x - t), which has no
+# pole at x - t = 1, but the written profile does (0/0 there): refused at x = 1, t = 0
+waves:
+  p: {given: "(x-t-1)/((x-t-1)*(x-t))", units: {x: m, t: s, y: m}}
+observe: {removed: "y(p, x=1[m], t=0[s])"}
+expect: {error: rejected, message: "not defined at this point"}

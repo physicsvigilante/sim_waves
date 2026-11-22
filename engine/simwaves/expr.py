@@ -204,6 +204,10 @@ class _Tr:
                     obligations.append(("nonneg", value(x.args[0])))
                 elif name in ("asin", "acos") and x.args:
                     obligations.append(("unit", value(x.args[0])))
+                elif name in ("tan", "sec") and x.args:
+                    obligations.append(("nonzero", sp.cos(value(x.args[0]))))
+                elif name in ("cot", "csc") and x.args:
+                    obligations.append(("nonzero", sp.sin(value(x.args[0]))))
                 for a in list(x.args) + [k.value for k in x.keywords]:
                     walk(a)
                 return
@@ -298,6 +302,34 @@ def _value_obligations(v):
             out.append(("positive", node.args[0]))
         elif isinstance(node, (sp.asin, sp.acos)):
             out.append(("unit", node.args[0]))
+        elif isinstance(node, (sp.tan, sp.sec)):
+            out.append(("nonzero", sp.cos(node.args[0])))
+        elif isinstance(node, (sp.cot, sp.csc)):
+            out.append(("nonzero", sp.sin(node.args[0])))
+        elif type(node).__name__ == "Defined":           # a wave value with its domain conditions
+            out.extend(_conditions_of(node))
+    return out
+
+
+def _conditions_of(guard):
+    """The (kind, value) conditions carried by a Defined(...) wave value, whatever form SymPy
+    gave the relationals (g > 0 may be stored as -g < 0)."""
+    out = []
+
+    def one(rel):
+        if isinstance(rel, sp.StrictGreaterThan):
+            out.append(("positive", rel.lhs - rel.rhs))
+        elif isinstance(rel, sp.StrictLessThan):
+            out.append(("positive", rel.rhs - rel.lhs))
+        elif isinstance(rel, sp.GreaterThan):
+            out.append(("nonneg", rel.lhs - rel.rhs))
+        elif isinstance(rel, sp.LessThan):
+            out.append(("nonneg", rel.rhs - rel.lhs))
+        elif isinstance(rel, sp.Unequality):
+            out.append(("nonzero", rel.lhs - rel.rhs))
+    for rel in guard.args[1:]:
+        for part in (rel.args if isinstance(rel, sp.And) else (rel,)):
+            one(part)
     return out
 
 

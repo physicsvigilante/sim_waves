@@ -751,6 +751,15 @@ Tests r214–r218.
 - **Wrong refusals of non-polynomial limits fixed:** signs near the point now also come from the
   Taylor series of entire expressions (√(1 − cos q) → 0, asin(cos q) → π/2). Tests r251–r258.
 
+### Milestone 14 review, round 13 (ChatGPT Astra, on PR #14; eval/review14/REPORT.md)
+- **Profile conditions are now checked where the wave is evaluated**, replacing round 12's check
+  when the scene is read. That one missed logs whose complex parts cancel (`log(t-x) - log(2(t-x))`
+  at x > t gave −log 2), wrongly refused equivalent poles (`(x-t)^2/(x-t)^3`), and had no condition
+  for tan. Each condition written in a `given` profile now goes with every value at a point: decided
+  when the point is a number, after the solve when it is symbolic (or as an inequality in a fact, or
+  a domain condition in a limit). A profile's shape (`y(p, x=x, t=0)`) is a function and is not
+  guarded. tan/sec/cot/csc conditions are recorded. Tests r259–r268.
+
 **Not fixed (tooling):** on Windows, r84 (peak of a sum of Gaussians) and r93 run for
 minutes, and r96 grows past 4.6 GB of memory; all three do so on the engine before m14
 as well. The wall-clock limit uses SIGALRM, which Windows lacks, so nothing stops a slow

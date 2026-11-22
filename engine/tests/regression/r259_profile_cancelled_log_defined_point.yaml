@@ -1,0 +1,6 @@
+# m14 review round 13: the profile log(x - t) - log(x - t) where its logs are defined (x - t = 2 > 0) is
+# log 2 - log 2 = 0
+waves:
+  p: {given: "log(x-t) - log(x-t)", units: {x: m, t: s, y: m}}
+observe: {pos: "y(p, x=2[m], t=0[s])"}
+expect: {pos: 0}

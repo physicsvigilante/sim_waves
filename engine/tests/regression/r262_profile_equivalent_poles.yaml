@@ -1,0 +1,6 @@
+# m14 review round 13 (K13): (x - t)^2/(x - t)^3 = 1/(x - t) away from x = t; round 12 wrongly refused the
+# profile; at x - t = 2 it is 1/2
+waves:
+  p: {given: "(x-t)**2 / (x-t)**3", units: {x: m, t: s, y: m}}
+observe: {value: "y(p, x=2[m], t=0[s])"}
+expect: {value: 0.5}

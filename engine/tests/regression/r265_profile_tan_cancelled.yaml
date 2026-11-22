@@ -1,0 +1,6 @@
+# m14 review round 13 (K14): tan(x - t) - tan(x - t) simplifies to 0, but tan has a pole at x - t = pi/2:
+# refused there (before: 0)
+waves:
+  p: {given: "tan(x-t) - tan(x-t)", units: {x: m, t: s, y: m}}
+observe: {invalid: "y(p, x=(pi/2)[m], t=0[s])"}
+expect: {error: rejected, message: "not defined at this point"}
