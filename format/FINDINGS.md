@@ -805,6 +805,11 @@ Tests r214–r218.
   sin(x) < 0 are decided stretch by stretch between their breakpoints within a finite range (or
   refused over the whole line). Tests r324–r329.
 
+### Milestone 14 review, round 20 (ChatGPT Astra, on PR #14; eval/review14/REPORT.md)
+- **An unresolved set from SymPy is no longer trusted:** a step condition SymPy leaves as a
+  ConditionSet (sin(x)/x < 0) is decided stretch by stretch, or refused; a branch is never skipped
+  for want of a point to evaluate. Tests r330–r331.
+
 **Not fixed (tooling):** on Windows, r84 (peak of a sum of Gaussians) and r93 run for
 minutes, and r96 grows past 4.6 GB of memory; all three do so on the engine before m14
 as well. The wall-clock limit uses SIGALRM, which Windows lacks, so nothing stops a slow

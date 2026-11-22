@@ -1440,13 +1440,24 @@ def _side_value(pairs, var, q, side, breaks):
     raise SceneError(f"cannot find the value just {'right' if side == '+' else 'left'} of {var} = {q}")
 
 
+def _plain_set(S_):
+    """True for a set built only from intervals, finite sets and unions of them (one SymPy has
+    actually solved), not a ConditionSet, an unevaluated Complement or Intersection, etc."""
+    if S_ is sp.S.EmptySet or isinstance(S_, (sp.Interval, sp.FiniteSet)) or S_ == sp.S.Reals:
+        return True
+    return isinstance(S_, sp.Union) and all(_plain_set(a) for a in S_.args)
+
+
 def _cond_region(c, var, dom, cuts):
     """Where the condition c holds, within dom. When SymPy cannot turn c into a set
     (sin(x) < 0), it is found from the places where its relations change (cuts, all of them
     within dom): between two cuts a relation whose sides are continuous keeps its truth, so
     one point decides each stretch. Refused when that cannot be certified."""
     try:
-        return c.as_set().intersect(dom)
+        got = c.as_set().intersect(dom)
+        if _plain_set(got):
+            return got
+        # an unresolved set (a ConditionSet): decide it below, or refuse
     except Exception:
         pass
     from sympy.calculus.util import continuous_domain
@@ -1516,14 +1527,17 @@ def _extreme_rows(e, var, dom):
         cset = sp.S.Reals if c is sp.true else _cond_region(c, var, dom, breaks)
         region = cset.intersect(dom) - taken
         taken = taken.union(cset)
+        if not _plain_set(region):
+            raise SceneError(f"cannot find where {c} holds over {dom}")
         if region is sp.S.EmptySet:
             continue
         if not piece.has(var):
             # a constant part: reached all over its stretch (or at its single point)
             w_ = _witness(region)
-            if w_ is not None:
-                flat = not isinstance(region, sp.FiniteSet) and region.measure != 0
-                rows.append((w_, e.xreplace({var: w_}), "flat" if flat else "at"))
+            if w_ is None:          # a nonempty stretch whose value must not be left out
+                raise SceneError(f"cannot find a point where {piece} applies over {dom}")
+            flat = not isinstance(region, sp.FiniteSet) and region.measure != 0
+            rows.append((w_, e.xreplace({var: w_}), "flat" if flat else "at"))
             continue
         crit = sp.solveset(sp.diff(piece, var), var, region)
         if crit is sp.S.EmptySet:

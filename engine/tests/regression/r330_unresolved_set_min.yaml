@@ -1,0 +1,5 @@
+# m14 review round 20 (U1): SymPy gives the set where sin(x)/x < 0 as an unresolved ConditionSet; it is now decided
+# stretch by stretch between pi and 2pi (sin(x)/x is continuous on [1, 7]). At 3pi/2 it is -2/(3pi) < 0, so
+# step(...) = 0: the smallest value is 0 (before: missed, as the branch had no point to evaluate)
+observe: {ok: "min_in(x, step(sin(x)/x), 1, 7)"}
+expect: {ok: 0}

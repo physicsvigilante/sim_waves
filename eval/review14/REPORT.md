@@ -300,3 +300,13 @@
 |---|---|---|---|---|
 | T1 | silent wrong answer | Whether a side of a breakpoint lies inside the range was tested with a fixed 10⁻¹² probe, so on a range shorter than that the jump's one-sided limit was left out. | A side counts when the range has points arbitrarily close to the breakpoint there: inf < q for the left, q < sup for the right (`scene.py` `_extreme_rows`). | r324 (your scene: refused), r325 (on [−1, 0], the jump at the closed end: refused) |
 | T2 | silent wrong answer | Breakpoints that SymPy returns as infinitely many (sin x = 0) were dropped, and a condition SymPy cannot turn into a set (sin x < 0) silently became the whole range. | Infinitely many breakpoints are re-solved within the range; if they are still not a finite list, the call is refused. A condition without a set is decided stretch by stretch between its breakpoints (one point each, after checking its sides are continuous on the range), plus each breakpoint itself; if that cannot be certified, the call is refused (`_cond_region`). | r326 (your scene: 1), r327 (min: 0), r328 (`step(-sin(x)**2)` on [1, 7]: 1, reached only at π and 2π), r329 (over the whole line: refused) |
+
+## Round 20
+- **Reviewer:** ChatGPT (Astra), posted on PR #14 on 2026-11-22. It was found by the 4-minute check on its third try.
+- **Commit reviewed:** `8656b7ea3dd0398f80e1611f2d2c5784432e463d`.
+- **Verdict:** FAIL. T1 and T2 are resolved for their cases. One high finding.
+- **Reproduction:** reproduced, with a different symptom on SymPy 1.12. The minimum was refused ("no smallest value", because the one-sided limits at π and 2π are 0), not the predicted 1. The cause is the same: the branch where sin(x)/x < 0 came back as an unresolved ConditionSet and got no point to evaluate.
+
+| # | Severity | Finding | Fix | Tests |
+|---|---|---|---|---|
+| U1 | silent wrong answer (a wrong refusal here) | `_cond_region` accepted whatever `as_set()` returned, including an unresolved `ConditionSet`. A branch with no witness was then skipped silently. | Only a set built from intervals and finite sets (a solved one) is accepted; anything else goes to the stretch-by-stretch method, or is refused. A branch region that is not such a set is refused, and so is a nonempty branch with no point found to evaluate: it is never skipped (`scene.py` `_plain_set`, `_cond_region`, `_extreme_rows`). | r330 (your scene: 0), r331 (max: 1) |
