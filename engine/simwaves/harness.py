@@ -72,7 +72,6 @@ def _run_file_local(path):
     import yaml
     with open(path, encoding="utf-8") as fh:
         expect = dict((yaml.safe_load(fh) or {}).get("expect") or {})
-    expect.pop("limits", None)              # read by the parent (run_dir), not a result
     if expect.get("error") == "limit":      # the parent judges a limit; here, just run it
         expect = {}
     if "error" in expect:
@@ -146,38 +145,35 @@ def timed_run(f):
     return status, lines, time.time() - t0
 
 
-def scene_limits(path, seconds, memory_mb):
-    """The limits for one scene: the run's, lowered (never raised) by its expect block's
-    `limits: {time: s, memory: MB}`. Returns (seconds, memory_mb, error or None, whether the
-    scene expects to be stopped by a limit (`error: limit`)). The file's size is checked
-    before it is parsed, so the parent never parses an unbounded document."""
+def scene_expectation(path):
+    """What a scene's expect block says about limits, read inside a contained worker (the
+    parent never parses a scene: review 15a F1). Returns (expects a limit, error or None).
+    Limits are set for the whole run (`--time`, `--memory`, or the caller's arguments); an
+    `expect.limits` block is refused."""
     import yaml
-    from .contain import LimitError, check_limits, check_scene_size
+    from .contain import LimitError, check_scene_size
     try:
-        seconds, memory_mb = check_limits(seconds, memory_mb)
         check_scene_size(path)
     except (LimitError, OSError) as exc:
-        return seconds, memory_mb, str(exc), False
+        return False, str(exc)
     try:
         with open(path, encoding="utf-8") as fh:
             data = yaml.safe_load(fh) or {}
     except MemoryError:                  # a memory limit is never swallowed (m15a)
         raise
-    except Exception:                                   # noqa: BLE001 - the worker reports it
-        return seconds, memory_mb, None, False
+    except Exception:                                   # noqa: BLE001 - the scene run reports it
+        return False, None
     expect = data.get("expect") if isinstance(data, dict) else None
     expect = expect if isinstance(expect, dict) else {}
-    lim = expect.get("limits", {})
-    if lim is None:
-        lim = {}
-    if not isinstance(lim, dict) or set(lim) - {"time", "memory"}:
-        return (seconds, memory_mb, f"expect.limits must be a mapping with only time: and memory:, not {lim!r}",
-                False)
-    try:
-        t, m = check_limits(lim.get("time", seconds), lim.get("memory", memory_mb), seconds, memory_mb)
-    except LimitError as exc:
-        return seconds, memory_mb, f"expect.limits: {exc}", False
-    return t, m, None, expect.get("error") == "limit"
+    if "limits" in expect:
+        return False, ("expect.limits is not supported: the time and memory limits apply to the whole run "
+                       "(--time, --memory)")
+    return expect.get("error") == "limit", None
+
+
+def scene_expectations(paths):
+    """scene_expectation for several scenes, in one contained request."""
+    return [scene_expectation(p) for p in paths]
 
 
 def _outcome(name, result, expects_limit):
@@ -196,39 +192,58 @@ def _outcome(name, result, expects_limit):
     return status, lines
 
 
+def _expectation_result(r, name):
+    """A contained scene_expectation result as (expects a limit, error or None)."""
+    from .contain import CrashResult, LimitResult
+    if isinstance(r, LimitResult):
+        return False, f"reading the scene was stopped by a limit: {r.message}"
+    if isinstance(r, CrashResult) or not isinstance(r, tuple):
+        return False, f"reading the scene failed: {getattr(r, 'message', r)}"
+    return r
+
+
 def run_file(path, seconds=None, memory_mb=None):
-    """Check one scene's expect block, bounded: in a contained worker, under the run's limits
-    lowered by the scene's own `expect.limits`, and honouring `error: limit`. Returns
-    (status, lines), status one of PASS, FAIL, ERROR, CRASH, LIMIT."""
+    """Check one scene's expect block, bounded: in a contained worker under the time and memory
+    limits (None: the defaults; any other value is validated as given), honouring
+    `error: limit`. Returns (status, lines), status one of PASS, FAIL, ERROR, CRASH, LIMIT."""
     from . import contain
     name = os.path.basename(path)
-    t, m, err, expects_limit = scene_limits(path, seconds or contain.DEFAULT_TIME,
-                                            memory_mb or contain.DEFAULT_MEMORY)
-    if err:
-        return "ERROR", [f"{name}: {err}"]
+    try:
+        t, m = contain.resolve_limits(seconds, memory_mb)
+    except contain.LimitError as exc:
+        return "ERROR", [f"{name}: {exc}"]
     if contain.IN_WORKER:                 # already contained: under this worker's budget
         from .budget import within
         from .errors import ResourceLimitError
+        expects_limit, err = scene_expectation(path)
+        if err:
+            return "ERROR", [f"{name}: {err}"]
         try:
             result = within(t, lambda: timed_run(path), public=ResourceLimitError("time", f"{t:g} s"))
         except ResourceLimitError as exc:
             result = contain.LimitResult(exc.kind, str(exc))
-    else:
-        result = contain.run_contained("simwaves.harness:timed_run", (path,), t, m)
+        return _outcome(name, result, expects_limit)
+    w = contain.shared_worker(m)
+    with contain._shared_lock:
+        expects_limit, err = _expectation_result(w.call("simwaves.harness:scene_expectation", (path,), t), name)
+        if err:
+            return "ERROR", [f"{name}: {err}"]
+        result = w.call("simwaves.harness:timed_run", (path,), t)
     return _outcome(name, result, expects_limit)
 
 
 def run_dir(path, jobs=None, seconds=None, memory_mb=None):
-    """Run every scene's expect block, each in a contained worker process under the time
-    and memory limits (contain.py), at most `jobs` at once (default: the number of CPUs).
-    A scene stopped by a limit is LIMIT, unless its expect block says `error: limit`.
-    Every scene gets exactly one status. Output keeps file order. Returns the counts per
-    status; the CLI succeeds only if every scene of a non-empty folder passed."""
+    """Run every scene's expect block, each in a contained worker process under the time and
+    memory limits of the run (None: the defaults; any other value is validated as given), at
+    most `jobs` at once (default: the number of CPUs). A scene stopped by a limit is LIMIT,
+    unless its expect block says `error: limit`. The parent never parses a scene: what each
+    expects is read in a contained worker first. Every scene gets exactly one status; output
+    keeps file order. Returns the counts per status; the CLI succeeds only if every scene of a
+    non-empty folder passed."""
     import time
-    from .contain import (DEFAULT_MEMORY, DEFAULT_TIME, CrashResult, LimitError, check_limits, run_contained,
-                          run_many)
+    from .contain import LimitError, resolve_limits, run_contained, run_many
     try:
-        seconds, memory_mb = check_limits(seconds or DEFAULT_TIME, memory_mb or DEFAULT_MEMORY)
+        seconds, memory_mb = resolve_limits(seconds, memory_mb)
     except LimitError as exc:
         print(f"ERROR: {exc}")
         return {"ERROR": 1}
@@ -238,9 +253,16 @@ def run_dir(path, jobs=None, seconds=None, memory_mb=None):
         return {"ERROR": 1}
     jobs = jobs or os.cpu_count() or 1
     counts, times = {}, []
-    plan = {f: scene_limits(f, seconds, memory_mb) for f in files}
-    shared = [f for f in files if plan[f][1] == memory_mb and plan[f][2] is None]
-    own = [f for f in files if f not in shared]
+
+    # 1. what each scene expects, read in contained workers (one request for all; if that
+    #    is stopped or fails, one request per scene so that one bad file cannot hide the others)
+    batch = run_contained("simwaves.harness:scene_expectations", (files,), seconds, memory_mb)
+    if isinstance(batch, list) and len(batch) == len(files):
+        plan = dict(zip(files, batch))
+    else:
+        got = run_many("simwaves.harness:scene_expectation", files, jobs, lambda _: seconds, memory_mb)
+        plan = {f: _expectation_result(r, os.path.basename(f)) for f, r in zip(files, got)}
+
     done, printed = {}, [0]
     started = {}
 
@@ -254,23 +276,15 @@ def run_dir(path, jobs=None, seconds=None, memory_mb=None):
             printed[0] += 1
 
     def record(f, result):
-        name = os.path.basename(f)
-        t, m, err, expects_limit = plan[f]
-        if err:
-            done[f] = ("ERROR", [f"{name}: {err}"], 0.0)
-        else:
-            status, lines = _outcome(name, result, expects_limit)
-            dt = result[2] if isinstance(result, tuple) else time.time() - started.get(f, time.time())
-            done[f] = (status, lines, dt)
+        expects_limit, _ = plan[f]
+        status, lines = _outcome(os.path.basename(f), result, expects_limit)
+        dt = result[2] if isinstance(result, tuple) else time.time() - started.get(f, time.time())
+        done[f] = (status, lines, dt)
 
-    for f in own:                         # its own limits (or an error in them): its own worker
-        t, m, err, _ = plan[f]
-        started[f] = time.time()
-        try:
-            r = None if err else run_contained("simwaves.harness:timed_run", (f,), t, m)
-        except BaseException as exc:      # noqa: BLE001 - every scene gets a status
-            r = CrashResult(f"the test runner failed on this scene ({type(exc).__name__}: {exc})")
-        record(f, r)
+    for f in files:                       # an error in reading it: no run
+        err = plan[f][1]
+        if err:
+            done[f] = ("ERROR", [f"{os.path.basename(f)}: {err}"], 0.0)
     emit()
 
     def on_result(i, f, result):
@@ -279,9 +293,10 @@ def run_dir(path, jobs=None, seconds=None, memory_mb=None):
 
     def seconds_of(f):
         started[f] = time.time()
-        return plan[f][0]
-    if shared:
-        run_many("simwaves.harness:timed_run", shared, jobs, seconds_of, memory_mb, on_result)
+        return seconds
+    todo = [f for f in files if f not in done]
+    if todo:
+        run_many("simwaves.harness:timed_run", todo, jobs, seconds_of, memory_mb, on_result)
     for f in files:                       # accounting: no scene may end without a status
         if f not in done:
             done[f] = ("CRASH", [f"{os.path.basename(f)}: no result was recorded for this scene"], 0.0)

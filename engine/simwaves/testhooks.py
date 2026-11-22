@@ -85,3 +85,24 @@ def nested_budget(_item=None):
     except Budget:
         return "normal fallback value"
     return "inner finished"
+
+
+_payload = b""
+
+
+def prepare_big(n):
+    """Review 15a F2: keep n bytes in this worker for the next request."""
+    global _payload
+    _payload = b"x" * int(n)
+    return len(_payload)
+
+
+def get_big():
+    """Review 15a F2: a reply of the prepared size (its transfer takes time)."""
+    return _payload
+
+
+def sleep_then_big(delay, n):
+    """Review 15a F2: wait, then reply with n bytes (for a transfer stalled part-way)."""
+    time.sleep(float(delay))
+    return b"x" * int(n)

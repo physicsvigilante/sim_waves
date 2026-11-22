@@ -1,3 +1,4 @@
-# m15a, control: a request that finishes inside its limit gives its value (1 s of work under a 10 s limit)
+# m15a, control: a request that finishes inside its limit gives its value (1 s of work; the folder runs with
+# --time 3 --memory 512)
 observe: {v: "test_spin(1) + 2"}
-expect: {limits: {time: 10}, v: 2}
+expect: {v: 2}

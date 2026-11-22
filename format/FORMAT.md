@@ -803,9 +803,9 @@ solving; relative tolerance), `abs`, `sqrt`, `sin`, `cos`, `tan`, `exp`, `log`, 
     `RESOURCE LIMIT (time 120 s)` or `RESOURCE LIMIT (memory 2048 MB)` (exit status 3).
     This says nothing about the physics: it is not an inconsistency, a refusal or an
     unsupported feature. Simplify the scene or raise the limit.
-  - In a test, a scene's `expect` block may lower its own limits
-    (`limits: {time: 5, memory: 512}`), never raise them, and `error: limit` expects the
-    scene to be stopped.
+  - The limits apply to the whole run. A scene cannot set its own (an `expect.limits` block
+    is refused). In a test, `error: limit` expects the scene to be stopped.
+  - A scene file larger than 64 KB is refused before it is read.
   - Some slow symbolic steps have their own shorter budgets and then switch to a stated
     numerical method or a specific refusal. These work the same on every platform.
 

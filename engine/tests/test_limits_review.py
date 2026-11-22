@@ -71,7 +71,7 @@ if __name__ == "__main__":
     from simwaves.contain import (CrashResult, LimitError, LimitResult, Worker, run_contained, run_many,
                                   check_limits)
     from simwaves.errors import ResourceLimitError
-    from simwaves.harness import run_file, scene_limits
+    from simwaves.harness import run_dir, run_file
 
     # ---- R1: an earlier whole-request deadline is never replaced by an inner fallback
     ok = 0
@@ -123,43 +123,54 @@ if __name__ == "__main__":
     except Budget as b:
         check("O1 attempt released inside the fallback", ref[0]() is None and b.__context__ is None)
 
-    # ---- R3: limits are validated: finite, positive, typed, whole MB, never above the run's
-    with tempfile.TemporaryDirectory() as d:
-        bad = {"neg memory": "{memory: -1}", "zero memory": "{memory: 0}", "bool time": "{time: true}",
-               "nan time": "{time: .nan}", "inf time": "{time: .inf}", "neg time": "{time: -5}",
-               "fractional memory": "{memory: 300.5}", "text": "{time: fast}", "list": "[1, 2]",
-               "extra key": "{time: 5, cpu: 1}", "raised time": "{time: 999}", "raised memory": "{memory: 4096}",
-               "below the start-up minimum": "{memory: 100}"}
-        for label, lim in bad.items():
-            p = write(d, "s.yaml", f"observe: {{v: '1'}}\nexpect: {{limits: {lim}, v: 1}}\n")
-            _, _, err, _ = scene_limits(p, 120, 2048)
-            check(f"R3 refused: {label}", err is not None, lim)
-        p = write(d, "s.yaml", "observe: {v: '1'}\nexpect: {limits: {time: 5, memory: 512.0}, v: 1}\n")
-        check("R3 control: valid lower limits", scene_limits(p, 120, 2048) == (5.0, 512, None, False))
-        for label, args in {"Worker(-1)": (lambda: Worker(-1)), "check_limits nan": (lambda: check_limits(
-                float("nan"), 512))}.items():
-            try:
-                args()
-                check(f"R3 refused at the containment boundary: {label}", False)
-            except LimitError:
-                check(f"R3 refused at the containment boundary: {label}", True)
+    # ---- R3: limits are validated: finite, positive, typed, whole MB (round 2: run-wide only)
+    for label, (t, m) in {"neg memory": (120, -1), "zero memory": (120, 0), "bool time": (True, 512),
+                          "nan time": (float("nan"), 512), "inf time": (float("inf"), 512), "neg time": (-5, 512),
+                          "fractional memory": (120, 300.5), "text": ("fast", 512),
+                          "below the start-up minimum": (120, 100)}.items():
+        try:
+            check_limits(t, m)
+            check(f"R3 refused: {label}", False)
+        except LimitError:
+            check(f"R3 refused: {label}", True)
+    check("R3 control: valid limits", check_limits(5, 512.0) == (5.0, 512))
+    try:
+        Worker(-1)
+        check("R3 refused at the containment boundary: Worker(-1)", False)
+    except LimitError:
+        check("R3 refused at the containment boundary: Worker(-1)", True)
 
-        # ---- R4: an oversized file is refused before it is parsed
+    with tempfile.TemporaryDirectory() as d:
+        # ---- R4: an oversized file is refused before it is parsed (now inside the worker too)
         big = write(d, "big.yaml", "assume: ['" + "x" * 4_000_000 + "']\nobserve: {v: '1'}\nexpect: {v: 1}\n")
+        status, lines = run_file(big)
+        check("R4 oversized scene refused", status == "ERROR" and "limited to" in lines[0], f"{status} {lines}")
+
+        # ---- F1: the parent never parses a scene: a tiny alias-expanding file is bounded
+        bomb = os.path.join(d, "bomb")
+        os.mkdir(bomb)
+        a = "&a0 {v: 1}"
+        for i in range(1, 23):
+            a = f"&a{i} {{<<: [{a}, *a{i - 1}]}}"
+        write(bomb, "alias.yaml", 'observe: {v: "1"}\nexpect: ' + a + "\n")
+        write(bomb, "plain.yaml", 'observe: {v: "1"}\nexpect: {v: 1}\n')
         t0 = time.monotonic()
-        _, _, err, _ = scene_limits(big, 120, 2048)
+        counts = run_dir(bomb, 1, 2, 512)
         dt = time.monotonic() - t0
-        check("R4 oversized scene refused before parsing", err is not None and "limited to" in err and dt < 0.2,
-              f"{err} in {dt:.2f} s")
+        check("F1 alias-expanding scene bounded by the run's limit; neighbour passes",
+              counts.get("PASS") == 1 and sum(counts.values()) == 2 and "PASS" in counts and dt < 2 * (2 + 10) + 60,
+              f"{counts} in {dt:.1f} s")
+        import simwaves.harness as hmod
+        check("F1 no per-scene limits reader in the parent", not hasattr(hmod, "scene_limits"))
 
         # ---- R2: every scene gets exactly one status; no result is never success
         one = os.path.join(d, "one")
         os.mkdir(one)
         write(one, "a.yaml", "observe: {v: '1'}\nexpect: {v: 1}\n")
-        write(one, "b.yaml", "observe: {v: '1'}\nexpect: {limits: {time: .nan}, v: 1}\n")
+        write(one, "b.yaml", "observe: {v: '1'}\nexpect: {limits: {time: 5}, v: 1}\n")
         r = subprocess.run([sys.executable, "-m", "simwaves", "test", one, "-j", "1"], cwd=HERE, env=ENV,
                            capture_output=True, text=True, encoding="utf-8", timeout=300)
-        check("R2 an invalid limit gives an ERROR and a non-zero exit",
+        check("R2 a scene's own limits give an ERROR and a non-zero exit",
               r.returncode != 0 and "ERROR 1" in r.stdout and "PASS 1" in r.stdout, r.stdout[-400:])
         empty = os.path.join(d, "empty")
         os.mkdir(empty)
@@ -191,12 +202,12 @@ if __name__ == "__main__":
 
     # ---- R5: the public entry points are bounded
     with tempfile.TemporaryDirectory() as d:
-        p = write(d, "direct.yaml", "observe: {v: 'test_spin(5)'}\nexpect: {limits: {time: 1}, error: limit}\n")
-        status, lines = run_file(p)
-        check("R5 run_file enforces expect.limits and error: limit",
+        p = write(d, "direct.yaml", "observe: {v: 'test_spin(5)'}\nexpect: {error: limit}\n")
+        status, lines = run_file(p, seconds=1)
+        check("R5 run_file enforces its limit and error: limit",
               status == "PASS" and "stopped by a limit" in lines[0], f"{status} {lines}")
-        p = write(d, "direct2.yaml", "observe: {v: 'test_spin(5)'}\nexpect: {limits: {time: 1}, v: 0}\n")
-        status, _ = run_file(p)
+        p = write(d, "direct2.yaml", "observe: {v: 'test_spin(5)'}\nexpect: {v: 0}\n")
+        status, _ = run_file(p, seconds=1)
         check("R5 run_file reports an unexpected limit as LIMIT", status == "LIMIT", status)
     from simwaves.export import export
     try:
@@ -211,6 +222,117 @@ if __name__ == "__main__":
         check("R5 evaluate honours its timeout", False, "returned")
     except ResourceLimitError:
         check("R5 evaluate honours its timeout", True)
+
+    # ---- F5: only None selects a default; 0 and False are refused, never replaced
+    with tempfile.TemporaryDirectory() as d:
+        p = write(d, "ordinary.yaml", "observe: {v: '1'}\nexpect: {v: 1}\n")
+        for label, kw in {"seconds=0": {"seconds": 0}, "seconds=False": {"seconds": False},
+                          "memory_mb=0": {"memory_mb": 0}, "memory_mb=False": {"memory_mb": False}}.items():
+            status, lines = run_file(p, **kw)
+            check(f"F5 run_file({label}) refused", status == "ERROR", f"{status} {lines}")
+        status, _ = run_file(p, seconds=None, memory_mb=None)
+        check("F5 control: run_file with None uses the defaults", status == "PASS", status)
+        check("F5 run_dir(seconds=0) refused", run_dir(d, 1, 0) == {"ERROR": 1})
+        check("F5 run_dir(seconds=False) refused", run_dir(d, 1, False) == {"ERROR": 1})
+        try:
+            export({"observe": {"v": "1"}}, seconds=0)
+            check("F5 export(seconds=0) refused", False)
+        except LimitError:
+            check("F5 export(seconds=0) refused", True)
+
+    # ---- F2: the parent's deadline covers the whole reply, and a stalled transfer is stopped
+    w = Worker()
+    w.call("simwaves.testhooks:prepare_big", (64 * 1024 * 1024,), 30)
+    t0 = time.monotonic()
+    r = w.call("simwaves.testhooks:get_big", (), 0.05)
+    dt = time.monotonic() - t0
+    check("F2 a reply complete only after its limit is a limit", isinstance(r, LimitResult),
+          f"{type(r).__name__} {dt:.2f} s")
+    r = w.call("simwaves.testhooks:prepare_big", (16,), 30)
+    check("F2 control: a small reply within its limit", r == 16, repr(r))
+    from simwaves.contain import GRACE
+    # a reply that never completes: the receive blocks (as with a transfer stalled part-way);
+    # the parent must still stop at its hard stop and return a limit
+    original_recv = w.conn.recv
+    blocked = []
+
+    def stalled_recv():
+        blocked.append(True)
+        time.sleep(3600)
+        return original_recv()
+    w.conn.recv = stalled_recv
+    box = {}
+
+    def stalled():
+        box["r"] = w.call("simwaves.testhooks:sleep_then_big", (0.2, 1024), 2)
+    t = threading.Thread(target=stalled, daemon=True)
+    t0 = time.monotonic()
+    t.start()
+    t.join(2 + GRACE + 20)
+    dt = time.monotonic() - t0
+    r = box.get("r")
+    check("F2 a stalled transfer ends at the hard stop",
+          bool(blocked) and not t.is_alive() and isinstance(r, LimitResult) and dt < 2 + GRACE + 20,
+          f"blocked={bool(blocked)} {type(r).__name__} {dt:.1f} s")
+    w.close()
+
+    # ---- F3: an expiry at any line of within() (set-up or teardown) is handled
+    from simwaves import budget
+    codes = [budget.within.__code__] + [c for c in budget.within.__code__.co_consts if hasattr(c, "co_lines")]
+    problems = []
+    for code in codes:
+        for target in sorted({ln for _, _, ln in code.co_lines() if ln}):
+            st = {"used": False}
+
+            def tr(frame, event, arg, code=code, target=target, st=st):
+                if frame.f_code is code and event == "line" and frame.f_lineno == target and not st["used"]:
+                    st["used"] = True
+                    time.sleep(0.10)
+                return tr
+            sys.settrace(tr)
+            try:
+                v = budget.within(0.025, lambda: 17, public=ResourceLimitError("time", ".025 s"))
+                out = f"value {v}"
+            except ResourceLimitError:
+                out = "limit"
+            except BaseException as exc:                  # noqa: BLE001
+                out = type(exc).__name__
+            finally:
+                sys.settrace(None)
+            time.sleep(0.03)
+            if out not in ("limit", "value 17") or budget._active or budget._critical:
+                problems.append((code.co_name, target, out, len(budget._active)))
+                budget._active.clear()
+                budget._critical.clear()
+    check("F3 expiry at every line of within(): classified, no state left", not problems, str(problems))
+
+    # ---- F4: the worker is owned from its start, before its imports
+    with tempfile.TemporaryDirectory() as d:
+        marker = os.path.join(d, "startup.json")
+        write(d, "startup_parent.py", (
+            "import json, os, sys, time\n"
+            "class DelayRunImport:\n"
+            "    def find_spec(self, fullname, path=None, target=None):\n"
+            "        if fullname == 'simwaves.run' and getattr(sys.modules.get('simwaves.contain'), 'IN_WORKER',"
+            " False):\n"
+            "            with open(os.environ['REVIEW_STARTUP_MARKER'], 'w') as f:\n"
+            "                json.dump({'worker': os.getpid()}, f)\n"
+            "            time.sleep(60)\n"
+            "        return None\n"
+            "sys.meta_path.insert(0, DelayRunImport())\n"
+            "if __name__ == '__main__':\n"
+            "    from simwaves.contain import Worker\n"
+            "    Worker().call('os:getpid', (), 30)\n"))
+        env = dict(ENV, REVIEW_STARTUP_MARKER=marker, PYTHONPATH=os.pathsep.join([d, HERE]))
+        caller = subprocess.Popen([sys.executable, "-m", "startup_parent"], cwd=d, env=env)
+        got = pids_from(marker, 60) or {}
+        caller.kill()
+        caller.wait(10)
+        time.sleep(3)
+        check("F4 parent killed during the worker's start-up: worker gone", got and not alive(got["worker"]),
+              str(got))
+        for pid in got.values():
+            kill_quietly(pid)
 
     # ---- R6: no descendant outlives its request
     with tempfile.TemporaryDirectory() as d:

@@ -67,6 +67,13 @@ def check_limits(seconds, memory_mb, max_seconds=None, max_memory=None):
     return s, m
 
 
+def resolve_limits(seconds=None, memory_mb=None):
+    """The limits a caller asked for: None selects the default; any other value, including 0
+    or False, is validated as given (review 15a F5). Returns (float seconds, int MB)."""
+    return check_limits(DEFAULT_TIME if seconds is None else seconds,
+                        DEFAULT_MEMORY if memory_mb is None else memory_mb)
+
+
 def check_scene_size(path):
     """Refuse a scene file too large to be a scene, before anything parses it."""
     size = os.path.getsize(path)
@@ -82,8 +89,18 @@ def _resolve(target):
 
 
 def _posix_setup(memory_mb):
+    """The worker's first steps on POSIX, before any import: die with the parent (Linux), lead
+    its own process group (killed as one), and cap its address space."""
     import resource
-    os.setpgrp()                                          # its own process group: killed as one
+    import signal
+    try:                                                  # killed if the parent dies (Linux)
+        import ctypes
+        ctypes.CDLL("libc.so.6", use_errno=True).prctl(1, signal.SIGKILL)   # PR_SET_PDEATHSIG
+        if os.getppid() == 1:                             # the parent died before this: stop
+            os._exit(1)
+    except (OSError, AttributeError):
+        pass
+    os.setpgrp()
     limit = memory_mb * 1024 * 1024
     resource.setrlimit(resource.RLIMIT_AS, (limit, limit))
 
@@ -108,11 +125,11 @@ def _send_raise(conn, exc):
 def _serve(conn, memory_mb):
     """The worker loop: run each (target, args, seconds) request under its time budget."""
     global IN_WORKER
+    if not WINDOWS:
+        _posix_setup(memory_mb)                           # first, before any other work
     IN_WORKER = True
     for var in ("OPENBLAS_NUM_THREADS", "OMP_NUM_THREADS", "MKL_NUM_THREADS"):
         os.environ.setdefault(var, "1")                   # no large per-thread buffers
-    if not WINDOWS:
-        _posix_setup(memory_mb)
     from .budget import within
     from .errors import ResourceLimitError
     import simwaves.run          # noqa: F401  (imports outside any request's time)
@@ -151,10 +168,11 @@ try:
     while os.read(fd, 1):
         pass
 finally:
-    try:
-        os.killpg(pgid, signal.SIGKILL)
-    except (ProcessLookupError, PermissionError):
-        pass
+    for kill in (os.killpg, os.kill):     # the group; or the worker alone, if not yet its own group
+        try:
+            kill(pgid, signal.SIGKILL)
+        except (ProcessLookupError, PermissionError):
+            pass
 """
 
 
@@ -303,20 +321,22 @@ class Worker:
                 if hidden is not None:
                     main.__file__ = hidden
         child.close()
+        # ownership first, before the worker's imports (review 15a F4): the job (Windows) or
+        # the guardian (Linux) kills the worker if this process dies at any point from here
         if WINDOWS:
             self.job = _Job(self.memory_mb)
             self.job.assign(self.proc.pid)
+        else:
+            self.guard = _Guardian(self.proc.pid)
         if not self.conn.poll(120):                        # imports take a few seconds
             raise RuntimeError("the worker process did not start within 120 s")
         msg = self.conn.recv()                             # EOFError if it died while starting
         if msg[0] != "ready":
             raise RuntimeError(f"the worker process sent {msg!r} instead of starting")
-        if not WINDOWS:
-            self.guard = _Guardian(self.proc.pid)
         self.served = 0
 
-    def kill(self):
-        """Kill the worker and everything it started."""
+    def _kill_tree(self):
+        """Kill the worker and everything it started (the pipe stays open)."""
         if self.proc is None:
             return
         if WINDOWS and self.job is not None:
@@ -328,10 +348,23 @@ class Worker:
                 os.killpg(self.proc.pid, signal.SIGKILL)
             except (ProcessLookupError, PermissionError):
                 pass
+            try:
+                os.kill(self.proc.pid, signal.SIGKILL)
+            except (ProcessLookupError, PermissionError):
+                pass
             if self.guard is not None:
                 self.guard.fire()
                 self.guard = None
         self.proc.join(10)
+
+    def kill(self):
+        """Kill the worker and everything it started, and close the pipe."""
+        if self.proc is None:
+            if self.guard is not None:
+                self.guard.fire()
+                self.guard = None
+            return
+        self._kill_tree()
         try:
             self.conn.close()
         except OSError:
@@ -361,16 +394,40 @@ class Worker:
                 self.kill()
                 return CrashResult(f"the worker process could not start ({type(exc).__name__}: {exc})")
         self.served += 1
-        try:
-            self.conn.send((target, tuple(args), seconds))
-            ready = self.conn.poll(seconds + GRACE)
-            msg = self.conn.recv() if ready else None
-        except (EOFError, OSError):
-            msg = ("died",)
-        if msg is None:                                    # stuck past the limit: hard stop
+        # One absolute deadline, owned here, covers sending the request, the evaluation and
+        # receiving the whole reply (review 15a F2). The transfer runs on its own thread, so
+        # a reply that stalls part-way can never hold this one past the hard stop.
+        import time
+        box = {}
+
+        def transfer(conn=self.conn):
+            try:
+                conn.send((target, tuple(args), seconds))
+                box["msg"] = conn.recv()
+            except (EOFError, OSError):
+                box["msg"] = ("died",)
+            except BaseException as exc:                   # noqa: BLE001 - a result, not a hang
+                box["msg"] = ("transport", f"{type(exc).__name__}: {exc}")
+        t0 = time.monotonic()
+        deadline = t0 + seconds
+        io = threading.Thread(target=transfer, name="simwaves-transfer", daemon=True)
+        io.start()
+        io.join(seconds + GRACE)
+        if io.is_alive():                                  # no complete reply by the hard stop
+            self._kill_tree()                              # the broken pipe ends the transfer
+            io.join(10)
             self.kill()
             return LimitResult("time", f"RESOURCE LIMIT (time {seconds:g} s)")
+        arrived = time.monotonic()
+        msg = box.get("msg", ("died",))
         kind = msg[0]
+        if kind == "ok" and arrived > deadline:
+            # the value was complete only after its time: a limit, never a value
+            self.served = RECYCLE_AFTER
+            return LimitResult("time", f"RESOURCE LIMIT (time {seconds:g} s)")
+        if kind == "transport":
+            self.kill()
+            return CrashResult(f"the reply could not be received ({msg[1]})")
         if kind == "ok":
             # a worker that came close to its limit is replaced before the next request, so
             # that one scene's leftovers (SymPy's caches) cannot push the next one over
@@ -414,21 +471,27 @@ def _close_shared():
     _shared.clear()
 
 
-def call_bounded(target, args=(), seconds=DEFAULT_TIME, memory_mb=DEFAULT_MEMORY):
+def shared_worker(memory_mb):
+    """This process's shared contained worker for a memory limit (created on first use)."""
+    with _shared_lock:
+        if not _shared:
+            import atexit
+            atexit.register(_close_shared)
+        return _shared.setdefault(memory_mb, Worker(memory_mb))
+
+
+def call_bounded(target, args=(), seconds=None, memory_mb=None):
     """The bounded form of a public entry point. Inside a worker the request is already
     contained, so the target runs directly (under the worker's budget). Outside, it runs in a
     shared contained worker of this process (one per memory limit), retired after any limit.
     A LimitResult or CrashResult is raised as ResourceLimitError or RuntimeError, so that a
     direct caller cannot mistake it for a value."""
+    seconds, memory_mb = resolve_limits(seconds, memory_mb)
     if IN_WORKER:
         return _resolve(target)(*args)
     from .errors import ResourceLimitError
-    seconds, memory_mb = check_limits(seconds, memory_mb)
+    w = shared_worker(memory_mb)
     with _shared_lock:
-        if not _shared:
-            import atexit
-            atexit.register(_close_shared)
-        w = _shared.setdefault(memory_mb, Worker(memory_mb))
         r = w.call(target, args, seconds)
     if isinstance(r, LimitResult):
         raise ResourceLimitError(r.kind, f"{seconds:g} s" if r.kind == "time" else f"{memory_mb} MB")

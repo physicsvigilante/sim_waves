@@ -1,8 +1,8 @@
-# m15a, control: an ordinary scene under a lowered limit is unaffected: a string of 2 m (tension 100 N, mu 0.01 kg/m) has
+# m15a, control: an ordinary scene under the folder's limits (--time 3 --memory 512) is unaffected: a string of 2 m (tension 100 N, mu 0.01 kg/m) has
 # fundamental v/(2L) with v = sqrt(100/0.01) = 100 m/s: 100/(2*2) = 25 Hz
 media:
   wire: {type: string, tension: 100 N, mu: 0.01 kg/m}
 resonators:
   r: {type: string, on: wire, length: 2 m, ends: [fixed, fixed]}
 observe: {f1: "frequency(r, harmonic=1)"}
-expect: {limits: {time: 60}, f1: 25}
+expect: {f1: 25}

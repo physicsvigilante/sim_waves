@@ -413,8 +413,7 @@ def export(data, seconds=None, memory_mb=None):
     """The view data for a scene, bounded: in a contained worker under a time and memory limit
     (contain.py). A limit raises ResourceLimitError; a scene error is raised as usual."""
     from . import contain
-    return contain.call_bounded("simwaves.export:_export_local", (data,), seconds or contain.DEFAULT_TIME,
-                                memory_mb or contain.DEFAULT_MEMORY)
+    return contain.call_bounded("simwaves.export:_export_local", (data,), seconds, memory_mb)
 
 
 def _export_local(data):

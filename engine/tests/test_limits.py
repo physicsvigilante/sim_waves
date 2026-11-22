@@ -50,7 +50,7 @@ if __name__ == "__main__":
     before = workers_now()
 
     # 1. the limit scenes and controls, in parallel
-    code, out, dt = cli("test", "tests/limits", "-j", "2")
+    code, out, dt = cli("test", "tests/limits", "-j", "2", "--time", "3", "--memory", "512")
     check("limit scenes all pass", code == 0 and "summary: PASS 5" in out, out[-600:])
 
     # 2. no worker survives a run
@@ -100,16 +100,13 @@ if __name__ == "__main__":
         peak = max(peak, cur)
     check("-j 2: at most 2 workers", len(pids) <= 2 and peak <= 2, f"pids {pids}, peak {peak}")
 
-    # 6. an expect block may lower its limits, never raise them
-    from simwaves.harness import scene_limits
+    # 6. limits apply to the whole run: a scene's own expect.limits is refused (review 15a round 2)
     with tempfile.TemporaryDirectory() as d:
-        low, high = os.path.join(d, "low.yaml"), os.path.join(d, "high.yaml")
-        open(low, "w").write("observe: {v: '1'}\nexpect: {limits: {time: 5, memory: 256}, v: 1}\n")
-        open(high, "w").write("observe: {v: '1'}\nexpect: {limits: {time: 999}, v: 1}\n")
-        t, m, err, _ = scene_limits(low, 120, 2048)
-        check("expect lowers the limits", (t, m, err) == (5, 256, None), str((t, m, err)))
-        t, m, err, _ = scene_limits(high, 120, 2048)
-        check("expect cannot raise the limits", err is not None and "may only be lowered" in err, str(err))
+        open(os.path.join(d, "own.yaml"), "w").write("observe: {v: '1'}\nexpect: {limits: {time: 5}, v: 1}\n")
+        open(os.path.join(d, "plain.yaml"), "w").write("observe: {v: '1'}\nexpect: {v: 1}\n")
+        code, out, _ = cli("test", d, "-j", "1")
+        check("expect.limits refused; a plain neighbour passes",
+              code != 0 and "ERROR 1" in out and "PASS 1" in out and "not supported" in out, out[-500:])
 
     time.sleep(1)
     left = workers_now() - before
