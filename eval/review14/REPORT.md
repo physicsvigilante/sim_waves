@@ -320,3 +320,13 @@
 | # | Severity | Finding | Fix | Tests |
 |---|---|---|---|---|
 | V1 | silent wrong answer (on SymPy 1.14, hash-order dependent) | Breakpoints were sorted by `float(sp.N(q))`; roots closer than a double's spacing kept a set's arbitrary order, so a stretch was skipped and a constant branch's witness fell in the other branch. | Breakpoints are sorted by exact comparison, refused when an order cannot be proved (`scene.py` `_exact_sorted`, using `_cmp`). The zeros of c·sin(ax + b) and c·cos(ax + b) are listed exactly within a finite range (ax + b = kπ, or π/2 + kπ), without SymPy's `solveset`; over an unbounded range, or for more than 10 000 of them, the call is refused (`_trig_linear_roots`). A condition whose sides are built only from functions continuous everywhere goes straight to the certified stretch method (`_continuous_everywhere`). A constant branch's witness is checked to lie where that branch is the one that applies, or the call is refused. | r332 (your scene: −1, also with `PYTHONHASHSEED` 0, 2, 4, 5 and 7), r333 (a step with the same close breakpoints: max 1, min 0), r334 (`step(cos(x - t))` over the whole line: refused) |
+
+## Round 22
+- **Reviewer:** ChatGPT (Astra), posted on PR #14 on 2026-11-22. It was found by the 4-minute check on its third try.
+- **Commit reviewed:** `5bb571273bb9ad936c9d36619fea9211c8b96525`.
+- **Verdict:** FAIL. V1 is resolved for its case. One high finding.
+- **Reproduction:** reproduced as predicted: 99/100.
+
+| # | Severity | Finding | Fix | Tests |
+|---|---|---|---|---|
+| W1 | silent wrong answer | The probe that finds which branch applies just beside a breakpoint was capped only at 1 and by the other breakpoints. On a short range it landed outside the range, past zeros that are not listed (only those inside the range are), and picked the wrong branch. | The probe lies strictly between the breakpoint and the nearer of the next breakpoint on that side and the range's edge on that side. Every change of a condition inside the range is a listed breakpoint, so no condition changes between the breakpoint and the probe. This holds at breakpoints and at open ends. Distances are compared exactly. A condition that cannot be decided at the probe is refused, not passed over (`scene.py` `_side_value`). | r335 (your scene: refused), r336 (mirrored minimum: refused), r337 (the jump at the right end: refused), r338 (control, reached: 1) |

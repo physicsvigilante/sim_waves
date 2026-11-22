@@ -816,6 +816,11 @@ Tests r214–r218.
   listed exactly over a finite range, and a branch's sample point is checked to lie in that
   branch. Tests r332–r334.
 
+### Milestone 14 review, round 22 (ChatGPT Astra, on PR #14; eval/review14/REPORT.md)
+- **The check of which branch applies beside a breakpoint stays inside the range,** short of the
+  next breakpoint and of the range's edge; it had probed outside, past sign changes that were not
+  listed. Tests r335–r338.
+
 **Not fixed (tooling):** on Windows, r84 (peak of a sum of Gaussians) and r93 run for
 minutes, and r96 grows past 4.6 GB of memory; all three do so on the engine before m14
 as well. The wall-clock limit uses SIGALRM, which Windows lacks, so nothing stops a slow

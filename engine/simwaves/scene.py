@@ -1423,20 +1423,45 @@ def _witness(region):
     return None
 
 
-def _side_value(pairs, var, q, side, breaks):
+def _side_value(pairs, var, q, side, breaks, dom):
     """The one-sided limit at q, from the left ('-') or right ('+'), of the piecewise
-    expression given as (piece, condition) pairs: the piece that applies just to that side
-    (probed closer than any other breakpoint), and its limit. (SymPy's limit of the whole
-    Piecewise at its own breakpoint can return the other side's value.)"""
-    others = [abs(b - q) for b in breaks if b != q and b.is_number]
-    delta = min([sp.Integer(1)] + [d / 2 for d in others])
+    expression given as (piece, condition) pairs: the piece that applies just to that side,
+    and its limit. (SymPy's limit of the whole Piecewise at its own breakpoint can return the
+    other side's value.) The piece is found at one probe point strictly between q and the
+    nearer of the next breakpoint on that side and the edge of dom on that side. Every place
+    inside dom where a condition can change is in breaks, so no condition changes between q
+    and the probe; outside dom there may be other changes (sin(10x) at x = 1 is negative
+    although it is positive just right of 0), so the probe never leaves dom."""
+    toward = [b for b in breaks if b.is_number and _cmp(b, q) == (1 if side == "+" else -1)]
+    edge = dom.sup if side == "+" else dom.inf
+    if edge.is_finite:
+        toward.append(edge)
+    gaps = [abs(b - q) for b in toward]
+    if any(_cmp(g, 0) != 1 for g in gaps):
+        raise SceneError(f"no room {'right' if side == '+' else 'left'} of {var} = {q} inside {dom}")
+    nearest = sp.Integer(1)
+    for g in gaps:
+        c = _cmp(g, nearest)
+        if c is None:
+            raise SceneError(f"cannot tell the order of {g} and {nearest} exactly")
+        if c < 0:
+            nearest = g
+    delta = nearest / 2
     probe = q + delta if side == "+" else q - delta
+    if dom.contains(probe) is not sp.true:
+        raise SceneError(f"cannot place a point just {'right' if side == '+' else 'left'} of {var} = {q} inside {dom}")
     for piece, cond in pairs:
-        if cond is sp.true or sp.sympify(cond).xreplace({var: probe}) is sp.true:
+        hit = sp.true if cond is sp.true else sp.sympify(cond).xreplace({var: probe})
+        if hit not in (sp.true, sp.false):
+            hit = sp.simplify(hit)
+        if hit is sp.true:
             v = sp.limit(piece, var, q, dir=side)
             if v.has(sp.Limit):
                 break
             return v
+        if hit is not sp.false:
+            raise SceneError(f"cannot decide which branch applies just {'right' if side == '+' else 'left'} "
+                             f"of {var} = {q}")
     raise SceneError(f"cannot find the value just {'right' if side == '+' else 'left'} of {var} = {q}")
 
 
@@ -1630,7 +1655,7 @@ def _extreme_rows(e, var, dom):
             # a side counts when dom has points arbitrarily close to q there, however short dom is
             for side, inside in (("-", (dom.inf < q) is sp.true), ("+", (q < dom.sup) is sp.true)):
                 if inside:
-                    rows.append((None, _side_value(pairs, var, q, side, breaks), "near"))
+                    rows.append((None, _side_value(pairs, var, q, side, breaks, dom), "near"))
     for end_, side in ((dom.inf, "+"), (dom.sup, "-")):
         open_end = dom.left_open if side == "+" else dom.right_open
         if end_.is_infinite:
@@ -1653,7 +1678,7 @@ def _extreme_rows(e, var, dom):
             rows.append((None, v, "near"))
         elif open_end:
             # an open end (where the written profile stops being defined): approached, not reached
-            rows.append((None, _side_value(pairs, var, end_, side, breaks), "near"))
+            rows.append((None, _side_value(pairs, var, end_, side, breaks, dom), "near"))
         else:
             rows.append((end_, e.xreplace({var: end_}), "at"))
     return rows

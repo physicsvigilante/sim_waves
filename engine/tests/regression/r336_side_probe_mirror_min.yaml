@@ -1,0 +1,4 @@
+# m14 review round 22 (W1), mirror: (x - 1)*(1 - step(sin(-10x))) on [0, 1/100] approaches -1 as x -> 0+ but is 0
+# at x = 0: no smallest value; refused
+observe: {bad: "min_in(x, (x-1)*(1-step(sin(-10*x))), 0, 1/100)"}
+expect: {error: rejected, message: "no smallest value"}
