@@ -217,3 +217,20 @@
 **Existing tests affected by the round 14 change:**
 - **FORMAT example `14_03_bmc_005`** computed |vy|/|c| with c declared `real`, so c = 0, a wave that does not move, was allowed, and the ratio is undefined there. The book's 4/3 silently assumes c ≠ 0, and the engine now refuses rather than assuming it. The example now uses a positive speed v (toward +x), stating the assumption in `assume`: vy = −4v/3, |vy|/v = 4/3.
 - **r147** (√(−1) > 0) is still refused, now by the written-root condition, with the new message.
+
+## Round 15
+- **Reviewer:** ChatGPT (Astra), posted on PR #14 on 2026-11-22. It was found by the new 4-minute check of the PR.
+- **Commit reviewed:** `f664c8f87abf5ec061288d887a810619c5bfb191`.
+- **Verdict:** FAIL. K15–K18 are resolved for their cases. Two high and two medium findings.
+- **Reproduction:** all four reproduced as predicted:
+  - NEW-1: q = −1, and a limit gave 0;
+  - NEW-2: 339.3 m/s;
+  - NEW-3: "2 situations";
+  - NEW-4: refused.
+
+| # | Severity | Finding | Fix | Tests |
+|---|---|---|---|---|
+| NEW-1 | silent wrong answer (pre-existing) | An observable's result can hold a condition: `sound_level(q)` returns a log needing q > 0. Two of them cancelled in a fact (q = −1) and in a limit (0). | Every call's **result** also records the conditions in its SymPy tree, as the call is read and before it can cancel (`expr.py` `_value_conditions`): powers, logs, asin/acos, tan/sec/cot/csc. | r278 (fact: inconsistent), r279 (control: q = 2), r280 (limit: refused) |
+| NEW-2 | silent wrong answer (pre-existing) | Scene fields were read without the condition list: `v: "(340 + log(-1) - log(-2)) m/s"` gave 339.3 m/s. | Fields read with units (`Scene.quantity`) record their conditions too. One that fails refuses the field when the scene is read; one involving an unknown is checked after the solve (`scene.py` `_check_field_conditions`, `run.py`). | r281 (refused), r282 (control: 340 m/s) |
+| NEW-3 | wrong refusal (from round 14) | "≠ 0" and asin/acos conditions were checked only after the solver had already reported ambiguity: `d(d-1) + 1/d - 1/d = 0` gave "2 situations". | Each candidate is filtered by those conditions **before** the candidates are counted (`solver.py`); if none survives, the facts are inconsistent. | r283 (d = 1), r284 (asin: d = 0), r285 (all excluded: inconsistent) |
+| NEW-4 | wrong refusal (from round 14) | `(-2)**n` with n an integer unknown required a positive base. | A symbolic integer exponent is treated as an integer: no condition if it is nonnegative, a nonzero base otherwise (`_power_obligation`). | r286 ((−2)² = 4), r287 ((−2)⁻¹ = −1/2) |

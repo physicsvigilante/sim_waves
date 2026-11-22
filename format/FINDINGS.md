@@ -770,6 +770,14 @@ Tests r214–r218.
   observes such as `log(-1) - log(-2)` (K17, pre-existing); a pole condition in a fact is
   checked after the solve (K18). The round 13 guard is removed. Tests r269–r277.
 
+### Milestone 14 review, round 15 (ChatGPT Astra, on PR #14; eval/review14/REPORT.md)
+- **The condition lists now also cover observables' results and scene fields:** a result such as
+  `sound_level(q)` records its log's q > 0 before it can cancel; a field such as
+  `(340 + log(-1) - log(-2)) m/s` is refused when read (an undecidable one is checked after the solve).
+- **Fact conditions now filter candidates before ambiguity is counted** (d(d-1) + 1/d - 1/d = 0
+  gives d = 1), and a symbolic integer exponent no longer needs a positive base ((-2)**n with n = 2
+  is 4). Tests r278–r287.
+
 **Not fixed (tooling):** on Windows, r84 (peak of a sum of Gaussians) and r93 run for
 minutes, and r96 grows past 4.6 GB of memory; all three do so on the engine before m14
 as well. The wall-clock limit uses SIGALRM, which Windows lacks, so nothing stops a slow

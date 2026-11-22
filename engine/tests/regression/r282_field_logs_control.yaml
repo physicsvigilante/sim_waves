@@ -1,0 +1,5 @@
+# m14 review round 15 (NEW-2), control: (340 + log(1)) m/s = 340 m/s
+media:
+  air: {type: gas, v: "(340 + log(1)) m/s"}
+observe: {speed: "speed(air) in m/s"}
+expect: {speed: 340}

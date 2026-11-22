@@ -394,12 +394,28 @@ class Scene:
             return tuple(x - n * y for x, y in zip(args[0], args[1]))
         return None
 
+    def _check_field_conditions(self, where, value):
+        """The conditions a field's written parts need (each log, root, power, division, tan,
+        asin/acos), recorded as it was read: one that fails refuses the field; one that cannot
+        be decided yet (it involves an unknown) is checked after the solve
+        (run._check_fact_conditions), so SymPy cannot cancel it into a plausible number
+        ((340 + log(-1) - log(-2)) m/s would otherwise read as 339.3 m/s)."""
+        from .expr import holds
+        for kind, g in getattr(self, "last_obligations", []):
+            h = holds(kind, g)
+            if h is False:
+                raise SceneError(f"{where}: '{value}' is not defined: a part written in it needs {g} to be "
+                                 f"{_KIND_WORD[kind]}")
+            if h is None:
+                self.__dict__.setdefault("field_conditions", []).append((where, value, kind, g))
+
     def quantity(self, value, d, where, temperature=False):
         """Parse a scene field value such as '0.2 m'; check its dimension."""
         if value is None:
             return None
         text, unit, factor, udim = split_quantity(value)
-        e = self.expr(text) * factor
+        e = self.expr(text, collect=True) * factor
+        self._check_field_conditions(where, value)
         if unit == "degC" and temperature:
             e = e + CELSIUS_OFFSET
         if udim is not None and d is not None and udim != d:

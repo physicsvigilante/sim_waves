@@ -547,6 +547,12 @@ def _check_fact_conditions(sc, sol):
     ones are inequalities of the solve) must hold on the solution."""
     from .errors import InconsistentError
     from .expr import holds
+    for where, value, kind, g in getattr(sc, "field_conditions", []):
+        gs = sp.simplify(sp.sympify(g).xreplace(sol))
+        h = holds(kind, gs)
+        if h is not True:
+            raise SceneError(f"{where}: '{value}' {'is not defined' if h is False else 'cannot be checked'}: a part "
+                             f"written in it needs {sc.show_back(gs)} to be {_KIND_WORD[kind]}")
     for i, text, kind, g in getattr(sc, "fact_conditions", []):
         gs = sp.simplify(sp.sympify(g).xreplace(sol))
         h = holds(kind, gs)

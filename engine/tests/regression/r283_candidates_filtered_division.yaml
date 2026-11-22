@@ -1,0 +1,7 @@
+# m14 review round 15 (NEW-3): d(d - 1) + 1/d - 1/d = 0: the written 1/d needs d != 0, so the candidate d = 0 is
+# excluded before counting, leaving d = 1 (before: 'two situations')
+unknowns: {d: real}
+given:
+  - "d*(d-1) + 1/d - 1/d == 0"
+observe: {d_solved: "d"}
+expect: {d_solved: 1}

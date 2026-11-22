@@ -172,9 +172,9 @@ class _Tr:
             if isinstance(n.op, ast.Div):
                 _note(self.ctx, "nonzero", b)
             elif isinstance(n.op, ast.Pow):
-                kb = sp.sympify(b)
-                if not (kb.is_integer and kb.is_nonnegative):
-                    _note(self.ctx, *_power_obligation(kb, a))
+                ob = _power_obligation(b, a)
+                if ob:
+                    _note(self.ctx, *ob)
             return _BIN[type(n.op)](a, b)
         if isinstance(n, ast.UnaryOp) and isinstance(n.op, (ast.USub, ast.UAdd)):
             v = self.val(n.operand)
@@ -223,6 +223,9 @@ class _Tr:
             kwargs = {k.arg: self.node(k.value) for k in n.keywords}
             out = self.ctx.call(n.func.id, args, kwargs)
             name = n.func.id
+            if isinstance(out, sp.Basic) and not isinstance(out, sp.Tuple):
+                for kind, g in _value_conditions(out):
+                    _note(self.ctx, kind, g)
             if args and name not in getattr(self.ctx, "functions", {}) and isinstance(args[0], sp.Basic):
                 a0 = sp.sympify(args[0])
                 if name in ("log", "ln"):
@@ -336,14 +339,38 @@ def written_obligations(text, ctx):
 
 
 def _power_obligation(k, base):
-    """What base**k needs to be real and finite: a nonzero base for a negative integer k, a
-    nonnegative base for a positive fractional k (0**(1/2) = 0), and a positive base for a
-    negative fractional or a symbolic k."""
-    if k.is_integer and k.is_negative:
-        return ("nonzero", base)
+    """What base**k needs to be real and finite, or None: nothing for a nonnegative integer k;
+    a nonzero base for any other integer k, numeric or symbolic ((-2)**n with n an integer is
+    real); a nonnegative base for a positive non-integer k (0**(1/2) = 0); a positive base
+    otherwise (a negative non-integer or a k that may not be an integer)."""
+    k = sp.sympify(k)
+    if k.is_integer:
+        return None if k.is_nonnegative else ("nonzero", base)
     if k.is_positive:
         return ("nonneg", base)
     return ("positive", base)
+
+
+def _value_conditions(v):
+    """The conditions a computed value needs to be real and finite, read from its SymPy tree
+    (an observable's result such as sound_level(q) = 10 log10(q/I0) holds a log): a power's
+    base (see _power_obligation), a log's argument positive, an asin/acos argument in
+    [-1, 1], tan/sec cos != 0, cot/csc sin != 0."""
+    out = []
+    for node in sp.preorder_traversal(v):
+        if isinstance(node, sp.Pow):
+            ob = _power_obligation(node.exp, node.base)
+            if ob:
+                out.append(ob)
+        elif isinstance(node, sp.log):
+            out.append(("positive", node.args[0]))
+        elif isinstance(node, (sp.asin, sp.acos)):
+            out.append(("unit", node.args[0]))
+        elif isinstance(node, (sp.tan, sp.sec)):
+            out.append(("nonzero", sp.cos(node.args[0])))
+        elif isinstance(node, (sp.cot, sp.csc)):
+            out.append(("nonzero", sp.sin(node.args[0])))
+    return out
 
 
 def _is_in(node):

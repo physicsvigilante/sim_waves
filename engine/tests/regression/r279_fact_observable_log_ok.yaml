@@ -1,0 +1,6 @@
+# m14 review round 15 (NEW-1), control: the same with q/(1 W/m^2) = 2, inside the log's domain: q = 2
+unknowns: {q: real}
+given:
+  - "sound_level(q) - sound_level(q) + q/(1[W/m^2]) == 2"
+observe: {q_solved: "q in W/m^2"}
+expect: {q_solved: 2}

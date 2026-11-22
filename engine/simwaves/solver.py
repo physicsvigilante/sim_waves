@@ -766,6 +766,16 @@ def _solve_given(sc):
         return {}
     eqs, ineqs = _conditions(sc, rels)
     sols, infinite = _solve(sc, eqs, ineqs, strict=True)
+    # the '!= 0' and asin/acos conditions the facts' written parts need exclude candidates
+    # before they are counted (d(d-1) + 1/d - 1/d = 0 has the single solution d = 1)
+    if sols and getattr(sc, "fact_conditions", None):
+        from .expr import holds
+        sols = [s for s in sols
+                if not any(holds(kind, sp.simplify(sp.sympify(g).xreplace(s))) is False
+                           for _, _, kind, g in sc.fact_conditions)]
+        if not sols:
+            raise InconsistentError("no situation satisfies the facts: every candidate makes a written part of "
+                                    "them undefined (a division by 0, or asin/acos outside [-1, 1])")
     if not sols:
         idxs = sorted({r[0] for r in rels})
         prior = {}

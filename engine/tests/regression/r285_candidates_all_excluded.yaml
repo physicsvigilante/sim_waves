@@ -1,0 +1,7 @@
+# m14 review round 15 (NEW-3), all candidates invalid: 1/d - 1/d + d = 0 has the single candidate d = 0, which
+# the written 1/d excludes: inconsistent
+unknowns: {d: real}
+given:
+  - "1/d - 1/d + d == 0"
+observe: {d_solved: "d"}
+expect: {error: rejected, message: "undefined"}
