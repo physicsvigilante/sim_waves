@@ -1,0 +1,12 @@
+id: R6
+type: single_correct
+statement: >
+  An ultrasound probe sends a continuous sinusoidal wave of frequency 2.5 MHz into
+  soft tissue, in which the speed of sound is 1540 m/s. The minimum distance, along
+  the direction of propagation, between two points in the tissue whose oscillations
+  differ in phase by pi/3 is closest to
+options:
+  A: 51 μm
+  B: 103 μm
+  C: 205 μm
+  D: 308 μm

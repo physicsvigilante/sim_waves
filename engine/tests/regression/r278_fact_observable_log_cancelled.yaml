@@ -1,0 +1,7 @@
+# m14 review round 15 (NEW-1): sound_level(q) = 10 log10(q/I0) needs q > 0; two of them cancel, and the fact
+# then asks q/(1 W/m^2) = -1, impossible for a positive intensity: inconsistent (before: q = -1)
+unknowns: {q: real}
+given:
+  - "sound_level(q) - sound_level(q) + q/(1[W/m^2]) == -1"
+observe: {q_solved: "q"}
+expect: {error: rejected, message: "no situation satisfies the facts"}

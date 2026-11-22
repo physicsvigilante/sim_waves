@@ -1,0 +1,13 @@
+id: R4
+type: single_correct
+statement: >
+  A sinusoidal transverse wave of amplitude 4 mm and frequency 50 Hz travels along a
+  long string in the +x direction. At t = 0 the particle at x = 10 cm is at its
+  maximum positive displacement (y = +4 mm), and the particle at x = 25 cm is at its
+  mean position, moving in the +y direction. The wavelength is known to be greater
+  than 20 cm. With y in mm, x in m and t in s, the equation of the wave is
+options:
+  A: y = 4 sin(100 pi t - (10 pi/3) x + 5 pi/6)
+  B: y = 4 sin(100 pi t - (50 pi/3) x + pi/6)
+  C: y = 4 sin(100 pi t - (10 pi/3) x + pi/6)
+  D: y = 4 sin(100 pi t + (10 pi/3) x + 5 pi/6)

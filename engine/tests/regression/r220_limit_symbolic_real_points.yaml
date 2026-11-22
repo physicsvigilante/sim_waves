@@ -1,0 +1,7 @@
+# m14 review rounds 4 and 7: under the numbers-only rule a point is a number, proved real: sqrt(2) is real,
+# so limit(q, q, sqrt(2)) = sqrt(2); limit(q^2, q, 3) = 9 (a symbolic point such as sqrt(b) is refused: r219)
+symbols: {q: real}
+observe:
+  sqrt_two: "limit(q, q, sqrt(2))"
+  square: "limit(q**2, q, 3)"
+expect: {sqrt_two: "sqrt(2)", square: 9}

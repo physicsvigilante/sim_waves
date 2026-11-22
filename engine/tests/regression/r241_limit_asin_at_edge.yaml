@@ -1,0 +1,8 @@
+# m14 review round 10 (K7): an asin/acos argument may tend to the edge of [-1, 1] if it stays inside:
+# 1 - q^2 is in (-1, 1) for 0 < |q| < sqrt(2), so asin(1 - q^2) -> pi/2 and acos(1 - q^2) -> 0
+# (round 9 wrongly refused this; asin(1 + q^2), which leaves [-1, 1], is refused: r247)
+symbols: {q: real}
+observe:
+  asin_edge: "limit(asin(1 - q**2), q, 0)"
+  acos_edge: "limit(acos(1 - q**2), q, 0)"
+expect: {asin_edge: "pi/2", acos_edge: 0}

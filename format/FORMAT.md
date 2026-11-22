@@ -63,7 +63,27 @@ Write YAML booleans only as `true`/`false`; `on`, `yes`, `no` are plain words.
   - `x` and `t` written freely in a formula count as SI numbers, so book formulas such as
     `0.2*sin(2*pi*(6*t - x/60))` are fine.
   - The `x=`, `t=`, `at=` and `r=` arguments must be lengths or times.
-- **Units:** m, cm, mm, km, s, ms, us, ns, kg, g, N, Pa, kPa, J, mJ, W, mW, kW, Hz, kHz, MHz, GHz, rad, deg, K, degC.
+- **Every part as written must be defined (real and finite).** Each log, root, power,
+  division, tan, asin/acos and wave value written in an `observe`, a `given` fact, a limit
+  or a field with units, and each such part inside an observable's result (the log in
+  `sound_level`), is checked, even if it cancels: `log(-1) - log(-2)` is refused although
+  SymPy would give -log 2. In an observe, the condition must hold with the solved values
+  (or it is refused); in a fact, the solution must satisfy it (it can rule out candidates:
+  `d*(d-1) + 1/d - 1/d == 0` gives d = 1); a field must satisfy it when read, or after the
+  solve if it involves an unknown. A power with an unknown exponent is decided once it is
+  known: `0**q` is 0 for q = 2 and refused for q = -1.
+  - `field(w)` carries the wave's written conditions: `at(field(w), x=..., t=...)` checks them
+    at those values. `max_over`, `min_over`, `mean_over`, `max_in`, `min_in` and
+    `frequency_of` need the expression defined for every value in their range. Their
+    variable and expression are positional; only `lo=` and `hi=` may be keywords.
+- **Units:** m, cm, mm, um (also μm), nm, km, s, ms, us, ns, h, kg, g, N, Pa, kPa, J, mJ, W, mW, kW, Hz, kHz, MHz, GHz, rad, deg, K, degC; km/h is `km/h` or `kmph`.
+  - `h` (hour) works inside a compound unit (`36 km/h`, `36[km/h]`) or in brackets
+    (`2[h]`). A lone `h` after a value (`3 h`) is not read as hours: it is too often a
+    height.
+  - A written zero takes its bracket's unit: `"0[m]"` is a length (and `"0[s]"` is not).
+  - `degC` is not allowed inside brackets: `20[degC]` could be a temperature or a
+    difference. Write temperatures in K (`293.15[K]`) and differences as `20[K]`. A
+    field (`now: 30 degC`) and a result `in degC` are fine.
 - **Internals:** the engine works in exact SI.
 
 ## Media
@@ -98,7 +118,11 @@ ends: {left: driven, right: absorbing}   # for fixed/free ends and joins, use `j
 w: {harmonic: {on: rope, A: 1 cm, f | omega | period, lambda | k, v,
                dir: +x | -x | <direction unknown>   (or  from: left | right | <origin>),
                phase: 0}}
-# 2. given: an explicit y(x,t); units for x, t AND y are required
+# 2. given: an explicit y(x,t); units for x, t AND y are required. Each log, root, division,
+#    tan or asin/acos written in the profile is checked wherever the wave is evaluated, even
+#    if it cancels: log(x - t) - log(x - t) is refused at x < t (and is 0 at x > t), a
+#    profile with poles is refused at a pole, and sqrt(x - t) at x < t is refused. This
+#    holds for y, vy, ay, slope, phase, energy densities, at(field(w), ...) and sums.
 p: {given: "3/(2 + (x - 4*t)**2)", units: {x: m, t: s, y: m}, on: rope}
 # 3. pulse on a string, launched from the coordinate origin (any origin, e.g. a horizontal rope:
 #    coordinate: {origin: left_end, direction: right, variable: s} and from: left_end, toward: right)
@@ -549,7 +573,10 @@ pl:   {on: air, geometry: plane, intensity: I}
     - The engine first tries a proof over every allowed value (basis "proved for every
       allowed arbitrary value").
     - Otherwise it checks 14 values, including values near both ends of every range
-      (basis "sampled, not proved").
+      (basis "sampled, not proved"). An unranged arbitrary value is scaled from x0.001 to
+      x1000 here. A scaling that leaves the physics (a sound speed of 340000 m/s is not
+      sound) is skipped, and the basis names it; with fewer than 5 extra values left, the
+      comparison is refused. Give a range (below:/above:) to avoid that.
     - If the truth changes, the comparison is NOT AVAILABLE ("true for some allowed
       values and false for others"): the option is not necessarily true.
   - `==` between exact numbers needs exact equality; engine decimals use a relative
@@ -562,6 +589,19 @@ pl:   {on: air, geometry: plane, intensity: I}
 - **Options given as rounded numbers:** `nearest(x, a, b, c, d)` gives the position (1 for
   a) of the option nearest to x by relative distance. It is refused when the two nearest
   options are about equally close.
+  - x (or an option) may depend on solved unknowns; the option is picked after the solve.
+    If it still depends on something unfixed, it is refused. With arbitrary values, the
+    value and options it compares must be **proved** free of them (the engine reruns the
+    scene with them as symbols); sampled agreement is not enough for a choice of option,
+    so a value that cannot be proved independent is refused. An expression around a
+    `nearest()` (e.g. `L*nearest(...)`) is still checked as a whole, like any value.
+  - A `nearest()` inside another is picked first.
+  - **Options printed in a unit:** `nearest(x in km/h, 36, 54, 72)` converts x to that
+    unit (its dimension is checked, as for `in` in `observe`). A printed number is read
+    in that unit; an option with a unit (`15[m/s]`) or an unknown is converted to it by
+    its own dimension, and refused if that cannot be checked.
+  - `nearest()` is for `observe` only, on its own: not in `given`, not inside a
+    comparison, and not plotted.
 - **Lists:** `item(list, n)` (1 for the first), `spacing(list)` (the common difference of
   an equally spaced list; otherwise refused), and `count(list)`.
 - **A band of frequencies** (a source of variable frequency):
@@ -610,6 +650,11 @@ pl:   {on: air, geometry: plane, intensity: I}
   solved on the unit circle and every branch is enumerated:
   - phases mod 2*pi;
   - other unknowns over the range allowed by their sign and by the inequalities.
+  - **Two points off the origin** (an unknown k, or omega, and an unknown phase, from two
+    displacements): each fact fixes its angle up to two inverse-sine branches and 2*pi*n,
+    so k = k0 + n*2*pi/(x2 - x1). A stated bound (e.g. "less than half a wavelength
+    apart": `kk*15[cm] < pi`) picks the branches; one left is the answer, two or more
+    (or no bound: infinitely many) are reported as ambiguous.
 - **Refused trig cases:** any other unknown inside a trig function is refused rather than
   risk a lost root.
 - **Unknowns inside log, exp, inverse trig or an exponent** (e.g. a power from a level):
@@ -655,6 +700,13 @@ never `omega(w)`: both are 1/s, so the dimension check cannot catch it.
   - `peak(w, t=...)` is the largest |y| over x at an instant, for any wave with a field.
     For a shaped pulse alone, `amplitude(p)` and `peak(p)` give its height.
     `peak_position(w, t=...)` is where it occurs; a tie is reported as ambiguous.
+  - These look only where the written profile is defined at that instant, and only at a
+    largest |y| that is reached: one only approached (beside a jump, toward where the profile
+    stops being defined, or at infinity) is refused. Values are compared exactly, not to a
+    tolerance. A constant field's peak is its value; its `peak_position` is ambiguous.
+    `max_in` and `min_in` likewise need their extreme value taken somewhere. A shape with
+    infinitely many breakpoints (`step(sin(x))`) is handled only over a finite range. An energy needs the profile defined over the whole
+    stretch, and `width` needs the shape defined everywhere.
   - At a corner of a shape, `vy` and `slope` are undefined and refused; ask just beside it.
   - Observables can be nested, e.g.
     `front(p, t=travel_time(rope, start=0[m], end=3[m])/2)`.
@@ -679,7 +731,31 @@ never `omega(w)`: both are 1/s, so the dimension check cannot catch it.
   - Use `beat_frequency(...)` for the rate of the loudness maxima. The envelope's own
     oscillation is at the difference frequency.
 - `limit(expr, var, value)` is for approximations; e.g. a small `dl` gives
-  `limit(f/dl, dl, 0)`.
+  `limit(f/dl, dl, 0)` (see `examples/23_05_asc_004.yaml`).
+  - Write it as `limit(expr, var, value)`: three arguments in that order, no keywords.
+  - **Everything other than the variable must be a number:** no other symbol or unknown,
+    and no arbitrary function (`functions:`), in the expression, the point, or anything
+    written in them. Use numbers or `arbitrary:` values (numbers when the engine
+    evaluates). Units in brackets are units (`q/2[m]` is fine). A wave whose profile is
+    an arbitrary function cannot be used inside a limit.
+  - **Every part as written must be defined near the point**, even one that cancels, and
+    including what a call returns (a wave given as `sqrt(x - t)`): a log needs a positive
+    argument there, a root a nonnegative one (`sqrt(0)` is fine), asin/acos an argument in
+    [−1, 1] (it may tend to ±1 from inside: asin(1 - q²) → π/2; asin(1) is fine), and a
+    division a denominator that is nonzero near the
+    point (it may be 0 at the point itself, as in sin(q)/q). So
+    `limit(log(q) - log(q), q, 0)` with q real is refused (no log below 0), while with q
+    positive it is approached from above. A symbolic limit is refused:
+    it is only generic, and can be wrong at some value of the other symbols (|q|/q at
+    q → c has no limit at c = 0). So a formula such as v/(2l²) cannot be read off a limit;
+    check it with numbers.
+  - At an interior point both one-sided limits are taken and must agree; otherwise it is
+    refused ("from above ..., from below ..."). At the edge of the variable's domain (0
+    for a positive symbol, or a stated bound) it is approached from inside only.
+  - The point must be one the variable can approach: within the values it can take, i.e.
+    its kind (0 or more for a positive symbol) together with any stated bound (`q < 1`
+    with q positive allows (0, 1)), or on an edge. Outside, it is refused. A whole-number
+    variable is refused.
 - Lists cannot be indexed (`[1]` is read as a unit and refused); use `min`, `max` or
   `count`.
 - `min(a, b)` and `max(a, b)` take two values of the same dimension, or one list

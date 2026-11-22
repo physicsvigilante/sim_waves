@@ -1,0 +1,10 @@
+# m14 review round 18 (S2), control: y = 1 + 1e-10 exp(-x**2) at t = 0 is largest at x = 0, 1 + 1e-10, above
+# its limit 1 at infinity
+media:
+  rope: {type: string, mu: "1 kg/m", tension: "1 N"}
+waves:
+  w: {given: "1 + exp(-(x-t)**2)/10000000000", units: {x: m, t: s, y: m}, on: rope}
+observe:
+  height: "peak(w, t=0[s])"
+  where: "peak_position(w, t=0[s])"
+expect: {height: "10000000001/10000000000", where: 0}

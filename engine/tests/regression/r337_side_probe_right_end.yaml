@@ -1,0 +1,4 @@
+# m14 review round 22 (W1), at the right end: (1 + x)*(1 - step(sin(10x))) on [-1/100, 0] is 1 + x for x < 0
+# (sin(10x) < 0), approaching 1, and 0 at x = 0 (step(0) = 1): no largest value; refused
+observe: {bad: "max_in(x, (1+x)*(1-step(sin(10*x))), -1/100, 0)"}
+expect: {error: rejected, message: "no largest value"}

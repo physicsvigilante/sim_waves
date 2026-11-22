@@ -1,0 +1,5 @@
+# m14 review round 7 (N8): log(c) - log(c) cancels to 0 as it is read, so c disappears, but log(0) is
+# undefined; c is written in the text, so the limit is refused (before: 0)
+symbols: {q: real, c: real}
+observe: {invalid: "limit(q + log(c) - log(c), q, 0)"}
+expect: {error: rejected, message: "c is a symbol"}

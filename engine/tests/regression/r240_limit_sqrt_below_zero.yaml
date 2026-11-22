@@ -1,0 +1,4 @@
+# m14 review round 9: sqrt(q) with q real at the interior point 0: no values from below: refused
+symbols: {q: real}
+observe: {sqrt_bad: "limit(sqrt(q), q, 0)"}
+expect: {error: rejected, message: "from below"}

@@ -1,0 +1,5 @@
+# m14 review round 5 (N5): q/(c*q) as q -> 0, c real: generic 1/c, but at c = 0 the expression is 0/0 for every
+# q, so no limit; a symbol other than the variable can hide such values: refused
+symbols: {q: real, c: real}
+observe: {param: "limit(q/(c*q), q, 0)"}
+expect: {error: rejected, message: "apart from its variable"}

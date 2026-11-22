@@ -1,0 +1,5 @@
+# m14 review round 15 (NEW-4): a negative integer exponent needs only a nonzero base: (-2)**n with n = -1 is -1/2
+unknowns: {n: integer}
+given: ["n == -1"]
+observe: {power: "(-2)**n"}
+expect: {power: -0.5}

@@ -1,0 +1,5 @@
+# m14 review round 15 (NEW-1): limit(sound_level(q) - sound_level(q), q, 0): the log inside sound_level needs
+# q > 0, so there are no values from below: refused (before: 0); the direct log(q) - log(q) is r238
+symbols: {q: real}
+observe: {bad: "limit(sound_level(q)-sound_level(q), q, 0)"}
+expect: {error: rejected, message: "must be positive near q -> 0 (from below)"}

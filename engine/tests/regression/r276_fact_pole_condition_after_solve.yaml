@@ -1,0 +1,10 @@
+# m14 review round 14 (K18): a wave 1/(x - t) at an unknown point in a fact: its '!= 0' condition is checked on
+# the solution (d = 2), so y = 1/2 (round 13 refused before solving)
+unknowns: {d: real}
+waves:
+  p: {given: "1/(x-t)", units: {x: m, t: s, y: m}}
+given:
+  - "d == 2[m]"
+  - "y(p, x=d, t=0[s]) == 0.5[m]"
+observe: {value: "y(p, x=d, t=0[s])"}
+expect: {value: 0.5}

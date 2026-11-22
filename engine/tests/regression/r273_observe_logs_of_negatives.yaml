@@ -1,0 +1,4 @@
+# m14 review round 14 (K17): log(-1) - log(-2) is -log 2 in complex numbers, but neither real log exists:
+# refused (before: -log 2)
+observe: {invalid_logs: "log(-1) - log(-2)"}
+expect: {error: rejected, message: "it needs -1 to be positive"}

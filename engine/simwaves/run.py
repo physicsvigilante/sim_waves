@@ -82,6 +82,67 @@ def _frac(k, j, fracs):
     return base
 
 
+def _symbolic_scale(sc):
+    """Each arbitrary value as a positive symbol mapped onto its allowed range (all of it):
+    (scale for Scene, the symbols)."""
+    syms = {n: sp.Dummy(n, positive=True) for n in sc.arbitrary}
+
+    def mapping(n):
+        lo, hi = sc.arbitrary_ranges.get(n, (sp.Integer(0), sp.oo))
+        s_ = syms[n]
+        if hi.is_finite:
+            return lambda v: lo + (hi - lo) * s_ / (1 + s_)
+        return lambda v: lo + s_
+    return {n: mapping(n) for n in sc.arbitrary}, set(syms.values())
+
+
+def _is_bare_nearest(text):
+    """True when the observe text is a single nearest(...) call and nothing around it."""
+    import ast
+    try:
+        body = ast.parse(str(text).replace("^", "**"), mode="eval").body
+    except SyntaxError:
+        return False
+    return isinstance(body, ast.Call) and isinstance(body.func, ast.Name) and body.func.id == "nearest"
+
+
+def _nearest_proved(sc, names, timeout):
+    """The names whose nearest() compares numbers proved independent of the arbitrary
+    values: the scene is run once with them as symbols, and every recorded argument must
+    simplify to an expression free of those symbols. A pick is discrete, so agreement at
+    sampled values proves nothing; anything not proved here is refused."""
+    if not names:
+        return set()
+    data = copy.deepcopy(sc.data)
+    data["observe"] = {n: sc.data["observe"][n] for n in names}
+    for key in ("view", "explore", "illustrate"):
+        data.pop(key, None)
+    try:
+        scale, syms = _symbolic_scale(sc)
+        sc_sym = Scene(data, scale=scale)
+        _evaluate_once(sc_sym, min(timeout, 60))
+        recorded = getattr(sc_sym, "nearest_args", {})
+    except Exception:                  # noqa: BLE001 - no proof: refused by the caller
+        return set()
+    proved = set()
+    numeric = getattr(sc, "nearest_args", {})
+    for n in names:
+        args, ref = recorded.get(n), numeric.get(n)
+        if not args or not ref or len(args) != len(ref):
+            continue
+        try:
+            simp = [[sp.simplify(a) for a in call] for call in args]
+            free = set().union(*(a.free_symbols for call in simp for a in call))
+            # the proof must agree with the numbers actually compared in the stated run
+            agree = all(len(c) == len(r) and all(_same_result(x, y) for x, y in zip(c, r))
+                        for c, r in zip(simp, ref))
+        except Exception:              # noqa: BLE001
+            continue
+        if not free and agree:         # every compared number is the same constant: proved
+            proved.add(n)
+    return proved
+
+
 def _evaluate_arbitrary(sc, timeout):
     """Run the scene at the stated arbitrary values and at two other scalings; keep only the
     observables that agree in all three runs."""
@@ -104,6 +165,7 @@ def _evaluate_arbitrary(sc, timeout):
                                                  f"answer depends on them")
                 res.pop(name)
             return sol, res
+    proved_nearest = None
     for name in list(res):
         failed = [(f, sc2.obs_errors[name]) for _, r2, sc2, f in others if name not in r2 and name in
                   getattr(sc2, "obs_errors", {})]
@@ -115,6 +177,37 @@ def _evaluate_arbitrary(sc, timeout):
                                              f"below the speed of sound)")
             res.pop(name)
             continue
+        # nearest(): the pick is discrete, so agreeing picks prove little; the numbers it
+        # compared must themselves be the same at every scaling (as any value must)
+        args0 = getattr(sc, "nearest_args", {}).get(name)
+        if args0 is not None and not all(
+                len(getattr(sc2, "nearest_args", {}).get(name, ())) == len(args0) and
+                all(len(a) == len(b) and all(_same_result(x, y) for x, y in zip(a, b))
+                    for a, b in zip(args0, sc2.nearest_args[name]))
+                for _, _, sc2, _ in others):
+            sc.obs_errors[name] = SceneError(f"nearest(): the value it compares depends on the arbitrary "
+                                             f"value(s) {names}, so the problem does not fix the option")
+            res.pop(name)
+            continue
+        if args0 is not None:
+            # agreement at samples is not enough for a discrete pick: it needs a proof
+            if proved_nearest is None:
+                proved_nearest = _nearest_proved(
+                    sc, [n for n in res if n in getattr(sc, "nearest_args", {})], timeout)
+            if name not in proved_nearest:
+                sc.obs_errors[name] = SceneError(
+                    f"nearest(): cannot prove that the value it compares is independent of the arbitrary "
+                    f"value(s) {names} (sampled agreement is not enough for a choice of option); give the "
+                    f"value without them, or read the option from the value")
+                res.pop(name)
+                continue
+            if _is_bare_nearest(sc.data["observe"][name]):
+                # the observable is the pick itself, and every compared number is proved fixed
+                sc.basis[name] = (sc.basis.get(name, "exact") + "; the compared value is proved independent "
+                                  "of the arbitrary values")
+                continue
+            # an expression around a nearest() (e.g. a + nearest(...)) still needs its own check
+            # as a whole: the proof covers the pick only
         if all(name in r2 and _same_result(res[name], r2[name]) for _, r2, _, _ in others):
             how = ("same at 5 values of each arbitrary value (ranged ones spread across their ranges, others "
                    "x0.01 to x89; sampled)" if sc.arbitrary_ranges else
@@ -134,14 +227,17 @@ COMPARISON_FRACTIONS = (sp.Rational(1, 1000), sp.Rational(1, 100), sp.Rational(1
                         sp.Rational(1, 2), sp.Rational(3, 4), sp.Rational(9, 10), sp.Rational(99, 100),
                         sp.Rational(999, 1000))
 COMPARISON_SCALES = (sp.Rational(1, 1000), sp.Rational(1, 100), sp.Integer(100), sp.Integer(1000))
+MIN_COMPARISON_RUNS = 5        # fewer extra runs that stay physical: the comparison is refused
 
 
 def _is_comparison(text):
     import ast
     try:
-        return isinstance(ast.parse(str(text).replace("^", "**"), mode="eval").body, ast.Compare)
+        body = ast.parse(str(text).replace("^", "**"), mode="eval").body
     except SyntaxError:
         return False
+    # 'x in cm' parses as a comparison but is a unit conversion, not a True/False result
+    return isinstance(body, ast.Compare) and not any(isinstance(op, (ast.In, ast.NotIn)) for op in body.ops)
 
 
 def _check_comparisons(sc, res, timeout):
@@ -195,11 +291,18 @@ def _check_comparisons(sc, res, timeout):
                 f = COMPARISON_SCALES[(k + j) % len(COMPARISON_SCALES)]
                 scale[n] = f if lo is None else (lambda lo_, f_: lambda v: lo_ + (v - lo_) * f_)(lo, f)
         runs.append(scale)
+    from .errors import PhysicalRangeError
+    skipped = []
     for scale in runs:
         try:
             sc2 = Scene(copy.deepcopy(data), scale=scale)
             _, r2 = _evaluate_once(sc2, timeout)
             errs = getattr(sc2, "obs_errors", {})
+        except PhysicalRangeError as exc:
+            # this scaling left the physics (e.g. a sound speed in light's range): the
+            # comparison has no meaning there, so the run is skipped and the basis says so
+            skipped.append(str(exc))
+            continue
         except SceneError as exc:
             r2, errs = {}, {n: exc for n in todo}
         for n in list(todo):
@@ -214,10 +317,21 @@ def _check_comparisons(sc, res, timeout):
                 sc.obs_errors[n] = SceneError(f"depends on the arbitrary value(s) {names}: true for some allowed "
                                               f"values and false for others (not necessarily true)")
                 res.pop(n)
+    done = len(runs) - len(skipped)
+    if done < MIN_COMPARISON_RUNS:
+        for n in todo:
+            if n in res:
+                sc.obs_errors[n] = SceneError(
+                    f"cannot be checked widely enough: only {done} of {len(runs)} extra runs stay physical "
+                    f"({skipped[0]}); give the arbitrary values a range (below:/above:)")
+                res.pop(n)
+        return
+    note = (f"; {len(skipped)} far scalings skipped, outside the physical range ({skipped[0]})"
+            if skipped else "")
     for n in todo:
         if n in res:
-            sc.basis[n] = (f"decided; same at {5 + len(runs)} values of the arbitrary values, including near the "
-                           f"ends of every range (sampled, not proved)")
+            sc.basis[n] = (f"decided; same at {5 + done} values of the arbitrary values, including near the "
+                           f"ends of every range (sampled, not proved){note}")
 
 
 def evaluate(sc, timeout=120):
@@ -230,13 +344,15 @@ def _split_unit(sc, name, text):
     """'expr in cm' -> ('expr', ('cm', factor)) after checking the dimension; else (text, None)."""
     import re
     from .expr import dimension_of, show_dim
-    from .units import split_quantity
-    m = re.match(r"^(.*\S)\s+in\s+([A-Za-z][A-Za-z0-9/^*]*)\s*$", str(text))
+    from .units import parse_unit
+    m = re.match(r"^(.*\S)\s+in\s+([A-Za-zµμ][A-Za-z0-9/^*µμ]*)\s*$", str(text))
     if not m:
         return text, None
     expr_text, unit = m.groups()
     try:
-        _, u, factor, udim = split_quantity("1 " + unit)
+        # the unit is named explicitly after 'in', so parse it directly (split_quantity's
+        # rule against a lone trailing 'h' is for field values only)
+        factor, udim = parse_unit(unit)
     except SceneError:
         udim = None
     if udim is None:
@@ -399,12 +515,64 @@ def _evaluate(sc):
                          f"combination the engine cannot handle yet; please report it") from exc
 
 
+_KIND_WORD = {"positive": "positive", "nonneg": "0 or more", "nonzero": "nonzero", "unit": "between -1 and 1",
+              "intpow": "(base, exponent) with a nonzero base or an exponent of 0 or more",
+              "pow": "(base, exponent) of a real, finite power"}
+
+
+def _check_observe_conditions(sc, name, conditions, sol):
+    """Each condition recorded while the observe was read (a log argument positive, a
+    denominator nonzero, a wave value at a point inside its profile's domain, ...) must hold
+    with the solved values put in. SymPy may have cancelled the part that needed it
+    (log(-1) - log(-2) -> -log(2)), so the value alone cannot show this. A condition that
+    fails, or cannot be decided, refuses the observable. Conditions on a profile's shape
+    (still in the free coordinates x, t) describe where that function is defined, and are not
+    required of an observable that is the function itself."""
+    from .expr import holds
+    from .scene import X, T
+    for kind, g in conditions:
+        gs = sp.sympify(g).xreplace(sol)
+        if gs.has(X, T):
+            continue
+        h = holds(kind, sp.simplify(gs))
+        if h is True:
+            continue
+        if h is False:
+            raise SceneError(f"observe.{name}: not defined: it needs {sc.show_back(gs)} to be {_KIND_WORD[kind]} "
+                             f"(a log, root, division, power, tan, asin/acos or wave value written in it fails)")
+        raise SceneError(f"observe.{name}: cannot check that it is defined: it needs {sc.show_back(gs)} to be "
+                         f"{_KIND_WORD[kind]} for every allowed value of its symbols")
+
+
+def _check_fact_conditions(sc, sol):
+    """The '!= 0' and asin/acos conditions recorded in the given facts (the '> 0' and '>= 0'
+    ones are inequalities of the solve) must hold on the solution."""
+    from .errors import InconsistentError
+    from .expr import holds
+    for where, value, kind, g in getattr(sc, "field_conditions", []):
+        gs = sp.simplify(sp.sympify(g).xreplace(sol))
+        h = holds(kind, gs)
+        if h is not True:
+            raise SceneError(f"{where}: '{value}' {'is not defined' if h is False else 'cannot be checked'}: a part "
+                             f"written in it needs {sc.show_back(gs)} to be {_KIND_WORD[kind]}")
+    for i, text, kind, g in getattr(sc, "fact_conditions", []):
+        gs = sp.simplify(sp.sympify(g).xreplace(sol))
+        h = holds(kind, gs)
+        if h is False:
+            raise InconsistentError(f"given[{i}] {text!r}: the solution makes it undefined ({sc.show_back(gs)} must "
+                                    f"be {_KIND_WORD[kind]})")
+        if h is None:
+            raise UndeterminedError(f"given[{i}] {text!r}: cannot check that the solution keeps it defined "
+                                    f"({sc.show_back(gs)} must be {_KIND_WORD[kind]})")
+
+
 def _evaluate_inner(sc):
     """Solve, verify, evaluate. Bases per result are left in sc.basis, and the
     independent re-check of every fact in sc.verification."""
     from .errors import InconsistentError
     from .scene import harmonic_problem
     sol = solve_given(sc)
+    _check_fact_conditions(sc, sol)
     from .doppler import check_media, check_solution
     check_media(sc, sol)
     check_solution(sc, sol)
@@ -414,11 +582,22 @@ def _evaluate_inner(sc):
     for name, text in (sc.data.get("observe") or {}).items():
         try:
             text, unit = _split_unit(sc, name, text)
-            parsed = sc.expr(text, allow_rel=True, check_dims=True)
+            parsed = sc.expr(text, allow_rel=True, check_dims=True, collect=True)
+            _check_observe_conditions(sc, name, list(getattr(sc, "last_obligations", [])), sol)
+            from .scene import Nearest
             if isinstance(parsed, list):
+                if any(sp.sympify(side).has(Nearest) for r in parsed for side in (r.lhs, r.rhs)):
+                    raise SceneError(f"observe.{name}: nearest() picks an option; observe it on its own, "
+                                     f"not inside a comparison")
                 v, basis = _decide_comparison(sc, text, parsed, sol)
             else:
-                v, basis = resolve_deferred(sp.sympify(parsed).xreplace(sol).doit())
+                rec = []
+                try:
+                    v, basis = resolve_deferred(sp.sympify(parsed).xreplace(sol).doit(), record=rec)
+                finally:                   # kept even when refused: the proof run reads them
+                    if rec:
+                        sc.nearest_args = getattr(sc, "nearest_args", {})
+                        sc.nearest_args[name] = rec
         except SceneError as exc:
             errors.append((name, exc))
             continue
@@ -437,6 +616,14 @@ def _evaluate_inner(sc):
             if isinstance(v, sp.Basic) and not isinstance(v, sp.Tuple) and \
                     v.has(sp.zoo, sp.oo, -sp.oo, sp.nan, sp.AccumBounds):
                 errors.append((name, SceneError(f"observe.{name} is infinite or undefined ({v})")))
+                continue
+            # every physical result is real: a value with an imaginary part means a root or log
+            # was evaluated outside its domain (sqrt(x - t) at x < t gives I)
+            parts = list(v) if isinstance(v, sp.Tuple) else [v]
+            if any(isinstance(p, sp.Basic) and (p.is_real is False or (p.is_number and abs(complex(sp.N(p, 30)).imag)
+                   > 1e-12 * max(1.0, abs(complex(sp.N(p, 30)))))) for p in parts):
+                errors.append((name, SceneError(f"observe.{name} is not a real value ({v}): a root, log or power "
+                                                f"is evaluated outside the values where it is defined")))
                 continue
         if unit is not None:
             if isinstance(v, sp.logic.boolalg.BooleanAtom):

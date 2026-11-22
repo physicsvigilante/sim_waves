@@ -1,0 +1,5 @@
+# m14 review round 12 (K11), control: cos(q) - 1 <= 0 near 0 (lowest term -q^2/2), so sqrt(cos q - 1) is
+# refused; the message names the condition a root needs, 0 or more
+symbols: {q: real}
+observe: {bad_root: "limit(sqrt(cos(q)-1), q, 0)"}
+expect: {error: rejected, message: "must be 0 or more"}

@@ -1,0 +1,5 @@
+# m14 review round 2 (R2): 1 + exp(-((a-2)/0.1)^2) is 1 to within 1e-17 at every sampled a, but 2 at a = 2,
+# which picks option 2; sampled agreement is no proof for a choice of option: refused
+arbitrary: {a: 1}
+observe: {pick: "nearest(1 + exp(-((a-2)/0.1)**2), 1, 2)"}
+expect: {error: rejected, message: "cannot prove"}

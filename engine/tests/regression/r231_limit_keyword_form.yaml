@@ -1,0 +1,5 @@
+# m14 review round 8 (K1): the keyword form limit(e=..., var=..., value=...) bypassed the written-text check
+# (log(c) - log(c) cancels; c = 0 makes log undefined): keywords are refused (before: 0)
+symbols: {q: real, c: real}
+observe: {invalid: "limit(e=q + log(c) - log(c), var=q, value=0)"}
+expect: {error: rejected, message: "without keywords"}

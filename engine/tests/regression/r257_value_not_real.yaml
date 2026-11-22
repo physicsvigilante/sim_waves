@@ -1,0 +1,6 @@
+# m14 review round 12: a wave sqrt(x - t) evaluated at x = -1, t = 0 is sqrt(-1) = I (before: reported as I).
+# Every physical result is real: refused. At x = 4 it is 2 (r258 checks the real case)
+waves:
+  p: {given: "sqrt(x-t)", units: {x: m, t: s, y: m}}
+observe: {neg: "y(p, x=-1[m], t=0[s])"}
+expect: {error: rejected, message: "not defined at this point"}

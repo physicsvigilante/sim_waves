@@ -1,0 +1,11 @@
+# m14 review R3: at the edge of a domain the limit is taken from inside only
+# z < 1 m, z -> 1 m: from below, |z - 1|/(z - 1) = -1; y > 2 m, y -> 2 m: from above, +1;
+# q positive, q -> 0: from above, |q|/q = 1; interior and smooth: sin(z)/z -> 1 at z = 0 (both sides agree)
+symbols: {z: real, y: real, q: positive}
+given: ["z < 1[m]", "y > 2[m]"]
+observe:
+  upper_edge: "limit(abs(z - 1[m])/(z - 1[m]), z, 1[m])"
+  lower_edge: "limit(abs(y - 2[m])/(y - 2[m]), y, 2[m])"
+  positive_zero: "limit(abs(q)/q, q, 0)"
+  interior: "limit(sin(z/1[m])/(z/1[m]), z, 0)"
+expect: {upper_edge: -1, lower_edge: 1, positive_zero: 1, interior: 1}

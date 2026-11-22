@@ -1,0 +1,5 @@
+# m14 review round 14 (K15): an observe y(p, x=-2) - y(p, x=-2) for the log profile is refused (no log at -2)
+waves:
+  p: {given: "log(x-t) - log(x-t)", units: {x: m, t: s, y: m}}
+observe: {obs_neg: "y(p, x=-2[m], t=0[s]) - y(p, x=-2[m], t=0[s])"}
+expect: {error: rejected, message: "not defined at this point"}

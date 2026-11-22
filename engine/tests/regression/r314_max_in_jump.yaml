@@ -1,0 +1,4 @@
+# m14 review round 18 (S1, max_in): (x + 1)*(1 - step(x)) on [-1, 1] is x + 1 for x < 0 and 0 from x = 0: it
+# approaches 1 as x -> 0- but never takes it; refused
+observe: {bad: "max_in(x, (x+1)*(1-step(x)), -1, 1)"}
+expect: {error: rejected, message: "no largest value"}

@@ -1,0 +1,5 @@
+# m14 review R1: an unknown option whose facts make it a time cannot be compared in cm: refused
+unknowns: {ell: positive}
+given: ["ell == 1[s]"]
+observe: {pick: "nearest(1[m] in cm, ell, 90)"}
+expect: {error: rejected, message: "cannot check"}

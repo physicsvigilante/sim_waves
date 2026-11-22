@@ -1,0 +1,4 @@
+# m14 review round 2 (N2): q is positive, so q cannot approach -1: refused (before: -1)
+symbols: {q: positive}
+observe: {invalid: "limit(q, q, -1)"}
+expect: {error: rejected, message: "outside the values q can take"}

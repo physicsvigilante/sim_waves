@@ -1,0 +1,4 @@
+# m14 review round 22 (W1), control: (1 - x)*step(sin(10x)) on [0, 1/100] is 1 at x = 0 (step(0) = 1) and 1 - x
+# below 1 elsewhere: largest value 1, reached
+observe: {ok: "max_in(x, (1-x)*step(sin(10*x)), 0, 1/100)"}
+expect: {ok: 1}

@@ -1,0 +1,4 @@
+# m14 review round 19 (T2): step(-sin(x)**2) on [1, 7] is 1 only where sin(x) = 0 (x = pi, 2pi) and 0 elsewhere,
+# so its largest value 1 is reached at isolated points that no midpoint or end sample sees
+observe: {ok: "max_in(x, step(-sin(x)**2), 1, 7)"}
+expect: {ok: 1}

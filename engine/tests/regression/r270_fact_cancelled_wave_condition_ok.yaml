@@ -1,0 +1,8 @@
+# m14 review round 14 (K15), control: the same fact with d = 3 inside the logs' domain (d > 0): d = 3
+unknowns: {d: real}
+waves:
+  p: {given: "log(x-t) - log(x-t)", units: {x: m, t: s, y: m}}
+given:
+  - "y(p, x=d, t=0[s]) - y(p, x=d, t=0[s]) + d == 3[m]"
+observe: {d_solved: "d"}
+expect: {d_solved: 3}

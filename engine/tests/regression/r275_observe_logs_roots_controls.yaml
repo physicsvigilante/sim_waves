@@ -1,0 +1,5 @@
+# m14 review round 14 (K17), controls: log(1) - log(2) = -log 2, sqrt(1) * sqrt(1) = 1
+observe:
+  ok_logs: "log(1) - log(2)"
+  ok_roots: "sqrt(1) * sqrt(1)"
+expect: {ok_logs: "-log(2)", ok_roots: 1}

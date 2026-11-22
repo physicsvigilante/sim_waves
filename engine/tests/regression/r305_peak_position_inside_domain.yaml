@@ -1,0 +1,12 @@
+# m14 review round 17 (H3), control: a Gaussian centred at x = 1 m with the same x > 0 domain peaks inside it:
+# at t = 0 at x = 1 m, height 1 m; v = sqrt(1 N / 1 kg/m) = 1 m/s, so at t = 2 s at x = 3 m
+media:
+  rope: {type: string, mu: "1 kg/m", tension: "1 N"}
+waves:
+  p: {pulse: {on: rope, shape: "exp(-(x-1)**2) + log(x) - log(x)", units: {x: m, y: m}, dir: +x}}
+observe:
+  pos: "peak_position(p, t=0[s])"
+  pos_later: "peak_position(p, t=2[s])"
+  height: "peak(p, t=0[s])"
+  amp: "amplitude(p)"
+expect: {pos: 1, pos_later: 3, height: 1, amp: 1}

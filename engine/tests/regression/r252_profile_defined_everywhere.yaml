@@ -1,0 +1,13 @@
+# m14 review round 12 (K8), controls: profiles defined for every x and t are accepted. A Lorentzian pulse
+# 3/(b + (x - 4t)^2) with b positive has peak 3/b at x = t = 0; sqrt(1 + x^2)*cos(x - t) is 1 at x = t = 0;
+# a Gaussian exp(-((x - 0.5)/0.05)^2) is 1 at x = 0.5, t = 0
+symbols: {b: positive}
+waves:
+  lor: {given: "3/(b + (x - 4*t)**2)", units: {x: m, t: s, y: m}}
+  root: {given: "sqrt(1 + x**2)*cos(x - t)", units: {x: m, t: s, y: m}}
+  gauss: {given: "exp(-((x - 0.5)/0.05)**2)", units: {x: m, t: s, y: m}}
+observe:
+  lor_peak: "y(lor, x=0[m], t=0[s])"
+  root_at_0: "y(root, x=0[m], t=0[s])"
+  gauss_peak: "y(gauss, x=0.5[m], t=0[s])"
+expect: {lor_peak: "3/b", root_at_0: 1, gauss_peak: 1}

@@ -1,0 +1,5 @@
+# m14 review round 16 (R4): 0**n with n = -1 is undefined: refused
+unknowns: {n: integer}
+given: ["n == -1"]
+observe: {value: "0**n"}
+expect: {error: rejected, message: "not defined"}

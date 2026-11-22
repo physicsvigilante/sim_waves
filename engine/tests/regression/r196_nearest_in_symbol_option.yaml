@@ -1,0 +1,6 @@
+# m14 review R1: an unknown option in nearest(x in u, ...) is converted by its own dimension, not read as a
+# number in u. ell = 1 m = 100 cm, the target is 1 m = 100 cm: option 1 is exact (before: ell read as 1 cm, pick 2)
+unknowns: {ell: positive}
+given: ["ell == 1[m]"]
+observe: {pick: "nearest(1[m] in cm, ell, 90)"}
+expect: {pick: 1}

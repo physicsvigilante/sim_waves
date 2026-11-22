@@ -1,0 +1,7 @@
+# m14 review round 15 (NEW-3): asin(d) - asin(d) + d(d - 2) = 0: the candidates are 0 and 2, and asin needs
+# -1 <= d <= 1, which excludes 2: d = 0
+unknowns: {d: real}
+given:
+  - "asin(d) - asin(d) + d*(d-2) == 0"
+observe: {d_solved: "d"}
+expect: {d_solved: 0}

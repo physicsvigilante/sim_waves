@@ -1,0 +1,4 @@
+# m14 review R3: the same for a plain real symbol with no bound: |w|/w at 0 has no limit
+symbols: {w: real}
+observe: {jump: "limit(abs(w)/w, w, 0)"}
+expect: {error: rejected, message: "does not exist"}

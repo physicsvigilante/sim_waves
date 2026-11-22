@@ -1,0 +1,7 @@
+# m14 review round 13: y(p, x=x, t=0) is the profile's shape at t = 0 (a function of x), not a value at a
+# point, so it keeps its own poles: 6/((x - 4.5t)^2 - 3) at t = 0 is the same function as 6/(x^2 - 3)
+# (run 7 single/10, a "which is a wave?" question)
+waves:
+  p: {given: "6/((x - 4.5*t)**2 - 3)", units: {x: m, t: s, y: m}}
+observe: {same_shape: "equivalent(y(p, x=x, t=0[s]), 6/(x**2 - 3))"}
+expect: {same_shape: true}

@@ -610,3 +610,227 @@ Tests: r162–r167.
   the sound guard, `limit` with a bounded symbol, unknown k and phase off the origin,
   and the units km/h and μm.
 - **The light and radar part of H1 was not tested:** no such problem was in the sample.
+
+## Milestone 14: service repairs (before freeze)
+The seven run 7 defects, and one tooling defect:
+- **`nearest()` after the solve:** a value or option that depends on solved unknowns is
+  picked once they are put in; one that still depends on something unfixed is refused.
+- **`nearest(x in u, ...)`:** x converted to u (dimension checked as for `in`); bare-number
+  options read in u, options with units converted. A value with a unit against
+  bare-number options is refused with a hint to write `in <unit>` (run 7 single/55).
+- **A written zero takes its bracket's unit:** `"0[m]"` is a length; `"0[s]"` is still
+  refused where a length is needed.
+- **`in <unit>` was classed as a comparison.** `x in cm` parses as a Python comparison,
+  so it got the wide comparison check (x1000), which pushed an arbitrary sound speed to
+  340000 m/s and tripped the sound guard. It is now an ordinary result. Real comparisons
+  skip a scaling that leaves the physics (a new `PhysicalRangeError` from the sound
+  guards), say so in the basis, and are refused with fewer than 5 extra runs left.
+- **`limit()` on a bounded symbol,** as `diff()` already did; a point outside the bound is
+  refused.
+- **Unknown k and phase from two points off the origin:** solved branch by branch
+  (k = k0 + n*2*pi/(x2 - x1), the phase from k). The stated bounds pick the branches; two
+  or more are ambiguous, as before. In run 7's integer/5, the author's bound
+  (0.15k < pi) leaves two branches (290.5 cm and 53.2 cm), so the refusal there was
+  right; only its message was wrong. A displacement larger than the amplitude is now
+  reported as inconsistent.
+- **Units:** km/h (`kmph`), h (only inside a compound unit or brackets, never a lone
+  `h`), um/μm, nm.
+- **Harness on Windows:** `simwaves test -j N` used `fork`, which Windows lacks; it now
+  uses `spawn` there.
+
+Tests: r176–r195.
+
+**Run 7 re-check:** the 44 final run 7 scenes re-run on the new engine. No value the old
+engine gave changed. Six options refused before are now picked (jee_advanced/2,
+jee_main/19, jee_main/36, single/130, single/182, single/2); integer/5's refusal now lists
+its two branches.
+
+### Milestone 14 review, round 1 (ChatGPT Astra, on PR #14; eval/review14/REPORT.md)
+
+**Four silent wrong answers, a wrong refusal and an export crash, all fixed with tests
+r196–r208:**
+1. **`nearest(x in u, ...)` read an unknown option as a number in u** (1 m read as 1 cm).
+   Such an option is now converted by its own dimension, or refused.
+2. **`nearest` with arbitrary values was accepted when the sampled picks agreed,** although
+   the value moved, and a far value picks another option. The numbers it compares must now
+   be the same at every scaling, as any value must.
+3. **A bounded `limit()` took one side at an interior point.** Both sides are now taken
+   and must agree; one side, from inside, only at a domain edge. Whole-number symbols are
+   refused.
+4. **`20[degC]` in brackets was a 20 K difference,** then shifted by the offset. `degC`
+   inside brackets is now refused as ambiguous.
+5. `in h` was refused; an explicit unit after `in` is now parsed directly.
+6. Plotting `nearest()` crashed export; it is now a clear error. Also refused: `nearest`
+   in `given` facts and inside comparisons, and keyword arguments in `nearest(x in u, ...)`.
+
+### Milestone 14 review, round 2 (ChatGPT Astra, on PR #14; eval/review14/REPORT.md)
+- **`nearest` with arbitrary values needs a proof, not samples.** A narrow bump can agree at
+  all five samples and still pick another option between them. The compared numbers must
+  now simplify to constants in a run with the arbitrary values as symbols; otherwise the
+  pick is refused. The three run 7 picks over arbitrary values are now proved.
+- **Nested `nearest()`** is resolved from the inside out (was an internal error).
+- **`limit()` at a point outside a symbol's domain** (q positive, q → −1) is refused (was −1).
+
+Tests r209–r213.
+
+### Milestone 14 review, round 3 (ChatGPT Astra, on PR #14; eval/review14/REPORT.md)
+- **A proof about a `nearest` part had waived the check of the whole result:** `a + nearest(2,1,2)`
+  gave 3. The proof now stands in only for an observable that is a single `nearest` call,
+  and it must agree with the numeric run.
+- **A bounded `limit` lost the symbol's own kind** (q positive, q < 1: q → −1 gave −1, and
+  |q|/q at 0 was refused). The domain is now the kind and the bound together.
+
+Tests r214–r218.
+
+### Milestone 14 review, round 4 (ChatGPT Astra, on PR #14; eval/review14/REPORT.md)
+- **A limit point of unknown reality was accepted** (b real: `limit(1, q, sqrt(b))` gave 1,
+  though b = −1 makes the point i). The point must now be proved real. Tests r219–r220.
+
+### Milestone 14 review, round 5 (ChatGPT Astra, on PR #14; eval/review14/REPORT.md)
+- **A limit with other symbols used SymPy's generic answer**, which can hide values where
+  no limit exists (|q|/q at q → c with c real gave Abs(c)/c, wrong at c = 0). With other
+  symbols present, the limit is now proved by continuity after cancellation, or refused.
+  The FORMAT approximation example (beat/dl as dl → 0) still gives v/(2l²). Tests r221–r224.
+
+### Milestone 14 review, round 6 (ChatGPT Astra, on PR #14; eval/review14/REPORT.md)
+- **Automatic cancellation hid a parameter from the limit proof** (`c*q/(c*q)` read as 1, so c
+  real gave 1, though c = 0 makes it 0/0 everywhere). The denominators as written are now
+  collected before translation and checked by the proof. Tests r225–r227.
+
+### Milestone 14 review, round 7 (ChatGPT Astra, on PR #14; eval/review14/REPORT.md)
+- **Two more symbolic-limit cases** (`c*q*(c*q)**(0-1)` and `q + log(c) - log(c)` with c real
+  gave 1 and 0). Rounds 3 to 7 all found ways for a symbol and its domain to be lost in
+  SymPy's simplification before `limit` sees it.
+- **Decision (the user's): narrow `limit()` instead of patching further.** Apart from its
+  variable, everything in a limit must now be a number. The symbols written in the text are
+  collected before SymPy simplifies, so nothing can hide; numbers and `arbitrary:` values
+  are allowed. The continuity proof (round 5) and the denominator collector (round 6) were
+  removed. Cost: a formula can no longer be read off a limit; the FORMAT example
+  23_05_asc_004 now uses numbers (170 per metre instead of v/(2l²)). Candidate for later:
+  a dedicated symbolic-approximation service, if runs show it is needed. Tests r228–r230;
+  r213, r219–r227 updated.
+
+### Milestone 14 review, round 8 (ChatGPT Astra, on PR #14; eval/review14/REPORT.md)
+- **Gaps in the numbers-only rule:** keyword arguments bypassed the written-text check (now
+  refused: `limit(expr, var, value)` only); arbitrary functions such as `F(0)` passed as numbers
+  (now refused); a unit in brackets was read as a same-named symbol (now skipped).
+  Tests r231–r235.
+
+### Milestone 14 review, round 9 (ChatGPT Astra, on PR #14; eval/review14/REPORT.md)
+- **An arbitrary profile hid behind `y(p, ...)` and cancelled** (`F(0) - F(0)` inside a limit
+  gave 0). `limit` now evaluates every written call on its own first, refusing one that holds
+  an arbitrary function.
+- **The same cancellation hid the variable's own domain** (`log(q) - log(q)` with q real gave
+  0). Every written log, root, power, asin/acos and division is now checked to be defined
+  near the point on each side approached. Tests r236–r241.
+
+### Milestone 14 review, round 10 (ChatGPT Astra, on PR #14; eval/review14/REPORT.md)
+- **The round 9 domain checker had three gaps:** the sign check used the wrong side for an
+  upper bound (`sqrt(q - 1)`, q < 1, gave 0); conditions inside a call's value were missed (a
+  wave given as `sqrt(x - t)`); and asin/acos refused an argument that tends to ±1 from inside
+  (asin(1 − q²) → π/2). All fixed. Tests r241 (rewritten), r242–r247.
+
+### Milestone 14 review, round 11 (ChatGPT Astra, on PR #14; eval/review14/REPORT.md)
+- **Two wrong refusals from the round 9–10 checks fixed:** asin/acos of a constant at an edge of
+  [−1, 1] (asin(1) = π/2), and a root of exactly 0 (√0 = 0; a root needs only a nonnegative
+  argument). Tests r248–r250.
+- **Known issue, scoped out (pre-existing, engine-wide):** a scene definition is simplified as it
+  is read, so its domain is lost. A wave given as `log(x-t) - log(x-t)` is 0 everywhere, even at
+  x − t < 0, where `y(p, ...)` should be undefined; the engine before m14 does the same. Candidate
+  milestone: keep the conditions of written scene definitions (profiles, fields) through parsing.
+
+### Milestone 14 review, round 12 (ChatGPT Astra, on PR #14; eval/review14/REPORT.md)
+- **K8, closed conservatively (the owner's decision after Astra held it as blocking):** each
+  log, root, division and asin/acos written in a `given` wave profile is read before
+  simplification; a condition that is neither provable everywhere nor still present in the
+  simplified profile (i.e. simplified away, as in log(x - t) - log(x - t)) is refused when the
+  scene is read. A stricter first version refused valid profiles with poles (run 7 single/10,
+  FORMAT example 02_cnt_005) and was narrowed. A non-real result (sqrt(x - t) at x < t) is now
+  refused instead of being reported as I. Keeping the domains of all scene definitions through
+  parsing remains a candidate milestone.
+- **Wrong refusals of non-polynomial limits fixed:** signs near the point now also come from the
+  Taylor series of entire expressions (√(1 − cos q) → 0, asin(cos q) → π/2). Tests r251–r258.
+
+### Milestone 14 review, round 13 (ChatGPT Astra, on PR #14; eval/review14/REPORT.md)
+- **Profile conditions are now checked where the wave is evaluated**, replacing round 12's check
+  when the scene is read. That one missed logs whose complex parts cancel (`log(t-x) - log(2(t-x))`
+  at x > t gave −log 2), wrongly refused equivalent poles (`(x-t)^2/(x-t)^3`), and had no condition
+  for tan. Each condition written in a `given` profile now goes with every value at a point: decided
+  when the point is a number, after the solve when it is symbolic (or as an inequality in a fact, or
+  a domain condition in a limit). A profile's shape (`y(p, x=x, t=0)`) is a function and is not
+  guarded. tan/sec/cot/csc conditions are recorded. Tests r259–r268.
+
+### Milestone 14 review, round 14 (ChatGPT Astra, on PR #14; eval/review14/REPORT.md)
+- **Conditions are now carried beside values, not inside them.** Every log, root, division,
+  power, tan, asin/acos and wave value written in an observe, a fact, a limit or a profile
+  records the condition it needs in a list kept beside the value while it is read, so no
+  cancellation can remove it. Observes check the list after the solve; facts turn it into
+  constraints (or check it on the solution); limits check their own near the point.
+  Fixes: guards cancelling in facts (K15), a limit of a profile's shape (K16), and plain
+  observes such as `log(-1) - log(-2)` (K17, pre-existing); a pole condition in a fact is
+  checked after the solve (K18). The round 13 guard is removed. Tests r269–r277.
+
+### Milestone 14 review, round 15 (ChatGPT Astra, on PR #14; eval/review14/REPORT.md)
+- **The condition lists now also cover observables' results and scene fields:** a result such as
+  `sound_level(q)` records its log's q > 0 before it can cancel; a field such as
+  `(340 + log(-1) - log(-2)) m/s` is refused when read (an undecidable one is checked after the solve).
+- **Fact conditions now filter candidates before ambiguity is counted** (d(d-1) + 1/d - 1/d = 0
+  gives d = 1), and a symbolic integer exponent no longer needs a positive base ((-2)**n with n = 2
+  is 4). Tests r278–r287.
+
+### Milestone 14 review, round 16 (ChatGPT Astra, on PR #14; eval/review14/REPORT.md)
+- **Sum waves, shaped pulses (and their reflected and transmitted copies) and arbitrary values now
+  carry or check their written conditions** like given profiles and fields; `0**n` with an integer
+  unknown n is decided once n is known. Tests r288–r296.
+
+### Milestone 14 review, round 17 (ChatGPT Astra, on PR #14; eval/review14/REPORT.md)
+- **Every observable that evaluates a wave now respects where its written profile is defined:**
+  `at(field(w), ...)`, `phase`, energy densities, the range functions (`max_over`, `max_in`, ...),
+  and the extremum searches. `peak`, `peak_position` and a pulse's `amplitude` refuse a largest
+  |y| that is only approached, never reached. An energy over a stretch where the profile is
+  undefined, and the width of such a shape, are refused. `0**q` with q declared real is decided
+  once q is known. Tests r297–r311.
+
+### Milestone 14 review, round 18 (ChatGPT Astra, on PR #14; eval/review14/REPORT.md)
+- **Extremes are now found exactly:** each candidate is either reached (a critical point, a
+  breakpoint's own value, a closed end, a constant stretch) or only approached (beside a jump, at
+  an open end, at infinity), and they are ordered exactly, without a tolerance. A jump's one-sided
+  limit and a supremum at infinity no longer pass for a peak; a constant field has a peak. An
+  exponent declared positive is decided after the solve; keyword ranges are honoured. Tests
+  r312–r323.
+
+### Milestone 14 review, round 19 (ChatGPT Astra, on PR #14; eval/review14/REPORT.md)
+- **A jump inside a very short range is no longer missed, and periodic steps are no longer
+  sampled:** a side of a breakpoint counts whenever the range reaches it, and conditions such as
+  sin(x) < 0 are decided stretch by stretch between their breakpoints within a finite range (or
+  refused over the whole line). Tests r324–r329.
+
+### Milestone 14 review, round 20 (ChatGPT Astra, on PR #14; eval/review14/REPORT.md)
+- **An unresolved set from SymPy is no longer trusted:** a step condition SymPy leaves as a
+  ConditionSet (sin(x)/x < 0) is decided stretch by stretch, or refused; a branch is never skipped
+  for want of a point to evaluate. Tests r330–r331.
+
+### Milestone 14 review, round 21 (ChatGPT Astra, on PR #14; eval/review14/REPORT.md)
+- **Breakpoints are ordered exactly,** not by floating-point keys (roots 1e-17 apart all rounded
+  to 1.0 and could be taken in any order). The zeros of sin and cos of a linear argument are
+  listed exactly over a finite range, and a branch's sample point is checked to lie in that
+  branch. Tests r332–r334.
+
+### Milestone 14 review, round 22 (ChatGPT Astra, on PR #14; eval/review14/REPORT.md)
+- **The check of which branch applies beside a breakpoint stays inside the range,** short of the
+  next breakpoint and of the range's edge; it had probed outside, past sign changes that were not
+  listed. Tests r335–r338.
+
+### Milestone 14 blind run (reserved R1–R6; eval/m14_repairs/RESULT.md)
+- **6 of 6 matched the keys, all with full engine fit** (no hand steps), on the engine frozen at
+  `4a0dcf8`: nearest on solved values, options in cm, km/h and μm, a limit on a bounded symbol,
+  a wave fixed from two off-origin points with a bounding branch, and statements proved over an
+  arbitrary sound speed. No post-run fixes.
+- **Friction:** a source passing the listener needs two source copies (R2); the refusal for too
+  few facts names an inequality as "cannot be checked"; per-mm limits need `/(dl/1[mm])`.
+
+**Not fixed (tooling):** on Windows, r84 (peak of a sum of Gaussians) and r93 run for
+minutes, and r96 grows past 4.6 GB of memory; all three do so on the engine before m14
+as well. The wall-clock limit uses SIGALRM, which Windows lacks, so nothing stops a slow
+scene there. A limit that works on Windows (a worker process with a timeout) is a
+candidate for later.

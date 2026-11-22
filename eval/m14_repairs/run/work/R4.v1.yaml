@@ -1,0 +1,17 @@
+id: R4
+assume:
+  - "Maximum positive displacement and mean position moving +y are read in the wave's own y = A sin(w t - k x + phi) convention."
+  - "Amplitude in mm; x in metres."
+unknowns: {k: positive, ph: phase}
+waves:
+  w: {harmonic: {A: 4 mm, f: 50 Hz, k: k, dir: +x, phase: ph}}
+given:
+  - {fact: "y(w, x=10[cm], t=0[s]) == 4[mm]", source: stated}
+  - {fact: "y(w, x=25[cm], t=0[s]) == 0[mm]", source: stated}
+  - {fact: "vy(w, x=25[cm], t=0[s]) > 0[m/s]", source: stated}
+  - {fact: "wavelength(w) > 20[cm]", source: stated}
+observe:
+  k: "k"
+  ph: "ph"
+  lam: "wavelength(w)"
+  A_ok: "y(w, x=0.1[m], t=0[s])"

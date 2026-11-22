@@ -1,0 +1,9 @@
+answer: [B]
+final_scene: R1.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "nothing (water level only enters as the air-column length)"
+missing_in_source: "none"
+reasoning: "Engine solved v=340 m/s, e=1 cm from the two resonances; the open-open pipe needs L=78.95 cm; nearest() picks option 2 = B (79 cm)."
+friction: "none"

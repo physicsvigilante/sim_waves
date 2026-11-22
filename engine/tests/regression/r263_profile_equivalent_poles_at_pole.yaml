@@ -1,0 +1,5 @@
+# m14 review round 13 (K13): the same profile at its pole x = t: refused
+waves:
+  p: {given: "(x-t)**2 / (x-t)**3", units: {x: m, t: s, y: m}}
+observe: {at_pole: "y(p, x=0[m], t=0[s])"}
+expect: {error: rejected, message: "not defined at this point"}

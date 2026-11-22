@@ -639,7 +639,7 @@ class Supersonic(SceneError):
 def check_media(sc, sol):
     """After solving: a gas or fluid speed solved to light's range is refused; an em medium
     solved faster than light, or with n < 1, is inconsistent."""
-    from .errors import InconsistentError
+    from .errors import InconsistentError, PhysicalRangeError
     from .scene import EMMedium, GasMedium, SOUND_SPEED_LIMIT, SPEED_OF_LIGHT
     for name, m in sc.objects.items():
         if isinstance(m, EMMedium):
@@ -649,7 +649,7 @@ def check_media(sc, sol):
         elif isinstance(m, GasMedium):
             v = sp.sympify(m.v).xreplace(sol)
             if v.is_number and float(sp.N(v)) >= SOUND_SPEED_LIMIT:
-                raise SceneError(f"media.{name}: the facts make the speed {sp.N(v, 6)} m/s: that is not sound in a "
+                raise PhysicalRangeError(f"media.{name}: the facts make the speed {sp.N(v, 6)} m/s: that is not sound in a "
                                  f"gas or fluid; for light, radar or radio use a medium of type: em")
 
 

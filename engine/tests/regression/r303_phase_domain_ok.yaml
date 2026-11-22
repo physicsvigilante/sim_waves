@@ -1,0 +1,5 @@
+# m14 review round 17 (H2), control: at x - t = 1 the profile is sin(t - x), phase t - x = -1
+waves:
+  p: {given: "sin(t-x) + log(x-t) - log(x-t)", units: {x: m, t: s, y: m}}
+observe: {ok: "phase(p, x=1[m], t=0[s])"}
+expect: {ok: -1}

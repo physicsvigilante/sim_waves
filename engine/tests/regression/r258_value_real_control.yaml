@@ -1,0 +1,5 @@
+# m14 review round 12, control: the wave sqrt(x - t) at x = 4, t = 0 is sqrt(4) = 2
+waves:
+  p: {given: "sqrt(x-t)", units: {x: m, t: s, y: m}}
+observe: {pos: "y(p, x=4[m], t=0[s])"}
+expect: {pos: 2}

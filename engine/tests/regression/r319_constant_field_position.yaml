@@ -1,0 +1,5 @@
+# m14 review round 18 (S3): peak_position of a constant field: largest everywhere, not at one place
+waves:
+  w: {given: "1", units: {x: m, t: s, y: m}}
+observe: {where: "peak_position(w, t=0[s])"}
+expect: {error: ambiguous, message: "all along a stretch"}

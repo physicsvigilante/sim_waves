@@ -1,0 +1,10 @@
+# m14 review round 13: a wave sqrt(x - t) at an unknown point in a fact: its condition x - t >= 0 becomes an
+# inequality for the solver; sqrt(d) = 2 gives d = 4, and y at d is 2
+unknowns: {d: positive}
+waves:
+  p: {given: "sqrt(x - t)", units: {x: m, t: s, y: m}}
+given: ["y(p, x=d, t=0[s]) == 2[m]"]
+observe:
+  d_found: "d"
+  y_at_d: "y(p, x=d, t=0[s])"
+expect: {d_found: 4, y_at_d: 2}

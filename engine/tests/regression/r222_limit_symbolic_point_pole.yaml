@@ -1,0 +1,4 @@
+# m14 review round 5 (N5): 1/q as q -> c, c real: generic 1/c, but at c = 0 there is no finite limit: refused
+symbols: {q: real, c: real}
+observe: {pole: "limit(1/q, q, c)"}
+expect: {error: rejected, message: "apart from its variable"}

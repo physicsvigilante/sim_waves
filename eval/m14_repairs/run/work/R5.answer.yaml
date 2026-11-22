@@ -1,0 +1,9 @@
+answer: [A, B]
+final_scene: R5.v1.yaml
+engine_fit: full
+hand_steps: []
+coverage: full
+not_represented: "nothing"
+missing_in_source: "speed of sound (declared arbitrary 100-1000 m/s)"
+reasoning: "Engine: A proved true, ratio 6/5 exact (B true), C proved false, D proved false."
+friction: "Option D compares the first overtone of Q (harmonic 3 of Q) with third harmonic of P; I used harmonic(Q,..)=3 directly, which is my own mapping of overtone to harmonic (the harmonic(r, overtone=k) helper was available but not used)."

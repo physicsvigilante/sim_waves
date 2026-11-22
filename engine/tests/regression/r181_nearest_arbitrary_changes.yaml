@@ -1,0 +1,6 @@
+# m14: nearest() on a value that depends on an arbitrary value picks a different option when it is scaled: refused
+arbitrary: {mu: 10 g/m}
+media: {w: {type: string, mu: mu, tension: 100 N}}
+resonators: {r: {type: string, on: w, length: 1 m, ends: [fixed, fixed]}}
+observe: {pick: "nearest(frequency(r, harmonic=1), 49[Hz], 200[Hz])"}
+expect: {error: rejected, message: "arbitrary"}

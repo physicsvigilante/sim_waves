@@ -1,0 +1,6 @@
+# m14 review round 15 (NEW-2): a field (340 + log(-1) - log(-2)) m/s: neither real log exists, though the complex
+# parts cancel to 340 - log 2 = 339.3 m/s: the field is refused when the scene is read
+media:
+  air: {type: gas, v: "(340 + log(-1) - log(-2)) m/s"}
+observe: {speed: "speed(air) in m/s"}
+expect: {error: rejected, message: "is not defined"}

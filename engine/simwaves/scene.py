@@ -105,7 +105,8 @@ class Scene:
                 rng = value
                 value = value["value"]
             text, unit, factor, udim = split_quantity(value)
-            v = self.expr(text) * factor
+            v = self.expr(text, collect=True) * factor
+            self._check_field_conditions(f"arbitrary.{name}", value)
             if not v.is_number or not v.is_positive:
                 raise SceneError(f"arbitrary.{name}: give a positive number with its unit, e.g. 10 g/m")
             if rng is not None:
@@ -113,7 +114,8 @@ class Scene:
                 for key in ("above", "below"):
                     if key in rng:
                         bt, bu, bf, bd = split_quantity(rng[key])
-                        b = self.expr(bt) * bf
+                        b = self.expr(bt, collect=True) * bf
+                        self._check_field_conditions(f"arbitrary.{name}.{key}", rng[key])
                         if not b.is_number or b.is_real is not True:
                             raise SceneError(f"arbitrary.{name}.{key}: a real number with a unit (other names "
                                              f"cannot be used in a range)")
@@ -283,8 +285,19 @@ class Scene:
         except (TypeError, AttributeError, ValueError) as exc:
             raise SceneError(f"{fname}(): bad arguments ({exc})") from exc
 
-    def expr(self, text, allow_rel=False, check_dims=False):
-        return translate(text, self, allow_rel, check_dims)
+    def expr(self, text, allow_rel=False, check_dims=False, collect=False):
+        return translate(text, self, allow_rel, check_dims, collect)
+
+    def unit_for_nearest(self, x_text, unit_text):
+        """(factor, offset, dimension) for 'nearest(x in unit, ...)', with the same checks as
+        'observe: x in unit' (known unit, matching dimension, no angle units)."""
+        from .run import _split_unit
+        from .units import parse_unit
+        text, unit = _split_unit(self, "nearest", f"{x_text} in {unit_text}")
+        if unit is None:
+            raise SceneError(f"nearest(): cannot read the unit {unit_text!r} after 'in'")
+        _, factor, offset = unit
+        return factor, offset, parse_unit(unit_text)[1]
 
     # ---- dimension checking (used for `given` and `observe`) -----------------
     def name_dim(self, n):
@@ -323,6 +336,10 @@ class Scene:
                     chk.same(kwargs[key], D_FREQ, f"argument {key}= of frequencies_in() (a frequency)")
         if fname == "nearest" and len(args) >= 2:
             for a_ in args[1:]:
+                if args[0] not in (None, DIMLESS, "obj") and a_ == DIMLESS:
+                    raise SceneError("nearest(): the value has a unit but the options are bare numbers; write "
+                                     "nearest(x in <unit>, ...) to read them in that unit, or give the options "
+                                     "units, e.g. 150[Hz]")
                 chk.same(args[0], a_, "the value and the options of nearest()")
         if fname in ("min", "max") and len(args) == 2 and "obj" not in args:
             chk.same(args[0], args[1], f"the two arguments of {fname}()")
@@ -379,12 +396,28 @@ class Scene:
             return tuple(x - n * y for x, y in zip(args[0], args[1]))
         return None
 
+    def _check_field_conditions(self, where, value):
+        """The conditions a field's written parts need (each log, root, power, division, tan,
+        asin/acos), recorded as it was read: one that fails refuses the field; one that cannot
+        be decided yet (it involves an unknown) is checked after the solve
+        (run._check_fact_conditions), so SymPy cannot cancel it into a plausible number
+        ((340 + log(-1) - log(-2)) m/s would otherwise read as 339.3 m/s)."""
+        from .expr import holds
+        for kind, g in getattr(self, "last_obligations", []):
+            h = holds(kind, g)
+            if h is False:
+                raise SceneError(f"{where}: '{value}' is not defined: a part written in it needs {g} to be "
+                                 f"{_KIND_WORD[kind]}")
+            if h is None:
+                self.__dict__.setdefault("field_conditions", []).append((where, value, kind, g))
+
     def quantity(self, value, d, where, temperature=False):
         """Parse a scene field value such as '0.2 m'; check its dimension."""
         if value is None:
             return None
         text, unit, factor, udim = split_quantity(value)
-        e = self.expr(text) * factor
+        e = self.expr(text, collect=True) * factor
+        self._check_field_conditions(where, value)
         if unit == "degC" and temperature:
             e = e + CELSIUS_OFFSET
         if udim is not None and d is not None and udim != d:
@@ -449,7 +482,8 @@ SOUND_SPEED_LIMIT = 10 ** 5                      # m/s: no sound in matter is th
 def _not_light(v, w):
     """Refuse a gas or fluid whose 'speed of sound' is that of light (radar, radio)."""
     if sp.sympify(v).is_number and float(sp.N(v)) >= SOUND_SPEED_LIMIT:
-        raise SceneError(f"{w}: a speed of {sp.N(v, 6)} m/s is not sound in a gas or fluid; for light, radar or "
+        from .errors import PhysicalRangeError
+        raise PhysicalRangeError(f"{w}: a speed of {sp.N(v, 6)} m/s is not sound in a gas or fluid; for light, radar or "
                          f"radio use a medium of type: em")
 
 
@@ -1057,6 +1091,89 @@ class _Cancelled(SceneError):
     """The parts of a wave cancel everywhere: amplitude 0, other properties undefined."""
 
 
+def _check_point(sc, wave, x, t, what):
+    """The conditions of a given wave's written profile (recorded when the scene was read,
+    before simplification) taken at the point (x, t). A condition that fails is refused at
+    once; one that cannot be decided yet (a symbolic point) is recorded beside the value
+    being read (expr._note), for the observe, fact or limit to check. A 'point' that still
+    contains the free coordinates (the profile's shape, y(p, x=x, t=0)) records its
+    conditions too: a limit in x checks them; an observe of a shape does not need them."""
+    from .expr import _note, holds
+    for kind, g in getattr(wave, "domain", ()):
+        gp = sp.sympify(g).xreplace({X: x, T: t})
+        h = holds(kind, gp)
+        if h is False and not (sp.sympify(x).has(X, T) or sp.sympify(t).has(X, T)):
+            raise SceneError(f"{what}(): the wave's written profile is not defined at this point: it needs "
+                             f"{gp} to be {_KIND_WORD[kind]} (a log, root, division, tan or asin/acos written "
+                             f"in it fails there)")
+        if h is not True:
+            _note(sc, kind, gp)
+
+
+_KIND_WORD = {"positive": "positive", "nonneg": "0 or more", "nonzero": "nonzero", "unit": "between -1 and 1",
+              "intpow": "(base, exponent) with a nonzero base or an exponent of 0 or more",
+              "pow": "(base, exponent) of a real, finite power"}
+
+
+def _defined_set(wave, t, what, shape=False):
+    """The x where the wave's written profile is defined at the instant t (shape=True: where
+    a shaped pulse's shape is, at t = 0), found from its written conditions; the whole real
+    line for a wave that has none. Refused when it cannot be found."""
+    from .expr import holds
+    conds = getattr(wave, "shape_domain" if shape else "domain", ()) or ()
+    region = sp.S.Reals
+    for kind, g in conds:
+        g = sp.sympify(g) if shape else sp.sympify(g).xreplace({T: sp.sympify(t)})
+        if holds(kind, g) is True:
+            continue
+        if kind in ("intpow", "pow"):
+            b, k = g
+            if not k.is_number:
+                raise SceneError(f"{what}: the wave's written profile has a power {b}**{k} with an exponent that "
+                                 f"is not a number; give numbers")
+            kind, g = ("nonzero", b) if k.is_integer else (("nonneg", b) if k.is_positive else ("positive", b))
+            if holds(kind, g) is True:
+                continue
+        if g.free_symbols - {X}:
+            raise SceneError(f"{what}: where the wave's written profile is defined depends on a symbol "
+                             f"({g} must be {_KIND_WORD[kind]}); give numbers")
+        try:
+            if kind == "positive":
+                part = _within(10, lambda: sp.solveset(g > 0, X, sp.S.Reals))
+            elif kind == "nonneg":
+                part = _within(10, lambda: sp.solveset(g >= 0, X, sp.S.Reals))
+            elif kind == "nonzero":
+                part = sp.S.Reals - _within(10, lambda: sp.solveset(sp.Eq(g, 0), X, sp.S.Reals))
+            else:
+                part = _within(10, lambda: sp.Intersection(sp.solveset(g >= -1, X, sp.S.Reals),
+                                                           sp.solveset(g <= 1, X, sp.S.Reals)))
+        except Exception:
+            part = None
+        if part is None or part.has(sp.ConditionSet) or part.has(sp.ImageSet):
+            raise SceneError(f"{what}: cannot find where the wave's written profile is defined ({g} must be "
+                             f"{_KIND_WORD[kind]})")
+        region = region.intersect(part)
+    return region
+
+
+def _candidates_over(e, var, dom, defined, what):
+    """Rows (place, value, how) for the extremes of e over dom, kept to where the written
+    profile is defined (see _extreme_rows)."""
+    region = dom if defined == sp.S.Reals else sp.sympify(defined).intersect(dom)
+    if region is sp.S.EmptySet:
+        raise SceneError(f"{what}: the wave's written profile is not defined anywhere there at that instant")
+    parts = region.args if isinstance(region, sp.Union) else (region,)
+    out = []
+    for part in parts:
+        if isinstance(part, sp.FiniteSet):
+            out += [(q, sp.sympify(e).xreplace({var: q}), "at") for q in part]
+        elif isinstance(part, sp.Interval):
+            out += _extreme_rows(e, var, part)
+        else:
+            raise SceneError(f"{what}: cannot find where the wave's written profile is defined ({part})")
+    return out
+
+
 class GivenWave:
     """A wave supplied as an explicit y(x, t). Properties are found by analysis."""
 
@@ -1081,10 +1198,16 @@ class GivenWave:
                 fac[var] = factor
             else:
                 fac[var] = sp.Integer(1)
+        from .expr import written_obligations
+        written = written_obligations(spec["given"], sc)       # read before SymPy simplifies anything
         raw = sc.expr(spec["given"])
         if raw.free_symbols - set(sc.names.values()):
             raise SceneError(f"{w}: formula uses undeclared symbols")
         self.f = fac["y"] * raw.xreplace({X: X / fac["x"], T: T / fac["t"]})
+        # the conditions the written profile needs (each log, root, division, tan, asin/acos),
+        # checked wherever the wave is evaluated at a point, since simplification may have
+        # removed them from f (log(x - t) - log(x - t) -> 0) or the complex parts may cancel
+        self.domain = [(k, sp.sympify(g).xreplace({X: X / fac["x"], T: T / fac["t"]})) for k, g in written]
         self._sin = None
         travelling = True
         if self.medium is not None:
@@ -1238,6 +1361,8 @@ class ShapedPulse(GivenWave):
             if udim != d:
                 raise SceneError(f"{w}.units.{var}: wrong dimension")
             fac[var] = factor
+        from .expr import written_obligations
+        written = written_obligations(spec["shape"], sc)     # read before SymPy simplifies anything
         raw = sc.expr(spec["shape"])
         if raw.has(T):
             raise SceneError(f"{w}.shape: the shape is y at t = 0 and must not contain t")
@@ -1251,13 +1376,21 @@ class ShapedPulse(GivenWave):
         self.v = self.medium.speed()
         self.f = self.g.xreplace({X: X - self.sign * self.v * T})
         self.derived_from = None
+        # the shape's written conditions, in x at t = 0, and moved along like the shape
+        self.shape_domain = [(k, sp.sympify(g).xreplace({X: X / fac["x"]})) for k, g in written]
+        self.domain = [(k, g.xreplace({X: X - self.sign * self.v * T})) for k, g in self.shape_domain]
 
     @classmethod
-    def derived(cls, name, medium, g, sign, v, origin, coef=None, parent=None):
+    def derived(cls, name, medium, g, sign, v, origin, coef=None, parent=None, xmap=None):
+        """A reflected or transmitted copy: its shape is coef * parent shape(xmap(x)), so its
+        written conditions are the parent's under the same map, moved along at its speed."""
         p = cls.__new__(cls)
         p.name, p._sin, p.medium, p.g, p.sign, p.v = name, None, medium, g, sign, v
         p.f = g.xreplace({X: X - sign * v * T})
         p.derived_from, p.coef, p.parent = origin, coef, parent
+        src = getattr(parent, "shape_domain", []) if parent is not None else []
+        p.shape_domain = [(k, sp.sympify(c).xreplace({X: xmap})) for k, c in src] if xmap is not None else list(src)
+        p.domain = [(k, c.xreplace({X: X - sign * v * T})) for k, c in p.shape_domain]
         return p
 
     def peak(self):
@@ -1265,68 +1398,371 @@ class ShapedPulse(GivenWave):
             return sp.Abs(self.coef) * self.parent.peak()
         # the pulse's own amplitude: largest |shape| (for a reflected pulse this is |r| times the
         # incident peak, wherever the image happens to be at t = 0)
-        return _peak_of(self.g, X, None, f"pulse '{self.name}'")
+        what = f"pulse '{self.name}'"
+        return _peak_of(self.g, X, None, what, _defined_set(self, None, f"peak() of {what}", shape=True))
 
     def velocity(self):
         return self.sign * self.v
 
 
-def _extreme_values(e, var, dom, points=False):
-    """Candidate values of e over the interval dom: interval ends (or limits at infinity),
-    breakpoints of piecewise parts (both sides), and interior critical points of each piece.
-    Works for shapes built from max/min/abs/step as well as smooth formulas."""
-    pw = sp.piecewise_fold(sp.sympify(e).rewrite(sp.Piecewise))
-    pieces = [a for a, _ in pw.args] if isinstance(pw, sp.Piecewise) else [pw]
-    conds = [c for _, c in pw.args] if isinstance(pw, sp.Piecewise) else []
-    pts = set()
-    for c in conds:
-        for rel in ([c] if isinstance(c, sp.Rel) else list(c.atoms(sp.Rel))):
-            roots = sp.solveset(rel.lhs - rel.rhs, var, sp.S.Reals)
-            if isinstance(roots, sp.FiniteSet):
-                pts.update(roots)
-    regions = [c for _, c in pw.args] if isinstance(pw, sp.Piecewise) else [sp.true]
-    taken = sp.S.EmptySet                  # Piecewise: a piece applies where no earlier one did
-    for p, c in zip(pieces, regions):
+def _witness(region):
+    """One point of a nonempty set of reals, or None."""
+    if isinstance(region, sp.Union):
+        for a in region.args:
+            w_ = _witness(a)
+            if w_ is not None:
+                return w_
+        return None
+    if isinstance(region, sp.FiniteSet):
+        return next(iter(region), None)
+    if isinstance(region, sp.Interval):
+        a, b = region.inf, region.sup
+        w_ = (a + b) / 2 if (a.is_finite and b.is_finite) else (a + 1 if a.is_finite else (b - 1 if b.is_finite
+                                                                                            else sp.Integer(0)))
+        return w_ if region.contains(w_) is sp.true else None
+    return None
+
+
+def _side_value(pairs, var, q, side, breaks, dom):
+    """The one-sided limit at q, from the left ('-') or right ('+'), of the piecewise
+    expression given as (piece, condition) pairs: the piece that applies just to that side,
+    and its limit. (SymPy's limit of the whole Piecewise at its own breakpoint can return the
+    other side's value.) The piece is found at one probe point strictly between q and the
+    nearer of the next breakpoint on that side and the edge of dom on that side. Every place
+    inside dom where a condition can change is in breaks, so no condition changes between q
+    and the probe; outside dom there may be other changes (sin(10x) at x = 1 is negative
+    although it is positive just right of 0), so the probe never leaves dom."""
+    toward = [b for b in breaks if b.is_number and _cmp(b, q) == (1 if side == "+" else -1)]
+    edge = dom.sup if side == "+" else dom.inf
+    if edge.is_finite:
+        toward.append(edge)
+    gaps = [abs(b - q) for b in toward]
+    if any(_cmp(g, 0) != 1 for g in gaps):
+        raise SceneError(f"no room {'right' if side == '+' else 'left'} of {var} = {q} inside {dom}")
+    nearest = sp.Integer(1)
+    for g in gaps:
+        c = _cmp(g, nearest)
+        if c is None:
+            raise SceneError(f"cannot tell the order of {g} and {nearest} exactly")
+        if c < 0:
+            nearest = g
+    delta = nearest / 2
+    probe = q + delta if side == "+" else q - delta
+    if dom.contains(probe) is not sp.true:
+        raise SceneError(f"cannot place a point just {'right' if side == '+' else 'left'} of {var} = {q} inside {dom}")
+    for piece, cond in pairs:
+        hit = sp.true if cond is sp.true else sp.sympify(cond).xreplace({var: probe})
+        if hit not in (sp.true, sp.false):
+            hit = sp.simplify(hit)
+        if hit is sp.true:
+            v = sp.limit(piece, var, q, dir=side)
+            if v.has(sp.Limit):
+                break
+            return v
+        if hit is not sp.false:
+            raise SceneError(f"cannot decide which branch applies just {'right' if side == '+' else 'left'} "
+                             f"of {var} = {q}")
+    raise SceneError(f"cannot find the value just {'right' if side == '+' else 'left'} of {var} = {q}")
+
+
+def _exact_sorted(points, what):
+    """Real numbers in increasing order, compared exactly (_cmp), not by floating-point keys
+    (two roots 1e-17 apart round to the same float); refused when an order cannot be proved."""
+    import functools
+
+    def order(a, b):
+        c = _cmp(a, b)
+        if c is None:
+            raise SceneError(f"{what}: cannot tell the order of {a} and {b} exactly")
+        return c
+    return sorted(points, key=functools.cmp_to_key(order))
+
+
+def _trig_linear_roots(g, var, dom, limit=10000):
+    """The zeros in dom of c*sin(a*var + b) or c*cos(a*var + b) (c, a, b numbers, a and c not 0),
+    exactly: a*var + b = k*pi (+ pi/2 for cos). None when g is not of that form. Refused when
+    dom is unbounded or holds more than `limit` of them. (SymPy 1.12's solveset can run for
+    minutes on sin(10**17*(x - 1)).)"""
+    coef, core = sp.sympify(g).as_independent(var, as_Add=False)
+    if not isinstance(core, (sp.sin, sp.cos)) or not coef.is_number or coef.is_zero is not False:
+        return None
+    arg = sp.expand(core.args[0])
+    if not arg.is_polynomial(var) or sp.degree(arg, var) != 1:
+        return None
+    a, b = arg.coeff(var, 1), arg.coeff(var, 0)
+    if not (a.is_number and b.is_number) or a.is_zero is not False:
+        return None
+    if not (dom.inf.is_finite and dom.sup.is_finite):
+        raise SceneError(f"cannot find every place where {g} is 0 over {dom}: there are infinitely many; give a "
+                         f"finite range")
+    off = sp.S.Zero if isinstance(core, sp.sin) else sp.pi / 2
+    ends = _exact_sorted([a * dom.inf + b, a * dom.sup + b], "the breakpoints")
+    k_lo, k_hi = sp.ceiling((ends[0] - off) / sp.pi), sp.floor((ends[1] - off) / sp.pi)
+    if not (k_lo.is_Integer and k_hi.is_Integer):
+        return None
+    if k_hi - k_lo + 1 > limit:
+        raise SceneError(f"{g} changes sign more than {limit} times over {dom}; give a shorter range")
+    roots = [(k * sp.pi + off - b) / a for k in range(int(k_lo), int(k_hi) + 1)]
+    return sp.FiniteSet(*[q for q in roots if dom.contains(q) is sp.true])
+
+
+def _continuous_everywhere(g):
+    """True when g is built only from functions continuous on the whole real line (sums,
+    products, nonnegative integer powers, sin, cos, exp, abs); None otherwise."""
+    for node in sp.preorder_traversal(sp.sympify(g)):
+        if isinstance(node, sp.Pow):
+            if not (node.exp.is_Integer and node.exp >= 0):
+                return None
+        elif isinstance(node, sp.Function):
+            if not isinstance(node, (sp.sin, sp.cos, sp.exp, sp.Abs)):
+                return None
+        elif not isinstance(node, (sp.Add, sp.Mul, sp.Symbol, sp.Number, sp.NumberSymbol)):
+            return None
+    return True
+
+
+def _plain_set(S_):
+    """True for a set built only from intervals, finite sets and unions of them (one SymPy has
+    actually solved), not a ConditionSet, an unevaluated Complement or Intersection, etc."""
+    if S_ is sp.S.EmptySet or isinstance(S_, (sp.Interval, sp.FiniteSet)) or S_ == sp.S.Reals:
+        return True
+    return isinstance(S_, sp.Union) and all(_plain_set(a) for a in S_.args)
+
+
+def _cond_region(c, var, dom, cuts):
+    """Where the condition c holds, within dom. When SymPy cannot turn c into a set
+    (sin(x) < 0), it is found from the places where its relations change (cuts, all of them
+    within dom): between two cuts a relation whose sides are continuous keeps its truth, so
+    one point decides each stretch. Refused when that cannot be certified."""
+    rels = [c] if isinstance(c, sp.Rel) else list(c.atoms(sp.Rel))
+    simple = all(_continuous_everywhere(r.lhs - r.rhs) for r in rels)
+    if not simple:
         try:
-            cset = c.as_set() if c is not sp.true else sp.S.Reals
-            region = cset.intersect(dom) - taken
-            taken = taken.union(cset)
+            got = c.as_set().intersect(dom)
+            if _plain_set(got):
+                return got
+            # an unresolved set (a ConditionSet): decide it below, or refuse
         except Exception:
-            region = dom
-        if not p.has(var):
+            pass
+        from sympy.calculus.util import continuous_domain
+        for rel in rels:
+            try:
+                ok = dom.is_subset(continuous_domain(rel.lhs - rel.rhs, var, dom))
+            except Exception:
+                ok = False
+            if ok is not True:
+                raise SceneError(f"cannot find where {c} holds over {dom}")
+    # every relation's sides are continuous on dom and cuts holds all their zeros in dom, so
+    # each relation keeps its truth between two consecutive cuts: one point decides a stretch
+    pts = _exact_sorted([q for q in cuts if dom.contains(q) is sp.true], f"where {c} holds")
+    edges = [dom.inf] + pts + [dom.sup]
+
+    def truth(u):
+        v = sp.sympify(c).xreplace({var: u})
+        if v not in (sp.true, sp.false):
+            v = sp.sympify(c).xreplace({var: u}).simplify()
+        if v not in (sp.true, sp.false):
+            raise SceneError(f"cannot decide {c} at {var} = {u}")
+        return v is sp.true
+    region = sp.S.EmptySet
+    for a, b in zip(edges, edges[1:]):
+        if (a < b) is not sp.true:
             continue
+        stretch = sp.Interval.open(a, b)
+        w_ = _witness(stretch)
+        if w_ is None:
+            raise SceneError(f"cannot find where {c} holds over {dom}")
+        if truth(w_):
+            region = region.union(stretch)
+    for q in pts + [u for u in (dom.inf, dom.sup) if u.is_finite and dom.contains(u) is sp.true]:
+        if truth(q):
+            region = region.union(sp.FiniteSet(q))
+    return region.intersect(dom)
+
+
+def _extreme_rows(e, var, dom):
+    """Candidates for the extremes of e over the interval dom, as rows (place, value, how):
+    - 'at': the value e takes at that place (an interior critical point, a breakpoint of a
+      piecewise part, a closed end of dom);
+    - 'flat': the value of a part that is constant over a whole stretch (place: one point of it);
+    - 'near': a value only approached: a one-sided limit at a breakpoint or at an open end
+      of dom, or the limit at infinity (place None). It may not be reached anywhere.
+    Works for shapes built from max/min/abs/step as well as smooth formulas."""
+    e = sp.sympify(e)
+    pw = sp.piecewise_fold(e.rewrite(sp.Piecewise))
+    pairs = list(pw.args) if isinstance(pw, sp.Piecewise) else [(pw, sp.true)]
+    pts = set()
+    for _, c in pairs:
+        if c is sp.true:
+            continue
+        for rel in ([c] if isinstance(c, sp.Rel) else list(c.atoms(sp.Rel))):
+            roots = _trig_linear_roots(rel.lhs - rel.rhs, var, dom)
+            if roots is not None:
+                pts.update(roots)
+                continue
+            roots = sp.solveset(rel.lhs - rel.rhs, var, sp.S.Reals)
+            if not isinstance(roots, sp.FiniteSet):
+                # infinitely many (sin(x) = 0): only those inside dom matter, and they must be few
+                roots = sp.solveset(rel.lhs - rel.rhs, var, dom)
+            if roots is sp.S.EmptySet:
+                continue
+            if not isinstance(roots, sp.FiniteSet):
+                raise SceneError(f"cannot find every place where {rel} changes over {dom}; give a "
+                                 f"finite range or a simpler shape")
+            pts.update(roots)
+    breaks = set(pts)
+    rows = []
+    taken = sp.S.EmptySet                  # Piecewise: a piece applies where no earlier one did
+    for piece, c in pairs:
+        cset = sp.S.Reals if c is sp.true else _cond_region(c, var, dom, breaks)
+        region = cset.intersect(dom) - taken
+        taken = taken.union(cset)
+        if not _plain_set(region):
+            raise SceneError(f"cannot find where {c} holds over {dom}")
         if region is sp.S.EmptySet:
             continue
-        crit = sp.solveset(sp.diff(p, var), var, region)
+        if not piece.has(var):
+            # a constant part: reached all over its stretch (or at its single point)
+            w_ = _witness(region)
+            if w_ is None:          # a nonempty stretch whose value must not be left out
+                raise SceneError(f"cannot find a point where {piece} applies over {dom}")
+            # the witness must lie where this branch is the one that applies
+            for p2, c2 in pairs:
+                hit = sp.true if c2 is sp.true else sp.sympify(c2).xreplace({var: w_})
+                if hit not in (sp.true, sp.false):
+                    hit = sp.simplify(hit)
+                if hit is sp.true:
+                    if p2 is not piece:
+                        raise SceneError(f"the branches of {e} do not agree at {var} = {w_}")
+                    break
+                if hit is not sp.false:
+                    raise SceneError(f"cannot decide which branch of {e} applies at {var} = {w_}")
+            flat = not isinstance(region, sp.FiniteSet) and region.measure != 0
+            rows.append((w_, e.xreplace({var: w_}), "flat" if flat else "at"))
+            continue
+        crit = sp.solveset(sp.diff(piece, var), var, region)
         if crit is sp.S.EmptySet:
             continue
         if not isinstance(crit, sp.FiniteSet):
-            raise SceneError(f"cannot locate the extremes of {p}")
+            raise SceneError(f"cannot locate the extremes of {piece}")
         pts.update(crit)
     if any(not q.is_number for q in pts):
         raise SceneError("the extremes depend on a symbol (a symbolic position or instant); give numbers")
     pts = {q for q in pts if dom.contains(q) is sp.true}
-    vals, where = [], []
-    eps = sp.Rational(1, 10 ** 9)
     for q in pts:
-        for qq in (q, q - eps, q + eps):
-            if dom.contains(qq) is sp.true:
-                vals.append(sp.sympify(e).xreplace({var: qq}))
-                where.append(q)
+        rows.append((q, e.xreplace({var: q}), "at"))       # the value at the place itself
+        if q in breaks:                                   # and what is approached on each side
+            # a side counts when dom has points arbitrarily close to q there, however short dom is
+            for side, inside in (("-", (dom.inf < q) is sp.true), ("+", (q < dom.sup) is sp.true)):
+                if inside:
+                    rows.append((None, _side_value(pairs, var, q, side, breaks, dom), "near"))
     for end_, side in ((dom.inf, "+"), (dom.sup, "-")):
+        open_end = dom.left_open if side == "+" else dom.right_open
         if end_.is_infinite:
-            try:
-                vals.append(sp.limit(pw, var, end_))
-            except Exception:
-                # the far tail of a piecewise shape: its value well beyond every breakpoint
-                far = max([abs(float(sp.N(q))) for q in pts] + [1]) * 10 ** 6
-                vals.append(pw.xreplace({var: far if end_ is sp.oo else -far}))
+            far = max([abs(float(sp.N(q))) for q in pts] + [1]) * 10 ** 6
+            far = sp.Integer(int(far)) if end_ is sp.oo else -sp.Integer(int(far))
+            v = None
+            if not isinstance(pw, sp.Piecewise):
+                v = sp.limit(pw, var, end_)
+            else:
+                # the piece that applies beyond every breakpoint, and its limit there
+                for piece, c in pairs:
+                    if c is sp.true or sp.sympify(c).xreplace({var: far}) is sp.true:
+                        try:
+                            v = sp.limit(piece, var, end_)
+                        except Exception:
+                            v = None
+                        break
+            if v is None or v.has(sp.Limit):
+                raise SceneError(f"cannot find the limit of {e} as {var} -> {end_}")
+            rows.append((None, v, "near"))
+        elif open_end:
+            # an open end (where the written profile stops being defined): approached, not reached
+            rows.append((None, _side_value(pairs, var, end_, side, breaks, dom), "near"))
         else:
-            vals.append(sp.sympify(e).xreplace({var: end_}))
-        where.append(None if end_.is_infinite else end_)
-    if points:
-        return [(w_, v) for w_, v in zip(where, vals) if v.is_finite is not False]
-    return [v for v in vals if v.is_finite is not False]
+            rows.append((end_, e.xreplace({var: end_}), "at"))
+    return rows
+
+
+def _extreme_values(e, var, dom):
+    """Every candidate value of e over dom (reached or approached), finite ones only."""
+    return [v for _, v, _ in _extreme_rows(e, var, dom) if v.is_finite is not False]
+
+
+def _cmp(a, b):
+    """Sign of a - b, decided exactly (or to 60 digits beyond any doubt); None if it cannot be."""
+    a, b = sp.sympify(a), sp.sympify(b)
+    if a == b:
+        return 0
+    inf_a = a.is_finite is False or a.has(sp.zoo)
+    inf_b = b.is_finite is False or b.has(sp.zoo)
+    if inf_a or inf_b:
+        if a in (sp.oo,) and b not in (sp.oo,):
+            return 1
+        if b in (sp.oo,) and a not in (sp.oo,):
+            return -1
+        return None
+    d = a - b
+    if d.is_zero:
+        return 0
+    if d.is_positive:
+        return 1
+    if d.is_negative:
+        return -1
+    try:
+        v = sp.N(d, 60)
+        if v.is_real and abs(v) > sp.Float("1e-45", 60):
+            return 1 if v > 0 else -1
+    except (TypeError, ValueError):
+        pass
+    try:
+        if sp.simplify(d) == 0:
+            return 0
+    except Exception:
+        pass
+    return None
+
+
+def _best_reached(rows, what, mode="abs"):
+    """The largest |value| (mode 'abs'), largest value ('max') or smallest ('min') that is
+    reached, with the rows reaching it. Refused when a value only approached (toward an open
+    end, a jump, or infinity) is beyond it, or when the ordering cannot be proved exactly: a
+    supremum that is never reached is not a maximum."""
+    key = {"abs": lambda v: sp.Abs(v), "max": lambda v: v, "min": lambda v: -v}[mode]
+    word = {"abs": "|y| has no largest value", "max": "no largest value", "min": "no smallest value"}[mode]
+    rows = [(q, sp.sympify(v), how) for q, v, how in rows if sp.sympify(v) is not sp.nan]
+    reached = [r for r in rows if r[2] != "near"]
+    if not reached:
+        raise SceneError(f"{what}: {word}: it is not reached anywhere")
+    best = reached[0]
+    for r in reached[1:]:
+        c = _cmp(key(r[1]), key(best[1]))
+        if c is None:
+            raise SceneError(f"{what}: cannot compare {r[1]} and {best[1]} exactly")
+        if c > 0:
+            best = r
+    ties = []
+    for r in reached:
+        c = _cmp(key(r[1]), key(best[1]))
+        if c is None:
+            raise SceneError(f"{what}: cannot compare {r[1]} and {best[1]} exactly")
+        if c == 0:
+            ties.append(r)
+    beyond = None
+    for q, v, how in rows:
+        if how != "near":
+            continue
+        c = _cmp(key(v), key(best[1]))
+        if c is None:
+            raise SceneError(f"{what}: cannot prove that the value {v} approached (but maybe never reached) is "
+                             f"not beyond {best[1]}")
+        if c > 0 and (beyond is None or _cmp(key(v), key(beyond)) == 1):
+            beyond = v
+    if beyond is not None:
+        raise SceneError(f"{what}: {word}: it comes ever closer to {beyond} toward a place it never reaches (a "
+                         f"jump, an open end of where the wave is defined, or infinity), beyond every value it "
+                         f"takes (at most {best[1]})")
+    return best[1], ties
 
 
 class _Budget(Exception):
@@ -1372,8 +1808,8 @@ def _numeric_extremum(e, var, dom):
         if not term.has(var):
             continue
         try:
-            pts = _within(5, lambda: _extreme_values(term, var, dom, points=True))
-            seeds += [float(sp.N(q)) for q, _ in pts if q is not None]
+            pts = _within(5, lambda: _extreme_rows(term, var, dom))
+            seeds += [float(sp.N(q)) for q, _, _ in pts if q is not None]
         except Exception:
             continue
     grid = np.linspace(max(lo, -50), min(hi, 50), 20001)
@@ -1411,26 +1847,27 @@ def _numeric_peak(e, var, dom):
     return _numeric_extremum(e, var, dom)[1]
 
 
-def _peak_of(e, var, extent, what):
-    """Largest |e| over var (on the extent, if given)."""
+def _peak_of(e, var, extent, what, defined=sp.S.Reals):
+    """Largest |e| over var (on the extent, if given, and where the written profile is
+    defined), reached at some place: a value only approached is not a peak."""
     lo, hi = (extent or (None, None))
     dom = sp.Interval(-sp.oo if lo is None else lo, sp.oo if hi is None else hi)
     try:
-        vals = _within(15, lambda: _extreme_values(e, var, dom))
-        nums = [abs(float(sp.N(v))) for v in vals]
+        cands = _within(15, lambda: _candidates_over(e, var, dom, defined, f"peak() of {what}"))
+        v, _ = _best_reached(cands, f"peak() of {what}")
     except _Budget:
         if sp.sympify(e).free_symbols - {var}:
             raise SceneError(f"peak(): the extremes of {what} take too long to find symbolically; give numbers")
+        if defined != sp.S.Reals:
+            raise SceneError(f"peak(): the extremes of {what} take too long to find over where its written "
+                             f"profile is defined")
         return _numeric_peak(e, var, dom)
     except SceneError:
         raise
     except Exception as exc:          # symbolic shapes the candidate search cannot handle
         raise SceneError(f"peak(): cannot find the extremes of {what} ({type(exc).__name__}); give "
                          f"its shape with numbers") from exc
-    if not nums:
-        raise SceneError(f"peak(): no value found for {what}")
-    best = max(range(len(nums)), key=lambda i: nums[i])
-    return sp.Abs(sp.nsimplify(vals[best])) if vals[best].is_number else sp.Abs(vals[best])
+    return sp.Abs(sp.nsimplify(v) if v.has(sp.Float) else v)
 
 
 def _shaped_pulse_derived(sc, wave, J, toward, far, near, r, t):
@@ -1462,13 +1899,13 @@ def _shaped_pulse_derived(sc, wave, J, toward, far, near, r, t):
     v1 = wave.v
     out = [(f"{wave.name}_reflected",
             ShapedPulse.derived(f"{wave.name}_reflected", near, r * wave.g.xreplace({X: 2 * xJ - X}), -s, v1,
-                                (wave.name, J.name), coef=r, parent=wave))]
+                                (wave.name, J.name), coef=r, parent=wave, xmap=2 * xJ - X))]
     if t is not None:
         v2 = far.speed()
         g_t = t * wave.g.xreplace({X: xJ + (v1 / v2) * (X - xJ)})
         out.append((f"{wave.name}_transmitted",
                     ShapedPulse.derived(f"{wave.name}_transmitted", far, g_t, s, v2, (wave.name, J.name),
-                                        coef=t, parent=wave)))
+                                        coef=t, parent=wave, xmap=xJ + (v1 / v2) * (X - xJ))))
     # a derived pulse heading for another junction or end would be reflected again: not modelled
     for dname, d in out:
         nxt = d.medium.extent[1] if d.sign == 1 else d.medium.extent[0]
@@ -1544,6 +1981,9 @@ class SumWave(GivenWave):
                              f"defined where every part exists (sum waves on one medium)")
         self.medium = next(iter(media.values())) if len(media) == 1 else None
         self.f = sp.Add(*[o.field() for o in self.parts])
+        # every part's written conditions hold for the sum: a part that cancels in the sum
+        # (log(x - t) - log(x - t) is 0) is still undefined where its logs are
+        self.domain = [c for o in self.parts for c in getattr(o, "domain", ())]
 
 
 class Junction:
@@ -1929,16 +2369,28 @@ def _spacing(_sc, items):
     return diffs[0]
 
 
+class Nearest(sp.Function):
+    """nearest(), kept unevaluated until resolve_deferred, after the solved values are put
+    in. resolve_deferred picks the option and records the numbers compared, so that with
+    arbitrary values the run can require those numbers (not only the pick) to be the same
+    at every scaling. Anything still symbolic then is refused."""
+
+
 def _nearest(_sc, x, *options):
     """The position (1 for the first) of the option nearest to x, by relative distance.
-    Refused when the two nearest options are about equally close."""
+    Refused when the two nearest options are about equally close. A value or option that
+    depends on an unknown is decided after the solve (see Nearest)."""
     if len(options) < 2:
         raise SceneError("nearest(x, a, b, ...): give at least two options")
+    if any(isinstance(o, (sp.Tuple, list, tuple)) for o in (x,) + options):
+        raise SceneError("nearest(): the value and every option must be single values, not lists")
+    return Nearest(*[sp.sympify(o) for o in (x,) + options])
+
+
+def _pick_nearest(x, options):
     vals = []
-    for o in (x,) + options:
+    for o in (x,) + tuple(options):
         o = sp.sympify(o)
-        if isinstance(o, sp.Tuple) or not o.is_number:
-            raise UndeterminedError("nearest(): needs numbers (the value and every option)")
         c = complex(sp.N(o, 30))
         if abs(c.imag) > 1e-20:
             raise SceneError("nearest(): a value is not real")
@@ -1988,7 +2440,9 @@ def _point(sc, fname, deriv):
                         raise SceneError(f"{fname}(): x = {xv} m is a corner of the shape at that instant, "
                                          f"where the {'slope' if X in deriv else 'velocity'} is not defined; "
                                          f"ask just beside it")
+            _check_point(_sc, wave, x, t, fname)
             return d.xreplace({X: x, T: t}).doit()
+        _check_point(_sc, wave, x, t, fname)
         for var in deriv:
             e = sp.diff(e, var)
         return e.xreplace({X: x, T: t}).doit()
@@ -2000,6 +2454,7 @@ def _phase(_sc, w, x=None, t=None):
     if x is None or t is None:
         raise SceneError("phase(): give both x= and t=")
     _check_wave_x(wave, x)
+    _check_point(_sc, wave, x, t, "phase")
     return wave.phase_expr(x, t)
 
 
@@ -2107,13 +2562,209 @@ def _frequency_of(_sc, var, e):
     return w / TWO_PI
 
 
-def _limit(_sc, e, var, value):
-    if not isinstance(var, sp.Symbol):
-        raise SceneError("limit(expr, var, value): second argument must be a variable")
-    v = sp.limit(e, var, value)
-    if v.has(sp.AccumBounds, sp.zoo, sp.nan) or v in (sp.oo, -sp.oo):
-        raise SceneError(f"limit(): the limit does not exist as a finite value (got {v})")
-    return v
+_ANALYTIC = (sp.sin, sp.cos, sp.exp, sp.sinh, sp.cosh)    # entire functions: Taylor series converge
+
+
+def _poly_sign_near(g, x, a, side):
+    """The sign (+1 or -1) of g just to one side of a, from its lowest nonzero term
+    c*(x-a)^k: sign(c), times (-1)^k from below. g is a polynomial in x, or an entire
+    function of x (built from +, *, nonnegative integer powers, sin, cos, exp, sinh, cosh),
+    whose Taylor series at a is then used: near a its sign is that of its lowest nonzero
+    term (1 - cos(q) ~ q^2/2 > 0). None if neither, if a coefficient is not a number, or if
+    no nonzero term is found up to order 12."""
+    h = sp.Dummy("h")
+    gh = sp.expand(g.subs(x, a + h))
+    if g.is_polynomial(x):
+        terms = gh
+    elif _entire_in(g, x):
+        try:
+            terms = sp.series(gh, h, 0, 13).removeO()
+        except Exception:                      # noqa: BLE001 - no proof
+            return None
+    else:
+        return None
+    try:
+        poly = sp.Poly(sp.expand(terms), h)
+    except sp.PolificationFailed:
+        return None
+    for (k,), c in sorted(poly.terms()):
+        if not c.is_number:
+            return None
+        if c != 0:
+            s = 1 if c > 0 else -1
+            return s if side == "+" else s * (-1) ** k
+    return None
+
+
+def _entire_in(g, x):
+    """True if g is built from +, *, nonnegative integer powers and entire functions of x
+    (sin, cos, exp, sinh, cosh), so that its Taylor series converges everywhere."""
+    for node in sp.preorder_traversal(g):
+        if node.is_Atom or isinstance(node, (sp.Add, sp.Mul)):
+            continue
+        if isinstance(node, sp.Pow) and node.exp.is_integer and node.exp.is_nonnegative:
+            continue
+        if isinstance(node, _ANALYTIC):
+            continue
+        if not node.has(x):
+            continue
+        return False
+    return True
+
+
+def _kind_interval(s):
+    """The values a symbol can take, from its sign assumptions."""
+    if s.is_positive:
+        return sp.Interval.open(0, sp.oo)
+    if s.is_nonnegative:
+        return sp.Interval(0, sp.oo)
+    if s.is_negative:
+        return sp.Interval.open(-sp.oo, 0)
+    if s.is_nonpositive:
+        return sp.Interval(-sp.oo, 0)
+    return sp.Interval(-sp.oo, sp.oo)
+
+
+def _show_interval(i):
+    if not isinstance(i, sp.Interval):
+        return str(i)
+    return f"{'(' if i.left_open else '['}{i.inf}, {i.sup}{')' if i.right_open else ']'}"
+
+
+def _limit(_sc, e, var, value, _written=(), _obligations=()):
+    """limit(expr, var, value), relative to the values var can take: its kind (positive, ...)
+    intersected with any stated bound. The point must lie in the closure of that domain; at
+    its edge the limit is taken from inside only, at an interior point from both sides, which
+    must agree. A bounded symbol appears in expressions as base + s*offset, so the limit is
+    computed in the offset, with each side mapped across (s = -1 reverses it).
+
+    Apart from var, everything must be a number: no other symbol in the expression, in the
+    point, or written in the text (`_written`, collected before SymPy simplified anything).
+    A symbolic limit is only generic: it can hide values of the other symbols where no limit
+    exists (|q|/q at q -> c is wrong at c = 0), and simplification as the text is read can
+    erase a symbol together with its domain (log(c) - log(c) -> 0, c*q/(c*q) -> 1). Numbers
+    (arbitrary: values) have neither problem."""
+    bv = None if isinstance(var, sp.Symbol) else _sc.bound_variable(var)
+    if any(sp.sympify(x).atoms(AppliedUndef) for x in (e, value)):
+        raise SceneError("limit(): the expression or the point contains an arbitrary function, which is not "
+                         "a number; apart from its variable, everything in a limit must be a number")
+    own = {bv[0], bv[1]} if bv is not None else ({var} if isinstance(var, sp.Symbol) else set())
+    others = (sp.sympify(e).free_symbols | sp.sympify(value).free_symbols | set(_written)) - own
+    if others:
+        names = ", ".join(sorted(str(_sc.show_back(s)) for s in others))
+        shown_var = bv[0] if bv is not None else var
+        raise SceneError(f"limit(): apart from its variable {shown_var}, everything in a limit must be a number, "
+                         f"but {names} {'is a symbol' if len(others) == 1 else 'are symbols'}; give "
+                         f"{'it a value' if len(others) == 1 else 'them values'} (a number, or arbitrary:)")
+    if bv is not None:
+        shown, p_off, sgn, base = bv           # messages name the declared symbol
+        if shown.is_integer or p_off.is_integer:
+            raise SceneError(f"limit(): {shown} takes whole-number values only, so a limit in it is not defined")
+        strict = bool(p_off.is_positive)
+        bound = sp.Interval(base, sp.oo, left_open=strict) if sgn == 1 else \
+            sp.Interval(-sp.oo, base, right_open=strict)
+        domain = _kind_interval(shown).intersect(bound)
+    else:
+        if not isinstance(var, sp.Symbol):
+            raise SceneError("limit(expr, var, value): second argument must be a variable")
+        if var.is_integer:
+            raise SceneError(f"limit(): {var} takes whole-number values only, so a limit in it is not defined")
+        shown, domain = var, _kind_interval(var)
+    value = sp.sympify(value)
+    if not isinstance(domain, sp.Interval) or domain.measure == 0:
+        raise SceneError(f"limit(): {shown} has no range of values to approach {value} in {_show_interval(domain)}")
+    # a real variable can approach only real points: the point must be proved real (infinity
+    # cannot be written in expressions, so every point here is meant to be finite)
+    if value.is_real is False:
+        raise SceneError(f"limit(): the point {value} is not a real value")
+    if value.is_real is not True:
+        raise SceneError(f"limit(): cannot check that the point {value} is real for every allowed value of "
+                         f"its symbols; {shown} can approach only real points")
+    lo, hi = domain.inf, domain.sup
+    at_edge = []
+    for end, sign, side in ((lo, 1, "+"), (hi, -1, "-")):
+        if not end.is_finite:
+            continue
+        gap = sp.simplify(sign * (value - end))          # >= 0 inside the closure
+        if gap.is_negative:
+            raise SceneError(f"limit(): {shown} -> {value} is outside the values {shown} can take {_show_interval(domain)}")
+        if gap.is_nonnegative is not True:
+            raise SceneError(f"limit(): cannot check that {shown} -> {value} is within the values {shown} "
+                             f"can take {_show_interval(domain)}")
+        if gap.is_zero:
+            at_edge.append(side)               # at this end: approach from inside only
+    sides = at_edge or ["+", "-"]
+    lim_var = p_off if bv is not None else var
+    lim_at = sp.simplify(sgn * (value - base)) if bv is not None else value
+
+    def in_offset(side):                       # a side of var as a side of the computed variable
+        return side if (bv is None or sgn == 1) else ("-" if side == "+" else "+")
+
+    def toward(g, side):                       # the one-sided limit of g at the point, in var
+        return sp.limit(sp.sympify(g), lim_var, lim_at, dir=in_offset(side))
+
+    def sign_near(g, side):                    # sign of a polynomial g just to that side of var
+        return _poly_sign_near(sp.sympify(g), lim_var, lim_at, in_offset(side))
+    # each function, power and division as written must be defined near the point on every
+    # side approached (cancellation must not hide this: log(q) - log(q) is not 0 for q < 0)
+    for kind, g in _obligations:
+        g = sp.sympify(g)
+        g_shown = _sc.show_back(g)              # in the declared symbol, not its offset
+        if kind in ("intpow", "pow"):
+            from .expr import holds
+            if holds(kind, g) is True:
+                continue
+            raise SceneError(f"limit(): cannot check that the power {g_shown[0]}**{g_shown[1]} written there is "
+                             f"defined near {shown} -> {value}")
+        if kind == "positive" and g.is_positive:
+            continue
+        if kind == "nonneg" and (g.is_nonnegative or sp.simplify(g) == 0):
+            continue                           # sqrt(0) = 0: a root needs only a nonnegative argument
+        if kind == "unit" and g.is_number and (sp.Abs(g) <= 1) is sp.true:
+            continue                           # a constant inside [-1, 1], ends included: asin(1) = pi/2
+        if kind == "nonzero" and g.is_nonzero:
+            continue
+        for side in sides:
+            lv = toward(g, side)
+            word = "above" if side == "+" else "below"
+            if kind in ("positive", "nonneg") and lv.is_zero and sign_near(g, side) == 1:
+                continue                       # a polynomial that leaves 0 upward on this side
+            if kind in ("positive", "nonneg") and lv.is_positive is not True:
+                need = "positive" if kind == "positive" else "0 or more"
+                what = "logarithm or power" if kind == "positive" else "root or power"
+                raise SceneError(f"limit(): {g_shown} must be {need} near {shown} -> {value} (from {word}) for the "
+                                 f"{what} written there; it tends to {lv}, and its sign there cannot be shown")
+            if kind == "unit":
+                if (sp.Abs(lv) < 1) is sp.true:
+                    continue
+                # tending to an end of [-1, 1] is fine if it stays inside: 1 - g > 0 near +1,
+                # 1 + g > 0 near -1 (asin(1 - q^2) -> pi/2)
+                if (lv == 1 and sign_near(1 - g, side) == 1) or (lv == -1 and sign_near(1 + g, side) == 1):
+                    continue
+                raise SceneError(f"limit(): {g_shown} must stay strictly between -1 and 1 near {shown} -> {value} "
+                                 f"(from {word}) for asin/acos; it tends to {lv}, and cannot be shown to stay "
+                                 f"inside")
+            if kind == "nonzero" and lv.is_nonzero is not True:
+                # a polynomial in the variable that is not identically 0 vanishes only at
+                # isolated points, so it is nonzero near the point (q/q, sin(q)/q, (f-f0)/dl)
+                if not (lv.is_zero and g.is_polynomial(lim_var) and sp.simplify(g) != 0):
+                    raise SceneError(f"limit(): the denominator {g_shown} may be 0 near {shown} -> {value} (from "
+                                     f"{word}); tends to {lv}")
+    vals = {}
+    for side in sides:
+        if bv is not None:                     # in the offset: n = base + sgn*p
+            p_side = side if sgn == 1 else ("-" if side == "+" else "+")
+            v = sp.limit(e, p_off, sp.simplify(sgn * (value - base)), dir=p_side)
+        else:
+            v = sp.limit(e, var, value, dir=side)
+        if v.has(sp.AccumBounds, sp.zoo, sp.nan) or v in (sp.oo, -sp.oo) or isinstance(v, sp.Limit):
+            word = "above" if side == "+" else "below"
+            raise SceneError(f"limit(): the limit does not exist as a finite value (from {word}: {v})")
+        vals[side] = v
+    if len(vals) == 2 and sp.simplify(vals["+"] - vals["-"]) != 0:
+        raise SceneError(f"limit(): the limit does not exist: from above it is {vals['+']}, "
+                         f"from below {vals['-']}")
+    return vals[sides[0]]
 
 
 def _diff(_sc, e, var, n=sp.Integer(1)):
@@ -2176,8 +2827,24 @@ def _equivalent(_sc, a, b):
     return Equivalent(a, b)
 
 
-def resolve_deferred(v):
-    """Return (value, basis). Ordinary engine results are exact ('exact')."""
+def resolve_deferred(v, record=None):
+    """Return (value, basis). Ordinary engine results are exact ('exact'). Each nearest()
+    with numeric arguments is decided here; its arguments are appended to `record`."""
+    if isinstance(v, sp.Basic) and v.has(Nearest):
+        # innermost first: a nearest() inside another is picked, then put into the outer one
+        while True:
+            ready = [n for n in v.atoms(Nearest)
+                     if not any(a.has(Nearest) for a in n.args) and all(a.is_number for a in n.args)]
+            if not ready:
+                break
+            picks = {}
+            for n in sorted(ready, key=sp.default_sort_key):
+                picks[n] = _pick_nearest(n.args[0], n.args[1:])
+                if record is not None:
+                    record.append(tuple(n.args))
+            v = v.xreplace(picks)
+        if record is not None:                 # what is left (symbolic): kept for the proof run
+            record.extend(tuple(n.args) for n in v.atoms(Nearest) if not any(a.has(Nearest) for a in n.args))
     if isinstance(v, Equivalent):
         truth, basis = equivalent(*v.args)
         if truth is None:
@@ -2185,6 +2852,11 @@ def resolve_deferred(v):
         return (sp.true if truth else sp.false), basis
     if v.has(Equivalent):
         raise SceneError("equivalent() must be the whole observe expression")
+    if isinstance(v, sp.Basic) and v.has(Nearest):
+        left = sorted({str(s) for n in v.atoms(Nearest) for s in n.free_symbols})
+        raise UndeterminedError(f"nearest(): the value or an option still depends on "
+                                f"{', '.join(left) or 'something unfixed'} after the solve, so no option can "
+                                f"be picked")
     return v, "exact"
 
 
@@ -2308,8 +2980,19 @@ def _minmax(fn, args):
     return fn(*args)
 
 
-def _at(sc, e, **values):
-    """The value of an expression with some variables set, e.g. at(expr, d=120[m])."""
+def _field(sc, w):
+    """y(x, t) of a wave. Its written conditions (in x and t) are recorded beside it: at()
+    puts its values into them, and a range function (max_over, ...) needs them throughout."""
+    wave = _obj(w, WAVES, "field")
+    _check_point(sc, wave, X, T, "field")
+    return wave.field()
+
+
+def _at(sc, e, _obligations=(), **values):
+    """The value of an expression with some variables set, e.g. at(expr, d=120[m]). The
+    conditions recorded while the expression was read (its logs, roots, divisions, a wave's
+    written profile from field()) are taken with the same values: a failing one is refused,
+    the others are passed on to the enclosing reading."""
     if not values:
         raise SceneError("at(expr, name=value, ...): give at least one variable")
     rep = {}
@@ -2328,6 +3011,16 @@ def _at(sc, e, **values):
         if sym in sc.unknowns:
             raise SceneError(f"at(): '{name}' is an unknown; its value comes from the facts")
         rep[sym] = sp.sympify(val)
+    from .expr import _note, holds
+    for kind, g in _obligations:
+        gs = sp.sympify(g).xreplace(rep)
+        h = holds(kind, gs)
+        if h is False and not gs.free_symbols:
+            raise SceneError(f"at(): the expression is not defined at these values: it needs {gs} to be "
+                             f"{_KIND_WORD[kind]} (a log, root, division, power, tan, asin/acos or wave profile "
+                             f"written in it fails there)")
+        if h is not True:
+            _note(sc, kind, gs)
     if isinstance(e, sp.Tuple):
         return sp.Tuple(*[sp.sympify(i).xreplace(rep) for i in e])
     return sp.sympify(e).xreplace(rep)
@@ -2345,7 +3038,8 @@ def _peak(sc, w, t=None):
     if meds and meds[0] is not None and all(m is meds[0] for m in meds):
         ext = getattr(meds[0], "extent", None)
     e = wave.field().xreplace({T: sp.sympify(t)})
-    return _peak_of(e, X, ext, f"wave '{wave.name}'")
+    what = f"wave '{wave.name}'"
+    return _peak_of(e, X, ext, what, _defined_set(wave, t, f"peak() of {what}"))
 
 
 def _peak_position(sc, w, t=None):
@@ -2358,17 +3052,20 @@ def _peak_position(sc, w, t=None):
     lo, hi = ext or (None, None)
     dom = sp.Interval(-sp.oo if lo is None else lo, sp.oo if hi is None else hi)
     e = wave.field().xreplace({T: sp.sympify(t)})
+    defined = _defined_set(wave, t, "peak_position()")
     try:
-        cands = _within(20, lambda: _extreme_values(e, X, dom, points=True))
+        cands = _within(20, lambda: _candidates_over(e, X, dom, defined, "peak_position()"))
     except _Budget:
         if e.free_symbols - {X}:
             raise SceneError("peak_position(): the extremes take too long to find symbolically; give numbers")
+        if defined != sp.S.Reals:
+            raise SceneError("peak_position(): the extremes take too long to find over where the written "
+                             "profile is defined")
         return _numeric_argmax(e, X, dom)
-    cands = [(q, abs(float(sp.N(v)))) for q, v in cands if q is not None]
-    if not cands:
-        raise SceneError("peak_position(): no maximum found")
-    best = max(v for _, v in cands)
-    at = sorted({q for q, v in cands if abs(v - best) <= 1e-12 * max(1.0, best)}, key=lambda q: float(sp.N(q)))
+    _, reached = _best_reached(cands, "peak_position()")
+    if any(how == "flat" for _, _, how in reached):
+        raise AmbiguousError("peak_position(): |y| is largest all along a stretch, not at one place")
+    at = sorted({q for q, _, _ in reached}, key=lambda q: float(sp.N(q)))
     if len(at) != 1:
         raise AmbiguousError(f"peak_position(): |y| is largest at several places: {at[:6]}")
     return at[0]
@@ -2425,7 +3122,7 @@ OBSERVABLES = {
     "wavelength": _wavelength,
     "k": lambda sc, w, at=None: (_check_wave_x(_obj(w, WAVES, "k"), at) if at is not None else None,
                                  _obj(w, WAVES, "k").wavenumber(at))[1],
-    "field": lambda sc, w: _obj(w, WAVES, "field").field(),
+    "field": lambda sc, w: _field(sc, w),
     "y": _point(None, "y", ()),
     "vy": _point(None, "vy", (T,)),
     "ay": _point(None, "ay", (T, T)),

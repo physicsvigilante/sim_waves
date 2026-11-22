@@ -1,0 +1,13 @@
+# m14 (run 7 defects 1, 2): nearest() on a solved unknown, with 'in u', mixed options; f0 = 54 Hz, T1 = 20 ms
+unknowns: {f0: positive}
+media: {s: {type: string, mu: 0.01 kg/m, tension: 100 N}}
+resonators: {r: {type: string, on: s, length: 1 m, ends: [fixed, fixed]}}
+given: [{fact: "beat_frequency(frequency(r, harmonic=1), f0) == 4[Hz]", source: stated}, "f0 > 50[Hz]"]
+observe:
+  plain: "nearest(f0, 65, 45, 55)"
+  units: "nearest(f0, 45[Hz], 0.055[kHz], 65[Hz])"
+  in_hz: "nearest(f0 in Hz, 55, 45, 65)"
+  in_khz: "nearest(f0 in kHz, 0.045, 0.065, 0.055)"
+  mixed: "nearest(f0 in Hz, 45, 65, 0.055[kHz])"
+  period: "nearest(period(r, harmonic=1) in ms, 10, 20, 40)"
+expect: {plain: 3, units: 2, in_hz: 1, in_khz: 3, mixed: 3, period: 2}

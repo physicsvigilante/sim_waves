@@ -1,0 +1,5 @@
+# m14 review round 10 (K5): y > 1, so 1 - y < 0 on the side approached (from above): sqrt(1 - y) refused
+symbols: {y: real}
+given: ["y > 1"]
+observe: {invalid: "limit(sqrt(1 - y), y, 1)"}
+expect: {error: rejected, message: "1 - y must be 0 or more near y -> 1 (from above)"}

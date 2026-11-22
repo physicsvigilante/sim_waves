@@ -1,0 +1,4 @@
+# m14 review round 2 (N2), and round 7 (numbers only): a symbolic point is refused (b is a symbol)
+symbols: {q: positive, b: real}
+observe: {l: "limit(q, q, b)"}
+expect: {error: rejected, message: "apart from its variable"}

@@ -1,0 +1,8 @@
+# m14 review round 10 (K5), controls on both kinds of bound: q < 1: sqrt(1 - q) -> 0 from below;
+# y > 1: sqrt(y - 1) -> 0 from above
+symbols: {q: real, y: real}
+given: ["q < 1", "y > 1"]
+observe:
+  upper: "limit(sqrt(1 - q), q, 1)"
+  lower: "limit(sqrt(y - 1), y, 1)"
+expect: {upper: 0, lower: 0}

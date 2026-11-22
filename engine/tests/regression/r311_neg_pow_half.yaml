@@ -1,0 +1,5 @@
+# m14 review round 17 (M1): (-2)**q with q = 1/2 is not real: refused
+unknowns: {q: real}
+given: ["2*q == 1"]
+observe: {bad: "(-2)**q"}
+expect: {error: rejected, message: "not defined"}

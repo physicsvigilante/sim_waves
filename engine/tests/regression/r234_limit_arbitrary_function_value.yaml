@@ -1,0 +1,5 @@
+# m14 review round 8 (K2): limit(F(1), q, 0) returned the unevaluated F(1), which is not a number: refused
+symbols: {q: real}
+functions: [F]
+observe: {invalid: "limit(F(1), q, 0)"}
+expect: {error: rejected, message: "F is an arbitrary function"}

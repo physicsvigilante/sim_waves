@@ -1,0 +1,5 @@
+# m14 review follow-up: nearest() in a given fact is refused (it picks an option; observe only)
+unknowns: {u: positive}
+given: ["nearest(u, 1, 2) == 1"]
+observe: {v: "u"}
+expect: {error: rejected, message: "observe only"}

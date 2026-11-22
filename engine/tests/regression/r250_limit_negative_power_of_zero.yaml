@@ -1,0 +1,4 @@
+# m14 review round 11 (K10), control: 0**(-0.5) is undefined (a negative fractional power needs a positive base)
+symbols: {q: real}
+observe: {bad: "limit(q + 0**(-0.5), q, 0)"}
+expect: {error: rejected, message: "must be positive"}

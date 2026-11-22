@@ -1,0 +1,18 @@
+# m14 (run 7 defect 7): km/h, kmph, h (inside a compound unit or in brackets), um, μm, nm
+media: {air: {type: gas, v: 330 m/s}}
+sources:
+  S: {on: air, at: [0 m, 0 m], f: 100 Hz, A: 1, phase: 0, spreading: none}
+points:
+  P: [0 m, "3[um]"]
+  Q: [0 m, "2[μm]"]
+rays:
+  r: {from: S, to: P}
+  q: {from: S, to: Q}
+observe:
+  v1: "36[km/h] in m/s"
+  v2: "36[kmph] in m/s"
+  t: "2[h] in s"
+  L: "length(r) in um"
+  Lq: "length(q) in μm"
+  n: "5[nm] in m"
+expect: {v1: 10, v2: 10, t: 7200, L: 3, Lq: 2, n: 5e-9}

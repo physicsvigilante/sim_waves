@@ -194,6 +194,15 @@ check("m11 explore of a ranged value keeps the range", "error" not in its[0] and
       str([i.get("error") for i in its]))
 check("m11 export shows the range", "below" in m11["arbitrary"]["u"], m11["arbitrary"]["u"])
 
+# m14 review R6: a deferred nearest() cannot be plotted; a clear ViewError, never a raw NameError
+r6 = """
+symbols: {u: positive}
+observe: {pick: "nearest(u, 1, 2)"}
+view: [{plot: pick, vs: u, range: [0.8, 1.2]}]
+"""
+check("m14 R6 plotting nearest() is a clear ViewError",
+      raises(lambda: export(_y.load(r6, Loader=_Loader)), ViewError))
+
 bad = [r for r in results if not r[1]]
 for name, ok, detail in results:
     print(("PASS " if ok else "FAIL ") + name + (f"  [{detail}]" if detail and not ok else ""))

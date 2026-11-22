@@ -1,0 +1,6 @@
+# m14 review round 13 (K12): log(t - x) - log(2(t - x)) at x = 1, t = 0: both written logs have negative
+# arguments; the principal complex values would cancel to the real -log 2 (before: reported). Refused
+waves:
+  p: {given: "log(t-x) - log(2*(t-x))", units: {x: m, t: s, y: m}}
+observe: {invalid: "y(p, x=1[m], t=0[s])"}
+expect: {error: rejected, message: "not defined at this point"}

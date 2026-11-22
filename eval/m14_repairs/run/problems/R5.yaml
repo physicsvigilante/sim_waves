@@ -1,0 +1,12 @@
+id: R5
+type: multiple_correct
+statement: >
+  Pipe P is 60 cm long and open at both ends. Pipe Q is 25 cm long and closed at one
+  end. Both pipes contain air at the same temperature; the speed of sound in this air
+  is not given. Neglect end corrections. Which of the following statements is/are
+  correct, whatever the speed of sound?
+options:
+  A: The fundamental frequency of Q is higher than that of P.
+  B: The ratio of the fundamental frequency of Q to that of P is 6:5.
+  C: The second harmonic of P is lower than the fundamental of Q.
+  D: The first overtone of Q is lower than the third harmonic of P.

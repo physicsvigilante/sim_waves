@@ -1,0 +1,9 @@
+# m14 (run 7 defect 4): 'x in cm' is a unit conversion, not a comparison: it gets the ordinary
+# arbitrary check (x0.01 to x89), not the wide comparison check that pushed a sound speed to 340000 m/s
+arbitrary: {c: 340 m/s}
+media: {air: {type: gas, v: c}}
+sources: {S: {on: air, at: [0 m, 0 m], f: 100 Hz, A: 1, phase: 0, spreading: none}}
+points: {P: [3 m, 4 m]}
+rays: {r: {from: S, to: P}}
+observe: {L: "length(r) in cm"}
+expect: {L: 500}

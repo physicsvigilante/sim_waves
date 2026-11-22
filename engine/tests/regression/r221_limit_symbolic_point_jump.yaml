@@ -1,0 +1,5 @@
+# m14 review round 5 (N5): |q|/q as q -> c, c real: SymPy's generic answer sign(c) is wrong at the allowed
+# c = 0, where the sides are +1 and -1; existence for every c cannot be proved: refused
+symbols: {q: real, c: real}
+observe: {jump: "limit(abs(q)/q, q, c)"}
+expect: {error: rejected, message: "apart from its variable"}

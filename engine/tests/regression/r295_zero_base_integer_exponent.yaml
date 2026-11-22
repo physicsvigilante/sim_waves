@@ -1,0 +1,6 @@
+# m14 review round 16 (R4): 0**n with n an integer unknown is decided once n is known: n = 2 gives 0
+# (round 15 wrongly required a nonzero base for every integer n of unknown sign)
+unknowns: {n: integer}
+given: ["n == 2"]
+observe: {value: "0**n"}
+expect: {value: 0}

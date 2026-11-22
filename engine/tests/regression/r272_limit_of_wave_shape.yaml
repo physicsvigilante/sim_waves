@@ -1,0 +1,6 @@
+# m14 review round 14 (K16): the limit of the profile's shape y(p, x=x, t=0) at x -> 0: the written logs need
+# x > 0, so there are no values from below: refused (before: 0); the route through y(p, x=q) is r246
+waves:
+  p: {given: "log(x-t) - log(x-t)", units: {x: m, t: s, y: m}}
+observe: {invalid: "limit(y(p, x=x, t=0[s]), x, 0)"}
+expect: {error: rejected, message: "x must be positive near x -> 0 (from below)"}

@@ -1,0 +1,7 @@
+# m14 review round 17 (H1): a range function needs the expression defined over the whole range: log(x) - log(x)
+# (t = 0) is undefined for x <= 0, inside [-2, 2] m, so refused
+waves:
+  cut: {given: "log(x-t) - log(x-t)", units: {x: m, t: s, y: m}}
+  smooth: {given: "exp(-(x-t)**2)", units: {x: m, t: s, y: m}}
+observe: {bad: "max_in(x, at(field(cut), t=0[s]), -2[m], 2[m])"}
+expect: {error: rejected, message: "not defined for every x in the range"}

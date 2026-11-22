@@ -47,12 +47,28 @@ def _facts(sc):
 
 def _relations(sc):
     out = []
+    sc.fact_conditions = []
     for i, (text, _src) in enumerate(_facts(sc)):
-        rels = sc.expr(text, allow_rel=True, check_dims=True)
+        rels = sc.expr(text, allow_rel=True, check_dims=True, collect=True)
+        written = list(getattr(sc, "last_obligations", []))
         if not isinstance(rels, list):
             raise SceneError(f"given[{i}] must be an equation (==) or inequality: {text!r}")
+        # the conditions the fact's written parts need (a log, root, division, wave value at a
+        # point...), recorded before SymPy could cancel them: the solution must satisfy them.
+        # '> 0' and '>= 0' become inequalities of the solve; '!= 0' and asin/acos ranges are
+        # checked on the solution (run._check_fact_conditions)
+        for kind, g in written:
+            if kind == "positive":
+                out.append((i, f"[defined] {text}: {g} > 0", ">", g, sp.Integer(0)))
+            elif kind == "nonneg":
+                out.append((i, f"[defined] {text}: {g} >= 0", ">=", g, sp.Integer(0)))
+            else:
+                sc.fact_conditions.append((i, text, kind, g))
+        from .scene import Nearest
         for r in rels:
             lhs, rhs = sp.sympify(r.lhs).doit(), sp.sympify(r.rhs).doit()
+            if (lhs - rhs).has(Nearest):
+                raise SceneError(f"given[{i}]: nearest() picks an option; use it in observe only")
             if (lhs - rhs).has(X):
                 raise SceneError(f"given[{i}] has a free x; evaluate at a point with x=...")
             out.append((i, text, r.op, lhs, rhs))
@@ -344,8 +360,83 @@ def _real(v):
     return True
 
 
+def _single_trig(e, targets):
+    """e = A*f(L) + c with f sin or cos, A and c numbers, L linear in targets with numeric
+    coefficients: return (f, A, c, L); else None."""
+    e = sp.expand(e)
+    trig = [f for f in e.atoms(sp.sin, sp.cos) if f.free_symbols & set(targets)]
+    if len(trig) != 1:
+        return None
+    f = trig[0]
+    D = sp.Dummy("f")
+    e2 = e.xreplace({f: D})
+    A = sp.diff(e2, D)
+    c = sp.expand(e2 - A * D)
+    L = sp.expand(f.args[0])
+    if not (A.is_number and A != 0 and c.is_number and _real(A) and _real(c)):
+        return None
+    if not all(sp.diff(L, u).is_number for u in targets) or \
+            sp.expand(L - sum(sp.diff(L, u) * u for u in targets)).free_symbols & set(targets):
+        return None
+    return type(f), A, c, L
+
+
+def _solve_phase_pair(E, targets, kinds):
+    """Two facts A_i*sin(s_i*ph + a_i*q + c_i) = y_i (or cos) for a phase ph and one other
+    angular unknown q (two points off the origin): each fact fixes its angle up to the two
+    inverse-sine branches and 2*pi*n; subtracting eliminates ph, so q = q0 + n*P with
+    P = 2*pi/|s1*a1 - s2*a2|, and ph follows from q. Returns (sols, periods) or None.
+    The branches of q are then enumerated against the stated bounds by _branches."""
+    if len(E) != 2 or len(targets) != 2:
+        return None
+    ph = [u for u in targets if kinds.get(u) == "phase"]
+    if len(ph) != 1:
+        return None
+    ph = ph[0]
+    q = next(u for u in targets if u != ph)
+    parts = [_single_trig(e, targets) for e in E]
+    if any(p is None for p in parts):
+        return None
+    angles, coef = [], []
+    for f, A, c, L in parts:
+        s, a = sp.diff(L, ph), sp.diff(L, q)
+        if s not in (1, -1) or a == 0:
+            return None
+        r = sp.nsimplify(-c / A)
+        if abs(sp.N(r, 30)) > 1:
+            return [], {}                          # |y| > |A|: this fact has no solution at all
+        base = sp.expand(L - s * ph - a * q)       # the constant part of the angle
+        th = [sp.asin(r), sp.pi - sp.asin(r)] if f is sp.sin else [sp.acos(r), -sp.acos(r)]
+        angles.append([(t - base) * s for t in th])   # s*(angle - base) = ph + s*a*q
+        coef.append(s * a)
+    d = coef[0] - coef[1]
+    if d == 0 or not d.is_number:
+        return None
+    sols = []
+    for t1, t2 in itertools.product(*angles):
+        q0 = sp.simplify((t1 - t2) / d)
+        sols.append({q: q0, ph: t1 - coef[0] * q})   # ph in terms of q: fixed per branch of q
+    return sols, _Periods({q: sp.simplify(TWO_PI / sp.Abs(d))}, probe=4)
+
+
+class _Periods(dict):
+    """Periods with a smaller probe for unbounded branches: in the phase-pair case every
+    further branch of q fits as well, so a few show that there are infinitely many."""
+
+    def __init__(self, data, probe):
+        super().__init__(data)
+        self.probe = probe
+
+
 def _core_solve(E, targets, kinds):
     """Return (solutions, periods). periods[u] is the period of an angular unknown u."""
+    for e in E:
+        p = _single_trig(e, targets)
+        if p is not None and abs(sp.N(p[2] / p[1], 30)) > 1:
+            return [], {}                          # A*sin(L) = y with |y| > |A|: no real solution
+    pair = _solve_phase_pair(E, targets, kinds)
+    if pair is not None:
+        return pair
     trig_u = [u for u in targets if _in_trig(u, E)]
     bases = {}
     for u in trig_u:
@@ -481,12 +572,13 @@ def _branches(sc, s, periods, ineqs, unknowns, strict):  # noqa: C901
         lo, hi = I.inf, I.sup
         if lo == -sp.oo or hi == sp.oo:
             infinite = True
+            probe = getattr(periods, "probe", PROBE)
             n_lo = 0 if lo == -sp.oo else int(sp.ceiling(sp.N((lo - u0) / p)))
-            n_hi = n_lo + PROBE if hi == sp.oo else int(sp.floor(sp.N((hi - u0) / p)))
+            n_hi = n_lo + probe if hi == sp.oo else int(sp.floor(sp.N((hi - u0) / p)))
             if hi == sp.oo and lo == -sp.oo:
-                n_lo, n_hi = -PROBE // 2, PROBE // 2
+                n_lo, n_hi = -probe // 2, probe // 2
             elif lo == -sp.oo:
-                n_lo, n_hi = n_hi - PROBE, n_hi
+                n_lo, n_hi = n_hi - probe, n_hi
         else:
             n_lo = int(sp.ceiling(sp.N((lo - u0) / p, 30))) - 1
             n_hi = int(sp.floor(sp.N((hi - u0) / p, 30))) + 1
@@ -496,7 +588,10 @@ def _branches(sc, s, periods, ineqs, unknowns, strict):  # noqa: C901
     kept = []
     keys = list(choices)
     for combo in itertools.product(*[choices[k] for k in keys]):
-        b = {**s, **dict(zip(keys, combo))}
+        chosen = dict(zip(keys, combo))
+        # a value fixed in terms of a branched unknown (a phase from its wavenumber) takes
+        # that branch's value
+        b = {**{k: sp.sympify(v).xreplace(chosen) for k, v in s.items()}, **chosen}
         for u in b:
             if sc.kinds.get(u) == "phase":
                 b[u] = _norm_phase(sp.simplify(b[u]))
@@ -671,6 +766,16 @@ def _solve_given(sc):
         return {}
     eqs, ineqs = _conditions(sc, rels)
     sols, infinite = _solve(sc, eqs, ineqs, strict=True)
+    # the '!= 0' and asin/acos conditions the facts' written parts need exclude candidates
+    # before they are counted (d(d-1) + 1/d - 1/d = 0 has the single solution d = 1)
+    if sols and getattr(sc, "fact_conditions", None):
+        from .expr import holds
+        sols = [s for s in sols
+                if not any(holds(kind, sp.simplify(sp.sympify(g).xreplace(s))) is False
+                           for _, _, kind, g in sc.fact_conditions)]
+        if not sols:
+            raise InconsistentError("no situation satisfies the facts: every candidate makes a written part of "
+                                    "them undefined (a division by 0, or asin/acos outside [-1, 1])")
     if not sols:
         idxs = sorted({r[0] for r in rels})
         prior = {}

@@ -1,0 +1,6 @@
+# m14 review round 17 (H2): phase at a point checks the written profile: x - t = -1 makes both logs undefined,
+# so refused (before: 1)
+waves:
+  p: {given: "sin(t-x) + log(x-t) - log(x-t)", units: {x: m, t: s, y: m}}
+observe: {bad: "phase(p, x=-1[m], t=0[s])"}
+expect: {error: rejected, message: "not defined at this point"}

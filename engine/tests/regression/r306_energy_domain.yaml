@@ -1,0 +1,8 @@
+# m14 review round 17 (H3, same principle): a pulse's energy integrates over every x; its shape is undefined for
+# x <= 0, so refused
+media:
+  rope: {type: string, mu: "1 kg/m", tension: "1 N"}
+waves:
+  p: {pulse: {on: rope, shape: "exp(-(x-1)**2) + log(x) - log(x)", units: {x: m, y: m}, dir: +x}}
+observe: {bad: "energy(p)"}
+expect: {error: rejected, message: "not defined over the whole stretch"}

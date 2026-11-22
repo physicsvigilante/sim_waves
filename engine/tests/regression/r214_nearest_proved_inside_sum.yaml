@@ -1,0 +1,5 @@
+# m14 review round 3 (N3): a + nearest(2, 1, 2) = a + 2 depends on the arbitrary a (3 at a = 1, 4 at a = 2);
+# the nearest part is proved constant, but that must not waive the check of the whole result: refused
+arbitrary: {a: 1}
+observe: {value: "a + nearest(2, 1, 2)"}
+expect: {error: rejected, message: "depends on the arbitrary"}

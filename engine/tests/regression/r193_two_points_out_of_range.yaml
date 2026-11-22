@@ -1,0 +1,11 @@
+# m14: a displacement larger than the amplitude has no solution: inconsistent, not a pick
+unknowns: {kk: positive, ph: phase}
+media: {rope: {type: string, mu: 10 g/m, tension: 50 N}}
+waves:
+  w: {harmonic: {on: rope, A: 8 cm, k: kk, dir: +x, phase: ph}}
+given:
+  - {fact: "kk*15[cm] < 1", source: stated}
+  - {fact: "y(w, x=10[cm], t=0[s]) == 9[cm]", source: stated}
+  - {fact: "y(w, x=25[cm], t=0[s]) == 4[cm]", source: stated}
+observe: {lam: "wavelength(w) in cm"}
+expect: {error: rejected, message: "no situation satisfies the facts"}

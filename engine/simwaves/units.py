@@ -18,6 +18,9 @@ _R = sp.Rational
 
 UNITS = {
     "m": (1, LENGTH), "cm": (_R(1, 100), LENGTH), "mm": (_R(1, 1000), LENGTH), "km": (1000, LENGTH),
+    "um": (_R(1, 10 ** 6), LENGTH), "μm": (_R(1, 10 ** 6), LENGTH),   # micrometre (the micro sign normalises to mu)
+    "nm": (_R(1, 10 ** 9), LENGTH),
+    "h": (3600, TIME), "kmph": (_R(5, 18), dim(1, 0, -1)),   # hour (see split_quantity), km/h
     "s": (1, TIME), "ms": (_R(1, 1000), TIME), "us": (_R(1, 10 ** 6), TIME), "ns": (_R(1, 10 ** 9), TIME),
     "kg": (1, MASS), "g": (_R(1, 1000), MASS),
     "N": (1, FORCE), "Pa": (1, dim(-1, 1, -2)), "J": (1, dim(2, 1, -2)), "mJ": (_R(1, 1000), dim(2, 1, -2)),
@@ -76,14 +79,18 @@ def parse_unit(text):
     return unit_from_ast(node)
 
 
-_UNIT_TOKEN = re.compile(r"^[A-Za-z0-9_*/^().\-]+$")
+_UNIT_TOKEN = re.compile(r"^[A-Za-z0-9_*/^().\-µμ]+$")
+# Unit names that are too often a variable to be read as a unit when they stand alone
+# after a value ('rho g h' is not 'rho g' hours); they still work inside a compound unit
+# such as km/h, or in brackets, 2[h].
+_NOT_ALONE = {"h"}
 
 
 def split_quantity(text):
     """Split '3*pi rad/s' into ('3*pi', 'rad/s', factor, dim). No unit -> (text, None, 1, None)."""
     text = str(text).strip()
     m = re.match(r"^(.*\S)\s+(\S+)$", text)
-    if m and _UNIT_TOKEN.match(m.group(2)):
+    if m and _UNIT_TOKEN.match(m.group(2)) and m.group(2) not in _NOT_ALONE:
         try:
             factor, d = parse_unit(m.group(2))
             return m.group(1), m.group(2), factor, d

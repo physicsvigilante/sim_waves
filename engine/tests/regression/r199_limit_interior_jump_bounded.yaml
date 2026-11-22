@@ -1,0 +1,6 @@
+# m14 review R3: z < 1 m, z -> 0.5 m is an interior point; |z - 0.5|/(z - 0.5) is -1 from below and +1 from
+# above, so the limit does not exist (before: -1, one side only)
+symbols: {z: real}
+given: ["z < 1[m]"]
+observe: {jump: "limit(abs(z - 0.5[m])/(z - 0.5[m]), z, 0.5[m])"}
+expect: {error: rejected, message: "from above it is 1, from below -1"}

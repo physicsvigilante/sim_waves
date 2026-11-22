@@ -1,0 +1,3 @@
+# m14 review round 19 (T1): on [-1, 0] the same shape approaches 1 at the right end but is 0 there; refused
+observe: {bad: "max_in(x, (x+1)*(1-step(x)), -1, 0)"}
+expect: {error: rejected, message: "no largest value"}

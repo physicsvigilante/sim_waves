@@ -1,0 +1,12 @@
+# m14 review round 17 (H3): the shape exp(-x**2) + log(x) - log(x) is defined for x > 0 only, where it falls
+# (derivative -2x exp(-x**2) < 0): its supremum 1 is approached as x -> 0+ but never reached, so there is no peak
+# position (before: x = 0, where the shape is undefined); peak and amplitude likewise
+media:
+  rope: {type: string, mu: "1 kg/m", tension: "1 N"}
+waves:
+  p: {pulse: {on: rope, shape: "exp(-x**2) + log(x) - log(x)", units: {x: m, y: m}, dir: +x}}
+observe:
+  bad_position: "peak_position(p, t=0[s])"
+  bad_peak: "peak(p, t=0[s])"
+  bad_amplitude: "amplitude(p)"
+expect: {error: rejected, message: "no largest value"}

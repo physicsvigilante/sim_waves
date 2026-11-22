@@ -1,0 +1,3 @@
+# m14 review round 18 (S5): lo= and hi= by keyword give the range: log(x) on [1, 2] is defined, largest log(2)
+observe: {max_log: "max_in(x, log(x), lo=1, hi=2)"}
+expect: {max_log: "log(2)"}

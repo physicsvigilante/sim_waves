@@ -1,0 +1,5 @@
+# m14 review round 3 (N2): q positive and q < 1, so q lies in (0, 1); q -> -1 is outside: refused (before: -1)
+symbols: {q: positive}
+given: ["q < 1"]
+observe: {invalid: "limit(q, q, -1)"}
+expect: {error: rejected, message: "outside the values q can take (0, 1)"}

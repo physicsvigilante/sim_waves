@@ -1,0 +1,6 @@
+# m14 review round 17 (M1): 0**q with q declared real is decided once q is known: q = 2 gives 0, and
+# (-2)**q gives 4 (round 16 required a positive base for any exponent not known to be an integer)
+unknowns: {q: real}
+given: ["q == 2"]
+observe: {value: "0**q", neg_base: "(-2)**q"}
+expect: {value: 0, neg_base: 4}
