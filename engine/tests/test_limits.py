@@ -50,7 +50,7 @@ if __name__ == "__main__":
     before = workers_now()
 
     # 1. the limit scenes and controls, in parallel
-    code, out, dt = cli("test", "tests/limits", "-j", "2", "--time", "3", "--memory", "512")
+    code, out, dt = cli("test", "tests/limits", "-j", "2", "--time", "6", "--memory", "512")
     check("limit scenes all pass", code == 0 and "summary: PASS 5" in out, out[-600:])
 
     # 2. no worker survives a run
@@ -89,16 +89,17 @@ if __name__ == "__main__":
     check("worker found while the request ran", bool(kids))
     check("worker killed with its parent", not alive, str(alive))
 
-    # 5. -j N: never more than N workers at once
+    # 5. -j N: never more than N requests at once (each request is its own process)
     from simwaves.contain import run_many
-    res = run_many("simwaves.testhooks:report_pid", list(range(6)), 2, lambda _: 30)
-    pids = {r[0] for r in res}
-    events = sorted([(r[1], 1) for r in res] + [(r[2], -1) for r in res])
+    res = run_many("simwaves.testhooks:report_pid", list(range(6)), 2, 30)
+    ok = all(isinstance(r, tuple) for r in res)
+    events = sorted([(r[1], 1) for r in res] + [(r[2], -1) for r in res]) if ok else []
     peak = cur = 0
     for _, d in events:
         cur += d
         peak = max(peak, cur)
-    check("-j 2: at most 2 workers", len(pids) <= 2 and peak <= 2, f"pids {pids}, peak {peak}")
+    check("-j 2: at most 2 requests at once", ok and peak <= 2 and len({r[0] for r in res}) == 6,
+          f"{res!r} peak {peak}")
 
     # 6. limits apply to the whole run: a scene's own expect.limits is refused (review 15a round 2)
     with tempfile.TemporaryDirectory() as d:

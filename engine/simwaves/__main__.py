@@ -23,17 +23,30 @@ def _round(o):
     return o
 
 
-def view(out, files):
+def view(out, files, seconds=None, memory_mb=None):
+    """Build a viewer page. Each scene is exported as its own contained request under the
+    time and memory limits (never multiplied: review 15a G3); the page is written only if
+    every scene finished."""
     import json
     import os
-    import yaml
-    from .export import export
-    from .run import _Loader
-    from .errors import SceneError as _SE
+    from .contain import CrashResult, LimitResult, run_request
     data = []
     for f in files:
-        with open(f, encoding="utf-8") as fh:
-            data.append(_round(export(yaml.load(fh, Loader=_Loader))))
+        try:
+            r = run_request("simwaves.export:_export_file", (f,), seconds, memory_mb)
+        except SceneError as exc:
+            print(f"{os.path.basename(f)}: {type(exc).__name__}: {exc}")
+            print("no page written")
+            return 1
+        if isinstance(r, LimitResult):
+            print(f"{os.path.basename(f)}: {_limit_text(r)}")
+            print("no page written")
+            return 3
+        if isinstance(r, CrashResult):
+            print(f"{os.path.basename(f)}: engine crash: {r.message}")
+            print("no page written")
+            return 4
+        data.append(_round(r))
     tpl = open(os.path.join(os.path.dirname(__file__), "..", "viewer", "template.html"), encoding="utf-8").read()
     # allow_nan=False: a NaN would make the page's JSON unparseable; '<' is escaped so
     # scene text can never close the data block or open an HTML comment inside it.
@@ -61,20 +74,6 @@ def _options(argv):
     return rest, opts
 
 
-def _view_text(out, files):
-    """view(), as text and an exit code (what a contained worker runs)."""
-    import contextlib
-    import io
-    buf = io.StringIO()
-    with contextlib.redirect_stdout(buf):
-        try:
-            code = view(out, files)
-        except SceneError as exc:
-            print(f"{type(exc).__name__}: {exc}")
-            code = 1
-    return buf.getvalue(), code
-
-
 def _limit_text(result):
     return (f"{result.message}: the request was stopped before it finished; this says nothing about "
             f"the physics of the scene. Use --time or --memory to change the limits.")
@@ -84,7 +83,7 @@ QUALIFIED_SYMPY = "1.12"        # engine/requirements.txt
 
 
 def main(argv):
-    from .contain import DEFAULT_MEMORY, DEFAULT_TIME, CrashResult, LimitResult, run_contained
+    from .contain import DEFAULT_MEMORY, DEFAULT_TIME, CrashResult, LimitResult, run_request
     import sympy
     if sympy.__version__ != QUALIFIED_SYMPY:
         print(f"warning: SymPy {sympy.__version__} is installed; the engine is qualified on SymPy "
@@ -102,12 +101,12 @@ def main(argv):
         print(f"error: {exc}")
         return 2
     if len(argv) >= 3 and argv[0] == "view":
-        r = run_contained("simwaves.__main__:_view_text", (argv[1], argv[2:]), seconds * len(argv[2:]), memory)
+        return view(argv[1], argv[2:], seconds, memory)
     elif len(argv) == 2 and argv[0] == "test":
         counts = run_dir(argv[1], opts.get("jobs"), seconds, memory)
         return 0 if set(counts) <= {"PASS"} else 1
     elif len(argv) == 2 and argv[0] == "run" and "jobs" not in opts:
-        r = run_contained("simwaves.__main__:_run_text", (argv[1],), seconds, memory)
+        r = run_request("simwaves.__main__:_run_text", (argv[1],), seconds, memory)
     else:
         print(__doc__)
         return 2

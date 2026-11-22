@@ -106,3 +106,46 @@ def sleep_then_big(delay, n):
     """Review 15a F2: wait, then reply with n bytes (for a transfer stalled part-way)."""
     time.sleep(float(delay))
     return b"x" * int(n)
+
+
+def late_big(n):
+    """Review 15a G1/F2: work until just before the request's deadline, then reply with n bytes,
+    so the reply is complete only after the deadline."""
+    from . import contain
+    left = contain.remaining() or 0
+    time.sleep(max(0.0, left - 0.02))
+    return b"x" * int(n)
+
+
+def stall_reply():
+    """Review 15a F2: start a reply frame on the reply stream, then stall forever, so the parent
+    is left holding a partial frame."""
+    import struct
+    from . import contain
+    with contain._reply_lock:
+        contain._reply.write(struct.pack("<Q", 10 ** 6) + b"partial")
+        contain._reply.flush()
+    while True:
+        time.sleep(1)
+
+
+def nested_budget_at_edge():
+    """Review 15a R1 in a request: an inner budget whose fallback would come after the
+    request's own deadline. The request's limit must win."""
+    from . import contain
+    from .budget import Budget, within
+    left = contain.remaining() or 0
+    time.sleep(max(0.0, left - 0.05))
+    try:
+        within(0.10, lambda: time.sleep(0.20))
+    except Budget:
+        return "normal fallback value"
+    return "inner finished"
+
+
+def slow_then_raise():
+    """Review 15a G4: block in C past the request's deadline, then raise an ordinary error.
+    The request's limit must win."""
+    from . import contain
+    time.sleep((contain.remaining() or 0) + 0.3)
+    raise ValueError("an ordinary error, raised after the deadline")

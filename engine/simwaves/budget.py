@@ -22,8 +22,8 @@ Lifecycle (review 15a, R1 and F3):
   "critical", and the watchdog never fires on a critical thread. Any expiry delivered while
   setting up or tearing down is caught there and classified as this budget's or an
   enclosing one's. No entry is ever left behind, and no private exception escapes.
-- **No late values:** a `within` whose deadline has passed never returns a value, even if fn()
-  finished just after the deadline.
+- **The deadline comes first:** a `within` whose deadline has passed never returns a value and
+  never passes on an ordinary error, even if fn() finished or failed just after the deadline.
 """
 import ctypes
 import gc
@@ -167,8 +167,9 @@ def within(seconds, fn, public=None, memory=False):
     if out_of_memory:
         gc.collect()
         raise _public(entry)
+    if ran_out or entry.fired or time.monotonic() >= entry.deadline:
+        # past the deadline: never a value, and never an ordinary error either (review 15a G4)
+        raise _public(entry)
     if other is not None:
         raise other
-    if ran_out or entry.fired or time.monotonic() >= entry.deadline:
-        raise _public(entry)                            # past the deadline: never a value
     return result

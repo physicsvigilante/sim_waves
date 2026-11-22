@@ -95,11 +95,14 @@ The environment is pinned in `engine/requirements.txt` (tests also need
 - `python -m simwaves test ../format/examples`
 - `python -m simwaves test tests/negative`
 - `python tests/test_export.py`
-- `python tests/test_limits.py` (containment)
+- `python tests/test_limits.py` and `python tests/test_limits_review.py` (containment)
 
-Every scene runs in a contained worker process, with 120 s and 2048 MB by default
-(m15a). A scene that passes a limit is reported as LIMIT, never as a physics result.
-With `-j 3` at most three workers run, so at most 6 GB in all on this 8 GB machine.
+Every scene runs in its own fresh process, owned from creation, with 120 s and 2048 MB
+by default, start-up included (m15a). A scene that passes a limit is reported as LIMIT, never
+as a physics result. With `-j 3` at most three run at once, so at most 6 GB in all on this
+8 GB machine. Run the limit scenes with `python -m simwaves test tests/limits --time 6
+--memory 512` (with `SIMWAVES_TEST_HOOKS=1`); `tests/test_limits.py` and
+`tests/test_limits_review.py` do this for you.
 Linux CI (`.github/workflows/tests.yml`) runs every suite on each pull request; report
 its result in the PR.
 GitHub from the shell: `gh` (signed in as the repository owner).

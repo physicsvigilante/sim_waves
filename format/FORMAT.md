@@ -795,10 +795,12 @@ solving; relative tolerance), `abs`, `sqrt`, `sin`, `cos`, `tan`, `exp`, `log`, 
 - **Redundant facts:** a fact that contains no unknowns and is identically true (e.g.
   `sin(a)**2 + cos(a)**2 == 1`) is accepted. If it is false, the scene is inconsistent.
   If it can't be decided for all symbol values, the scene is over-specified.
-- **Time and memory limits:** every request (`run`, `test` and `view`) runs in its own
-  worker process.
+- **Time and memory limits:** every request runs in its own fresh process: one `run`, each
+  scene of a `test` run, each scene of a `view`.
   - The default limits are **120 s and 2048 MB per request**; change them with `--time S`
-    and `--memory MB`.
+    and `--memory MB`. The time counts from the moment the request is accepted, so the
+    process's start-up (about a second) is included.
+  - `view` writes its page only if every scene finished within the limits.
   - A request that passes a limit is stopped and reported as
     `RESOURCE LIMIT (time 120 s)` or `RESOURCE LIMIT (memory 2048 MB)` (exit status 3).
     This says nothing about the physics: it is not an inconsistency, a refusal or an

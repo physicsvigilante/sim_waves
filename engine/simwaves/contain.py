@@ -1,42 +1,46 @@
-"""Containment (m15a): every request runs in a worker process under a time and memory limit.
+"""Containment (m15a): every request runs in its own fresh process under a time and memory limit.
 
-One request lifecycle, owned by the parent (review 15a):
-1. **Admission:** limits are validated (finite, positive, typed, never above the run's), and
-   a scene file larger than MAX_SCENE_BYTES is refused before it is parsed.
-2. **Start-up:** a spawn-started worker. If it fails to start, that is the request's result.
-3. **Evaluation:** under a whole-request time budget (budget.py), which ends a slow request
-   at a bytecode boundary with ResourceLimitError. If the worker does not answer within the
-   limit plus a short grace (stuck inside a long C call), the parent kills it.
-4. **Exactly one terminal result** per request: a value, a re-raised scene exception, a
-   LimitResult or a CrashResult, never nothing.
-5. **Clean-up of the whole process tree:**
-   - Windows: a Job Object holds the worker and everything it starts, with memory caps and
-     kill-on-close, so they all die with the job, or with the parent.
-   - Linux: the worker leads its own process group, under RLIMIT_AS. A small guardian
-     process, outside that group, holds a pipe from the parent. It kills the whole group as
-     soon as the pipe closes: the parent retired the worker, or the parent died.
-   A worker that hit any limit is retired before the next request.
+One request, one process (review 15a round 3, option C). The parent owns the request from
+admission to the last byte of the reply:
+1. **Admission:** the limits are validated (only None selects a default), and a scene file
+   larger than MAX_SCENE_BYTES is refused before it is parsed. The request's single
+   monotonic deadline starts here, so start-up counts against it.
+2. **Ownership from creation:**
+   - Windows: the parent joins a kill-on-close supervisor Job Object the first time it starts
+     a request, so every child it creates is in that job from the moment it exists, and dies
+     with the parent. Each child is created suspended, put in its own job (memory caps,
+     kill-on-close) and only then resumed. If any step fails, it is terminated directly.
+   - Linux: the child starts in its own session (set before it executes anything). Its first
+     act sets the parent-death signal; it exits at once if its parent is already gone. It then
+     caps its address space. A guardian process outside the group holds a pipe from the parent
+     and kills the whole group when the pipe closes: request over, or parent dead.
+3. **Evaluation** in the child under the remaining time (budget.py), from resolving the
+   target onwards.
+4. **One terminal result** from the parent's own deadline, whatever the child sends: a value,
+   the request's own exception (re-raised), a LimitResult or a CrashResult. Anything complete
+   only after the deadline is a limit. Past the deadline plus GRACE the tree is killed.
+5. **Clean-up:** the child and everything it started are gone before the result is returned.
 A limit is reported as such, never as a fact about the physics.
 """
 import importlib
 import math
-import multiprocessing as mp
 import os
 import pickle
+import struct
 import subprocess
 import sys
 import threading
+import time
 import traceback
 
-DEFAULT_TIME = 120            # seconds per request
-DEFAULT_MEMORY = 2048         # MB per worker process
+DEFAULT_TIME = 120            # seconds per request (start-up included)
+DEFAULT_MEMORY = 2048         # MB per request process
 MIN_MEMORY = 256              # MB: the engine needs about 150 MB just to start
 GRACE = 10                    # seconds beyond the time limit before the parent kills
-RECYCLE_AFTER = 20            # requests per worker before a fresh one (bounds SymPy's caches)
-RECYCLE_AT = 0.5              # ... or once its peak memory passes this share of its limit
 MAX_SCENE_BYTES = 64 * 1024   # a scene file above this is refused before parsing
 WINDOWS = sys.platform == "win32"
-IN_WORKER = False             # True inside a worker: public entry points call through directly
+IN_WORKER = False             # True inside a request's process: public entry points run directly
+ENGINE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 class LimitError(ValueError):
@@ -82,82 +86,119 @@ def check_scene_size(path):
                          f"{MAX_SCENE_BYTES // 1024} KB")
 
 
-# ---------------------------------------------------------------- the worker (child) side
+# ---------------------------------------------------------------- frames on a byte stream
+def _write_frame(stream, obj):
+    data = pickle.dumps(obj, protocol=pickle.HIGHEST_PROTOCOL)
+    stream.write(struct.pack("<Q", len(data)))
+    stream.write(data)
+    stream.flush()
+
+
+def _read_exact(stream, n):
+    chunks, got = [], 0
+    while got < n:
+        b = stream.read(n - got)
+        if not b:
+            raise EOFError("the stream ended")
+        chunks.append(b)
+        got += len(b)
+    return b"".join(chunks)
+
+
+def _read_frame(stream):
+    (n,) = struct.unpack("<Q", _read_exact(stream, 8))
+    return pickle.loads(_read_exact(stream, n))
+
+
+# ---------------------------------------------------------------- the child side
+_reply = None                 # the child's reply stream (its real stdout)
+_deadline = None              # the child's own deadline (monotonic), for remaining()
+_reply_lock = threading.Lock()
+
+
 def _resolve(target):
     mod, name = target.split(":")
     return getattr(importlib.import_module(mod), name)
 
 
-def _posix_setup(memory_mb):
-    """The worker's first steps on POSIX, before any import: die with the parent (Linux), lead
-    its own process group (killed as one), and cap its address space."""
-    import resource
+def note(obj):
+    """In a request's process: send a note to the parent at once (it arrives even if the
+    request is later stopped by a limit). Outside one: does nothing."""
+    if _reply is not None:
+        with _reply_lock:
+            _write_frame(_reply, ("note", obj))
+
+
+def remaining():
+    """In a request's process: seconds left before its deadline (None outside one)."""
+    return None if _deadline is None else _deadline - time.monotonic()
+
+
+def _posix_first_steps():
+    """Linux, the child's very first steps, before any import: die with the parent; leave at
+    once if the parent is already gone (it died before this point)."""
     import signal
-    try:                                                  # killed if the parent dies (Linux)
+    try:
         import ctypes
         ctypes.CDLL("libc.so.6", use_errno=True).prctl(1, signal.SIGKILL)   # PR_SET_PDEATHSIG
-        if os.getppid() == 1:                             # the parent died before this: stop
-            os._exit(1)
     except (OSError, AttributeError):
         pass
-    os.setpgrp()
+    expected = os.environ.get("SIMWAVES_PARENT")
+    if expected is not None and os.getppid() != int(expected):
+        os._exit(1)
+
+
+def _cap_memory(memory_mb):
+    import resource
     limit = memory_mb * 1024 * 1024
     resource.setrlimit(resource.RLIMIT_AS, (limit, limit))
 
 
-def _peak_bytes():
-    """This worker's peak memory so far (Linux; on Windows the parent asks its Job Object)."""
-    if WINDOWS:
-        return 0
-    import resource
-    return resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024
-
-
-def _send_raise(conn, exc):
-    """Carry an exception back to the parent; if it cannot be pickled, its traceback."""
-    try:
-        pickle.dumps(exc)
-        conn.send(("raise", exc))
-    except Exception:                                     # noqa: BLE001
-        conn.send(("error", traceback.format_exc()))
-
-
-def _serve(conn, memory_mb):
-    """The worker loop: run each (target, args, seconds) request under its time budget."""
-    global IN_WORKER
+def child_main():
+    """The request's process: read one request, run it under its time, send one result."""
+    global IN_WORKER, _reply, _deadline
     if not WINDOWS:
-        _posix_setup(memory_mb)                           # first, before any other work
+        _posix_first_steps()
     IN_WORKER = True
+    _reply = sys.stdout.buffer
+    sys.stdout = sys.stderr                               # the target's prints never reach the reply
     for var in ("OPENBLAS_NUM_THREADS", "OMP_NUM_THREADS", "MKL_NUM_THREADS"):
-        os.environ.setdefault(var, "1")                   # no large per-thread buffers
+        os.environ.setdefault(var, "1")
+    try:
+        target, args, seconds, memory_mb, nominal = _read_frame(sys.stdin.buffer)
+    except Exception:                                     # noqa: BLE001 - nothing to run
+        os._exit(2)
+    _deadline = time.monotonic() + seconds
+    if not WINDOWS:
+        _cap_memory(memory_mb)
+    note(("pid", os.getpid()))
     from .budget import within
     from .errors import ResourceLimitError
-    import simwaves.run          # noqa: F401  (imports outside any request's time)
-    import simwaves.harness      # noqa: F401
-    conn.send(("ready", os.getpid()))
-    while True:
+    try:
+        left = max(0.001, _deadline - time.monotonic())
+        out = within(left, lambda: _resolve(target)(*args), public=ResourceLimitError("time", f"{nominal:g} s"))
+        result = ("ok", out)
+    except ResourceLimitError as exc:
+        result = ("limit", exc.kind, str(exc))
+    except MemoryError:
+        result = ("limit", "memory", f"RESOURCE LIMIT (memory {memory_mb} MB)")
+    except Exception as exc:                              # noqa: BLE001 - the caller's exception
         try:
-            msg = conn.recv()
-        except (EOFError, OSError):
-            return
-        if msg is None:
-            return
-        target, args, seconds = msg
-        try:
-            fn = _resolve(target)
-            out = within(seconds, lambda: fn(*args), public=ResourceLimitError("time", f"{seconds:g} s"))
-            conn.send(("ok", out, _peak_bytes()))
-        except ResourceLimitError as exc:
-            conn.send(("limit", exc.kind, str(exc)))
-        except MemoryError:
-            try:
-                conn.send(("limit", "memory", f"RESOURCE LIMIT (memory {memory_mb} MB)"))
-            finally:
-                os._exit(3)                                # its state is not to be trusted
-        except Exception as exc:                           # noqa: BLE001 - the caller's exception
-            _send_raise(conn, exc)
-        except BaseException:                              # noqa: BLE001 - report, keep serving
-            conn.send(("error", traceback.format_exc()))
+            pickle.dumps(exc)
+            result = ("raise", exc)
+        except Exception:                                 # noqa: BLE001
+            result = ("error", traceback.format_exc())
+    except BaseException:                                 # noqa: BLE001
+        result = ("error", traceback.format_exc())
+    try:
+        with _reply_lock:
+            _write_frame(_reply, result)
+    except MemoryError:
+        os._exit(3)
+    except Exception:                                     # noqa: BLE001 - e.g. the value cannot be pickled
+        with _reply_lock:
+            _write_frame(_reply, ("error", traceback.format_exc()))
+    os._exit(0)
 
 
 # ---------------------------------------------------------------- Linux guardian
@@ -168,7 +209,7 @@ try:
     while os.read(fd, 1):
         pass
 finally:
-    for kill in (os.killpg, os.kill):     # the group; or the worker alone, if not yet its own group
+    for kill in (os.killpg, os.kill):
         try:
             kill(pgid, signal.SIGKILL)
         except (ProcessLookupError, PermissionError):
@@ -177,8 +218,8 @@ finally:
 
 
 class _Guardian:
-    """Linux: a small process outside the worker's group that kills the whole group when the
-    pipe from the parent closes (worker retired, or parent dead)."""
+    """Linux: a small process outside the child's group that kills the whole group when the
+    pipe from the parent closes (request over, or parent dead)."""
 
     def __init__(self, pgid):
         rfd, self.wfd = os.pipe()
@@ -188,7 +229,6 @@ class _Guardian:
         os.close(rfd)
 
     def fire(self):
-        """Close the pipe: the guardian kills the group and exits."""
         if self.wfd is not None:
             os.close(self.wfd)
             self.wfd = None
@@ -199,66 +239,71 @@ class _Guardian:
 
 
 # ---------------------------------------------------------------- Windows Job Objects
+class _Win:
+    """kernel32/ntdll entry points and the job structures."""
+    _ready = None
+
+    @classmethod
+    def get(cls):
+        if cls._ready is None:
+            import ctypes
+            from ctypes import wintypes
+            k = ctypes.WinDLL("kernel32", use_last_error=True)
+            k.CreateJobObjectW.restype = wintypes.HANDLE
+            k.CreateJobObjectW.argtypes = (ctypes.c_void_p, wintypes.LPCWSTR)
+            k.SetInformationJobObject.argtypes = (wintypes.HANDLE, ctypes.c_int, ctypes.c_void_p, wintypes.DWORD)
+            k.QueryInformationJobObject.argtypes = (wintypes.HANDLE, ctypes.c_int, ctypes.c_void_p, wintypes.DWORD,
+                                                    ctypes.c_void_p)
+            k.AssignProcessToJobObject.argtypes = (wintypes.HANDLE, wintypes.HANDLE)
+            k.TerminateJobObject.argtypes = (wintypes.HANDLE, wintypes.UINT)
+            k.CloseHandle.argtypes = (wintypes.HANDLE,)
+            k.GetCurrentProcess.restype = wintypes.HANDLE
+            nt = ctypes.WinDLL("ntdll")
+            nt.NtResumeProcess.argtypes = (wintypes.HANDLE,)
+
+            class IO(ctypes.Structure):
+                _fields_ = [(n, ctypes.c_ulonglong) for n in ("r", "w", "o", "rb", "wb", "ob")]
+
+            class Basic(ctypes.Structure):
+                _fields_ = [("PerProcessUserTimeLimit", ctypes.c_int64), ("PerJobUserTimeLimit", ctypes.c_int64),
+                            ("LimitFlags", wintypes.DWORD), ("MinimumWorkingSetSize", ctypes.c_size_t),
+                            ("MaximumWorkingSetSize", ctypes.c_size_t), ("ActiveProcessLimit", wintypes.DWORD),
+                            ("Affinity", ctypes.c_size_t), ("PriorityClass", wintypes.DWORD),
+                            ("SchedulingClass", wintypes.DWORD)]
+
+            class Extended(ctypes.Structure):
+                _fields_ = [("BasicLimitInformation", Basic), ("IoInfo", IO), ("ProcessMemoryLimit", ctypes.c_size_t),
+                            ("JobMemoryLimit", ctypes.c_size_t), ("PeakProcessMemoryUsed", ctypes.c_size_t),
+                            ("PeakJobMemoryUsed", ctypes.c_size_t)]
+            cls._ready = (ctypes, k, nt, Extended)
+        return cls._ready
+
+
 class _Job:
-    """A Windows Job Object: a memory limit for the worker and everything it starts, and
-    kill-on-close, so they all die with the job (or with the parent)."""
+    """A Windows Job Object with kill-on-close (and, given memory_mb, memory caps)."""
 
-    def __init__(self, memory_mb):
-        import ctypes
-        from ctypes import wintypes
-        self.ct = ctypes
-        k = ctypes.WinDLL("kernel32", use_last_error=True)
-        self.k = k
-        k.CreateJobObjectW.restype = wintypes.HANDLE
-        k.CreateJobObjectW.argtypes = (ctypes.c_void_p, wintypes.LPCWSTR)
-        k.SetInformationJobObject.argtypes = (wintypes.HANDLE, ctypes.c_int, ctypes.c_void_p, wintypes.DWORD)
-        k.QueryInformationJobObject.argtypes = (wintypes.HANDLE, ctypes.c_int, ctypes.c_void_p, wintypes.DWORD,
-                                                ctypes.c_void_p)
-        k.OpenProcess.restype = wintypes.HANDLE
-        k.OpenProcess.argtypes = (wintypes.DWORD, wintypes.BOOL, wintypes.DWORD)
-        k.AssignProcessToJobObject.argtypes = (wintypes.HANDLE, wintypes.HANDLE)
-        k.TerminateJobObject.argtypes = (wintypes.HANDLE, wintypes.UINT)
-        k.CloseHandle.argtypes = (wintypes.HANDLE,)
-
-        class IO(ctypes.Structure):
-            _fields_ = [(n, ctypes.c_ulonglong) for n in ("r", "w", "o", "rb", "wb", "ob")]
-
-        class Basic(ctypes.Structure):
-            _fields_ = [("PerProcessUserTimeLimit", ctypes.c_int64), ("PerJobUserTimeLimit", ctypes.c_int64),
-                        ("LimitFlags", wintypes.DWORD), ("MinimumWorkingSetSize", ctypes.c_size_t),
-                        ("MaximumWorkingSetSize", ctypes.c_size_t), ("ActiveProcessLimit", wintypes.DWORD),
-                        ("Affinity", ctypes.c_size_t), ("PriorityClass", wintypes.DWORD),
-                        ("SchedulingClass", wintypes.DWORD)]
-
-        class Extended(ctypes.Structure):
-            _fields_ = [("BasicLimitInformation", Basic), ("IoInfo", IO), ("ProcessMemoryLimit", ctypes.c_size_t),
-                        ("JobMemoryLimit", ctypes.c_size_t), ("PeakProcessMemoryUsed", ctypes.c_size_t),
-                        ("PeakJobMemoryUsed", ctypes.c_size_t)]
-        self.Extended = Extended
-        self.limit = memory_mb * 1024 * 1024
+    def __init__(self, memory_mb=None):
+        ct, k, _, Extended = _Win.get()
+        self.ct, self.k, self.Extended = ct, k, Extended
         self.h = k.CreateJobObjectW(None, None)
         if not self.h:
-            raise OSError(ctypes.get_last_error(), "CreateJobObject failed")
+            raise OSError(ct.get_last_error(), "CreateJobObject failed")
         info = Extended()
-        info.BasicLimitInformation.LimitFlags = 0x2000 | 0x0100 | 0x0200   # KILL_ON_JOB_CLOSE, PROCESS_, JOB_MEMORY
-        info.ProcessMemoryLimit = self.limit
-        info.JobMemoryLimit = self.limit
-        if not k.SetInformationJobObject(self.h, 9, ctypes.byref(info), ctypes.sizeof(info)):
-            raise OSError(ctypes.get_last_error(), "SetInformationJobObject failed")
+        flags = 0x2000                                    # KILL_ON_JOB_CLOSE
+        if memory_mb is not None:
+            flags |= 0x0100 | 0x0200                      # PROCESS_MEMORY, JOB_MEMORY
+            info.ProcessMemoryLimit = info.JobMemoryLimit = memory_mb * 1024 * 1024
+        info.BasicLimitInformation.LimitFlags = flags
+        if not k.SetInformationJobObject(self.h, 9, ct.byref(info), ct.sizeof(info)):
+            raise OSError(ct.get_last_error(), "SetInformationJobObject failed")
 
-    def assign(self, pid):
-        hp = self.k.OpenProcess(0x0100 | 0x0001, False, pid)      # PROCESS_SET_QUOTA | TERMINATE
-        if not hp:
-            raise OSError(self.ct.get_last_error(), "OpenProcess failed")
-        try:
-            if not self.k.AssignProcessToJobObject(self.h, hp):
-                raise OSError(self.ct.get_last_error(), "AssignProcessToJobObject failed")
-        finally:
-            self.k.CloseHandle(hp)
+    def assign_handle(self, handle):
+        if not self.k.AssignProcessToJobObject(self.h, handle):
+            raise OSError(self.ct.get_last_error(), "AssignProcessToJobObject failed")
 
     def peak(self):
         info = self.Extended()
-        if self.k.QueryInformationJobObject(self.h, 9, self.ct.byref(info), self.ct.sizeof(info), None):
+        if self.h and self.k.QueryInformationJobObject(self.h, 9, self.ct.byref(info), self.ct.sizeof(info), None):
             return max(info.PeakProcessMemoryUsed, info.PeakJobMemoryUsed)
         return 0
 
@@ -269,230 +314,191 @@ class _Job:
             self.h = None
 
 
+_supervisor = None
+_supervisor_lock = threading.Lock()
+
+
+def _ensure_supervisor():
+    """Windows: put this process in a kill-on-close job, once. Every child created afterwards
+    is in that job from creation, so it cannot outlive this process, whatever happens between
+    its creation and its own job. Returns False if Windows refuses (then a child is owned only
+    from the moment it is assigned its own job, while still suspended)."""
+    global _supervisor
+    with _supervisor_lock:
+        if _supervisor is None:
+            try:
+                job = _Job()
+                _, k, _, _ = _Win.get()
+                job.assign_handle(k.GetCurrentProcess())
+                _supervisor = job                         # kept open for this process's lifetime
+            except OSError:
+                _supervisor = False
+        return bool(_supervisor)
+
+
 # ---------------------------------------------------------------- the parent side
 class LimitResult:
     """The request was stopped by a limit: kind 'time' or 'memory'."""
 
-    def __init__(self, kind, message):
-        self.kind, self.message = kind, message
+    def __init__(self, kind, message, notes=()):
+        self.kind, self.message, self.notes = kind, message, list(notes)
 
     def __repr__(self):
         return self.message
 
 
 class CrashResult:
-    """The request has no result: the worker failed to start, died, or the runner failed."""
+    """The request has no result: its process failed to start, died, or the runner failed."""
 
-    def __init__(self, message):
-        self.message = message
+    def __init__(self, message, notes=()):
+        self.message, self.notes = message, list(notes)
 
     def __repr__(self):
         return self.message
 
 
-_start_lock = threading.Lock()
+class _Request:
+    """One running request: the child process and its owners."""
 
+    def __init__(self, memory_mb):
+        self.memory_mb = memory_mb
+        self.popen = self.job = self.guard = None
 
-class Worker:
-    """One contained worker process. call() runs one request and returns its value, a
-    LimitResult or a CrashResult, or re-raises the request's own exception. A worker that hit
-    a limit, died, or came near its memory limit is retired, with everything it started,
-    before the next request."""
-
-    def __init__(self, memory_mb=DEFAULT_MEMORY):
-        self.memory_mb = check_limits(1, memory_mb)[1]
-        self.proc = self.conn = self.job = self.guard = None
-        self.served = 0
-
-    def _start(self):
-        ctx = mp.get_context("spawn")
-        self.conn, child = ctx.Pipe()
-        self.proc = ctx.Process(target=_serve, args=(child, self.memory_mb), daemon=True)
-        # The worker needs only simwaves, never the caller's script. A script run directly
-        # would otherwise be re-run in the worker (spawn imports __main__ from its path).
-        main = sys.modules.get("__main__")
-        hidden = None
-        with _start_lock:
-            if main is not None and getattr(main, "__spec__", None) is None and hasattr(main, "__file__"):
-                hidden = main.__dict__.pop("__file__")
-            try:
-                self.proc.start()
-            finally:
-                if hidden is not None:
-                    main.__file__ = hidden
-        child.close()
-        # ownership first, before the worker's imports (review 15a F4): the job (Windows) or
-        # the guardian (Linux) kills the worker if this process dies at any point from here
+    def launch(self):
+        cmd = [sys.executable, "-m", "simwaves.child"]
+        env = dict(os.environ)
+        env["PYTHONPATH"] = os.pathsep.join([ENGINE_DIR] + ([env["PYTHONPATH"]] if env.get("PYTHONPATH") else []))
+        env["SIMWAVES_PARENT"] = str(os.getpid())
+        pipes = dict(stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         if WINDOWS:
-            self.job = _Job(self.memory_mb)
-            self.job.assign(self.proc.pid)
+            _ensure_supervisor()
+            self.popen = subprocess.Popen(cmd, env=env, creationflags=0x00000004 | 0x08000000,   # SUSPENDED, NO_WINDOW
+                                          **pipes)
+            try:
+                self.job = _Job(self.memory_mb)
+                self.job.assign_handle(int(self.popen._handle))
+                _, _, nt, _ = _Win.get()
+                if nt.NtResumeProcess(int(self.popen._handle)) != 0:
+                    raise OSError("NtResumeProcess failed")
+            except BaseException:
+                self.kill()
+                raise
         else:
-            self.guard = _Guardian(self.proc.pid)
-        if not self.conn.poll(120):                        # imports take a few seconds
-            raise RuntimeError("the worker process did not start within 120 s")
-        msg = self.conn.recv()                             # EOFError if it died while starting
-        if msg[0] != "ready":
-            raise RuntimeError(f"the worker process sent {msg!r} instead of starting")
-        self.served = 0
-
-    def _kill_tree(self):
-        """Kill the worker and everything it started (the pipe stays open)."""
-        if self.proc is None:
-            return
-        if WINDOWS and self.job is not None:
-            self.job.close()
-            self.job = None
-        if not WINDOWS:
-            import signal
+            self.popen = subprocess.Popen(cmd, env=env, start_new_session=True, **pipes)
             try:
-                os.killpg(self.proc.pid, signal.SIGKILL)
-            except (ProcessLookupError, PermissionError):
-                pass
-            try:
-                os.kill(self.proc.pid, signal.SIGKILL)
-            except (ProcessLookupError, PermissionError):
-                pass
-            if self.guard is not None:
-                self.guard.fire()
-                self.guard = None
-        self.proc.join(10)
+                self.guard = _Guardian(self.popen.pid)
+            except BaseException:
+                self.kill()
+                raise
 
     def kill(self):
-        """Kill the worker and everything it started, and close the pipe."""
-        if self.proc is None:
-            if self.guard is not None:
-                self.guard.fire()
-                self.guard = None
-            return
-        self._kill_tree()
-        try:
-            self.conn.close()
-        except OSError:
-            pass
-        self.proc = self.conn = None
-
-    def close(self):
-        if self.proc is not None and self.proc.is_alive():
+        """Kill the child and everything it started; wait for the child."""
+        if self.job is not None:
+            self.job.close()
+            self.job = None
+        if self.popen is not None:
+            if not WINDOWS:
+                import signal
+                try:
+                    os.killpg(self.popen.pid, signal.SIGKILL)
+                except (ProcessLookupError, PermissionError):
+                    pass
             try:
-                self.conn.send(None)
-                self.proc.join(5)
-            except (OSError, BrokenPipeError):
+                self.popen.kill()
+            except OSError:
                 pass
-        self.kill()
-
-    def pid(self):
-        return self.proc.pid if self.proc is not None else None
-
-    def call(self, target, args=(), seconds=DEFAULT_TIME):
-        seconds = check_limits(seconds, self.memory_mb)[0]
-        if self.proc is None or not self.proc.is_alive() or self.served >= RECYCLE_AFTER:
-            if self.proc is not None:
-                self.close()
             try:
-                self._start()
-            except Exception as exc:                       # noqa: BLE001 - a result, not a hang
-                self.kill()
-                return CrashResult(f"the worker process could not start ({type(exc).__name__}: {exc})")
-        self.served += 1
-        # One absolute deadline, owned here, covers sending the request, the evaluation and
-        # receiving the whole reply (review 15a F2). The transfer runs on its own thread, so
-        # a reply that stalls part-way can never hold this one past the hard stop.
-        import time
-        box = {}
-
-        def transfer(conn=self.conn):
-            try:
-                conn.send((target, tuple(args), seconds))
-                box["msg"] = conn.recv()
-            except (EOFError, OSError):
-                box["msg"] = ("died",)
-            except BaseException as exc:                   # noqa: BLE001 - a result, not a hang
-                box["msg"] = ("transport", f"{type(exc).__name__}: {exc}")
-        t0 = time.monotonic()
-        deadline = t0 + seconds
-        io = threading.Thread(target=transfer, name="simwaves-transfer", daemon=True)
-        io.start()
-        io.join(seconds + GRACE)
-        if io.is_alive():                                  # no complete reply by the hard stop
-            self._kill_tree()                              # the broken pipe ends the transfer
-            io.join(10)
-            self.kill()
-            return LimitResult("time", f"RESOURCE LIMIT (time {seconds:g} s)")
-        arrived = time.monotonic()
-        msg = box.get("msg", ("died",))
-        kind = msg[0]
-        if kind == "ok" and arrived > deadline:
-            # the value was complete only after its time: a limit, never a value
-            self.served = RECYCLE_AFTER
-            return LimitResult("time", f"RESOURCE LIMIT (time {seconds:g} s)")
-        if kind == "transport":
-            self.kill()
-            return CrashResult(f"the reply could not be received ({msg[1]})")
-        if kind == "ok":
-            # a worker that came close to its limit is replaced before the next request, so
-            # that one scene's leftovers (SymPy's caches) cannot push the next one over
-            peak = self.job.peak() if (WINDOWS and self.job is not None) else msg[2]
-            if peak >= RECYCLE_AT * self.memory_mb * 1024 * 1024:
-                self.served = RECYCLE_AFTER
-            return msg[1]
-        if kind == "limit":
-            self.kill()                                    # retire it, and anything it started
-            return LimitResult(msg[1], msg[2])
-        if kind == "raise":
-            raise msg[1]
-        if kind == "error":
-            self.kill()
-            return CrashResult(msg[1])
-        # the worker died without answering: over its memory, or a crash
-        peak = self.job.peak() if (WINDOWS and self.job is not None) else 0
-        code = self.proc.exitcode if self.proc is not None else None
-        self.kill()
-        if peak >= 0.9 * self.memory_mb * 1024 * 1024 or code in (-9, 3):
-            return LimitResult("memory", f"RESOURCE LIMIT (memory {self.memory_mb} MB)")
-        return CrashResult(f"the worker process ended unexpectedly (exit code {code})")
+                self.popen.wait(10)
+            except subprocess.TimeoutExpired:
+                pass
+        if self.guard is not None:
+            self.guard.fire()
+            self.guard = None
 
 
-def run_contained(target, args=(), seconds=DEFAULT_TIME, memory_mb=DEFAULT_MEMORY):
-    """Run one request in a fresh contained worker and close it afterwards."""
-    w = Worker(memory_mb)
+def run_request(target, args=(), seconds=None, memory_mb=None):
+    """Run target(*args) in a fresh contained process. Returns its value, a LimitResult or a
+    CrashResult, or re-raises the request's own exception. The deadline starts now, before the
+    process exists. The process and everything it started are gone when this returns."""
+    seconds, memory_mb = resolve_limits(seconds, memory_mb)
+    t0 = time.monotonic()
+    deadline = t0 + seconds
+    req = _Request(memory_mb)
+    notes, box, tail = [], {}, []
     try:
-        return w.call(target, args, seconds)
-    finally:
-        w.close()
+        req.launch()
+    except Exception as exc:                              # noqa: BLE001 - a result, not a hang
+        return CrashResult(f"the request's process could not start ({type(exc).__name__}: {exc})")
 
+    def drain_stderr():                                   # never let a full stderr pipe block the child
+        try:
+            for line in iter(req.popen.stderr.readline, b""):
+                tail.append(line.decode("utf-8", "replace"))
+                del tail[:-40]
+        except (OSError, ValueError):
+            pass
 
-_shared = {}
-_shared_lock = threading.Lock()
-
-
-def _close_shared():
-    for w in list(_shared.values()):
-        w.close()
-    _shared.clear()
-
-
-def shared_worker(memory_mb):
-    """This process's shared contained worker for a memory limit (created on first use)."""
-    with _shared_lock:
-        if not _shared:
-            import atexit
-            atexit.register(_close_shared)
-        return _shared.setdefault(memory_mb, Worker(memory_mb))
+    def transfer():
+        try:
+            left = max(0.001, deadline - time.monotonic())
+            _write_frame(req.popen.stdin, (target, tuple(args), left, memory_mb, seconds))
+            req.popen.stdin.close()
+            while True:
+                frame = _read_frame(req.popen.stdout)
+                if frame[0] == "note":
+                    notes.append(frame[1])
+                    continue
+                box["msg"] = frame
+                return
+        except (EOFError, OSError, ValueError):
+            box["msg"] = ("died",)
+        except BaseException as exc:                      # noqa: BLE001 - a result, not a hang
+            box["msg"] = ("transport", f"{type(exc).__name__}: {exc}")
+    err = threading.Thread(target=drain_stderr, daemon=True)
+    io = threading.Thread(target=transfer, daemon=True)
+    err.start()
+    io.start()
+    io.join(max(0.0, deadline + GRACE - time.monotonic()))
+    if io.is_alive():                                     # no complete reply by the hard stop
+        req.kill()
+        io.join(10)
+        return LimitResult("time", f"RESOURCE LIMIT (time {seconds:g} s)", notes)
+    arrived = time.monotonic()
+    msg = box.get("msg", ("died",))
+    peak = req.job.peak() if req.job is not None else 0
+    try:
+        code = req.popen.wait(5)
+    except subprocess.TimeoutExpired:
+        code = None
+    req.kill()                                            # whatever the outcome: the tree is gone
+    kind = msg[0]
+    if kind == "limit":
+        return LimitResult(msg[1], msg[2], notes)
+    if arrived > deadline:                                # complete only after its time: a limit
+        return LimitResult("time", f"RESOURCE LIMIT (time {seconds:g} s)", notes)
+    if kind == "ok":
+        return msg[1]
+    if kind == "raise":
+        raise msg[1]
+    if kind == "error":
+        return CrashResult(msg[1], notes)
+    if kind == "transport":
+        return CrashResult(f"the reply could not be received ({msg[1]})", notes)
+    if peak >= 0.9 * memory_mb * 1024 * 1024 or code in (3, -9):
+        return LimitResult("memory", f"RESOURCE LIMIT (memory {memory_mb} MB)", notes)
+    return CrashResult(f"the request's process ended unexpectedly (exit code {code})"
+                       + (": " + "".join(tail[-8:]).strip() if tail else ""), notes)
 
 
 def call_bounded(target, args=(), seconds=None, memory_mb=None):
-    """The bounded form of a public entry point. Inside a worker the request is already
-    contained, so the target runs directly (under the worker's budget). Outside, it runs in a
-    shared contained worker of this process (one per memory limit), retired after any limit.
-    A LimitResult or CrashResult is raised as ResourceLimitError or RuntimeError, so that a
-    direct caller cannot mistake it for a value."""
+    """The bounded form of a public entry point. Inside a request's process the target runs
+    directly (already contained). Outside, it runs as its own request. A limit or a crash is
+    raised (ResourceLimitError, RuntimeError), so a direct caller cannot take it for a value."""
     seconds, memory_mb = resolve_limits(seconds, memory_mb)
     if IN_WORKER:
         return _resolve(target)(*args)
     from .errors import ResourceLimitError
-    w = shared_worker(memory_mb)
-    with _shared_lock:
-        r = w.call(target, args, seconds)
+    r = run_request(target, args, seconds, memory_mb)
     if isinstance(r, LimitResult):
         raise ResourceLimitError(r.kind, f"{seconds:g} s" if r.kind == "time" else f"{memory_mb} MB")
     if isinstance(r, CrashResult):
@@ -500,18 +506,16 @@ def call_bounded(target, args=(), seconds=None, memory_mb=None):
     return r
 
 
-def run_many(target, items, jobs, seconds_of, memory_mb=DEFAULT_MEMORY, on_result=None):
-    """Run target(item) for each item on at most `jobs` contained workers at once. seconds_of
-    gives each item's time limit. Every item gets exactly one result: a value, a LimitResult or
-    a CrashResult (a start-up, transport or scheduler failure, or an item never reached).
-    on_result(index, item, result) is called once per item. Returns the results in item order.
-    Every worker is killed at the end, even after Ctrl-C."""
+def run_many(target, items, jobs, seconds, memory_mb=None, on_result=None):
+    """Run target(item) for each item, each as its own request, at most `jobs` at once. Every
+    item gets exactly one result (a value, a LimitResult or a CrashResult). on_result(index,
+    item, result) is called once per item. Returns the results in item order. On Ctrl-C the
+    running requests are stopped and their processes killed."""
     items = list(items)
     results = [None] * len(items)
     reported = [False] * len(items)
     nxt = [0]
     lock = threading.Lock()
-    workers = [Worker(memory_mb) for _ in range(max(1, min(jobs, len(items) or 1)))]
     stop = threading.Event()
 
     def report(i, r):
@@ -522,7 +526,7 @@ def run_many(target, items, jobs, seconds_of, memory_mb=DEFAULT_MEMORY, on_resul
             if on_result is not None:
                 on_result(i, items[i], r)
 
-    def loop(w):
+    def loop():
         while not stop.is_set():
             with lock:
                 if nxt[0] >= len(items):
@@ -530,16 +534,12 @@ def run_many(target, items, jobs, seconds_of, memory_mb=DEFAULT_MEMORY, on_resul
                 i = nxt[0]
                 nxt[0] += 1
             try:
-                r = w.call(target, (items[i],), seconds_of(items[i]))
-            except BaseException as exc:                   # noqa: BLE001 - every item gets a result
-                r = CrashResult(f"the test runner failed on this item ({type(exc).__name__}: {exc})")
-                try:
-                    w.kill()
-                except BaseException:                      # noqa: BLE001
-                    pass
+                r = run_request(target, (items[i],), seconds, memory_mb)
+            except BaseException as exc:                  # noqa: BLE001 - every item gets a result
+                r = CrashResult(f"the runner failed on this item ({type(exc).__name__}: {exc})")
             report(i, r)
 
-    threads = [threading.Thread(target=loop, args=(w,), daemon=True) for w in workers]
+    threads = [threading.Thread(target=loop, daemon=True) for _ in range(max(1, min(jobs, len(items) or 1)))]
     try:
         for t in threads:
             t.start()
@@ -550,9 +550,7 @@ def run_many(target, items, jobs, seconds_of, memory_mb=DEFAULT_MEMORY, on_resul
         stop.set()
         raise
     finally:
-        for w in workers:
-            w.kill()
         for i in range(len(items)):
             if not reported[i]:
-                report(i, CrashResult("never run (the test runner stopped before reaching it)"))
+                report(i, CrashResult("never run (the runner stopped before reaching it)"))
     return results
