@@ -515,12 +515,56 @@ def _evaluate(sc):
                          f"combination the engine cannot handle yet; please report it") from exc
 
 
+_KIND_WORD = {"positive": "positive", "nonneg": "0 or more", "nonzero": "nonzero", "unit": "between -1 and 1"}
+
+
+def _check_observe_conditions(sc, name, conditions, sol):
+    """Each condition recorded while the observe was read (a log argument positive, a
+    denominator nonzero, a wave value at a point inside its profile's domain, ...) must hold
+    with the solved values put in. SymPy may have cancelled the part that needed it
+    (log(-1) - log(-2) -> -log(2)), so the value alone cannot show this. A condition that
+    fails, or cannot be decided, refuses the observable. Conditions on a profile's shape
+    (still in the free coordinates x, t) describe where that function is defined, and are not
+    required of an observable that is the function itself."""
+    from .expr import holds
+    from .scene import X, T
+    for kind, g in conditions:
+        gs = sp.sympify(g).xreplace(sol)
+        if gs.has(X, T):
+            continue
+        h = holds(kind, sp.simplify(gs))
+        if h is True:
+            continue
+        if h is False:
+            raise SceneError(f"observe.{name}: not defined: it needs {sc.show_back(gs)} to be {_KIND_WORD[kind]} "
+                             f"(a log, root, division, power, tan, asin/acos or wave value written in it fails)")
+        raise SceneError(f"observe.{name}: cannot check that it is defined: it needs {sc.show_back(gs)} to be "
+                         f"{_KIND_WORD[kind]} for every allowed value of its symbols")
+
+
+def _check_fact_conditions(sc, sol):
+    """The '!= 0' and asin/acos conditions recorded in the given facts (the '> 0' and '>= 0'
+    ones are inequalities of the solve) must hold on the solution."""
+    from .errors import InconsistentError
+    from .expr import holds
+    for i, text, kind, g in getattr(sc, "fact_conditions", []):
+        gs = sp.simplify(sp.sympify(g).xreplace(sol))
+        h = holds(kind, gs)
+        if h is False:
+            raise InconsistentError(f"given[{i}] {text!r}: the solution makes it undefined ({sc.show_back(gs)} must "
+                                    f"be {_KIND_WORD[kind]})")
+        if h is None:
+            raise UndeterminedError(f"given[{i}] {text!r}: cannot check that the solution keeps it defined "
+                                    f"({sc.show_back(gs)} must be {_KIND_WORD[kind]})")
+
+
 def _evaluate_inner(sc):
     """Solve, verify, evaluate. Bases per result are left in sc.basis, and the
     independent re-check of every fact in sc.verification."""
     from .errors import InconsistentError
     from .scene import harmonic_problem
     sol = solve_given(sc)
+    _check_fact_conditions(sc, sol)
     from .doppler import check_media, check_solution
     check_media(sc, sol)
     check_solution(sc, sol)
@@ -530,7 +574,8 @@ def _evaluate_inner(sc):
     for name, text in (sc.data.get("observe") or {}).items():
         try:
             text, unit = _split_unit(sc, name, text)
-            parsed = sc.expr(text, allow_rel=True, check_dims=True)
+            parsed = sc.expr(text, allow_rel=True, check_dims=True, collect=True)
+            _check_observe_conditions(sc, name, list(getattr(sc, "last_obligations", [])), sol)
             from .scene import Nearest
             if isinstance(parsed, list):
                 if any(sp.sympify(side).has(Nearest) for r in parsed for side in (r.lhs, r.rhs)):

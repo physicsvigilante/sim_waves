@@ -1,12 +1,12 @@
 id: 22/03/bmc_005
-assume: ["Only the local slope at A is known, so the shape is left as an arbitrary profile F.", "JEE convention: tan 53 deg = 4/3 (3-4-5 triangle)."]
+assume: ["Only the local slope at A is known, so the shape is left as an arbitrary profile F.", "JEE convention: tan 53 deg = 4/3 (3-4-5 triangle).", "The wave moves (speed v > 0, toward +x); the ratio |vy|/v is the same toward -x. A signed velocity c could be 0, where the ratio is undefined, so the engine would refuse it."]
 functions: [F]
-symbols: {c: real, xA: real}           # c = signed wave velocity
+symbols: {v: positive, xA: real}       # v = wave speed
 waves:
-  w: {given: "F(x - c*t)", units: {x: m, t: s, y: m}}
+  w: {given: "F(x - v*t)", units: {x: m, t: s, y: m}}
 given:
   - "slope(w, x=xA, t=0) == 4/3"
 observe:
   vy_A: "vy(w, x=xA, t=0)"
-  ratio: "abs(vy(w, x=xA, t=0))/abs(c)"
-expect: {vy_A: "-4*c/3", ratio: "4/3"}
+  ratio: "abs(vy(w, x=xA, t=0))/v"
+expect: {vy_A: "-4*v/3", ratio: "4/3"}

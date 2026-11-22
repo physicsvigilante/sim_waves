@@ -47,31 +47,28 @@ def _facts(sc):
 
 def _relations(sc):
     out = []
+    sc.fact_conditions = []
     for i, (text, _src) in enumerate(_facts(sc)):
-        rels = sc.expr(text, allow_rel=True, check_dims=True)
+        rels = sc.expr(text, allow_rel=True, check_dims=True, collect=True)
+        written = list(getattr(sc, "last_obligations", []))
         if not isinstance(rels, list):
             raise SceneError(f"given[{i}] must be an equation (==) or inequality: {text!r}")
-        from .scene import Nearest, Defined
+        # the conditions the fact's written parts need (a log, root, division, wave value at a
+        # point...), recorded before SymPy could cancel them: the solution must satisfy them.
+        # '> 0' and '>= 0' become inequalities of the solve; '!= 0' and asin/acos ranges are
+        # checked on the solution (run._check_fact_conditions)
+        for kind, g in written:
+            if kind == "positive":
+                out.append((i, f"[defined] {text}: {g} > 0", ">", g, sp.Integer(0)))
+            elif kind == "nonneg":
+                out.append((i, f"[defined] {text}: {g} >= 0", ">=", g, sp.Integer(0)))
+            else:
+                sc.fact_conditions.append((i, text, kind, g))
+        from .scene import Nearest
         for r in rels:
             lhs, rhs = sp.sympify(r.lhs).doit(), sp.sympify(r.rhs).doit()
             if (lhs - rhs).has(Nearest):
                 raise SceneError(f"given[{i}]: nearest() picks an option; use it in observe only")
-            # a wave value whose written profile needs conditions at a symbolic point: the
-            # conditions become inequalities the solution must satisfy; then the plain value
-            for g in (lhs - rhs).atoms(Defined):
-                for c in g.args[1:]:
-                    parts = c.args if isinstance(c, sp.And) else (c,)
-                    for c1 in parts:
-                        if isinstance(c1, sp.Unequality):
-                            raise SceneError(f"given[{i}]: the wave's written profile needs {c1} at a point the "
-                                             f"facts fix later; this cannot be checked inside a fact")
-                        op = {sp.StrictGreaterThan: ">", sp.GreaterThan: ">=", sp.StrictLessThan: "<",
-                              sp.LessThan: "<="}[type(c1)]
-                        out.append((i, f"[defined] {text}: {c1}", op, sp.sympify(c1.lhs), sp.sympify(c1.rhs)))
-            if (lhs - rhs).has(Defined):
-                plain = lambda z: isinstance(z, Defined)
-                lhs = lhs.replace(plain, lambda z: z.args[0])
-                rhs = rhs.replace(plain, lambda z: z.args[0])
             if (lhs - rhs).has(X):
                 raise SceneError(f"given[{i}] has a free x; evaluate at a point with x=...")
             out.append((i, text, r.op, lhs, rhs))

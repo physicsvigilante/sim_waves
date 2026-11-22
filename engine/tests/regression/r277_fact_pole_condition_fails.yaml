@@ -1,0 +1,10 @@
+# m14 review round 14 (K18), negative: (1/d)*d^2 = d holds at d = 0 algebraically, but the wave value 1/d
+# is undefined there; the condition d != 0, checked on the solution, makes the facts inconsistent
+unknowns: {d: real}
+waves:
+  p: {given: "1/(x-t)", units: {x: m, t: s, y: m}}
+given:
+  - "d == 0[m]"
+  - "y(p, x=d, t=0[s]) * d**2 == 0[m**3]"
+observe: {value: "d"}
+expect: {error: rejected, message: "undefined"}

@@ -47,12 +47,73 @@ def _parse(text):
         raise SceneError(f"cannot parse expression: {text!r}") from exc
 
 
-def translate(text, ctx, allow_rel=False, check_dims=False):
+def translate(text, ctx, allow_rel=False, check_dims=False, collect=False):
+    """Translate an expression. While it is read, every log, root, power, division, tan,
+    asin/acos and wave value at a point records the condition it needs (see _note) in a list
+    kept beside the value, so that no SymPy simplification can cancel it. Each reading has
+    its own list; with collect=True it is left in ctx.last_obligations for the caller to
+    check (observe after the solve, facts as constraints)."""
     src, tree = _parse(text)
-    out = _Tr(src, ctx, allow_rel).run(tree.body)
+    sinks = _sinks(ctx)
+    sinks.append([])
+    try:
+        out = _Tr(src, ctx, allow_rel).run(tree.body)
+    finally:
+        got = sinks.pop()
+    if collect:
+        ctx.last_obligations = got
     if check_dims:
         _Dim(src, ctx).node(tree.body)
     return out
+
+
+def _sinks(ctx):
+    s = getattr(ctx, "_obligation_sinks", None)
+    if s is None:
+        s = []
+        try:
+            ctx._obligation_sinks = s
+        except AttributeError:
+            pass
+    return s
+
+
+def _note(ctx, kind, g):
+    """Record that g must be 'positive', 'nonneg', 'nonzero' or in [-1, 1] ('unit') for the
+    expression being read to be real and finite. Conditions that already hold are dropped."""
+    sinks = getattr(ctx, "_obligation_sinks", None)
+    if not sinks:
+        return
+    g = sp.sympify(g)
+    if holds(kind, g) is True:
+        return
+    sinks[-1].append((kind, g))
+
+
+def holds(kind, g):
+    """True, False, or None (undecided) for a condition on g."""
+    g = sp.sympify(g)
+    if kind == "positive":
+        r = g.is_positive
+    elif kind == "nonneg":
+        r = True if (g.is_nonnegative or g == 0) else (False if g.is_negative else None)
+    elif kind == "nonzero":
+        r = False if g.is_zero else g.is_nonzero
+    else:                                          # 'unit': -1 <= g <= 1
+        if g.is_real is False:
+            return False
+        lo, hi = sp.sympify(g + 1).is_nonnegative, sp.sympify(1 - g).is_nonnegative
+        r = True if (lo and hi) else (False if (lo is False or hi is False) else None)
+    if r is None and g.is_number:                  # a number SymPy left unevaluated: decide it
+        try:
+            c = complex(sp.N(g, 30))
+        except (TypeError, ValueError):
+            return None
+        if abs(c.imag) > 1e-20:
+            return False
+        v = c.real
+        r = {"positive": v > 0, "nonneg": v >= 0, "nonzero": v != 0, "unit": -1 <= v <= 1}[kind]
+    return r
 
 
 def dimension_of(text, ctx):
@@ -108,6 +169,12 @@ class _Tr:
                                  "arithmetic; use count(...) on it, or observe it on its own")
             if isinstance(n.op, ast.Pow) and b.is_number and abs(sp.N(b)) > MAX_EXP:
                 raise SceneError(f"exponent too large in {self.src!r}")
+            if isinstance(n.op, ast.Div):
+                _note(self.ctx, "nonzero", b)
+            elif isinstance(n.op, ast.Pow):
+                kb = sp.sympify(b)
+                if not (kb.is_integer and kb.is_nonnegative):
+                    _note(self.ctx, *_power_obligation(kb, a))
             return _BIN[type(n.op)](a, b)
         if isinstance(n, ast.UnaryOp) and isinstance(n.op, (ast.USub, ast.UAdd)):
             v = self.val(n.operand)
@@ -133,22 +200,42 @@ class _Tr:
                 if n.keywords:
                     raise SceneError("nearest() takes no keyword arguments")
                 return self.ctx.call("nearest", self._nearest_in(n.args), {})
-            args = [self.node(a) for a in n.args]
-            kwargs = {k.arg: self.node(k.value) for k in n.keywords}
             if n.func.id == "limit":
                 # positional only, so that the written text of the expression and the point is
                 # always seen (a keyword form would bypass the checks below)
                 if n.keywords or len(n.args) != 3:
                     raise SceneError("limit(): write it as limit(expr, var, value), three arguments in that "
                                      "order, without keywords")
-                # the expression and the point as written, each part on its own, before SymPy's
-                # automatic simplification can cancel anything (log(c) - log(c) -> 0,
-                # y(p, ...) - y(p, ...) -> 0): the symbols they hold, and the conditions each
-                # function, power and division needs near the point
-                syms, obligations = self._limit_scan([n.args[0], n.args[2]])
-                kwargs["_written"] = tuple(syms)
-                kwargs["_obligations"] = tuple(obligations)
-            return self.ctx.call(n.func.id, args, kwargs)
+                # the limit's arguments are read into a list of their own: their conditions
+                # (in the limit variable) are checked near the point by the limit, not by the
+                # enclosing observe; the symbols written, and any arbitrary function, are found
+                # part by part before SymPy's simplification can cancel them
+                sinks = _sinks(self.ctx)
+                sinks.append([])
+                try:
+                    args = [self.node(a) for a in n.args]
+                    syms = self._limit_scan([n.args[0], n.args[2]])
+                finally:
+                    obligations = sinks.pop()
+                return self.ctx.call("limit", args, {"_written": tuple(syms),
+                                                     "_obligations": tuple(obligations)})
+            args = [self.node(a) for a in n.args]
+            kwargs = {k.arg: self.node(k.value) for k in n.keywords}
+            out = self.ctx.call(n.func.id, args, kwargs)
+            name = n.func.id
+            if args and name not in getattr(self.ctx, "functions", {}) and isinstance(args[0], sp.Basic):
+                a0 = sp.sympify(args[0])
+                if name in ("log", "ln"):
+                    _note(self.ctx, "positive", a0)
+                elif name == "sqrt":
+                    _note(self.ctx, "nonneg", a0)
+                elif name in ("asin", "acos"):
+                    _note(self.ctx, "unit", a0)
+                elif name in ("tan", "sec"):
+                    _note(self.ctx, "nonzero", sp.cos(a0))
+                elif name in ("cot", "csc"):
+                    _note(self.ctx, "nonzero", sp.sin(a0))
+            return out
         if isinstance(n, ast.Compare):
             if not (top and self.allow_rel):
                 raise SceneError(f"comparison not allowed here: {self.src!r}")
@@ -162,24 +249,15 @@ class _Tr:
             return rels
         raise SceneError(f"not allowed in expressions: {type(n).__name__} in {self.src!r}")
 
-    def _limit_scan(self, nodes, allow_functions=False):
-        """For limit(): walk the written expression and point, translating each part on its
-        own (so nothing has cancelled yet). Returns (symbols, obligations):
-        - symbols: the free symbols of every name and of every call's value (an observable
-          such as y(p, ...) may hold symbols from its definition);
-        - obligations: (kind, value) pairs the limit must check near the point: 'nonzero' for
-          a denominator or the base of a negative integer power, 'nonneg' for a sqrt argument
-          or the base of a positive fractional power, 'positive' for a log argument or the
-          base of a negative fractional power, 'unit' for an asin/acos argument (in [-1, 1]).
-        A call to an arbitrary function (functions:), or a call whose value holds one, is
-        refused: it is not a number. Unit names inside brackets are units, not names."""
+    def _limit_scan(self, nodes):
+        """For limit(): the free symbols of every name written in the expression and the
+        point, and of every call's value, found part by part (an observable such as y(p, ...)
+        may hold symbols from its definition). A call to an arbitrary function (functions:),
+        or a call whose value holds one, is refused: it is not a number. Unit names inside
+        brackets are units, not names."""
         from sympy.core.function import AppliedUndef
-        syms, obligations = set(), []
+        syms = set()
         funcs = getattr(self.ctx, "functions", {})
-
-        def value(x):
-            v = self.val(x)
-            return sp.sympify(v)
 
         def walk(x):
             if isinstance(x, ast.Subscript):           # value[unit]: the unit is parsed as a unit
@@ -187,27 +265,14 @@ class _Tr:
                 return
             if isinstance(x, ast.Call) and isinstance(x.func, ast.Name):
                 name = x.func.id
-                if name in funcs and not allow_functions:
+                if name in funcs:
                     raise SceneError(f"limit(): {name} is an arbitrary function, not a number; apart from its "
                                      f"variable, everything in a limit must be a number")
-                v = value(x)
-                if v.atoms(AppliedUndef) and not allow_functions:
+                v = sp.sympify(self.val(x))
+                if v.atoms(AppliedUndef):
                     raise SceneError(f"limit(): {name}(...) holds an arbitrary function, which is not a number; "
                                      f"apart from its variable, everything in a limit must be a number")
                 syms.update(v.free_symbols)
-                # the conditions held inside the call's value (a wave given as sqrt(x - t) puts a
-                # root inside y(p, ...)), before it can cancel against another part
-                obligations.extend(_value_obligations(v))
-                if name in ("log", "ln") and x.args:
-                    obligations.append(("positive", value(x.args[0])))
-                elif name == "sqrt" and x.args:
-                    obligations.append(("nonneg", value(x.args[0])))
-                elif name in ("asin", "acos") and x.args:
-                    obligations.append(("unit", value(x.args[0])))
-                elif name in ("tan", "sec") and x.args:
-                    obligations.append(("nonzero", sp.cos(value(x.args[0]))))
-                elif name in ("cot", "csc") and x.args:
-                    obligations.append(("nonzero", sp.sin(value(x.args[0]))))
                 for a in list(x.args) + [k.value for k in x.keywords]:
                     walk(a)
                 return
@@ -219,17 +284,11 @@ class _Tr:
                 if isinstance(v, sp.Basic):
                     syms.update(v.free_symbols)
                 return
-            if isinstance(x, ast.BinOp) and isinstance(x.op, ast.Div):
-                obligations.append(("nonzero", value(x.right)))
-            if isinstance(x, ast.BinOp) and isinstance(x.op, ast.Pow):
-                k = value(x.right)
-                if not (k.is_integer and k.is_nonnegative):
-                    obligations.append(_power_obligation(k, value(x.left)))
             for child in ast.iter_child_nodes(x):
                 walk(child)
         for nd in nodes:
             walk(nd)
-        return syms, obligations
+        return syms
 
     def _nearest_in(self, nodes):
         """nearest(x in u, a, b, ...): x converted to the unit u (checked as for 'observe ...
@@ -270,10 +329,10 @@ def _no_celsius(unit_node, src):
 
 
 def written_obligations(text, ctx):
-    """The conditions a written expression needs to be real and finite, read part by part
-    before SymPy simplifies anything (see _Tr._limit_scan); arbitrary functions allowed."""
-    src, tree = _parse(text)
-    return _Tr(src, ctx, False)._limit_scan([tree.body], allow_functions=True)[1]
+    """The conditions a written expression needs to be real and finite, recorded as it is
+    read (before SymPy simplifies anything)."""
+    translate(text, ctx, collect=True)
+    return list(ctx.last_obligations)
 
 
 def _power_obligation(k, base):
@@ -285,52 +344,6 @@ def _power_obligation(k, base):
     if k.is_positive:
         return ("nonneg", base)
     return ("positive", base)
-
-
-def _value_obligations(v):
-    """The conditions a computed value needs to be real and finite, read from its SymPy
-    tree: a positive base for a fractional or symbolic power, a nonzero base for a negative
-    integer power, a positive log argument, and an asin/acos argument inside (-1, 1)."""
-    out = []
-    for node in sp.preorder_traversal(v):
-        if isinstance(node, sp.Pow):
-            k = node.exp
-            if k.is_integer and k.is_nonnegative:
-                continue
-            out.append(_power_obligation(k, node.base))
-        elif isinstance(node, sp.log):
-            out.append(("positive", node.args[0]))
-        elif isinstance(node, (sp.asin, sp.acos)):
-            out.append(("unit", node.args[0]))
-        elif isinstance(node, (sp.tan, sp.sec)):
-            out.append(("nonzero", sp.cos(node.args[0])))
-        elif isinstance(node, (sp.cot, sp.csc)):
-            out.append(("nonzero", sp.sin(node.args[0])))
-        elif type(node).__name__ == "Defined":           # a wave value with its domain conditions
-            out.extend(_conditions_of(node))
-    return out
-
-
-def _conditions_of(guard):
-    """The (kind, value) conditions carried by a Defined(...) wave value, whatever form SymPy
-    gave the relationals (g > 0 may be stored as -g < 0)."""
-    out = []
-
-    def one(rel):
-        if isinstance(rel, sp.StrictGreaterThan):
-            out.append(("positive", rel.lhs - rel.rhs))
-        elif isinstance(rel, sp.StrictLessThan):
-            out.append(("positive", rel.rhs - rel.lhs))
-        elif isinstance(rel, sp.GreaterThan):
-            out.append(("nonneg", rel.lhs - rel.rhs))
-        elif isinstance(rel, sp.LessThan):
-            out.append(("nonneg", rel.rhs - rel.lhs))
-        elif isinstance(rel, sp.Unequality):
-            out.append(("nonzero", rel.lhs - rel.rhs))
-    for rel in guard.args[1:]:
-        for part in (rel.args if isinstance(rel, sp.And) else (rel,)):
-            one(part)
-    return out
 
 
 def _is_in(node):

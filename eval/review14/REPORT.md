@@ -188,3 +188,32 @@
 - r267: a guarded wave value inside a fact: √d = 2 gives d = 4.
 - r268: a profile's shape is not guarded (run 7 single/10).
 - r251, r256 and r257 now expect "not defined at this point".
+
+## Round 14
+- **Reviewer:** ChatGPT (Astra), posted on PR #14 on 2026-11-22.
+- **Commit reviewed:** `376ed613d29643dbf58919bf7491b21d0687e85e`.
+- **Verdict:** FAIL. K12–K14 are resolved for their cases. Three required findings and one optional.
+- **Reproduction:** all four reproduced as predicted:
+  - K15: d = −1;
+  - K16: 0;
+  - K17: −log 2 and −1;
+  - K18: refused before solving.
+
+**One mechanism replaces the round 13 guard.** Every finding came from a condition carried *inside* a SymPy value, where cancellation could remove it. K17 also showed the problem is not limited to waves or limits.
+- **Recorded beside the value:** while an `observe`, a `given` fact, a `limit` argument or a wave profile is being read, every log, root, division, power, tan/sec/cot/csc, asin/acos and wave value at a point records the condition it needs in a list kept **beside** the value (`expr.py` `translate`, `_note`, `holds`). No simplification can touch that list. Each reading has its own list, so nested readings cannot leak conditions.
+- **Observe:** after the solve, each condition is checked with the solved values; one that fails or cannot be decided refuses the observable (`run.py` `_check_observe_conditions`).
+- **Facts:** "> 0" and "≥ 0" conditions become inequalities of the solve; "≠ 0" and asin/acos conditions are checked on the solution (`solver.py` `_relations`, `run.py` `_check_fact_conditions`).
+- **Limit:** its arguments are read into their own list, whose conditions in the limit variable are checked on each side approached.
+- **Wave values:** a value at a point checks its profile's written conditions there. It refuses at once if one fails, and records it in the list if it cannot be decided yet (`scene.py` `_check_point`). A profile's shape records its conditions in x and t: a limit in x checks them, while an observe of the shape itself does not need them.
+- **Removed:** the round 13 `Defined` guard.
+
+| # | Severity | Finding | Now | Tests |
+|---|---|---|---|---|
+| K15 | silent wrong answer | The guard cancelled inside a fact: `y(p,x=d) - y(p,x=d) + d == -1` solved to d = −1. | The logs' condition d > 0 is a constraint of the solve: inconsistent. With `+ d == 3`, d = 3. An observe at x = −2 is refused. | r269, r270, r271 |
+| K16 | silent wrong answer | The limit of an unguarded shape, `limit(y(p, x=x, t=0), x, 0)`, gave 0. | The shape's x > 0 condition is checked by the limit: refused "from below". The route through `y(p, x=q)` is also refused (r246). | r272 |
+| K17 | silent wrong answer (pre-existing, any observe) | `log(-1) - log(-2)` gave −log 2, and `sqrt(-1)*sqrt(-1)` gave −1. | Refused: the written log and root conditions fail. `log(1) - log(2)` and `sqrt(1)*sqrt(1)` are unchanged. | r273, r274, r275 |
+| K18 (optional) | wrong refusal | A wave pole condition in a fact was refused before solving. | Checked on the solution: d = 2 gives 0.5. If the facts put the point at the pole, they are inconsistent. | r276, r277 |
+
+**Existing tests affected by the round 14 change:**
+- **FORMAT example `14_03_bmc_005`** computed |vy|/|c| with c declared `real`, so c = 0, a wave that does not move, was allowed, and the ratio is undefined there. The book's 4/3 silently assumes c ≠ 0, and the engine now refuses rather than assuming it. The example now uses a positive speed v (toward +x), stating the assumption in `assume`: vy = −4v/3, |vy|/v = 4/3.
+- **r147** (√(−1) > 0) is still refused, now by the written-root condition, with the new message.

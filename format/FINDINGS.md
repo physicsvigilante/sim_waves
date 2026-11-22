@@ -760,6 +760,16 @@ Tests r214–r218.
   a domain condition in a limit). A profile's shape (`y(p, x=x, t=0)`) is a function and is not
   guarded. tan/sec/cot/csc conditions are recorded. Tests r259–r268.
 
+### Milestone 14 review, round 14 (ChatGPT Astra, on PR #14; eval/review14/REPORT.md)
+- **Conditions are now carried beside values, not inside them.** Every log, root, division,
+  power, tan, asin/acos and wave value written in an observe, a fact, a limit or a profile
+  records the condition it needs in a list kept beside the value while it is read, so no
+  cancellation can remove it. Observes check the list after the solve; facts turn it into
+  constraints (or check it on the solution); limits check their own near the point.
+  Fixes: guards cancelling in facts (K15), a limit of a profile's shape (K16), and plain
+  observes such as `log(-1) - log(-2)` (K17, pre-existing); a pole condition in a fact is
+  checked after the solve (K18). The round 13 guard is removed. Tests r269–r277.
+
 **Not fixed (tooling):** on Windows, r84 (peak of a sum of Gaussians) and r93 run for
 minutes, and r96 grows past 4.6 GB of memory; all three do so on the engine before m14
 as well. The wall-clock limit uses SIGALRM, which Windows lacks, so nothing stops a slow

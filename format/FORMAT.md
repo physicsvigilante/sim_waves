@@ -63,6 +63,11 @@ Write YAML booleans only as `true`/`false`; `on`, `yes`, `no` are plain words.
   - `x` and `t` written freely in a formula count as SI numbers, so book formulas such as
     `0.2*sin(2*pi*(6*t - x/60))` are fine.
   - The `x=`, `t=`, `at=` and `r=` arguments must be lengths or times.
+- **Every part as written must be defined (real and finite).** Each log, root, power,
+  division, tan, asin/acos and wave value written in an `observe`, a `given` fact or a
+  limit is checked, even if it cancels: `log(-1) - log(-2)` is refused although SymPy would
+  give -log 2. In an observe, the condition must hold with the solved values (or it is
+  refused); in a fact, the solution must satisfy it.
 - **Units:** m, cm, mm, um (also μm), nm, km, s, ms, us, ns, h, kg, g, N, Pa, kPa, J, mJ, W, mW, kW, Hz, kHz, MHz, GHz, rad, deg, K, degC; km/h is `km/h` or `kmph`.
   - `h` (hour) works inside a compound unit (`36 km/h`, `36[km/h]`) or in brackets
     (`2[h]`). A lone `h` after a value (`3 h`) is not read as hours: it is too often a

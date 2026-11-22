@@ -283,8 +283,8 @@ class Scene:
         except (TypeError, AttributeError, ValueError) as exc:
             raise SceneError(f"{fname}(): bad arguments ({exc})") from exc
 
-    def expr(self, text, allow_rel=False, check_dims=False):
-        return translate(text, self, allow_rel, check_dims)
+    def expr(self, text, allow_rel=False, check_dims=False, collect=False):
+        return translate(text, self, allow_rel, check_dims, collect)
 
     def unit_for_nearest(self, x_text, unit_text):
         """(factor, offset, dimension) for 'nearest(x in unit, ...)', with the same checks as
@@ -1073,46 +1073,26 @@ class _Cancelled(SceneError):
     """The parts of a wave cancel everywhere: amplitude 0, other properties undefined."""
 
 
-class Defined(sp.Function):
-    """A wave value at a point, with the conditions its written profile needs there
-    (relationals: g > 0, g >= 0, g != 0, -1 <= g <= 1). It becomes the value as soon as every
-    condition is true, and is refused as soon as one is false; one still undecided after the
-    solve is refused by resolve_deferred. So a profile such as log(t - x) - log(2(t - x)) is
-    not reported at x > t, where its logs are undefined, even though the complex parts would
-    cancel to a real number."""
-
-    @classmethod
-    def eval(cls, value, *conds):
-        if any(c is sp.false for c in conds):
-            raise SceneError("the wave's written profile is not defined at this point (a log, root, division, "
-                             "tan or asin/acos written in it fails there)")
-        left = [c for c in conds if c is not sp.true]
-        if not left:
-            return value
-        if len(left) < len(conds):
-            return cls(value, *left)
-        return None
+def _check_point(sc, wave, x, t, what):
+    """The conditions of a given wave's written profile (recorded when the scene was read,
+    before simplification) taken at the point (x, t). A condition that fails is refused at
+    once; one that cannot be decided yet (a symbolic point) is recorded beside the value
+    being read (expr._note), for the observe, fact or limit to check. A 'point' that still
+    contains the free coordinates (the profile's shape, y(p, x=x, t=0)) records its
+    conditions too: a limit in x checks them; an observe of a shape does not need them."""
+    from .expr import _note, holds
+    for kind, g in getattr(wave, "domain", ()):
+        gp = sp.sympify(g).xreplace({X: x, T: t})
+        h = holds(kind, gp)
+        if h is False and not (sp.sympify(x).has(X, T) or sp.sympify(t).has(X, T)):
+            raise SceneError(f"{what}(): the wave's written profile is not defined at this point: it needs "
+                             f"{gp} to be {_KIND_WORD[kind]} (a log, root, division, tan or asin/acos written "
+                             f"in it fails there)")
+        if h is not True:
+            _note(sc, kind, gp)
 
 
-def _domain_rel(kind, g):
-    """A written condition as a relational that SymPy decides once g is a number."""
-    if kind == "positive":
-        return sp.StrictGreaterThan(g, 0)
-    if kind == "nonneg":
-        return sp.GreaterThan(g, 0)
-    if kind == "nonzero":
-        return sp.Ne(g, 0)
-    return sp.And(sp.GreaterThan(g, -1), sp.LessThan(g, 1))
-
-
-def _guard(value, rels, x, t):
-    """value, guarded by the profile conditions rels taken at (x, t). A 'point' that still
-    contains the free coordinates (y(w, x=x, t=0) is the shape at t = 0) is a function, not a
-    value at a point: it keeps its own singularities and is not guarded."""
-    if not rels or sp.sympify(x).has(X, T) or sp.sympify(t).has(X, T):
-        return value
-    conds = [sp.sympify(r).xreplace({X: x, T: t}) for r in rels]
-    return Defined(value, *conds)
+_KIND_WORD = {"positive": "positive", "nonneg": "0 or more", "nonzero": "nonzero", "unit": "between -1 and 1"}
 
 
 class GivenWave:
@@ -1148,9 +1128,7 @@ class GivenWave:
         # the conditions the written profile needs (each log, root, division, tan, asin/acos),
         # checked wherever the wave is evaluated at a point, since simplification may have
         # removed them from f (log(x - t) - log(x - t) -> 0) or the complex parts may cancel
-        self.domain = [_domain_rel(k, sp.sympify(g).xreplace({X: X / fac["x"], T: T / fac["t"]}))
-                       for k, g in written]
-        self.domain = [r for r in self.domain if r is not sp.true]
+        self.domain = [(k, sp.sympify(g).xreplace({X: X / fac["x"], T: T / fac["t"]})) for k, g in written]
         self._sin = None
         travelling = True
         if self.medium is not None:
@@ -2066,10 +2044,12 @@ def _point(sc, fname, deriv):
                         raise SceneError(f"{fname}(): x = {xv} m is a corner of the shape at that instant, "
                                          f"where the {'slope' if X in deriv else 'velocity'} is not defined; "
                                          f"ask just beside it")
-            return _guard(d.xreplace({X: x, T: t}).doit(), getattr(wave, "domain", ()), x, t)
+            _check_point(_sc, wave, x, t, fname)
+            return d.xreplace({X: x, T: t}).doit()
+        _check_point(_sc, wave, x, t, fname)
         for var in deriv:
             e = sp.diff(e, var)
-        return _guard(e.xreplace({X: x, T: t}).doit(), getattr(wave, "domain", ()), x, t)
+        return e.xreplace({X: x, T: t}).doit()
     return f
 
 
@@ -2267,7 +2247,6 @@ def _limit(_sc, e, var, value, _written=(), _obligations=()):
     exists (|q|/q at q -> c is wrong at c = 0), and simplification as the text is read can
     erase a symbol together with its domain (log(c) - log(c) -> 0, c*q/(c*q) -> 1). Numbers
     (arbitrary: values) have neither problem."""
-    e = sp.sympify(e).replace(lambda z: isinstance(z, Defined), lambda z: z.args[0])
     bv = None if isinstance(var, sp.Symbol) else _sc.bound_variable(var)
     if any(sp.sympify(x).atoms(AppliedUndef) for x in (e, value)):
         raise SceneError("limit(): the expression or the point contains an arbitrary function, which is not "
@@ -2463,10 +2442,6 @@ def resolve_deferred(v, record=None):
             v = v.xreplace(picks)
         if record is not None:                 # what is left (symbolic): kept for the proof run
             record.extend(tuple(n.args) for n in v.atoms(Nearest) if not any(a.has(Nearest) for a in n.args))
-    if isinstance(v, sp.Basic) and v.has(Defined):
-        left = sorted({str(c) for g in v.atoms(Defined) for c in g.args[1:]})
-        raise UndeterminedError(f"cannot check that the wave's written profile is defined where it is used: it "
-                                f"needs {', '.join(left)}")
     if isinstance(v, Equivalent):
         truth, basis = equivalent(*v.args)
         if truth is None:
