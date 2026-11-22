@@ -1,0 +1,7 @@
+# m14 review round 16 (R1), control: at x - t = 1 both parts are defined: 0 + exp(-1)
+waves:
+  cut: {given: "log(x-t) - log(x-t)", units: {x: m, t: s, y: m}}
+  smooth: {given: "exp(-(x-t)**2)", units: {x: m, t: s, y: m}}
+  total: {sum: [cut, smooth]}
+observe: {ok: "y(total, x=1[m], t=0[s])"}
+expect: {ok: "exp(-1)"}

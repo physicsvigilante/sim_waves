@@ -778,6 +778,11 @@ Tests r214–r218.
   gives d = 1), and a symbolic integer exponent no longer needs a positive base ((-2)**n with n = 2
   is 4). Tests r278–r287.
 
+### Milestone 14 review, round 16 (ChatGPT Astra, on PR #14; eval/review14/REPORT.md)
+- **Sum waves, shaped pulses (and their reflected and transmitted copies) and arbitrary values now
+  carry or check their written conditions** like given profiles and fields; `0**n` with an integer
+  unknown n is decided once n is known. Tests r288–r296.
+
 **Not fixed (tooling):** on Windows, r84 (peak of a sum of Gaussians) and r93 run for
 minutes, and r96 grows past 4.6 GB of memory; all three do so on the engine before m14
 as well. The wall-clock limit uses SIGALRM, which Windows lacks, so nothing stops a slow

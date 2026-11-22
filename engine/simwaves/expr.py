@@ -93,6 +93,13 @@ def _note(ctx, kind, g):
 def holds(kind, g):
     """True, False, or None (undecided) for a condition on g."""
     g = sp.sympify(g)
+    if kind == "intpow":                           # g = (base, integer exponent)
+        b, k = g
+        if k.is_nonnegative or b.is_nonzero:
+            return True
+        if k.is_negative and b.is_zero:
+            return False
+        return None
     if kind == "positive":
         r = g.is_positive
     elif kind == "nonneg":
@@ -345,7 +352,13 @@ def _power_obligation(k, base):
     otherwise (a negative non-integer or a k that may not be an integer)."""
     k = sp.sympify(k)
     if k.is_integer:
-        return None if k.is_nonnegative else ("nonzero", base)
+        if k.is_nonnegative:
+            return None
+        if k.is_negative:
+            return ("nonzero", base)
+        # an integer exponent of unknown sign (an unknown n): decided once n is known,
+        # 0**n is 0 for n = 2 and undefined for n = -1
+        return ("intpow", sp.Tuple(base, k))
     if k.is_positive:
         return ("nonneg", base)
     return ("positive", base)

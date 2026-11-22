@@ -1,0 +1,6 @@
+# m14 review round 16 (R3): an arbitrary value (2 + log(-1) - log(-2)) m/s: neither real log exists, though
+# the complex parts cancel to 2 - log 2 > 0: refused when read (before: accepted)
+arbitrary:
+  c: "(2 + log(-1) - log(-2)) m/s"
+observe: {invariant: "c/c"}
+expect: {error: rejected, message: "is not defined"}

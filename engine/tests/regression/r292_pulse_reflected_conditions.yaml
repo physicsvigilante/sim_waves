@@ -1,0 +1,11 @@
+# m14 review round 16 (R2): a reflected copy keeps the shape's conditions under the same map. v = sqrt(80/0.0125)
+# = 80 m/s on PQ; the reflected shape is taken at 2*4.8 - (x + 80 t): at x = 4 m, t = 0.2 s that is -10.4, where
+# the written log is undefined: refused
+media:
+  PQ: {type: string, mass: 0.06 kg, length: 4.8 m, tension: 80 N}
+  QR: {type: string, mass: 0.2 kg, length: 2.56 m, tension: 80 N}
+junctions: {Q: {at: 4.8 m, left: PQ, right: QR}}
+waves:
+  p: {pulse: {on: PQ, shape: "exp(-((x - 0.5)/0.05)**2) + log(x) - log(x)", units: {x: m, y: m}, dir: +x}}
+observe: {bad: "y(p_reflected, x=4[m], t=0.2[s])"}
+expect: {error: rejected, message: "not defined at this point"}

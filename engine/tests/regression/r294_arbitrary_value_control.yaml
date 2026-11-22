@@ -1,0 +1,5 @@
+# m14 review round 16 (R3), control: an arbitrary value (2 + log(1)) m/s = 2 m/s is fine; c/c = 1
+arbitrary:
+  c: "(2 + log(1)) m/s"
+observe: {invariant: "c/c"}
+expect: {invariant: 1}

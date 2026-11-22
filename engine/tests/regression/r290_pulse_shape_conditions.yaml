@@ -1,0 +1,9 @@
+# m14 review round 16 (R2): a shaped pulse keeps its written shape's conditions, moved with it (v = 1 m/s):
+# exp(-x^2) + log(x) - log(x) at x - vt = -1 is refused (before: exp(-1)); at t = 1 s, x = 0.5 m, x - vt = -0.5:
+# refused too (r291 has the defined points)
+media:
+  rope: {type: string, mu: "1 kg/m", tension: "1 N"}
+waves:
+  p: {pulse: {on: rope, shape: "exp(-x**2) + log(x) - log(x)", units: {x: m, y: m}, dir: +x}}
+observe: {bad: "y(p, x=0.5[m], t=1[s])"}
+expect: {error: rejected, message: "not defined at this point"}

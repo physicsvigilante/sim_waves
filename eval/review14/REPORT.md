@@ -234,3 +234,20 @@
 | NEW-2 | silent wrong answer (pre-existing) | Scene fields were read without the condition list: `v: "(340 + log(-1) - log(-2)) m/s"` gave 339.3 m/s. | Fields read with units (`Scene.quantity`) record their conditions too. One that fails refuses the field when the scene is read; one involving an unknown is checked after the solve (`scene.py` `_check_field_conditions`, `run.py`). | r281 (refused), r282 (control: 340 m/s) |
 | NEW-3 | wrong refusal (from round 14) | "≠ 0" and asin/acos conditions were checked only after the solver had already reported ambiguity: `d(d-1) + 1/d - 1/d = 0` gave "2 situations". | Each candidate is filtered by those conditions **before** the candidates are counted (`solver.py`); if none survives, the facts are inconsistent. | r283 (d = 1), r284 (asin: d = 0), r285 (all excluded: inconsistent) |
 | NEW-4 | wrong refusal (from round 14) | `(-2)**n` with n an integer unknown required a positive base. | A symbolic integer exponent is treated as an integer: no condition if it is nonnegative, a nonzero base otherwise (`_power_obligation`). | r286 ((−2)² = 4), r287 ((−2)⁻¹ = −1/2) |
+
+## Round 16
+- **Reviewer:** ChatGPT (Astra), posted on PR #14 on 2026-11-22. It was found by the 4-minute check on its third try.
+- **Commit reviewed:** `5387bbdd96bb46f05a5213bb8685d3c675bd9fc3`.
+- **Verdict:** FAIL. NEW-1 to NEW-4 are resolved for their cases. Three high and one medium finding.
+- **Reproduction:** all four reproduced as predicted:
+  - R1: e⁻¹;
+  - R2: e⁻¹;
+  - R3: 1, accepted;
+  - R4: refused.
+
+| # | Severity | Finding | Fix | Tests |
+|---|---|---|---|---|
+| R1 | silent wrong answer | A **sum wave** did not carry its parts' conditions: a part that cancels to 0 (`log(x-t) - log(x-t)`) let the sum be reported at x − t = −1. | A sum's conditions are all its parts' conditions, nested sums included (`scene.py` `SumWave`). | r288 (refused), r289 (x − t = 1: e⁻¹) |
+| R2 | silent wrong answer | A **shaped pulse** read its shape without the condition list. | The shape's written conditions are recorded (in x) and moved along with the shape (x − s·v·t). Reflected and transmitted copies take the parent's conditions under the same map as their shapes (2x_J − x; x_J + (v₁/v₂)(x − x_J)) (`scene.py` `ShapedPulse`, `derived`). | r290 (refused), r291 (x − vt = 1: e⁻¹), r292 (reflected copy at an invalid point: refused) |
+| R3 | silent acceptance | **Arbitrary values** and their range bounds were read without the condition list. | Read with it and checked like fields: a failing condition refuses the value. | r293 (refused), r294 (`(2 + log(1)) m/s`: c/c = 1) |
+| R4 | wrong refusal (from round 15) | `0**n` with n an integer unknown required a nonzero base before n was known. | An integer exponent of unknown sign records a combined condition, "base ≠ 0 or exponent ≥ 0", decided after the solve (`expr.py` kind "intpow", `holds`). | r295 (n = 2: 0), r296 (n = −1: refused) |

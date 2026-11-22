@@ -105,7 +105,8 @@ class Scene:
                 rng = value
                 value = value["value"]
             text, unit, factor, udim = split_quantity(value)
-            v = self.expr(text) * factor
+            v = self.expr(text, collect=True) * factor
+            self._check_field_conditions(f"arbitrary.{name}", value)
             if not v.is_number or not v.is_positive:
                 raise SceneError(f"arbitrary.{name}: give a positive number with its unit, e.g. 10 g/m")
             if rng is not None:
@@ -113,7 +114,8 @@ class Scene:
                 for key in ("above", "below"):
                     if key in rng:
                         bt, bu, bf, bd = split_quantity(rng[key])
-                        b = self.expr(bt) * bf
+                        b = self.expr(bt, collect=True) * bf
+                        self._check_field_conditions(f"arbitrary.{name}.{key}", rng[key])
                         if not b.is_number or b.is_real is not True:
                             raise SceneError(f"arbitrary.{name}.{key}: a real number with a unit (other names "
                                              f"cannot be used in a range)")
@@ -1108,7 +1110,8 @@ def _check_point(sc, wave, x, t, what):
             _note(sc, kind, gp)
 
 
-_KIND_WORD = {"positive": "positive", "nonneg": "0 or more", "nonzero": "nonzero", "unit": "between -1 and 1"}
+_KIND_WORD = {"positive": "positive", "nonneg": "0 or more", "nonzero": "nonzero", "unit": "between -1 and 1",
+              "intpow": "(base, exponent) with a nonzero base or an exponent of 0 or more"}
 
 
 class GivenWave:
@@ -1298,6 +1301,8 @@ class ShapedPulse(GivenWave):
             if udim != d:
                 raise SceneError(f"{w}.units.{var}: wrong dimension")
             fac[var] = factor
+        from .expr import written_obligations
+        written = written_obligations(spec["shape"], sc)     # read before SymPy simplifies anything
         raw = sc.expr(spec["shape"])
         if raw.has(T):
             raise SceneError(f"{w}.shape: the shape is y at t = 0 and must not contain t")
@@ -1311,13 +1316,21 @@ class ShapedPulse(GivenWave):
         self.v = self.medium.speed()
         self.f = self.g.xreplace({X: X - self.sign * self.v * T})
         self.derived_from = None
+        # the shape's written conditions, in x at t = 0, and moved along like the shape
+        self.shape_domain = [(k, sp.sympify(g).xreplace({X: X / fac["x"]})) for k, g in written]
+        self.domain = [(k, g.xreplace({X: X - self.sign * self.v * T})) for k, g in self.shape_domain]
 
     @classmethod
-    def derived(cls, name, medium, g, sign, v, origin, coef=None, parent=None):
+    def derived(cls, name, medium, g, sign, v, origin, coef=None, parent=None, xmap=None):
+        """A reflected or transmitted copy: its shape is coef * parent shape(xmap(x)), so its
+        written conditions are the parent's under the same map, moved along at its speed."""
         p = cls.__new__(cls)
         p.name, p._sin, p.medium, p.g, p.sign, p.v = name, None, medium, g, sign, v
         p.f = g.xreplace({X: X - sign * v * T})
         p.derived_from, p.coef, p.parent = origin, coef, parent
+        src = getattr(parent, "shape_domain", []) if parent is not None else []
+        p.shape_domain = [(k, sp.sympify(c).xreplace({X: xmap})) for k, c in src] if xmap is not None else list(src)
+        p.domain = [(k, c.xreplace({X: X - sign * v * T})) for k, c in p.shape_domain]
         return p
 
     def peak(self):
@@ -1522,13 +1535,13 @@ def _shaped_pulse_derived(sc, wave, J, toward, far, near, r, t):
     v1 = wave.v
     out = [(f"{wave.name}_reflected",
             ShapedPulse.derived(f"{wave.name}_reflected", near, r * wave.g.xreplace({X: 2 * xJ - X}), -s, v1,
-                                (wave.name, J.name), coef=r, parent=wave))]
+                                (wave.name, J.name), coef=r, parent=wave, xmap=2 * xJ - X))]
     if t is not None:
         v2 = far.speed()
         g_t = t * wave.g.xreplace({X: xJ + (v1 / v2) * (X - xJ)})
         out.append((f"{wave.name}_transmitted",
                     ShapedPulse.derived(f"{wave.name}_transmitted", far, g_t, s, v2, (wave.name, J.name),
-                                        coef=t, parent=wave)))
+                                        coef=t, parent=wave, xmap=xJ + (v1 / v2) * (X - xJ))))
     # a derived pulse heading for another junction or end would be reflected again: not modelled
     for dname, d in out:
         nxt = d.medium.extent[1] if d.sign == 1 else d.medium.extent[0]
@@ -1604,6 +1617,9 @@ class SumWave(GivenWave):
                              f"defined where every part exists (sum waves on one medium)")
         self.medium = next(iter(media.values())) if len(media) == 1 else None
         self.f = sp.Add(*[o.field() for o in self.parts])
+        # every part's written conditions hold for the sum: a part that cancels in the sum
+        # (log(x - t) - log(x - t) is 0) is still undefined where its logs are
+        self.domain = [c for o in self.parts for c in getattr(o, "domain", ())]
 
 
 class Junction:
@@ -2329,6 +2345,12 @@ def _limit(_sc, e, var, value, _written=(), _obligations=()):
     for kind, g in _obligations:
         g = sp.sympify(g)
         g_shown = _sc.show_back(g)              # in the declared symbol, not its offset
+        if kind == "intpow":
+            from .expr import holds
+            if holds(kind, g) is True:
+                continue
+            raise SceneError(f"limit(): cannot check that the power {g_shown[0]}**{g_shown[1]} written there is "
+                             f"defined near {shown} -> {value}")
         if kind == "positive" and g.is_positive:
             continue
         if kind == "nonneg" and (g.is_nonnegative or sp.simplify(g) == 0):

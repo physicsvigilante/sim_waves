@@ -515,7 +515,8 @@ def _evaluate(sc):
                          f"combination the engine cannot handle yet; please report it") from exc
 
 
-_KIND_WORD = {"positive": "positive", "nonneg": "0 or more", "nonzero": "nonzero", "unit": "between -1 and 1"}
+_KIND_WORD = {"positive": "positive", "nonneg": "0 or more", "nonzero": "nonzero", "unit": "between -1 and 1",
+              "intpow": "(base, exponent) with a nonzero base or an exponent of 0 or more"}
 
 
 def _check_observe_conditions(sc, name, conditions, sol):
