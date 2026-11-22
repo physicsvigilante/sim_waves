@@ -251,3 +251,20 @@
 | R2 | silent wrong answer | A **shaped pulse** read its shape without the condition list. | The shape's written conditions are recorded (in x) and moved along with the shape (x − s·v·t). Reflected and transmitted copies take the parent's conditions under the same map as their shapes (2x_J − x; x_J + (v₁/v₂)(x − x_J)) (`scene.py` `ShapedPulse`, `derived`). | r290 (refused), r291 (x − vt = 1: e⁻¹), r292 (reflected copy at an invalid point: refused) |
 | R3 | silent acceptance | **Arbitrary values** and their range bounds were read without the condition list. | Read with it and checked like fields: a failing condition refuses the value. | r293 (refused), r294 (`(2 + log(1)) m/s`: c/c = 1) |
 | R4 | wrong refusal (from round 15) | `0**n` with n an integer unknown required a nonzero base before n was known. | An integer exponent of unknown sign records a combined condition, "base ≠ 0 or exponent ≥ 0", decided after the solve (`expr.py` kind "intpow", `holds`). | r295 (n = 2: 0), r296 (n = −1: refused) |
+
+## Round 17
+- **Reviewer:** ChatGPT (Astra), posted on PR #14 on 2026-11-22. It was found by the 4-minute check.
+- **Commit reviewed:** `b841c3f5561339f5fc9f85141a14c4c3d0f49643`.
+- **Verdict:** FAIL. R1 to R4 are resolved for their cases. Three high and one medium finding.
+- **Reproduction:** all four reproduced as predicted:
+  - H1: e⁻¹;
+  - H2: 1;
+  - H3: x = 0;
+  - M1: refused ("needs 0 to be positive"), and the same for `(-2)**q`.
+
+| # | Severity | Finding | Fix | Tests |
+|---|---|---|---|---|
+| H1 | silent wrong answer | `at(field(w), x=…, t=…)` put values into the simplified field without the wave's written conditions. | `field()` records the wave's conditions (in x and t) beside its value. `at()` reads its expression into a list of its own, puts its values into those conditions, refuses one that fails and passes the rest on (`scene.py` `_field`, `_at`; `expr.py`). The same principle for the **range functions**: `max_over`, `min_over`, `mean_over`, `max_in`, `min_in` and `frequency_of` refuse an expression whose conditions in their variable fail anywhere in the range (`expr.py` `_over_range`). | r297 (refused), r298 (nested sum: refused), r299 (x − t = 1: 2e⁻¹), r300 (`max_in` over [−2, 2] m: refused), r301 (over [1, 2] m: 0) |
+| H2 | silent wrong answer | `phase(w, x=…, t=…)` did not check the written profile at the point. | It checks it, like `y` (`_check_point`). | r302 (refused), r303 (x − t = 1: −1) |
+| H3 | silent wrong answer | `peak_position` searched the whole string, not where the shape is defined, and took a supremum it never reaches as the maximum. | Extremum searches (`peak`, `peak_position`, `amplitude` of a shaped pulse) work only where the written profile is defined at that instant (`_defined_set`, from its conditions). An open end of that region, like an end at infinity, is approached, not reached. When |y| comes closer to a larger value toward such an end than anywhere it is reached, there is no largest value, and the observable is refused (`_largest_reached`). On the same principle: an **energy** needs the profile defined over the whole stretch it integrates, a **width** needs the shape defined everywhere, and an **energy density** checks the point. | r304 (refused: no largest value), r305 (Gaussian centred at x = 1 m: at x = 1 m at t = 0, at x = 3 m at t = 2 s, height 1), r306 (energy: refused), r307 (width: refused), r308 (density at x = −1 m: refused) |
+| M1 | wrong refusal | `0**q` with q declared real and solved to 2 required a positive base before q was known; `(-2)**q` likewise. | An exponent that is still a symbol, not known to be an integer, records a combined condition "the power base**exponent is real and finite" (kind `pow`), decided after the solve: a positive base; an integer exponent as for `intpow`; a non-integer exponent needs a base of 0 or more, and a zero base a positive exponent (`expr.py` `_power_obligation`, `holds`). | r309 (q = 2: 0 and 4), r310 (q = −1: refused), r311 ((−2)^(1/2): refused) |

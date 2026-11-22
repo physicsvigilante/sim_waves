@@ -70,7 +70,11 @@ Write YAML booleans only as `true`/`false`; `on`, `yes`, `no` are plain words.
   SymPy would give -log 2. In an observe, the condition must hold with the solved values
   (or it is refused); in a fact, the solution must satisfy it (it can rule out candidates:
   `d*(d-1) + 1/d - 1/d == 0` gives d = 1); a field must satisfy it when read, or after the
-  solve if it involves an unknown.
+  solve if it involves an unknown. A power with an unknown exponent is decided once it is
+  known: `0**q` is 0 for q = 2 and refused for q = -1.
+  - `field(w)` carries the wave's written conditions: `at(field(w), x=..., t=...)` checks them
+    at those values. `max_over`, `min_over`, `mean_over`, `max_in`, `min_in` and
+    `frequency_of` need the expression defined for every value in their range.
 - **Units:** m, cm, mm, um (also μm), nm, km, s, ms, us, ns, h, kg, g, N, Pa, kPa, J, mJ, W, mW, kW, Hz, kHz, MHz, GHz, rad, deg, K, degC; km/h is `km/h` or `kmph`.
   - `h` (hour) works inside a compound unit (`36 km/h`, `36[km/h]`) or in brackets
     (`2[h]`). A lone `h` after a value (`3 h`) is not read as hours: it is too often a
@@ -116,7 +120,8 @@ w: {harmonic: {on: rope, A: 1 cm, f | omega | period, lambda | k, v,
 # 2. given: an explicit y(x,t); units for x, t AND y are required. Each log, root, division,
 #    tan or asin/acos written in the profile is checked wherever the wave is evaluated, even
 #    if it cancels: log(x - t) - log(x - t) is refused at x < t (and is 0 at x > t), a
-#    profile with poles is refused at a pole, and sqrt(x - t) at x < t is refused.
+#    profile with poles is refused at a pole, and sqrt(x - t) at x < t is refused. This
+#    holds for y, vy, ay, slope, phase, energy densities, at(field(w), ...) and sums.
 p: {given: "3/(2 + (x - 4*t)**2)", units: {x: m, t: s, y: m}, on: rope}
 # 3. pulse on a string, launched from the coordinate origin (any origin, e.g. a horizontal rope:
 #    coordinate: {origin: left_end, direction: right, variable: s} and from: left_end, toward: right)
@@ -694,6 +699,10 @@ never `omega(w)`: both are 1/s, so the dimension check cannot catch it.
   - `peak(w, t=...)` is the largest |y| over x at an instant, for any wave with a field.
     For a shaped pulse alone, `amplitude(p)` and `peak(p)` give its height.
     `peak_position(w, t=...)` is where it occurs; a tie is reported as ambiguous.
+  - These look only where the written profile is defined at that instant, and only at a
+    largest |y| that is reached: one only approached (toward where the profile stops being
+    defined, or at infinity) is refused. An energy needs the profile defined over the whole
+    stretch, and `width` needs the shape defined everywhere.
   - At a corner of a shape, `vy` and `slope` are undefined and refused; ask just beside it.
   - Observables can be nested, e.g.
     `front(p, t=travel_time(rope, start=0[m], end=3[m])/2)`.

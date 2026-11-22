@@ -1,0 +1,8 @@
+# m14 review round 17 (H1): the same through a nested sum, refused at x - t = -1
+waves:
+  cut: {given: "log(x-t) - log(x-t)", units: {x: m, t: s, y: m}}
+  smooth: {given: "exp(-(x-t)**2)", units: {x: m, t: s, y: m}}
+  inner: {sum: [cut, smooth]}
+  total: {sum: [inner, smooth]}
+observe: {bad: "at(field(total), x=-1[m], t=0[s])"}
+expect: {error: rejected, message: "not defined at these values"}

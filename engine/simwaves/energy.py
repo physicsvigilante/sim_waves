@@ -7,7 +7,7 @@ import sympy as sp
 
 from .errors import SceneError, UndeterminedError
 from .scene import (LENGTH, OBS_DIMS, OBSERVABLES, StringMedium, ShapedPulse, T, WAVES, X,
-                    _Budget, _check_wave_x, _obj, _within, dim)
+                    _Budget, _check_point, _check_wave_x, _defined_set, _obj, _within, dim)
 
 D_ENERGY, D_ELEN = dim(2, 1, -2), dim(1, 1, -2)       # J, J/m
 SYMBOLIC_BUDGET = 10                                 # seconds before a numerical integral is used
@@ -98,6 +98,7 @@ def _density(kind):
         if x is None or t is None:
             raise SceneError(f"{fname}(wave, x=..., t=...): give both")
         _check_wave_x(wave, x)
+        _check_point(sc, wave, x, t, fname)
         m, mu, ten = _string_of(wave, fname)
         pwf, vy, sl = _fields(wave, fname)
         xv, tv = sp.sympify(x), sp.sympify(t)
@@ -170,6 +171,11 @@ def _energy(kind):
         elif not order.is_extended_nonnegative:
             raise SceneError(f"{fname}(): cannot tell whether start < end; give start before end")
         what = f"{fname}() of '{wave.name}'"
+        # the written profile must be defined over the whole stretch integrated
+        defined = _defined_set(wave, t0, what)
+        if defined != sp.S.Reals and sp.Interval(lo, hi).is_subset(defined) is not True:
+            raise SceneError(f"{what}: the wave's written profile is not defined over the whole stretch from "
+                             f"x = {lo} to {hi} at that instant (only for x in {defined})")
         _check_continuous(pwf.xreplace({T: t0}), lo, hi, what)
         k = (mu * vy ** 2 / 2).xreplace({T: t0})
         u = (ten * sl ** 2 / 2).xreplace({T: t0})
@@ -223,6 +229,9 @@ def _extreme_in(kind):
 def _width(sc, p):
     """Length of the one stretch of x over which a shaped pulse is non-zero."""
     pulse = _obj(p, (ShapedPulse,), "width")
+    defined = _defined_set(pulse, None, f"width() of '{pulse.name}'", shape=True)
+    if defined != sp.S.Reals:
+        raise SceneError(f"width(): the shape of pulse '{pulse.name}' as written is defined only for x in {defined}")
     try:
         pw = _pw(pulse.g)
         if sp.simplify(pulse.g) == 0:

@@ -1,0 +1,7 @@
+# m14 review round 17 (H3, same principle): the energy density at x = -1 m, t = 0 needs log(-1): refused
+media:
+  rope: {type: string, mu: "1 kg/m", tension: "1 N"}
+waves:
+  p: {pulse: {on: rope, shape: "exp(-(x-1)**2) + log(x) - log(x)", units: {x: m, y: m}, dir: +x}}
+observe: {bad: "energy_density(p, x=-1[m], t=0[s])"}
+expect: {error: rejected, message: "not defined at this point"}

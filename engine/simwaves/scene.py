@@ -1111,7 +1111,90 @@ def _check_point(sc, wave, x, t, what):
 
 
 _KIND_WORD = {"positive": "positive", "nonneg": "0 or more", "nonzero": "nonzero", "unit": "between -1 and 1",
-              "intpow": "(base, exponent) with a nonzero base or an exponent of 0 or more"}
+              "intpow": "(base, exponent) with a nonzero base or an exponent of 0 or more",
+              "pow": "(base, exponent) of a real, finite power"}
+
+
+def _defined_set(wave, t, what, shape=False):
+    """The x where the wave's written profile is defined at the instant t (shape=True: where
+    a shaped pulse's shape is, at t = 0), found from its written conditions; the whole real
+    line for a wave that has none. Refused when it cannot be found."""
+    from .expr import holds
+    conds = getattr(wave, "shape_domain" if shape else "domain", ()) or ()
+    region = sp.S.Reals
+    for kind, g in conds:
+        g = sp.sympify(g) if shape else sp.sympify(g).xreplace({T: sp.sympify(t)})
+        if holds(kind, g) is True:
+            continue
+        if kind in ("intpow", "pow"):
+            b, k = g
+            if not k.is_number:
+                raise SceneError(f"{what}: the wave's written profile has a power {b}**{k} with an exponent that "
+                                 f"is not a number; give numbers")
+            kind, g = ("nonzero", b) if k.is_integer else (("nonneg", b) if k.is_positive else ("positive", b))
+            if holds(kind, g) is True:
+                continue
+        if g.free_symbols - {X}:
+            raise SceneError(f"{what}: where the wave's written profile is defined depends on a symbol "
+                             f"({g} must be {_KIND_WORD[kind]}); give numbers")
+        try:
+            if kind == "positive":
+                part = _within(10, lambda: sp.solveset(g > 0, X, sp.S.Reals))
+            elif kind == "nonneg":
+                part = _within(10, lambda: sp.solveset(g >= 0, X, sp.S.Reals))
+            elif kind == "nonzero":
+                part = sp.S.Reals - _within(10, lambda: sp.solveset(sp.Eq(g, 0), X, sp.S.Reals))
+            else:
+                part = _within(10, lambda: sp.Intersection(sp.solveset(g >= -1, X, sp.S.Reals),
+                                                           sp.solveset(g <= 1, X, sp.S.Reals)))
+        except Exception:
+            part = None
+        if part is None or part.has(sp.ConditionSet) or part.has(sp.ImageSet):
+            raise SceneError(f"{what}: cannot find where the wave's written profile is defined ({g} must be "
+                             f"{_KIND_WORD[kind]})")
+        region = region.intersect(part)
+    return region
+
+
+def _candidates_over(e, var, dom, defined, what):
+    """(place, value) candidates for the extremes of e over dom, kept to where the written
+    profile is defined; a place None is a value only approached (an open end, or infinity)."""
+    region = dom if defined == sp.S.Reals else sp.sympify(defined).intersect(dom)
+    if region is sp.S.EmptySet:
+        raise SceneError(f"{what}: the wave's written profile is not defined anywhere there at that instant")
+    parts = region.args if isinstance(region, sp.Union) else (region,)
+    out = []
+    for part in parts:
+        if isinstance(part, sp.FiniteSet):
+            out += [(q, sp.sympify(e).xreplace({var: q})) for q in part]
+        elif isinstance(part, sp.Interval):
+            out += _extreme_values(e, var, part, points=True)
+        else:
+            raise SceneError(f"{what}: cannot find where the wave's written profile is defined ({part})")
+    return out
+
+
+def _largest_reached(cands, what):
+    """The largest |value| that is reached (at a place), and every place reaching it. Refused
+    when |y| comes closer to a larger value only toward a place it never reaches (an open end
+    where the written profile stops being defined, or infinity): then there is no largest."""
+    def mag(v):
+        v = sp.sympify(v)
+        if v.is_finite is False or v.has(sp.oo, -sp.oo, sp.zoo):
+            return float("inf")
+        return abs(float(sp.N(v)))
+    rows = [(q, v, mag(v)) for q, v in cands if v is not sp.nan]
+    reached = [(q, v, m) for q, v, m in rows if q is not None]
+    if not reached:
+        raise SceneError(f"{what}: no largest value: |y| has no maximum that it reaches")
+    top = max(m for _, _, m in reached)
+    sup = max(m for _, _, m in rows)
+    if sup > top + 1e-9 * max(1.0, top):
+        raise SceneError(f"{what}: no largest value: |y| comes ever closer to "
+                         f"{'an unbounded value' if sup == float('inf') else f'{sup:.6g}'} toward a place it never "
+                         f"reaches (an open end of where the wave is defined, or infinity)")
+    at = [(q, v) for q, v, m in reached if abs(m - top) <= 1e-12 * max(1.0, top)]
+    return top, at
 
 
 class GivenWave:
@@ -1338,7 +1421,8 @@ class ShapedPulse(GivenWave):
             return sp.Abs(self.coef) * self.parent.peak()
         # the pulse's own amplitude: largest |shape| (for a reflected pulse this is |r| times the
         # incident peak, wherever the image happens to be at t = 0)
-        return _peak_of(self.g, X, None, f"pulse '{self.name}'")
+        what = f"pulse '{self.name}'"
+        return _peak_of(self.g, X, None, what, _defined_set(self, None, f"peak() of {what}", shape=True))
 
     def velocity(self):
         return self.sign * self.v
@@ -1387,6 +1471,7 @@ def _extreme_values(e, var, dom, points=False):
                 vals.append(sp.sympify(e).xreplace({var: qq}))
                 where.append(q)
     for end_, side in ((dom.inf, "+"), (dom.sup, "-")):
+        open_end = dom.left_open if side == "+" else dom.right_open
         if end_.is_infinite:
             try:
                 vals.append(sp.limit(pw, var, end_))
@@ -1394,11 +1479,17 @@ def _extreme_values(e, var, dom, points=False):
                 # the far tail of a piecewise shape: its value well beyond every breakpoint
                 far = max([abs(float(sp.N(q))) for q in pts] + [1]) * 10 ** 6
                 vals.append(pw.xreplace({var: far if end_ is sp.oo else -far}))
+            where.append(None)
+        elif open_end:
+            # an open end (where the written profile stops being defined): approached, not reached
+            vals.append(sp.limit(pw, var, end_, dir=side))
+            where.append(None)
         else:
             vals.append(sp.sympify(e).xreplace({var: end_}))
-        where.append(None if end_.is_infinite else end_)
+            where.append(end_)
     if points:
-        return [(w_, v) for w_, v in zip(where, vals) if v.is_finite is not False]
+        # unbounded values are kept: a caller must not take a smaller value as the largest
+        return list(zip(where, vals))
     return [v for v in vals if v.is_finite is not False]
 
 
@@ -1484,26 +1575,28 @@ def _numeric_peak(e, var, dom):
     return _numeric_extremum(e, var, dom)[1]
 
 
-def _peak_of(e, var, extent, what):
-    """Largest |e| over var (on the extent, if given)."""
+def _peak_of(e, var, extent, what, defined=sp.S.Reals):
+    """Largest |e| over var (on the extent, if given, and where the written profile is
+    defined), reached at some place: a value only approached is not a peak."""
     lo, hi = (extent or (None, None))
     dom = sp.Interval(-sp.oo if lo is None else lo, sp.oo if hi is None else hi)
     try:
-        vals = _within(15, lambda: _extreme_values(e, var, dom))
-        nums = [abs(float(sp.N(v))) for v in vals]
+        cands = _within(15, lambda: _candidates_over(e, var, dom, defined, f"peak() of {what}"))
+        _, at = _largest_reached(cands, f"peak() of {what}")
     except _Budget:
         if sp.sympify(e).free_symbols - {var}:
             raise SceneError(f"peak(): the extremes of {what} take too long to find symbolically; give numbers")
+        if defined != sp.S.Reals:
+            raise SceneError(f"peak(): the extremes of {what} take too long to find over where its written "
+                             f"profile is defined")
         return _numeric_peak(e, var, dom)
     except SceneError:
         raise
     except Exception as exc:          # symbolic shapes the candidate search cannot handle
         raise SceneError(f"peak(): cannot find the extremes of {what} ({type(exc).__name__}); give "
                          f"its shape with numbers") from exc
-    if not nums:
-        raise SceneError(f"peak(): no value found for {what}")
-    best = max(range(len(nums)), key=lambda i: nums[i])
-    return sp.Abs(sp.nsimplify(vals[best])) if vals[best].is_number else sp.Abs(vals[best])
+    v = at[0][1]
+    return sp.Abs(sp.nsimplify(v)) if v.is_number else sp.Abs(v)
 
 
 def _shaped_pulse_derived(sc, wave, J, toward, far, near, r, t):
@@ -2090,6 +2183,7 @@ def _phase(_sc, w, x=None, t=None):
     if x is None or t is None:
         raise SceneError("phase(): give both x= and t=")
     _check_wave_x(wave, x)
+    _check_point(_sc, wave, x, t, "phase")
     return wave.phase_expr(x, t)
 
 
@@ -2345,7 +2439,7 @@ def _limit(_sc, e, var, value, _written=(), _obligations=()):
     for kind, g in _obligations:
         g = sp.sympify(g)
         g_shown = _sc.show_back(g)              # in the declared symbol, not its offset
-        if kind == "intpow":
+        if kind in ("intpow", "pow"):
             from .expr import holds
             if holds(kind, g) is True:
                 continue
@@ -2615,8 +2709,19 @@ def _minmax(fn, args):
     return fn(*args)
 
 
-def _at(sc, e, **values):
-    """The value of an expression with some variables set, e.g. at(expr, d=120[m])."""
+def _field(sc, w):
+    """y(x, t) of a wave. Its written conditions (in x and t) are recorded beside it: at()
+    puts its values into them, and a range function (max_over, ...) needs them throughout."""
+    wave = _obj(w, WAVES, "field")
+    _check_point(sc, wave, X, T, "field")
+    return wave.field()
+
+
+def _at(sc, e, _obligations=(), **values):
+    """The value of an expression with some variables set, e.g. at(expr, d=120[m]). The
+    conditions recorded while the expression was read (its logs, roots, divisions, a wave's
+    written profile from field()) are taken with the same values: a failing one is refused,
+    the others are passed on to the enclosing reading."""
     if not values:
         raise SceneError("at(expr, name=value, ...): give at least one variable")
     rep = {}
@@ -2635,6 +2740,16 @@ def _at(sc, e, **values):
         if sym in sc.unknowns:
             raise SceneError(f"at(): '{name}' is an unknown; its value comes from the facts")
         rep[sym] = sp.sympify(val)
+    from .expr import _note, holds
+    for kind, g in _obligations:
+        gs = sp.sympify(g).xreplace(rep)
+        h = holds(kind, gs)
+        if h is False and not gs.free_symbols:
+            raise SceneError(f"at(): the expression is not defined at these values: it needs {gs} to be "
+                             f"{_KIND_WORD[kind]} (a log, root, division, power, tan, asin/acos or wave profile "
+                             f"written in it fails there)")
+        if h is not True:
+            _note(sc, kind, gs)
     if isinstance(e, sp.Tuple):
         return sp.Tuple(*[sp.sympify(i).xreplace(rep) for i in e])
     return sp.sympify(e).xreplace(rep)
@@ -2652,7 +2767,8 @@ def _peak(sc, w, t=None):
     if meds and meds[0] is not None and all(m is meds[0] for m in meds):
         ext = getattr(meds[0], "extent", None)
     e = wave.field().xreplace({T: sp.sympify(t)})
-    return _peak_of(e, X, ext, f"wave '{wave.name}'")
+    what = f"wave '{wave.name}'"
+    return _peak_of(e, X, ext, what, _defined_set(wave, t, f"peak() of {what}"))
 
 
 def _peak_position(sc, w, t=None):
@@ -2665,17 +2781,18 @@ def _peak_position(sc, w, t=None):
     lo, hi = ext or (None, None)
     dom = sp.Interval(-sp.oo if lo is None else lo, sp.oo if hi is None else hi)
     e = wave.field().xreplace({T: sp.sympify(t)})
+    defined = _defined_set(wave, t, "peak_position()")
     try:
-        cands = _within(20, lambda: _extreme_values(e, X, dom, points=True))
+        cands = _within(20, lambda: _candidates_over(e, X, dom, defined, "peak_position()"))
     except _Budget:
         if e.free_symbols - {X}:
             raise SceneError("peak_position(): the extremes take too long to find symbolically; give numbers")
+        if defined != sp.S.Reals:
+            raise SceneError("peak_position(): the extremes take too long to find over where the written "
+                             "profile is defined")
         return _numeric_argmax(e, X, dom)
-    cands = [(q, abs(float(sp.N(v)))) for q, v in cands if q is not None]
-    if not cands:
-        raise SceneError("peak_position(): no maximum found")
-    best = max(v for _, v in cands)
-    at = sorted({q for q, v in cands if abs(v - best) <= 1e-12 * max(1.0, best)}, key=lambda q: float(sp.N(q)))
+    _, reached = _largest_reached(cands, "peak_position()")
+    at = sorted({q for q, _ in reached}, key=lambda q: float(sp.N(q)))
     if len(at) != 1:
         raise AmbiguousError(f"peak_position(): |y| is largest at several places: {at[:6]}")
     return at[0]
@@ -2732,7 +2849,7 @@ OBSERVABLES = {
     "wavelength": _wavelength,
     "k": lambda sc, w, at=None: (_check_wave_x(_obj(w, WAVES, "k"), at) if at is not None else None,
                                  _obj(w, WAVES, "k").wavenumber(at))[1],
-    "field": lambda sc, w: _obj(w, WAVES, "field").field(),
+    "field": lambda sc, w: _field(sc, w),
     "y": _point(None, "y", ()),
     "vy": _point(None, "vy", (T,)),
     "ay": _point(None, "ay", (T, T)),

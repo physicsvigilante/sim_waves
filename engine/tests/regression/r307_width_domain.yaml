@@ -1,0 +1,7 @@
+# m14 review round 17 (H3, same principle): a width needs the shape everywhere: undefined for x <= 0, refused
+media:
+  rope: {type: string, mu: "1 kg/m", tension: "1 N"}
+waves:
+  p: {pulse: {on: rope, shape: "exp(-(x-1)**2) + log(x) - log(x)", units: {x: m, y: m}, dir: +x}}
+observe: {bad: "width(p)"}
+expect: {error: rejected, message: "defined only for x in"}

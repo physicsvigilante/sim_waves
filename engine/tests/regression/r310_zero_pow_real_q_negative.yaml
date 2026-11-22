@@ -1,0 +1,5 @@
+# m14 review round 17 (M1): 0**q with q = -1 is undefined: refused
+unknowns: {q: real}
+given: ["q == -1"]
+observe: {value: "0**q"}
+expect: {error: rejected, message: "not defined"}

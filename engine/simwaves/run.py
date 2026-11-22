@@ -516,7 +516,8 @@ def _evaluate(sc):
 
 
 _KIND_WORD = {"positive": "positive", "nonneg": "0 or more", "nonzero": "nonzero", "unit": "between -1 and 1",
-              "intpow": "(base, exponent) with a nonzero base or an exponent of 0 or more"}
+              "intpow": "(base, exponent) with a nonzero base or an exponent of 0 or more",
+              "pow": "(base, exponent) of a real, finite power"}
 
 
 def _check_observe_conditions(sc, name, conditions, sol):

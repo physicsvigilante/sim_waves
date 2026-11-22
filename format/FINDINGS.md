@@ -783,6 +783,14 @@ Tests r214–r218.
   carry or check their written conditions** like given profiles and fields; `0**n` with an integer
   unknown n is decided once n is known. Tests r288–r296.
 
+### Milestone 14 review, round 17 (ChatGPT Astra, on PR #14; eval/review14/REPORT.md)
+- **Every observable that evaluates a wave now respects where its written profile is defined:**
+  `at(field(w), ...)`, `phase`, energy densities, the range functions (`max_over`, `max_in`, ...),
+  and the extremum searches. `peak`, `peak_position` and a pulse's `amplitude` refuse a largest
+  |y| that is only approached, never reached. An energy over a stretch where the profile is
+  undefined, and the width of such a shape, are refused. `0**q` with q declared real is decided
+  once q is known. Tests r297–r311.
+
 **Not fixed (tooling):** on Windows, r84 (peak of a sum of Gaussians) and r93 run for
 minutes, and r96 grows past 4.6 GB of memory; all three do so on the engine before m14
 as well. The wall-clock limit uses SIGALRM, which Windows lacks, so nothing stops a slow

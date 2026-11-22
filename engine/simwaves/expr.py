@@ -100,6 +100,20 @@ def holds(kind, g):
         if k.is_negative and b.is_zero:
             return False
         return None
+    if kind == "pow":                              # g = (base, exponent of unknown kind): b**k real, finite
+        b, k = g
+        if b.is_positive:
+            return True
+        if k.is_integer:
+            return holds("intpow", g)
+        if k.is_integer is False:                  # a non-integer exponent
+            if b.is_negative:
+                return False
+            if b.is_zero:
+                return True if k.is_positive else (False if k.is_nonpositive else None)
+            if b.is_nonnegative and k.is_positive:
+                return True
+        return None
     if kind == "positive":
         r = g.is_positive
     elif kind == "nonneg":
@@ -226,8 +240,32 @@ class _Tr:
                     obligations = sinks.pop()
                 return self.ctx.call("limit", args, {"_written": tuple(syms),
                                                      "_obligations": tuple(obligations)})
-            args = [self.node(a) for a in n.args]
-            kwargs = {k.arg: self.node(k.value) for k in n.keywords}
+            if n.func.id in _OWN_LIST:
+                # the expression's conditions are read into a list of their own: at() puts its
+                # values into them; max_over/min_over/mean_over/max_in/min_in/frequency_of need
+                # them to hold over the whole range of their variable (see _over_range)
+                if any(k.arg.startswith("_") for k in n.keywords):
+                    raise SceneError(f"{n.func.id}(): a name starting with _ is not allowed")
+                own = _OWN_LIST[n.func.id]
+                sinks = _sinks(self.ctx)
+                args, obligations = [], []
+                for i, a in enumerate(n.args):
+                    if i != own:
+                        args.append(self.node(a))
+                        continue
+                    sinks.append([])
+                    try:
+                        args.append(self.node(a))
+                    finally:
+                        obligations = sinks.pop()
+                kwargs = {k.arg: self.node(k.value) for k in n.keywords}
+                if n.func.id == "at":
+                    kwargs["_obligations"] = tuple(obligations)
+                else:
+                    _over_range(self.ctx, n.func.id, args, obligations)
+            else:
+                args = [self.node(a) for a in n.args]
+                kwargs = {k.arg: self.node(k.value) for k in n.keywords}
             out = self.ctx.call(n.func.id, args, kwargs)
             name = n.func.id
             if isinstance(out, sp.Basic) and not isinstance(out, sp.Tuple):
@@ -361,7 +399,67 @@ def _power_obligation(k, base):
         return ("intpow", sp.Tuple(base, k))
     if k.is_positive:
         return ("nonneg", base)
+    if k.free_symbols:
+        # an exponent still unknown (q, declared real): 0**q is 0 for q = 2 and undefined for
+        # q = -1, (-2)**q is 4 for q = 2 and not real for q = 1/2; decided once q is known
+        return ("pow", sp.Tuple(base, k))
     return ("positive", base)
+
+
+# calls whose expression argument (at this position) keeps its conditions in a list of its own
+_OWN_LIST = {"at": 0, "max_over": 1, "min_over": 1, "mean_over": 1, "max_in": 1, "min_in": 1,
+             "frequency_of": 1}
+_KIND_TEXT = {"positive": "positive", "nonneg": "0 or more", "nonzero": "nonzero", "unit": "between -1 and 1"}
+
+
+def _over_range(ctx, fname, args, obligations):
+    """The conditions of an expression whose maximum, minimum, mean or frequency over a
+    variable is asked: each one in that variable must hold for every value in the range
+    (the whole real line, or [lo, hi]); the expression is not defined otherwise, whatever
+    SymPy's simplified form says (log(x - t) - log(x - t) is not 0 for x < t). The others are
+    passed on to the enclosing reading."""
+    var = sp.sympify(args[0]) if args else None
+    rng = sp.S.Reals
+    if len(args) >= 4:
+        lo, hi = sp.sympify(args[2]), sp.sympify(args[3])
+        rng = sp.Interval(lo, hi) if (lo.is_number and hi.is_number and (lo < hi) is sp.true) else None
+    for kind, g in obligations:
+        g = sp.sympify(g)
+        if not isinstance(var, sp.Symbol) or var not in g.free_symbols:
+            _note(ctx, kind, g)
+            continue
+        if holds(kind, g) is True:
+            continue
+        if kind in ("intpow", "pow"):
+            b, k = g
+            if var in k.free_symbols:
+                raise SceneError(f"{fname}(): cannot check that the power {b}**{k} written there is defined "
+                                 f"for every {var}")
+            kind, g = ("nonzero", b) if (kind == "intpow" or k.is_integer) else ("positive", b)
+        word = _KIND_TEXT[kind]
+        if rng is None:
+            raise SceneError(f"{fname}(): cannot check that {g} is {word} over a symbolic range of {var}; "
+                             f"give numeric limits")
+        try:
+            if kind == "positive":
+                bad = sp.solveset(g <= 0, var, rng)
+            elif kind == "nonneg":
+                bad = sp.solveset(g < 0, var, rng)
+            elif kind == "nonzero":
+                bad = sp.solveset(sp.Eq(g, 0), var, rng)
+            else:
+                bad = sp.Union(sp.solveset(g < -1, var, rng), sp.solveset(g > 1, var, rng))
+        except Exception:
+            bad = None
+        if bad is sp.S.EmptySet:
+            continue
+        if bad is None or bad.has(sp.ConditionSet) or g.free_symbols - {var}:
+            raise SceneError(f"{fname}(): cannot check that the expression is defined for every {var} in the "
+                             f"range: it needs {g} to be {word}")
+        fails = {"positive": "becomes 0 or negative", "nonneg": "becomes negative", "nonzero": "becomes 0",
+                 "unit": "leaves [-1, 1]"}[kind]
+        raise SceneError(f"{fname}(): the expression is not defined for every {var} in the range: it needs "
+                         f"{g} to be {word}, and it {fails} for {var} in {bad}")
 
 
 def _value_conditions(v):
