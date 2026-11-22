@@ -1,0 +1,9 @@
+# m14 review round 12 (K11): signs near the point from the Taylor series of entire functions: 1 - cos(q) =
+# 2 sin(q/2)^2 >= 0, so sqrt(1 - cos q) -> 0; cos(q) tends to 1 from inside [-1, 1], so asin(cos q) -> pi/2 and
+# acos(cos q) -> 0 (round 11 wrongly refused them)
+symbols: {q: real}
+observe:
+  root: "limit(sqrt(1-cos(q)), q, 0)"
+  inverse: "limit(asin(cos(q)), q, 0)"
+  acos_cos: "limit(acos(cos(q)), q, 0)"
+expect: {root: 0, inverse: "pi/2", acos_cos: 0}

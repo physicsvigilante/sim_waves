@@ -162,7 +162,7 @@ class _Tr:
             return rels
         raise SceneError(f"not allowed in expressions: {type(n).__name__} in {self.src!r}")
 
-    def _limit_scan(self, nodes):
+    def _limit_scan(self, nodes, allow_functions=False):
         """For limit(): walk the written expression and point, translating each part on its
         own (so nothing has cancelled yet). Returns (symbols, obligations):
         - symbols: the free symbols of every name and of every call's value (an observable
@@ -187,11 +187,11 @@ class _Tr:
                 return
             if isinstance(x, ast.Call) and isinstance(x.func, ast.Name):
                 name = x.func.id
-                if name in funcs:
+                if name in funcs and not allow_functions:
                     raise SceneError(f"limit(): {name} is an arbitrary function, not a number; apart from its "
                                      f"variable, everything in a limit must be a number")
                 v = value(x)
-                if v.atoms(AppliedUndef):
+                if v.atoms(AppliedUndef) and not allow_functions:
                     raise SceneError(f"limit(): {name}(...) holds an arbitrary function, which is not a number; "
                                      f"apart from its variable, everything in a limit must be a number")
                 syms.update(v.free_symbols)
@@ -263,6 +263,13 @@ def _no_celsius(unit_node, src):
         raise SceneError(f"degC inside unit brackets is ambiguous (a temperature or a temperature "
                          f"difference) in {src!r}: write temperatures in K, e.g. 293.15[K], or a "
                          f"difference as 20[K]; results can still be given 'in degC'")
+
+
+def written_obligations(text, ctx):
+    """The conditions a written expression needs to be real and finite, read part by part
+    before SymPy simplifies anything (see _Tr._limit_scan); arbitrary functions allowed."""
+    src, tree = _parse(text)
+    return _Tr(src, ctx, False)._limit_scan([tree.body], allow_functions=True)[1]
 
 
 def _power_obligation(k, base):

@@ -1,0 +1,7 @@
+# m14 review round 12 (K8): a profile log(x - t) - log(x - t) was simplified to 0 as the scene was read, so
+# y(p, x=-1, t=0) gave 0 although log(-1) is undefined (also before m14). A written condition (here x - t > 0)
+# that cannot be proved everywhere and is simplified away is refused when the scene is read
+waves:
+  p: {given: "log(x-t) - log(x-t)", units: {x: m, t: s, y: m}}
+observe: {direct: "y(p, x=-1[m], t=0[s])"}
+expect: {error: rejected, message: "simplifies that condition away"}

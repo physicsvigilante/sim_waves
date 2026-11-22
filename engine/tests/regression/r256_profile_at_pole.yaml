@@ -1,0 +1,5 @@
+# m14 review round 12 (K8): the same profile at its pole x = sqrt(3) m, t = 0 is infinite: refused
+waves:
+  p: {given: "6/((x - 4.5*t)**2 - 3)", units: {x: m, t: s, y: m}}
+observe: {at_pole: "y(p, x=sqrt(3)[m], t=0[s])"}
+expect: {error: rejected, message: "infinite or undefined"}

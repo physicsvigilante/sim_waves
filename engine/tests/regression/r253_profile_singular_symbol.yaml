@@ -1,0 +1,7 @@
+# m14 review round 12 (K8): a profile with poles is accepted when its condition survives simplification (a
+# JEE "which is a wave?" option such as 6/((x - 4.5t)^2 - 3)); the engine meets the pole where it is used.
+# Away from the poles, at x = t = 0: 6/(0 - 3) = -2
+waves:
+  p: {given: "6/((x - 4.5*t)**2 - 3)", units: {x: m, t: s, y: m}}
+observe: {away: "y(p, x=0[m], t=0[s])"}
+expect: {away: -2}

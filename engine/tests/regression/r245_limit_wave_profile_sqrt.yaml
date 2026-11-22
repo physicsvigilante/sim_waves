@@ -4,4 +4,4 @@ symbols: {q: real}
 waves:
   p: {given: "sqrt(x-t)", units: {x: m, t: s, y: m}}
 observe: {invalid: "limit(q + y(p,x=q,t=0[s]) - y(p,x=q,t=0[s]), q, 0)"}
-expect: {error: rejected, message: "q must be positive near q -> 0 (from below)"}
+expect: {error: rejected, message: "q must be 0 or more near q -> 0 (from below)"}

@@ -564,6 +564,14 @@ def _evaluate_inner(sc):
                     v.has(sp.zoo, sp.oo, -sp.oo, sp.nan, sp.AccumBounds):
                 errors.append((name, SceneError(f"observe.{name} is infinite or undefined ({v})")))
                 continue
+            # every physical result is real: a value with an imaginary part means a root or log
+            # was evaluated outside its domain (sqrt(x - t) at x < t gives I)
+            parts = list(v) if isinstance(v, sp.Tuple) else [v]
+            if any(isinstance(p, sp.Basic) and (p.is_real is False or (p.is_number and abs(complex(sp.N(p, 30)).imag)
+                   > 1e-12 * max(1.0, abs(complex(sp.N(p, 30)))))) for p in parts):
+                errors.append((name, SceneError(f"observe.{name} is not a real value ({v}): a root, log or power "
+                                                f"is evaluated outside the values where it is defined")))
+                continue
         if unit is not None:
             if isinstance(v, sp.logic.boolalg.BooleanAtom):
                 errors.append((name, SceneError(f"observe.{name}: a True/False result has no unit")))

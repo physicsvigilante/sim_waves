@@ -3,4 +3,4 @@
 symbols: {q: real}
 given: ["q < 1"]
 observe: {invalid: "limit(sqrt(q - 1), q, 1)"}
-expect: {error: rejected, message: "q - 1 must be positive near q -> 1 (from below)"}
+expect: {error: rejected, message: "q - 1 must be 0 or more near q -> 1 (from below)"}

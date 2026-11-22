@@ -739,6 +739,18 @@ Tests r214–r218.
   x − t < 0, where `y(p, ...)` should be undefined; the engine before m14 does the same. Candidate
   milestone: keep the conditions of written scene definitions (profiles, fields) through parsing.
 
+### Milestone 14 review, round 12 (ChatGPT Astra, on PR #14; eval/review14/REPORT.md)
+- **K8, closed conservatively (the owner's decision after Astra held it as blocking):** each
+  log, root, division and asin/acos written in a `given` wave profile is read before
+  simplification; a condition that is neither provable everywhere nor still present in the
+  simplified profile (i.e. simplified away, as in log(x - t) - log(x - t)) is refused when the
+  scene is read. A stricter first version refused valid profiles with poles (run 7 single/10,
+  FORMAT example 02_cnt_005) and was narrowed. A non-real result (sqrt(x - t) at x < t) is now
+  refused instead of being reported as I. Keeping the domains of all scene definitions through
+  parsing remains a candidate milestone.
+- **Wrong refusals of non-polynomial limits fixed:** signs near the point now also come from the
+  Taylor series of entire expressions (√(1 − cos q) → 0, asin(cos q) → π/2). Tests r251–r258.
+
 **Not fixed (tooling):** on Windows, r84 (peak of a sum of Gaussians) and r93 run for
 minutes, and r96 grows past 4.6 GB of memory; all three do so on the engine before m14
 as well. The wall-clock limit uses SIGALRM, which Windows lacks, so nothing stops a slow

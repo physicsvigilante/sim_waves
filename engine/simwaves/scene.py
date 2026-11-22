@@ -1073,6 +1073,47 @@ class _Cancelled(SceneError):
     """The parts of a wave cancel everywhere: amplitude 0, other properties undefined."""
 
 
+_PROFILE_NEEDS = {"positive": ("positive", lambda g: g.is_positive),
+                  "nonneg": ("0 or more", lambda g: g.is_nonnegative or sp.simplify(g) == 0),
+                  "nonzero": ("nonzero", lambda g: g.is_nonzero),
+                  "unit": ("between -1 and 1", lambda g: g.is_number and (sp.Abs(g) <= 1) is sp.true)}
+
+
+def _check_profile_defined(sc, text, raw, w):
+    """A given profile must not lose, in SymPy's simplification as it is read, a condition
+    its written form needs: log(x - t) - log(x - t) becomes 0, which would then be reported
+    where log is undefined. Each log, root, power, division and asin/acos written in it
+    (read before simplification) must either hold for every real x and t and every allowed
+    value of its symbols, or still be present in the simplified profile `raw`, where the
+    engine meets it at the point it is used (a pole gives an infinite value, refused).
+    A condition that is neither is refused, so the wave is refused when the scene is read."""
+    from .expr import written_obligations, _value_obligations
+    kept = _value_obligations(raw)
+    for kind, g in written_obligations(text, sc):
+        g = sp.sympify(g)
+        word, holds = _PROFILE_NEEDS[kind]
+        if holds(g) is True or any(_same_condition(kind, g, k2, g2) for k2, g2 in kept):
+            continue
+        raise SceneError(f"{w}.given: the profile needs {g} to be {word}, which cannot be shown for every x and t, "
+                         f"and the written profile simplifies that condition away (e.g. log(x - t) - log(x - t) "
+                         f"becomes 0); write the profile in its simplified form")
+
+
+def _same_condition(kind, g, kind2, g2):
+    """True when condition (kind2, g2) of the simplified profile carries (kind, g) of the
+    written one: the same kind on the same expression, up to a constant factor (positive,
+    except for 'nonzero', where any nonzero factor will do)."""
+    if kind2 != kind:
+        return False
+    try:
+        r = sp.simplify(sp.sympify(g) / sp.sympify(g2))
+    except Exception:                          # noqa: BLE001
+        return False
+    if not r.is_number or r == 0:
+        return False
+    return True if kind == "nonzero" else bool(r.is_positive)
+
+
 class GivenWave:
     """A wave supplied as an explicit y(x, t). Properties are found by analysis."""
 
@@ -1098,6 +1139,7 @@ class GivenWave:
             else:
                 fac[var] = sp.Integer(1)
         raw = sc.expr(spec["given"])
+        _check_profile_defined(sc, spec["given"], sp.sympify(raw), w)
         if raw.free_symbols - set(sc.names.values()):
             raise SceneError(f"{w}: formula uses undeclared symbols")
         self.f = fac["y"] * raw.xreplace({X: X / fac["x"], T: T / fac["t"]})
@@ -2135,15 +2177,29 @@ def _frequency_of(_sc, var, e):
     return w / TWO_PI
 
 
+_ANALYTIC = (sp.sin, sp.cos, sp.exp, sp.sinh, sp.cosh)    # entire functions: Taylor series converge
+
+
 def _poly_sign_near(g, x, a, side):
-    """The sign (+1 or -1) of a polynomial g in x just to one side of a, from its lowest
-    nonzero term c*(x-a)^k: sign(c), times (-1)^k from below. None if g is not a polynomial
-    in x with numeric coefficients, or is identically 0."""
-    if not g.is_polynomial(x):
-        return None
+    """The sign (+1 or -1) of g just to one side of a, from its lowest nonzero term
+    c*(x-a)^k: sign(c), times (-1)^k from below. g is a polynomial in x, or an entire
+    function of x (built from +, *, nonnegative integer powers, sin, cos, exp, sinh, cosh),
+    whose Taylor series at a is then used: near a its sign is that of its lowest nonzero
+    term (1 - cos(q) ~ q^2/2 > 0). None if neither, if a coefficient is not a number, or if
+    no nonzero term is found up to order 12."""
     h = sp.Dummy("h")
+    gh = sp.expand(g.subs(x, a + h))
+    if g.is_polynomial(x):
+        terms = gh
+    elif _entire_in(g, x):
+        try:
+            terms = sp.series(gh, h, 0, 13).removeO()
+        except Exception:                      # noqa: BLE001 - no proof
+            return None
+    else:
+        return None
     try:
-        poly = sp.Poly(sp.expand(g.subs(x, a + h)), h)
+        poly = sp.Poly(sp.expand(terms), h)
     except sp.PolificationFailed:
         return None
     for (k,), c in sorted(poly.terms()):
@@ -2153,6 +2209,22 @@ def _poly_sign_near(g, x, a, side):
             s = 1 if c > 0 else -1
             return s if side == "+" else s * (-1) ** k
     return None
+
+
+def _entire_in(g, x):
+    """True if g is built from +, *, nonnegative integer powers and entire functions of x
+    (sin, cos, exp, sinh, cosh), so that its Taylor series converges everywhere."""
+    for node in sp.preorder_traversal(g):
+        if node.is_Atom or isinstance(node, (sp.Add, sp.Mul)):
+            continue
+        if isinstance(node, sp.Pow) and node.exp.is_integer and node.exp.is_nonnegative:
+            continue
+        if isinstance(node, _ANALYTIC):
+            continue
+        if not node.has(x):
+            continue
+        return False
+    return True
 
 
 def _kind_interval(s):
@@ -2267,8 +2339,10 @@ def _limit(_sc, e, var, value, _written=(), _obligations=()):
             if kind in ("positive", "nonneg") and lv.is_zero and sign_near(g, side) == 1:
                 continue                       # a polynomial that leaves 0 upward on this side
             if kind in ("positive", "nonneg") and lv.is_positive is not True:
-                raise SceneError(f"limit(): {g_shown} must be positive near {shown} -> {value} (from {word}) for the "
-                                 f"logarithm, root or power written there, but it tends to {lv}")
+                need = "positive" if kind == "positive" else "0 or more"
+                what = "logarithm or power" if kind == "positive" else "root or power"
+                raise SceneError(f"limit(): {g_shown} must be {need} near {shown} -> {value} (from {word}) for the "
+                                 f"{what} written there; it tends to {lv}, and its sign there cannot be shown")
             if kind == "unit":
                 if (sp.Abs(lv) < 1) is sp.true:
                     continue
