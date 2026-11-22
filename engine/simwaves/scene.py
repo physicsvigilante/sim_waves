@@ -1147,6 +1147,8 @@ def _defined_set(wave, t, what, shape=False):
             else:
                 part = _within(10, lambda: sp.Intersection(sp.solveset(g >= -1, X, sp.S.Reals),
                                                            sp.solveset(g <= 1, X, sp.S.Reals)))
+        except MemoryError:                  # a memory limit is never swallowed (m15a)
+            raise
         except Exception:
             part = None
         if part is None or part.has(sp.ConditionSet) or part.has(sp.ImageSet):
@@ -1542,12 +1544,16 @@ def _cond_region(c, var, dom, cuts):
             if _plain_set(got):
                 return got
             # an unresolved set (a ConditionSet): decide it below, or refuse
+        except MemoryError:                  # a memory limit is never swallowed (m15a)
+            raise
         except Exception:
             pass
         from sympy.calculus.util import continuous_domain
         for rel in rels:
             try:
                 ok = dom.is_subset(continuous_domain(rel.lhs - rel.rhs, var, dom))
+            except MemoryError:                  # a memory limit is never swallowed (m15a)
+                raise
             except Exception:
                 ok = False
             if ok is not True:
@@ -1670,6 +1676,8 @@ def _extreme_rows(e, var, dom):
                     if c is sp.true or sp.sympify(c).xreplace({var: far}) is sp.true:
                         try:
                             v = sp.limit(piece, var, end_)
+                        except MemoryError:                  # a memory limit is never swallowed (m15a)
+                            raise
                         except Exception:
                             v = None
                         break
@@ -1718,6 +1726,8 @@ def _cmp(a, b):
     try:
         if sp.simplify(d) == 0:
             return 0
+    except MemoryError:                  # a memory limit is never swallowed (m15a)
+        raise
     except Exception:
         pass
     return None
@@ -1765,32 +1775,16 @@ def _best_reached(rows, what, mode="abs"):
     return best[1], ties
 
 
-class _Budget(Exception):
-    pass
+from .budget import Budget as _Budget      # noqa: E402  (energy.py imports it from here)
 
 
 def _within(seconds, fn):
-    """Run fn with a time budget (POSIX); raises _Budget when it runs out. The outer evaluation
-    alarm is restored afterwards with its remaining time."""
-    import signal
-    import time
-    if not hasattr(signal, "SIGALRM"):
-        return fn()
-    remaining = signal.alarm(0)
-    old = signal.getsignal(signal.SIGALRM)
-    t0 = time.time()
-
-    def stop(*_):
-        raise _Budget()
-    signal.signal(signal.SIGALRM, stop)
-    signal.alarm(seconds if not remaining else min(seconds, remaining))
-    try:
-        return fn()
-    finally:
-        signal.alarm(0)
-        signal.signal(signal.SIGALRM, old)
-        if remaining:
-            signal.alarm(max(1, int(remaining - (time.time() - t0))))
+    """Run fn with a time budget; raises _Budget when it runs out. The same on every
+    platform (budget.py): an enclosing budget that runs out first passes through to its own
+    caller, and no `except Exception` inside fn can swallow the time-out. Running out of
+    memory inside fn counts as the budget running out (the caller's fallback is taken)."""
+    from .budget import within
+    return within(seconds, fn, memory=True)
 
 
 def _numeric_extremum(e, var, dom):
@@ -1810,6 +1804,8 @@ def _numeric_extremum(e, var, dom):
         try:
             pts = _within(5, lambda: _extreme_rows(term, var, dom))
             seeds += [float(sp.N(q)) for q, _, _ in pts if q is not None]
+        except MemoryError:                  # a memory limit is never swallowed (m15a)
+            raise
         except Exception:
             continue
     grid = np.linspace(max(lo, -50), min(hi, 50), 20001)
@@ -1864,6 +1860,8 @@ def _peak_of(e, var, extent, what, defined=sp.S.Reals):
         return _numeric_peak(e, var, dom)
     except SceneError:
         raise
+    except MemoryError:                  # a memory limit is never swallowed (m15a)
+        raise
     except Exception as exc:          # symbolic shapes the candidate search cannot handle
         raise SceneError(f"peak(): cannot find the extremes of {what} ({type(exc).__name__}); give "
                          f"its shape with numbers") from exc
@@ -1881,6 +1879,8 @@ def _shaped_pulse_derived(sc, wave, J, toward, far, near, r, t):
         behind = sp.Interval(other, sp.oo) if s == -1 else sp.Interval(-sp.oo, other)
         try:
             back = max(abs(float(sp.N(v))) for v in _extreme_values(wave.g, X, behind))
+        except MemoryError:                  # a memory limit is never swallowed (m15a)
+            raise
         except Exception:
             back = None
         pk0 = float(sp.N(_peak_of(wave.g, X, None, f"pulse '{wave.name}'")))
@@ -1890,6 +1890,8 @@ def _shaped_pulse_derived(sc, wave, J, toward, far, near, r, t):
     try:
         far_max = max(abs(float(sp.N(v))) for v in _extreme_values(wave.g, X, beyond))
         pk = float(sp.N(_peak_of(wave.g, X, None, f"pulse '{wave.name}'")))
+    except MemoryError:                  # a memory limit is never swallowed (m15a)
+        raise
     except Exception:
         raise SceneError(f"pulse '{wave.name}': cannot check that it starts on its own string before junction "
                          f"'{J.name}'; give its shape and the junction position as numbers")
@@ -2579,6 +2581,8 @@ def _poly_sign_near(g, x, a, side):
     elif _entire_in(g, x):
         try:
             terms = sp.series(gh, h, 0, 13).removeO()
+        except MemoryError:                  # a memory limit is never swallowed (m15a)
+            raise
         except Exception:                      # noqa: BLE001 - no proof
             return None
     else:

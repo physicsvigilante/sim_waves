@@ -461,6 +461,8 @@ def _over_range(ctx, fname, args, obligations, kwargs=None):
                 bad = sp.solveset(sp.Eq(g, 0), var, rng)
             else:
                 bad = sp.Union(sp.solveset(g < -1, var, rng), sp.solveset(g > 1, var, rng))
+        except MemoryError:                  # a memory limit is never swallowed (m15a)
+            raise
         except Exception:
             bad = None
         if bad is sp.S.EmptySet:

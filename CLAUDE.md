@@ -89,16 +89,19 @@ Copy each round of Astra's findings, with what was done about each, to
 `eval/reviewNN/REPORT.md`, naming the reviewer and the commit reviewed.
 
 ## Tests
-From `engine/`:
-- `python -m simwaves test tests/regression -j 2`
+The environment is pinned in `engine/requirements.txt` (tests also need
+`requirements-dev.txt`). From `engine/`:
+- `python -m simwaves test tests/regression -j 3`
 - `python -m simwaves test ../format/examples`
 - `python -m simwaves test tests/negative`
 - `python tests/test_export.py`
+- `python tests/test_limits.py` (containment)
 
-On Windows there is no wall-clock limit per scene (it uses SIGALRM), and some scenes are
-slow there (r84, r93), or grow without limit in memory (r96: past 4.6 GB): leave them
-out of the suite run, run r84 and r93 on their own with a time cap, do not run r96 on
-this 8 GB machine, and report all three in the PR.
+Every scene runs in a contained worker process, with 120 s and 2048 MB by default
+(m15a). A scene that passes a limit is reported as LIMIT, never as a physics result.
+With `-j 3` at most three workers run, so at most 6 GB in all on this 8 GB machine.
+Linux CI (`.github/workflows/tests.yml`) runs every suite on each pull request; report
+its result in the PR.
 GitHub from the shell: `gh` (signed in as the repository owner).
 
 ## Content rules

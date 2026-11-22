@@ -795,6 +795,19 @@ solving; relative tolerance), `abs`, `sqrt`, `sin`, `cos`, `tan`, `exp`, `log`, 
 - **Redundant facts:** a fact that contains no unknowns and is identically true (e.g.
   `sin(a)**2 + cos(a)**2 == 1`) is accepted. If it is false, the scene is inconsistent.
   If it can't be decided for all symbol values, the scene is over-specified.
+- **Time and memory limits:** every request (`run`, `test` and `view`) runs in its own
+  worker process.
+  - The default limits are **120 s and 2048 MB per request**; change them with `--time S`
+    and `--memory MB`.
+  - A request that passes a limit is stopped and reported as
+    `RESOURCE LIMIT (time 120 s)` or `RESOURCE LIMIT (memory 2048 MB)` (exit status 3).
+    This says nothing about the physics: it is not an inconsistency, a refusal or an
+    unsupported feature. Simplify the scene or raise the limit.
+  - In a test, a scene's `expect` block may lower its own limits
+    (`limits: {time: 5, memory: 512}`), never raise them, and `error: limit` expects the
+    scene to be stopped.
+  - Some slow symbolic steps have their own shorter budgets and then switch to a stated
+    numerical method or a specific refusal. These work the same on every platform.
 
 ## Views (`python -m simwaves view out.html scene.yaml ...`)
 
@@ -870,7 +883,8 @@ For a comparison, put both setups in one scene (e.g. `s1`, `s2`) and take ratios
 ## Limits (v0)
 
 - Expressions are capped at 2000 characters and exponents at 100.
-- Evaluation has a 120 s time limit on Linux/macOS. Windows has no such limit yet.
+- Every request has a time and a memory limit, 120 s and 2048 MB by default, on every
+  platform (see "How results are reported").
 - `x=`, `at=` positions that are numbers are checked against the string's extent
   (set by junctions). A symbolic `x` (e.g. `y(w, x=x, t=0)`) is not checked: keep it
   inside the string yourself.

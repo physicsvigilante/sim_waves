@@ -1,0 +1,3 @@
+# m15a, control: a request that finishes inside its limit gives its value (1 s of work under a 10 s limit)
+observe: {v: "test_spin(1) + 2"}
+expect: {limits: {time: 10}, v: 2}

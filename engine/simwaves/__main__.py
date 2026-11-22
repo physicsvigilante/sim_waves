@@ -2,6 +2,9 @@
   python -m simwaves run  <scene.yaml>               evaluate one scene
   python -m simwaves test <folder> [-j N]            run every scene's expect block (N in parallel)
   python -m simwaves view <out.html> <scene.yaml>... build a viewer page from scenes
+Options (run, test, view): --time S (default 120 s per request), --memory MB (default 2048).
+Each request runs in a contained worker process; one stopped by a limit is reported as
+RESOURCE LIMIT, which says nothing about the physics.
 """
 import sys
 
@@ -41,24 +44,92 @@ def view(out, files):
     return 0
 
 
-def main(argv):
-    if len(argv) >= 3 and argv[0] == "view":
+def _options(argv):
+    """Pull -j/--jobs, --time and --memory out of argv; returns (rest, options) or None."""
+    opts, rest, i = {}, [], 0
+    names = {"-j": "jobs", "--jobs": "jobs", "--time": "time", "--memory": "memory"}
+    while i < len(argv):
+        a = argv[i]
+        if a in names:
+            if i + 1 >= len(argv) or not argv[i + 1].isdigit() or int(argv[i + 1]) <= 0:
+                return None
+            opts[names[a]] = int(argv[i + 1])
+            i += 2
+            continue
+        rest.append(a)
+        i += 1
+    return rest, opts
+
+
+def _view_text(out, files):
+    """view(), as text and an exit code (what a contained worker runs)."""
+    import contextlib
+    import io
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf):
         try:
-            return view(argv[1], argv[2:])
+            code = view(out, files)
         except SceneError as exc:
             print(f"{type(exc).__name__}: {exc}")
-            return 1
-    jobs = None
-    if len(argv) == 4 and argv[0] == "test" and argv[2] in ("-j", "--jobs") and argv[3].isdigit():
-        jobs, argv = int(argv[3]), argv[:2]
-    if len(argv) != 2 or argv[0] not in ("run", "test"):
+            code = 1
+    return buf.getvalue(), code
+
+
+def _limit_text(result):
+    return (f"{result.message}: the request was stopped before it finished; this says nothing about "
+            f"the physics of the scene. Use --time or --memory to change the limits.")
+
+
+QUALIFIED_SYMPY = "1.12"        # engine/requirements.txt
+
+
+def main(argv):
+    from .contain import DEFAULT_MEMORY, DEFAULT_TIME, CrashResult, LimitResult, run_contained
+    import sympy
+    if sympy.__version__ != QUALIFIED_SYMPY:
+        print(f"warning: SymPy {sympy.__version__} is installed; the engine is qualified on SymPy "
+              f"{QUALIFIED_SYMPY} (engine/requirements.txt). Results may differ.", file=sys.stderr)
+    parsed = _options(argv)
+    if parsed is None:
         print(__doc__)
         return 2
-    if argv[0] == "test":
-        counts = run_dir(argv[1], jobs)
+    argv, opts = parsed
+    seconds, memory = opts.get("time", DEFAULT_TIME), opts.get("memory", DEFAULT_MEMORY)
+    if len(argv) >= 3 and argv[0] == "view":
+        r = run_contained("simwaves.__main__:_view_text", (argv[1], argv[2:]), seconds * len(argv[2:]), memory)
+    elif len(argv) == 2 and argv[0] == "test":
+        counts = run_dir(argv[1], opts.get("jobs"), seconds, memory)
         return 0 if set(counts) <= {"PASS"} else 1
+    elif len(argv) == 2 and argv[0] == "run" and "jobs" not in opts:
+        r = run_contained("simwaves.__main__:_run_text", (argv[1],), seconds, memory)
+    else:
+        print(__doc__)
+        return 2
+    if isinstance(r, LimitResult):
+        print(_limit_text(r))
+        return 3
+    if isinstance(r, CrashResult):
+        print(f"engine crash: {r.message}")
+        return 4
+    text, code = r
+    print(text, end="", flush=True)
+    return code
+
+
+def _run_text(path):
+    """Evaluate one scene and return its printed report and exit code (what a contained
+    worker runs for `python -m simwaves run`)."""
+    import contextlib
+    import io
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf):
+        code = _run_one(path)
+    return buf.getvalue(), code
+
+
+def _run_one(path):
     try:
-        sc = load(argv[1])
+        sc = load(path)
         sol, res = evaluate(sc)
     except SceneError as exc:
         sol_, res_ = getattr(exc, "partial", ({}, {}))
@@ -79,4 +150,5 @@ def main(argv):
     return 1 if errs else 0
 
 
-sys.exit(main(sys.argv[1:]))
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))
