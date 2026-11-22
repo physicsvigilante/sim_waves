@@ -1,0 +1,6 @@
+# m14 review round 18 (S3): a constant field y = 1 m has |y| = 1 m everywhere: peak 1 m (refused in round 17);
+# its position is not one place, so peak_position is ambiguous
+waves:
+  w: {given: "1", units: {x: m, t: s, y: m}}
+observe: {height: "peak(w, t=0[s])"}
+expect: {height: 1}

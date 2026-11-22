@@ -1,0 +1,5 @@
+# m14 review round 18 (S4): q declared positive, solved to 2: (-2)**q = 4 (round 17 required -2 >= 0)
+unknowns: {q: positive}
+given: ["q == 2"]
+observe: {value: "(-2)**q"}
+expect: {value: 4}

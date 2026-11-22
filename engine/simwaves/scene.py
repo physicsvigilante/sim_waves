@@ -1157,8 +1157,8 @@ def _defined_set(wave, t, what, shape=False):
 
 
 def _candidates_over(e, var, dom, defined, what):
-    """(place, value) candidates for the extremes of e over dom, kept to where the written
-    profile is defined; a place None is a value only approached (an open end, or infinity)."""
+    """Rows (place, value, how) for the extremes of e over dom, kept to where the written
+    profile is defined (see _extreme_rows)."""
     region = dom if defined == sp.S.Reals else sp.sympify(defined).intersect(dom)
     if region is sp.S.EmptySet:
         raise SceneError(f"{what}: the wave's written profile is not defined anywhere there at that instant")
@@ -1166,35 +1166,12 @@ def _candidates_over(e, var, dom, defined, what):
     out = []
     for part in parts:
         if isinstance(part, sp.FiniteSet):
-            out += [(q, sp.sympify(e).xreplace({var: q})) for q in part]
+            out += [(q, sp.sympify(e).xreplace({var: q}), "at") for q in part]
         elif isinstance(part, sp.Interval):
-            out += _extreme_values(e, var, part, points=True)
+            out += _extreme_rows(e, var, part)
         else:
             raise SceneError(f"{what}: cannot find where the wave's written profile is defined ({part})")
     return out
-
-
-def _largest_reached(cands, what):
-    """The largest |value| that is reached (at a place), and every place reaching it. Refused
-    when |y| comes closer to a larger value only toward a place it never reaches (an open end
-    where the written profile stops being defined, or infinity): then there is no largest."""
-    def mag(v):
-        v = sp.sympify(v)
-        if v.is_finite is False or v.has(sp.oo, -sp.oo, sp.zoo):
-            return float("inf")
-        return abs(float(sp.N(v)))
-    rows = [(q, v, mag(v)) for q, v in cands if v is not sp.nan]
-    reached = [(q, v, m) for q, v, m in rows if q is not None]
-    if not reached:
-        raise SceneError(f"{what}: no largest value: |y| has no maximum that it reaches")
-    top = max(m for _, _, m in reached)
-    sup = max(m for _, _, m in rows)
-    if sup > top + 1e-9 * max(1.0, top):
-        raise SceneError(f"{what}: no largest value: |y| comes ever closer to "
-                         f"{'an unbounded value' if sup == float('inf') else f'{sup:.6g}'} toward a place it never "
-                         f"reaches (an open end of where the wave is defined, or infinity)")
-    at = [(q, v) for q, v, m in reached if abs(m - top) <= 1e-12 * max(1.0, top)]
-    return top, at
 
 
 class GivenWave:
@@ -1428,69 +1405,202 @@ class ShapedPulse(GivenWave):
         return self.sign * self.v
 
 
-def _extreme_values(e, var, dom, points=False):
-    """Candidate values of e over the interval dom: interval ends (or limits at infinity),
-    breakpoints of piecewise parts (both sides), and interior critical points of each piece.
+def _witness(region):
+    """One point of a nonempty set of reals, or None."""
+    if isinstance(region, sp.Union):
+        for a in region.args:
+            w_ = _witness(a)
+            if w_ is not None:
+                return w_
+        return None
+    if isinstance(region, sp.FiniteSet):
+        return next(iter(region), None)
+    if isinstance(region, sp.Interval):
+        a, b = region.inf, region.sup
+        w_ = (a + b) / 2 if (a.is_finite and b.is_finite) else (a + 1 if a.is_finite else (b - 1 if b.is_finite
+                                                                                            else sp.Integer(0)))
+        return w_ if region.contains(w_) is sp.true else None
+    return None
+
+
+def _side_value(pairs, var, q, side, breaks):
+    """The one-sided limit at q, from the left ('-') or right ('+'), of the piecewise
+    expression given as (piece, condition) pairs: the piece that applies just to that side
+    (probed closer than any other breakpoint), and its limit. (SymPy's limit of the whole
+    Piecewise at its own breakpoint can return the other side's value.)"""
+    others = [abs(b - q) for b in breaks if b != q and b.is_number]
+    delta = min([sp.Integer(1)] + [d / 2 for d in others])
+    probe = q + delta if side == "+" else q - delta
+    for piece, cond in pairs:
+        if cond is sp.true or sp.sympify(cond).xreplace({var: probe}) is sp.true:
+            v = sp.limit(piece, var, q, dir=side)
+            if v.has(sp.Limit):
+                break
+            return v
+    raise SceneError(f"cannot find the value just {'right' if side == '+' else 'left'} of {var} = {q}")
+
+
+def _extreme_rows(e, var, dom):
+    """Candidates for the extremes of e over the interval dom, as rows (place, value, how):
+    - 'at': the value e takes at that place (an interior critical point, a breakpoint of a
+      piecewise part, a closed end of dom);
+    - 'flat': the value of a part that is constant over a whole stretch (place: one point of it);
+    - 'near': a value only approached: a one-sided limit at a breakpoint or at an open end
+      of dom, or the limit at infinity (place None). It may not be reached anywhere.
     Works for shapes built from max/min/abs/step as well as smooth formulas."""
-    pw = sp.piecewise_fold(sp.sympify(e).rewrite(sp.Piecewise))
-    pieces = [a for a, _ in pw.args] if isinstance(pw, sp.Piecewise) else [pw]
-    conds = [c for _, c in pw.args] if isinstance(pw, sp.Piecewise) else []
+    e = sp.sympify(e)
+    pw = sp.piecewise_fold(e.rewrite(sp.Piecewise))
+    pairs = list(pw.args) if isinstance(pw, sp.Piecewise) else [(pw, sp.true)]
     pts = set()
-    for c in conds:
+    for _, c in pairs:
+        if c is sp.true:
+            continue
         for rel in ([c] if isinstance(c, sp.Rel) else list(c.atoms(sp.Rel))):
             roots = sp.solveset(rel.lhs - rel.rhs, var, sp.S.Reals)
             if isinstance(roots, sp.FiniteSet):
                 pts.update(roots)
-    regions = [c for _, c in pw.args] if isinstance(pw, sp.Piecewise) else [sp.true]
+    breaks = set(pts)
+    rows = []
     taken = sp.S.EmptySet                  # Piecewise: a piece applies where no earlier one did
-    for p, c in zip(pieces, regions):
+    for piece, c in pairs:
         try:
             cset = c.as_set() if c is not sp.true else sp.S.Reals
             region = cset.intersect(dom) - taken
             taken = taken.union(cset)
         except Exception:
             region = dom
-        if not p.has(var):
-            continue
         if region is sp.S.EmptySet:
             continue
-        crit = sp.solveset(sp.diff(p, var), var, region)
+        if not piece.has(var):
+            # a constant part: reached all over its stretch (or at its single point)
+            w_ = _witness(region)
+            if w_ is not None:
+                flat = not isinstance(region, sp.FiniteSet) and region.measure != 0
+                rows.append((w_, e.xreplace({var: w_}), "flat" if flat else "at"))
+            continue
+        crit = sp.solveset(sp.diff(piece, var), var, region)
         if crit is sp.S.EmptySet:
             continue
         if not isinstance(crit, sp.FiniteSet):
-            raise SceneError(f"cannot locate the extremes of {p}")
+            raise SceneError(f"cannot locate the extremes of {piece}")
         pts.update(crit)
     if any(not q.is_number for q in pts):
         raise SceneError("the extremes depend on a symbol (a symbolic position or instant); give numbers")
     pts = {q for q in pts if dom.contains(q) is sp.true}
-    vals, where = [], []
-    eps = sp.Rational(1, 10 ** 9)
     for q in pts:
-        for qq in (q, q - eps, q + eps):
-            if dom.contains(qq) is sp.true:
-                vals.append(sp.sympify(e).xreplace({var: qq}))
-                where.append(q)
+        rows.append((q, e.xreplace({var: q}), "at"))       # the value at the place itself
+        if q in breaks:                                   # and what is approached on each side
+            for side, inside in (("-", dom.contains(q - sp.Rational(1, 10 ** 12))),
+                                 ("+", dom.contains(q + sp.Rational(1, 10 ** 12)))):
+                if inside is sp.true:
+                    rows.append((None, _side_value(pairs, var, q, side, breaks), "near"))
     for end_, side in ((dom.inf, "+"), (dom.sup, "-")):
         open_end = dom.left_open if side == "+" else dom.right_open
         if end_.is_infinite:
-            try:
-                vals.append(sp.limit(pw, var, end_))
-            except Exception:
-                # the far tail of a piecewise shape: its value well beyond every breakpoint
-                far = max([abs(float(sp.N(q))) for q in pts] + [1]) * 10 ** 6
-                vals.append(pw.xreplace({var: far if end_ is sp.oo else -far}))
-            where.append(None)
+            far = max([abs(float(sp.N(q))) for q in pts] + [1]) * 10 ** 6
+            far = sp.Integer(int(far)) if end_ is sp.oo else -sp.Integer(int(far))
+            v = None
+            if not isinstance(pw, sp.Piecewise):
+                v = sp.limit(pw, var, end_)
+            else:
+                # the piece that applies beyond every breakpoint, and its limit there
+                for piece, c in pairs:
+                    if c is sp.true or sp.sympify(c).xreplace({var: far}) is sp.true:
+                        try:
+                            v = sp.limit(piece, var, end_)
+                        except Exception:
+                            v = None
+                        break
+            if v is None or v.has(sp.Limit):
+                raise SceneError(f"cannot find the limit of {e} as {var} -> {end_}")
+            rows.append((None, v, "near"))
         elif open_end:
             # an open end (where the written profile stops being defined): approached, not reached
-            vals.append(sp.limit(pw, var, end_, dir=side))
-            where.append(None)
+            rows.append((None, _side_value(pairs, var, end_, side, breaks), "near"))
         else:
-            vals.append(sp.sympify(e).xreplace({var: end_}))
-            where.append(end_)
-    if points:
-        # unbounded values are kept: a caller must not take a smaller value as the largest
-        return list(zip(where, vals))
-    return [v for v in vals if v.is_finite is not False]
+            rows.append((end_, e.xreplace({var: end_}), "at"))
+    return rows
+
+
+def _extreme_values(e, var, dom):
+    """Every candidate value of e over dom (reached or approached), finite ones only."""
+    return [v for _, v, _ in _extreme_rows(e, var, dom) if v.is_finite is not False]
+
+
+def _cmp(a, b):
+    """Sign of a - b, decided exactly (or to 60 digits beyond any doubt); None if it cannot be."""
+    a, b = sp.sympify(a), sp.sympify(b)
+    if a == b:
+        return 0
+    inf_a = a.is_finite is False or a.has(sp.zoo)
+    inf_b = b.is_finite is False or b.has(sp.zoo)
+    if inf_a or inf_b:
+        if a in (sp.oo,) and b not in (sp.oo,):
+            return 1
+        if b in (sp.oo,) and a not in (sp.oo,):
+            return -1
+        return None
+    d = a - b
+    if d.is_zero:
+        return 0
+    if d.is_positive:
+        return 1
+    if d.is_negative:
+        return -1
+    try:
+        v = sp.N(d, 60)
+        if v.is_real and abs(v) > sp.Float("1e-45", 60):
+            return 1 if v > 0 else -1
+    except (TypeError, ValueError):
+        pass
+    try:
+        if sp.simplify(d) == 0:
+            return 0
+    except Exception:
+        pass
+    return None
+
+
+def _best_reached(rows, what, mode="abs"):
+    """The largest |value| (mode 'abs'), largest value ('max') or smallest ('min') that is
+    reached, with the rows reaching it. Refused when a value only approached (toward an open
+    end, a jump, or infinity) is beyond it, or when the ordering cannot be proved exactly: a
+    supremum that is never reached is not a maximum."""
+    key = {"abs": lambda v: sp.Abs(v), "max": lambda v: v, "min": lambda v: -v}[mode]
+    word = {"abs": "|y| has no largest value", "max": "no largest value", "min": "no smallest value"}[mode]
+    rows = [(q, sp.sympify(v), how) for q, v, how in rows if sp.sympify(v) is not sp.nan]
+    reached = [r for r in rows if r[2] != "near"]
+    if not reached:
+        raise SceneError(f"{what}: {word}: it is not reached anywhere")
+    best = reached[0]
+    for r in reached[1:]:
+        c = _cmp(key(r[1]), key(best[1]))
+        if c is None:
+            raise SceneError(f"{what}: cannot compare {r[1]} and {best[1]} exactly")
+        if c > 0:
+            best = r
+    ties = []
+    for r in reached:
+        c = _cmp(key(r[1]), key(best[1]))
+        if c is None:
+            raise SceneError(f"{what}: cannot compare {r[1]} and {best[1]} exactly")
+        if c == 0:
+            ties.append(r)
+    beyond = None
+    for q, v, how in rows:
+        if how != "near":
+            continue
+        c = _cmp(key(v), key(best[1]))
+        if c is None:
+            raise SceneError(f"{what}: cannot prove that the value {v} approached (but maybe never reached) is "
+                             f"not beyond {best[1]}")
+        if c > 0 and (beyond is None or _cmp(key(v), key(beyond)) == 1):
+            beyond = v
+    if beyond is not None:
+        raise SceneError(f"{what}: {word}: it comes ever closer to {beyond} toward a place it never reaches (a "
+                         f"jump, an open end of where the wave is defined, or infinity), beyond every value it "
+                         f"takes (at most {best[1]})")
+    return best[1], ties
 
 
 class _Budget(Exception):
@@ -1536,8 +1646,8 @@ def _numeric_extremum(e, var, dom):
         if not term.has(var):
             continue
         try:
-            pts = _within(5, lambda: _extreme_values(term, var, dom, points=True))
-            seeds += [float(sp.N(q)) for q, _ in pts if q is not None]
+            pts = _within(5, lambda: _extreme_rows(term, var, dom))
+            seeds += [float(sp.N(q)) for q, _, _ in pts if q is not None]
         except Exception:
             continue
     grid = np.linspace(max(lo, -50), min(hi, 50), 20001)
@@ -1582,7 +1692,7 @@ def _peak_of(e, var, extent, what, defined=sp.S.Reals):
     dom = sp.Interval(-sp.oo if lo is None else lo, sp.oo if hi is None else hi)
     try:
         cands = _within(15, lambda: _candidates_over(e, var, dom, defined, f"peak() of {what}"))
-        _, at = _largest_reached(cands, f"peak() of {what}")
+        v, _ = _best_reached(cands, f"peak() of {what}")
     except _Budget:
         if sp.sympify(e).free_symbols - {var}:
             raise SceneError(f"peak(): the extremes of {what} take too long to find symbolically; give numbers")
@@ -1595,8 +1705,7 @@ def _peak_of(e, var, extent, what, defined=sp.S.Reals):
     except Exception as exc:          # symbolic shapes the candidate search cannot handle
         raise SceneError(f"peak(): cannot find the extremes of {what} ({type(exc).__name__}); give "
                          f"its shape with numbers") from exc
-    v = at[0][1]
-    return sp.Abs(sp.nsimplify(v)) if v.is_number else sp.Abs(v)
+    return sp.Abs(sp.nsimplify(v) if v.has(sp.Float) else v)
 
 
 def _shaped_pulse_derived(sc, wave, J, toward, far, near, r, t):
@@ -2791,8 +2900,10 @@ def _peak_position(sc, w, t=None):
             raise SceneError("peak_position(): the extremes take too long to find over where the written "
                              "profile is defined")
         return _numeric_argmax(e, X, dom)
-    _, reached = _largest_reached(cands, "peak_position()")
-    at = sorted({q for q, _ in reached}, key=lambda q: float(sp.N(q)))
+    _, reached = _best_reached(cands, "peak_position()")
+    if any(how == "flat" for _, _, how in reached):
+        raise AmbiguousError("peak_position(): |y| is largest all along a stretch, not at one place")
+    at = sorted({q for q, _, _ in reached}, key=lambda q: float(sp.N(q)))
     if len(at) != 1:
         raise AmbiguousError(f"peak_position(): |y| is largest at several places: {at[:6]}")
     return at[0]

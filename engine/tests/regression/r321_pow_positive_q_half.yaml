@@ -1,0 +1,5 @@
+# m14 review round 18 (S4): q declared positive, solved to 1/2: (-2)**q is not real; refused
+unknowns: {q: positive}
+given: ["2*q == 1"]
+observe: {value: "(-2)**q"}
+expect: {error: rejected, message: "not defined"}

@@ -74,7 +74,8 @@ Write YAML booleans only as `true`/`false`; `on`, `yes`, `no` are plain words.
   known: `0**q` is 0 for q = 2 and refused for q = -1.
   - `field(w)` carries the wave's written conditions: `at(field(w), x=..., t=...)` checks them
     at those values. `max_over`, `min_over`, `mean_over`, `max_in`, `min_in` and
-    `frequency_of` need the expression defined for every value in their range.
+    `frequency_of` need the expression defined for every value in their range. Their
+    variable and expression are positional; only `lo=` and `hi=` may be keywords.
 - **Units:** m, cm, mm, um (also μm), nm, km, s, ms, us, ns, h, kg, g, N, Pa, kPa, J, mJ, W, mW, kW, Hz, kHz, MHz, GHz, rad, deg, K, degC; km/h is `km/h` or `kmph`.
   - `h` (hour) works inside a compound unit (`36 km/h`, `36[km/h]`) or in brackets
     (`2[h]`). A lone `h` after a value (`3 h`) is not read as hours: it is too often a
@@ -700,8 +701,10 @@ never `omega(w)`: both are 1/s, so the dimension check cannot catch it.
     For a shaped pulse alone, `amplitude(p)` and `peak(p)` give its height.
     `peak_position(w, t=...)` is where it occurs; a tie is reported as ambiguous.
   - These look only where the written profile is defined at that instant, and only at a
-    largest |y| that is reached: one only approached (toward where the profile stops being
-    defined, or at infinity) is refused. An energy needs the profile defined over the whole
+    largest |y| that is reached: one only approached (beside a jump, toward where the profile
+    stops being defined, or at infinity) is refused. Values are compared exactly, not to a
+    tolerance. A constant field's peak is its value; its `peak_position` is ambiguous.
+    `max_in` and `min_in` likewise need their extreme value taken somewhere. An energy needs the profile defined over the whole
     stretch, and `width` needs the shape defined everywhere.
   - At a corner of a shape, `vy` and `slope` are undefined and refused; ask just beside it.
   - Observables can be nested, e.g.

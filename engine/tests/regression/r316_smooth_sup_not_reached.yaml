@@ -1,0 +1,10 @@
+# m14 review round 18 (S2): y = 1 - 1e-10 exp(-x**2) at t = 0 is below 1 everywhere and tends to 1 only as
+# |x| -> oo; x = 0 is its minimum. No largest value: refused (before: a 1e-9 tolerance took x = 0)
+media:
+  rope: {type: string, mu: "1 kg/m", tension: "1 N"}
+waves:
+  w: {given: "1 - exp(-(x-t)**2)/10000000000", units: {x: m, t: s, y: m}, on: rope}
+observe:
+  height: "peak(w, t=0[s])"
+  where: "peak_position(w, t=0[s])"
+expect: {error: rejected, message: "no largest value"}

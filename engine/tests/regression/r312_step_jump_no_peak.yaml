@@ -1,0 +1,11 @@
+# m14 review round 18 (S1): exp(x)*(1 - step(x)) is e^x for x < 0 and 0 for x >= 0: |y| approaches 1 as x -> 0-
+# but is 0 at x = 0, so no largest value is reached; refused (before: x = 0 and height 1, while y(p, 0, 0) = 0)
+media:
+  rope: {type: string, mu: "1 kg/m", tension: "1 N"}
+waves:
+  p: {pulse: {on: rope, shape: "exp(x)*(1-step(x))", units: {x: m, y: m}, dir: +x}}
+observe:
+  where: "peak_position(p, t=0[s])"
+  height: "peak(p, t=0[s])"
+  amp: "amplitude(p)"
+expect: {error: rejected, message: "no largest value"}

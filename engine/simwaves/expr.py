@@ -102,7 +102,7 @@ def holds(kind, g):
         return None
     if kind == "pow":                              # g = (base, exponent of unknown kind): b**k real, finite
         b, k = g
-        if b.is_positive:
+        if b.is_positive or (b.is_nonnegative and k.is_positive):
             return True
         if k.is_integer:
             return holds("intpow", g)
@@ -247,6 +247,13 @@ class _Tr:
                 if any(k.arg.startswith("_") for k in n.keywords):
                     raise SceneError(f"{n.func.id}(): a name starting with _ is not allowed")
                 own = _OWN_LIST[n.func.id]
+                if len(n.args) <= own:
+                    raise SceneError(f"{n.func.id}(): give the {'expression' if own == 0 else 'variable and expression'}"
+                                     f" as the first argument{'s' if own else ''}, without keywords")
+                if n.func.id == "at" and any(k.arg == "e" for k in n.keywords):
+                    raise SceneError("at(): give the expression as the first argument, without a keyword")
+                if n.func.id != "at" and any(k.arg not in ("lo", "hi") for k in n.keywords):
+                    raise SceneError(f"{n.func.id}(): only lo= and hi= may be given by keyword")
                 sinks = _sinks(self.ctx)
                 args, obligations = [], []
                 for i, a in enumerate(n.args):
@@ -262,7 +269,7 @@ class _Tr:
                 if n.func.id == "at":
                     kwargs["_obligations"] = tuple(obligations)
                 else:
-                    _over_range(self.ctx, n.func.id, args, obligations)
+                    _over_range(self.ctx, n.func.id, args, obligations, kwargs)
             else:
                 args = [self.node(a) for a in n.args]
                 kwargs = {k.arg: self.node(k.value) for k in n.keywords}
@@ -397,12 +404,13 @@ def _power_obligation(k, base):
         # an integer exponent of unknown sign (an unknown n): decided once n is known,
         # 0**n is 0 for n = 2 and undefined for n = -1
         return ("intpow", sp.Tuple(base, k))
+    if k.free_symbols:
+        # an exponent still unknown (q, declared real or positive): 0**q is 0 for q = 2 and
+        # undefined for q = -1, (-2)**q is 4 for q = 2 and not real for q = 1/2; decided once q
+        # is known
+        return ("pow", sp.Tuple(base, k))
     if k.is_positive:
         return ("nonneg", base)
-    if k.free_symbols:
-        # an exponent still unknown (q, declared real): 0**q is 0 for q = 2 and undefined for
-        # q = -1, (-2)**q is 4 for q = 2 and not real for q = 1/2; decided once q is known
-        return ("pow", sp.Tuple(base, k))
     return ("positive", base)
 
 
@@ -412,17 +420,21 @@ _OWN_LIST = {"at": 0, "max_over": 1, "min_over": 1, "mean_over": 1, "max_in": 1,
 _KIND_TEXT = {"positive": "positive", "nonneg": "0 or more", "nonzero": "nonzero", "unit": "between -1 and 1"}
 
 
-def _over_range(ctx, fname, args, obligations):
+def _over_range(ctx, fname, args, obligations, kwargs=None):
     """The conditions of an expression whose maximum, minimum, mean or frequency over a
     variable is asked: each one in that variable must hold for every value in the range
     (the whole real line, or [lo, hi]); the expression is not defined otherwise, whatever
     SymPy's simplified form says (log(x - t) - log(x - t) is not 0 for x < t). The others are
     passed on to the enclosing reading."""
     var = sp.sympify(args[0]) if args else None
+    kwargs = kwargs or {}
+    lo = args[2] if len(args) > 2 else kwargs.get("lo")
+    hi = args[3] if len(args) > 3 else kwargs.get("hi")
     rng = sp.S.Reals
-    if len(args) >= 4:
-        lo, hi = sp.sympify(args[2]), sp.sympify(args[3])
-        rng = sp.Interval(lo, hi) if (lo.is_number and hi.is_number and (lo < hi) is sp.true) else None
+    if lo is not None or hi is not None:
+        lo, hi = sp.sympify(lo), sp.sympify(hi)
+        rng = sp.Interval(lo, hi) if (lo is not None and hi is not None and lo.is_number and hi.is_number
+                                      and (lo < hi) is sp.true) else None
     for kind, g in obligations:
         g = sp.sympify(g)
         if not isinstance(var, sp.Symbol) or var not in g.free_symbols:

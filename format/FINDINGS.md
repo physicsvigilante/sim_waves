@@ -791,6 +791,14 @@ Tests r214–r218.
   undefined, and the width of such a shape, are refused. `0**q` with q declared real is decided
   once q is known. Tests r297–r311.
 
+### Milestone 14 review, round 18 (ChatGPT Astra, on PR #14; eval/review14/REPORT.md)
+- **Extremes are now found exactly:** each candidate is either reached (a critical point, a
+  breakpoint's own value, a closed end, a constant stretch) or only approached (beside a jump, at
+  an open end, at infinity), and they are ordered exactly, without a tolerance. A jump's one-sided
+  limit and a supremum at infinity no longer pass for a peak; a constant field has a peak. An
+  exponent declared positive is decided after the solve; keyword ranges are honoured. Tests
+  r312–r323.
+
 **Not fixed (tooling):** on Windows, r84 (peak of a sum of Gaussians) and r93 run for
 minutes, and r96 grows past 4.6 GB of memory; all three do so on the engine before m14
 as well. The wall-clock limit uses SIGALRM, which Windows lacks, so nothing stops a slow

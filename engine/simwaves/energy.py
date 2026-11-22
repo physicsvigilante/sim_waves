@@ -204,7 +204,7 @@ def _mean_over(sc, var, e, lo, hi):
 def _extreme_in(kind):
     def f(sc, var, e, lo, hi):
         """Largest (or smallest) value of e for var in [lo, hi]; exact where possible."""
-        from .scene import _extreme_values
+        from .scene import _best_reached, _extreme_rows
         if not isinstance(var, sp.Symbol):
             raise SceneError(f"{kind}_in(var, expr, lo, hi): first argument must be a variable")
         lo, hi = sp.sympify(lo), sp.sympify(hi)
@@ -215,14 +215,12 @@ def _extreme_in(kind):
             raise SceneError(f"{kind}_in(): the expression must depend only on {var}; other symbols need values. "
                              f"Put at(...) inside: {kind}_in({var}, at(expr, a=...), lo, hi)")
         try:
-            vals = _within(20, lambda: _extreme_values(e, var, sp.Interval(lo, hi)))
+            rows = _within(20, lambda: _extreme_rows(e, var, sp.Interval(lo, hi)))
         except _Budget:
             raise SceneError(f"{kind}_in(): the extremes take too long to find")
-        nums = [(float(sp.N(v)), v) for v in vals if v.is_number]
-        if not nums:
-            raise SceneError(f"{kind}_in(): no value found")
-        pick = max(nums, key=lambda t_: t_[0]) if kind == "max" else min(nums, key=lambda t_: t_[0])
-        return sp.nsimplify(pick[1]) if pick[1].is_Float else pick[1]
+        # only a value taken somewhere counts; one only approached at a jump must not be beyond it
+        pick, _ = _best_reached(rows, f"{kind}_in()", mode=kind)
+        return sp.nsimplify(pick) if pick.is_Float else pick
     return f
 
 

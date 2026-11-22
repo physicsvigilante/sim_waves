@@ -1,0 +1,12 @@
+# m14 review round 18 (S1), control: exp(-x)*step(x) is 1 at x = 0 (step(0) = 1) and smaller elsewhere: the
+# peak is reached there; y(p, 0, 0) = 1 agrees
+media:
+  rope: {type: string, mu: "1 kg/m", tension: "1 N"}
+waves:
+  p: {pulse: {on: rope, shape: "exp(-x)*step(x)", units: {x: m, y: m}, dir: +x}}
+observe:
+  where: "peak_position(p, t=0[s])"
+  height: "peak(p, t=0[s])"
+  amp: "amplitude(p)"
+  at_zero: "y(p, x=0[m], t=0[s])"
+expect: {where: 0, height: 1, amp: 1, at_zero: 1}
