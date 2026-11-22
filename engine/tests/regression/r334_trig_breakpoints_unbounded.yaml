@@ -1,0 +1,5 @@
+# m14 review round 21 (V1): the exact listing of sin/cos zeros needs a finite range: over the whole line it is refused
+waves:
+  w: {given: "step(cos(x - t))", units: {x: m, t: s, y: m}}
+observe: {bad: "peak(w, t=0[s])"}
+expect: {error: rejected, message: "infinitely many"}

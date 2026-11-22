@@ -1440,6 +1440,62 @@ def _side_value(pairs, var, q, side, breaks):
     raise SceneError(f"cannot find the value just {'right' if side == '+' else 'left'} of {var} = {q}")
 
 
+def _exact_sorted(points, what):
+    """Real numbers in increasing order, compared exactly (_cmp), not by floating-point keys
+    (two roots 1e-17 apart round to the same float); refused when an order cannot be proved."""
+    import functools
+
+    def order(a, b):
+        c = _cmp(a, b)
+        if c is None:
+            raise SceneError(f"{what}: cannot tell the order of {a} and {b} exactly")
+        return c
+    return sorted(points, key=functools.cmp_to_key(order))
+
+
+def _trig_linear_roots(g, var, dom, limit=10000):
+    """The zeros in dom of c*sin(a*var + b) or c*cos(a*var + b) (c, a, b numbers, a and c not 0),
+    exactly: a*var + b = k*pi (+ pi/2 for cos). None when g is not of that form. Refused when
+    dom is unbounded or holds more than `limit` of them. (SymPy 1.12's solveset can run for
+    minutes on sin(10**17*(x - 1)).)"""
+    coef, core = sp.sympify(g).as_independent(var, as_Add=False)
+    if not isinstance(core, (sp.sin, sp.cos)) or not coef.is_number or coef.is_zero is not False:
+        return None
+    arg = sp.expand(core.args[0])
+    if not arg.is_polynomial(var) or sp.degree(arg, var) != 1:
+        return None
+    a, b = arg.coeff(var, 1), arg.coeff(var, 0)
+    if not (a.is_number and b.is_number) or a.is_zero is not False:
+        return None
+    if not (dom.inf.is_finite and dom.sup.is_finite):
+        raise SceneError(f"cannot find every place where {g} is 0 over {dom}: there are infinitely many; give a "
+                         f"finite range")
+    off = sp.S.Zero if isinstance(core, sp.sin) else sp.pi / 2
+    ends = _exact_sorted([a * dom.inf + b, a * dom.sup + b], "the breakpoints")
+    k_lo, k_hi = sp.ceiling((ends[0] - off) / sp.pi), sp.floor((ends[1] - off) / sp.pi)
+    if not (k_lo.is_Integer and k_hi.is_Integer):
+        return None
+    if k_hi - k_lo + 1 > limit:
+        raise SceneError(f"{g} changes sign more than {limit} times over {dom}; give a shorter range")
+    roots = [(k * sp.pi + off - b) / a for k in range(int(k_lo), int(k_hi) + 1)]
+    return sp.FiniteSet(*[q for q in roots if dom.contains(q) is sp.true])
+
+
+def _continuous_everywhere(g):
+    """True when g is built only from functions continuous on the whole real line (sums,
+    products, nonnegative integer powers, sin, cos, exp, abs); None otherwise."""
+    for node in sp.preorder_traversal(sp.sympify(g)):
+        if isinstance(node, sp.Pow):
+            if not (node.exp.is_Integer and node.exp >= 0):
+                return None
+        elif isinstance(node, sp.Function):
+            if not isinstance(node, (sp.sin, sp.cos, sp.exp, sp.Abs)):
+                return None
+        elif not isinstance(node, (sp.Add, sp.Mul, sp.Symbol, sp.Number, sp.NumberSymbol)):
+            return None
+    return True
+
+
 def _plain_set(S_):
     """True for a set built only from intervals, finite sets and unions of them (one SymPy has
     actually solved), not a ConditionSet, an unevaluated Complement or Intersection, etc."""
@@ -1453,22 +1509,27 @@ def _cond_region(c, var, dom, cuts):
     (sin(x) < 0), it is found from the places where its relations change (cuts, all of them
     within dom): between two cuts a relation whose sides are continuous keeps its truth, so
     one point decides each stretch. Refused when that cannot be certified."""
-    try:
-        got = c.as_set().intersect(dom)
-        if _plain_set(got):
-            return got
-        # an unresolved set (a ConditionSet): decide it below, or refuse
-    except Exception:
-        pass
-    from sympy.calculus.util import continuous_domain
-    for rel in ([c] if isinstance(c, sp.Rel) else list(c.atoms(sp.Rel))):
+    rels = [c] if isinstance(c, sp.Rel) else list(c.atoms(sp.Rel))
+    simple = all(_continuous_everywhere(r.lhs - r.rhs) for r in rels)
+    if not simple:
         try:
-            ok = dom.is_subset(continuous_domain(rel.lhs - rel.rhs, var, dom))
+            got = c.as_set().intersect(dom)
+            if _plain_set(got):
+                return got
+            # an unresolved set (a ConditionSet): decide it below, or refuse
         except Exception:
-            ok = False
-        if ok is not True:
-            raise SceneError(f"cannot find where {c} holds over {dom}")
-    pts = sorted([q for q in cuts if dom.contains(q) is sp.true], key=lambda q: float(sp.N(q)))
+            pass
+        from sympy.calculus.util import continuous_domain
+        for rel in rels:
+            try:
+                ok = dom.is_subset(continuous_domain(rel.lhs - rel.rhs, var, dom))
+            except Exception:
+                ok = False
+            if ok is not True:
+                raise SceneError(f"cannot find where {c} holds over {dom}")
+    # every relation's sides are continuous on dom and cuts holds all their zeros in dom, so
+    # each relation keeps its truth between two consecutive cuts: one point decides a stretch
+    pts = _exact_sorted([q for q in cuts if dom.contains(q) is sp.true], f"where {c} holds")
     edges = [dom.inf] + pts + [dom.sup]
 
     def truth(u):
@@ -1510,6 +1571,10 @@ def _extreme_rows(e, var, dom):
         if c is sp.true:
             continue
         for rel in ([c] if isinstance(c, sp.Rel) else list(c.atoms(sp.Rel))):
+            roots = _trig_linear_roots(rel.lhs - rel.rhs, var, dom)
+            if roots is not None:
+                pts.update(roots)
+                continue
             roots = sp.solveset(rel.lhs - rel.rhs, var, sp.S.Reals)
             if not isinstance(roots, sp.FiniteSet):
                 # infinitely many (sin(x) = 0): only those inside dom matter, and they must be few
@@ -1536,6 +1601,17 @@ def _extreme_rows(e, var, dom):
             w_ = _witness(region)
             if w_ is None:          # a nonempty stretch whose value must not be left out
                 raise SceneError(f"cannot find a point where {piece} applies over {dom}")
+            # the witness must lie where this branch is the one that applies
+            for p2, c2 in pairs:
+                hit = sp.true if c2 is sp.true else sp.sympify(c2).xreplace({var: w_})
+                if hit not in (sp.true, sp.false):
+                    hit = sp.simplify(hit)
+                if hit is sp.true:
+                    if p2 is not piece:
+                        raise SceneError(f"the branches of {e} do not agree at {var} = {w_}")
+                    break
+                if hit is not sp.false:
+                    raise SceneError(f"cannot decide which branch of {e} applies at {var} = {w_}")
             flat = not isinstance(region, sp.FiniteSet) and region.measure != 0
             rows.append((w_, e.xreplace({var: w_}), "flat" if flat else "at"))
             continue

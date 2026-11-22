@@ -810,6 +810,12 @@ Tests r214–r218.
   ConditionSet (sin(x)/x < 0) is decided stretch by stretch, or refused; a branch is never skipped
   for want of a point to evaluate. Tests r330–r331.
 
+### Milestone 14 review, round 21 (ChatGPT Astra, on PR #14; eval/review14/REPORT.md)
+- **Breakpoints are ordered exactly,** not by floating-point keys (roots 1e-17 apart all rounded
+  to 1.0 and could be taken in any order). The zeros of sin and cos of a linear argument are
+  listed exactly over a finite range, and a branch's sample point is checked to lie in that
+  branch. Tests r332–r334.
+
 **Not fixed (tooling):** on Windows, r84 (peak of a sum of Gaussians) and r93 run for
 minutes, and r96 grows past 4.6 GB of memory; all three do so on the engine before m14
 as well. The wall-clock limit uses SIGALRM, which Windows lacks, so nothing stops a slow

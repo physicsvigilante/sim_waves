@@ -310,3 +310,13 @@
 | # | Severity | Finding | Fix | Tests |
 |---|---|---|---|---|
 | U1 | silent wrong answer (a wrong refusal here) | `_cond_region` accepted whatever `as_set()` returned, including an unresolved `ConditionSet`. A branch with no witness was then skipped silently. | Only a set built from intervals and finite sets (a solved one) is accepted; anything else goes to the stretch-by-stretch method, or is refused. A branch region that is not such a set is refused, and so is a nonempty branch with no point found to evaluate: it is never skipped (`scene.py` `_plain_set`, `_cond_region`, `_extreme_rows`). | r330 (your scene: 0), r331 (max: 1) |
+
+## Round 21
+- **Reviewer:** ChatGPT (Astra), posted on PR #14 on 2026-11-22. It was found by the 4-minute check on its fourth try.
+- **Commit reviewed:** `36bf1a63c82bcb411dc3907fb811662b88915ad6`.
+- **Verdict:** FAIL. U1 is resolved for its case. One high finding.
+- **Reproduction:** confirmed, with a different symptom on SymPy 1.12. Here the scene did not finish: SymPy 1.12's `solveset`, `continuous_domain` and `as_set` each ran for minutes on `sin(10**17*(x - 1))`, and Windows has no per-scene time limit. The defect Astra found is in the code either way: breakpoints were sorted by `float()` keys, and these four all round to 1.0.
+
+| # | Severity | Finding | Fix | Tests |
+|---|---|---|---|---|
+| V1 | silent wrong answer (on SymPy 1.14, hash-order dependent) | Breakpoints were sorted by `float(sp.N(q))`; roots closer than a double's spacing kept a set's arbitrary order, so a stretch was skipped and a constant branch's witness fell in the other branch. | Breakpoints are sorted by exact comparison, refused when an order cannot be proved (`scene.py` `_exact_sorted`, using `_cmp`). The zeros of c·sin(ax + b) and c·cos(ax + b) are listed exactly within a finite range (ax + b = kπ, or π/2 + kπ), without SymPy's `solveset`; over an unbounded range, or for more than 10 000 of them, the call is refused (`_trig_linear_roots`). A condition whose sides are built only from functions continuous everywhere goes straight to the certified stretch method (`_continuous_everywhere`). A constant branch's witness is checked to lie where that branch is the one that applies, or the call is refused. | r332 (your scene: −1, also with `PYTHONHASHSEED` 0, 2, 4, 5 and 7), r333 (a step with the same close breakpoints: max 1, min 0), r334 (`step(cos(x - t))` over the whole line: refused) |
