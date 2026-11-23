@@ -728,6 +728,121 @@ if __name__ == "__main__":
     r = run_request("os:getpid", (), 30)
     check("K1 control: a normal request", isinstance(r, int), repr(r))
 
+    # ---- L1: a set-up step held past the hard stop cannot start a process after the result.
+    #      Every process birth (request child, guardian) is recorded against the time the
+    #      result returned; the held step is released only afterwards.
+    HOLD = GRACE + contain.CANCEL_WAIT + 3
+
+    def is_ours(cmd):
+        text = " ".join(cmd) if isinstance(cmd, (list, tuple)) else str(cmd)
+        return "simwaves.child" in text or "killpg" in text or "pgid" in text
+
+    def held_run(label, install, uninstall, target="os:getpid", args=()):
+        births = []
+        orig_popen6 = subprocess.Popen
+
+        class Rec6(orig_popen6):
+            def __init__(self, *a, **k):
+                super().__init__(*a, **k)
+                if is_ours(a[0]):
+                    births.append((self.pid, time.monotonic()))
+        contain.subprocess.Popen = Rec6
+        release = threading.Event()
+        install(release)
+        try:
+            r = run_request(target, args, 0.1, 512)
+            returned = time.monotonic()
+        finally:
+            release.set()
+        time.sleep(3)
+        uninstall()
+        contain.subprocess.Popen = orig_popen6
+        late = [pid for pid, born in births if born > returned]
+        left = [pid for pid, _ in births if alive(pid)] + child_procs()
+        return r, late, left, births
+
+    # (a) the creator held just before a commit point (the first: the child; the second: the
+    #     guardian on Linux, the child's job on Windows)
+    for which in (1, 2):
+        orig_step = contain._Request._step
+
+        def install(release, which=which, orig_step=orig_step):
+            calls = []
+
+            def held_step(self, name, make):
+                calls.append(name)
+                if len(calls) == which:
+                    release.wait(HOLD)
+                return orig_step(self, name, make)
+            contain._Request._step = held_step
+
+        def uninstall(orig_step=orig_step):
+            contain._Request._step = orig_step
+        r, late, left, births = held_run(f"commit {which}", install, uninstall)
+        check(f"L1 a creator held before commit point {which}: a limit, no process started after it, none left",
+              isinstance(r, LimitResult) and not late and not left, f"{r!r} late={late} left={left}")
+
+    # (b) the preparation of the second step held: the guardian's pipe on Linux, the child's job on
+    #     Windows (no process is created by the preparation; nothing may start after the result)
+    if contain.WINDOWS:
+        orig_prep = contain._Job.__init__
+
+        def install(release):
+            def held_job(self, memory_mb=None):
+                release.wait(HOLD)
+                orig_prep(self, memory_mb)
+            contain._Job.__init__ = held_job
+
+        def uninstall():
+            contain._Job.__init__ = orig_prep
+        what = "the child's job"
+    else:
+        orig_prep = contain._Guardian.__init__
+
+        def install(release):
+            def held_guard(self, pgid):
+                orig_prep(self, pgid)                      # the pipe exists; the guardian is not started
+                release.wait(HOLD)
+            contain._Guardian.__init__ = held_guard
+
+        def uninstall():
+            contain._Guardian.__init__ = orig_prep
+        what = "the guardian"
+    r, late, left, births = held_run("prep", install, uninstall)
+    check(f"L1 {what} prepared past the stop: a limit, no process started after it, none left",
+          isinstance(r, LimitResult) and not late and not left, f"{r!r} late={late} left={left}")
+
+    # (c) declared J1 (a creation committed before the cancel, its call still in progress): a limit
+    #     is returned; the late process never receives the request and is killed when creation returns
+    with tempfile.TemporaryDirectory() as d:
+        ran = os.path.join(d, "ran.txt")
+        orig_popen7 = subprocess.Popen
+
+        def install(release):
+            class SlowCreate(orig_popen7):
+                def __init__(self, *a, **k):
+                    if "simwaves.child" in " ".join(a[0]):
+                        release.wait(HOLD)                 # committed, creation call not yet returned
+                    super().__init__(*a, **k)
+            contain.subprocess.Popen = SlowCreate
+        release = threading.Event()
+        install(release)
+        threading.Timer(GRACE + contain.CANCEL_WAIT + 2, release.set).start()   # after the result
+        r = run_request("builtins:open", (ran, "w"), 0.1, 512)
+        time.sleep(8)                                      # creation returns, then is killed
+        contain.subprocess.Popen = orig_popen7
+        check("L1 declared J1 case: a creation committed before the cancel returns late; it never gets the "
+              "request and is killed", isinstance(r, LimitResult) and not os.path.exists(ran) and not child_procs(),
+              f"{r!r} ran={os.path.exists(ran)} left={child_procs()}")
+
+    # controls: the same request with time to run; the file target really runs when allowed
+    r = run_request("os:getpid", (), 30)
+    check("L1 control: a normal request", isinstance(r, int), repr(r))
+    with tempfile.TemporaryDirectory() as d:
+        ran = os.path.join(d, "ran.txt")
+        r = run_request("builtins:open", (ran, "w"), 30)
+        check("L1 control: the marker request runs when it has time", os.path.exists(ran), repr(r))
+
     # ---- K2: the bytes checked are the bytes sent, and the ceiling is exact
     def frame_size(n):
         b = contain._request_bytes(("builtins:len", ("x" * n,), 1.0e6, 512, 60.0), 10 ** 9)

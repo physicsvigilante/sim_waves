@@ -225,23 +225,39 @@ finally:
 
 class _Guardian:
     """Linux: a small process outside the child's group that kills the whole group when the
-    pipe from the parent closes (request over, or parent dead)."""
+    pipe from the parent closes (request over, or parent dead). Constructing it only prepares
+    (the pipe and the command); start() creates the process, so all the preparation happens
+    before the request's commit point (review 15a L1)."""
 
     def __init__(self, pgid):
-        rfd, self.wfd = os.pipe()
-        self.proc = subprocess.Popen([sys.executable, "-c", _GUARD, str(pgid), str(rfd)], pass_fds=(rfd,),
-                                     start_new_session=True, stdin=subprocess.DEVNULL,
-                                     stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        os.close(rfd)
+        self.proc = None
+        self.rfd, self.wfd = os.pipe()
+        self.cmd = [sys.executable, "-c", _GUARD, str(pgid), str(self.rfd)]
+
+    def start(self):
+        self.proc = subprocess.Popen(self.cmd, pass_fds=(self.rfd,), start_new_session=True,
+                                     stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
+                                     stderr=subprocess.DEVNULL)
+        self._close_read()
+        return self
+
+    def _close_read(self):
+        if self.rfd is not None:
+            os.close(self.rfd)
+            self.rfd = None
 
     def fire(self):
+        """Close the pipe (the guardian then kills the group and exits) and wait for it; a
+        guardian never started only has its pipe closed. Safe to call more than once."""
+        self._close_read()
         if self.wfd is not None:
             os.close(self.wfd)
             self.wfd = None
-        try:
-            self.proc.wait(10)
-        except subprocess.TimeoutExpired:
-            self.proc.kill()
+        if self.proc is not None:
+            try:
+                self.proc.wait(10)
+            except subprocess.TimeoutExpired:
+                self.proc.kill()
 
 
 # ---------------------------------------------------------------- Windows Job Objects
@@ -368,39 +384,61 @@ class _Cancelled(Exception):
 
 
 class _Request:
-    """One running request: the child process and its owners, with one cancellation state
-    shared by set-up and clean-up (review 15a I1, K1). Each creation step checks for a cancel and
-    creates its process or owner under one lock, with nothing in between, so after kill() no
-    step can begin. kill() raises the cancel signal first and waits at most CANCEL_WAIT for the
-    lock. If a creation call holds it longer (it stalled inside the operating system: the
-    declared J1 case), what it creates is killed as soon as it returns."""
+    """One running request: the child process and its owners, with one state shared by set-up
+    and clean-up (review 15a I1, K1, L1).
+
+    The state (cancelled; a creation step in progress) changes only under one lock. Every step
+    that creates a process, or lets one run, passes a commit point: under the lock, it either
+    sees the cancel and stops, or marks itself in progress. kill() marks the request cancelled
+    under the same lock. So each creation step either committed before the cancel or never
+    begins: once kill() has set the cancel, no step can start a process. Everything that can
+    be slow (the environment, the supervisor job, the child's job, the guardian's pipe) is
+    prepared before the commit point; after it there is only the creation call itself.
+
+    kill() waits at most CANCEL_WAIT for a step that committed before the cancel. If that step
+    is still in progress then (its creation call stalled: the declared J1 case, which covers a
+    creation committed before the cancel), what it creates is killed as soon as it returns,
+    and it never receives the request."""
 
     def __init__(self, memory_mb):
         self.memory_mb = memory_mb
         self.popen = self.job = self.guard = None
-        self._cancel = threading.Event()
-        self._lock = threading.Lock()
+        self._cond = threading.Condition(threading.Lock())
+        self._cancelled = False
+        self._creating = False
 
     @property
     def cancelled(self):
-        return self._cancel.is_set()
+        with self._cond:
+            return self._cancelled
 
-    def _create(self, name, make):
-        """Check for a cancel and create (make()) under the lock, then record it as `name`.
-        Returns the new object."""
-        with self._lock:
-            if self._cancel.is_set():
+    def _step(self, name, make):
+        """Commit, then run make() (one creation call, nothing slow), then record its result as
+        `name` (None: record nothing). Raises _Cancelled if the request was cancelled before the
+        commit, or while the step was in progress (then what it made is killed first)."""
+        with self._cond:
+            if self._cancelled:
                 raise _Cancelled("the request was cancelled before this set-up step")
+            self._creating = True                         # the commit point
+        obj = None
+        try:
             obj = make()
-            setattr(self, name, obj)
-        if self._cancel.is_set():                         # cancelled while it was being created
+        finally:
+            with self._cond:
+                if name is not None and obj is not None:
+                    setattr(self, name, obj)
+                self._creating = False
+                late = self._cancelled
+                self._cond.notify_all()
+        if late:                                          # cancelled while the step was in progress
             self.kill()
             raise _Cancelled("the request was cancelled during set-up")
         return obj
 
     def launch(self):
-        if self._cancel.is_set():
+        if self.cancelled:
             raise _Cancelled("the request was cancelled before its process was started")
+        # preparation: everything that may be slow happens before any commit point
         cmd = [sys.executable, "-m", "simwaves.child", str(self.memory_mb)]
         env = dict(os.environ)
         env["PYTHONPATH"] = os.pathsep.join([ENGINE_DIR] + ([env["PYTHONPATH"]] if env.get("PYTHONPATH") else []))
@@ -412,46 +450,48 @@ class _Request:
                 # before the child's own job was assigned: refuse (review 15a H1)
                 raise OSError("Windows refused to put this process in a job; a request's process could "
                               "outlive it, so none is started")
-            self._create("popen", lambda: subprocess.Popen(cmd, env=env, creationflags=0x00000004 | 0x08000000,
-                                                           **pipes))               # SUSPENDED, NO_WINDOW
+            self._step("popen", lambda: subprocess.Popen(cmd, env=env, creationflags=0x00000004 | 0x08000000,
+                                                         **pipes))                 # SUSPENDED, NO_WINDOW
+            job = None
             try:
-                def own_job():
-                    job = _Job(self.memory_mb)
-                    try:
-                        job.assign_handle(int(self.popen._handle))
-                    except BaseException:
-                        job.close()
-                        raise
+                job = _Job(self.memory_mb)                # prepared: no process is created by it
+
+                def assign():
+                    job.assign_handle(int(self.popen._handle))
                     return job
-                self._create("job", own_job)
-                with self._lock:                          # resume only a request still wanted
-                    if self._cancel.is_set():
-                        raise _Cancelled("the request was cancelled during set-up")
+                self._step("job", assign)
+
+                def resume():                             # let it run only if still wanted
                     _, _, nt, _ = _Win.get()
                     if nt.NtResumeProcess(int(self.popen._handle)) != 0:
                         raise OSError("NtResumeProcess failed")
+                self._step(None, resume)
             except BaseException:
+                if job is not None:
+                    job.close()                           # safe if kill() closed it already
                 self.kill()
                 raise
         else:
-            self._create("popen", lambda: subprocess.Popen(cmd, env=env, start_new_session=True, **pipes))
+            self._step("popen", lambda: subprocess.Popen(cmd, env=env, start_new_session=True, **pipes))
+            guard = None
             try:
-                self._create("guard", lambda: _Guardian(self.popen.pid))
+                guard = _Guardian(self.popen.pid)         # prepared: the pipe, no process yet
+                self._step("guard", guard.start)
             except BaseException:
+                if guard is not None:
+                    guard.fire()                          # safe if kill() fired it already
                 self.kill()
                 raise
 
     def kill(self):
         """Cancel the request, kill its process and everything it started, and wait for it.
         Safe to call more than once, and from any thread."""
-        self._cancel.set()
-        got = self._lock.acquire(timeout=CANCEL_WAIT)
-        try:
+        with self._cond:
+            self._cancelled = True                        # no step can commit after this
+            if self._creating:                            # one committed before the cancel
+                self._cond.wait_for(lambda: not self._creating, timeout=CANCEL_WAIT)
             job, popen, guard = self.job, self.popen, self.guard
             self.job = self.guard = None
-        finally:
-            if got:
-                self._lock.release()
         if job is not None:
             job.close()
         if popen is not None:
@@ -609,9 +649,9 @@ def _run(req, frame, seconds, memory_mb, deadline):
     launcher.start()
     launcher.join(max(0.0, deadline + GRACE - time.monotonic()))
     if launcher.is_alive():
-        # cancel: from now the set-up cannot start a process, and whatever it creates is killed
-        # the moment it is recorded (review 15a I1). Wait a little for a set-up that is just
-        # finishing, so that its process is gone before the result returns
+        # cancel: from now no set-up step can commit, so none can start a process; one that
+        # committed before the cancel is waited for briefly, and what it creates is killed the
+        # moment it returns (review 15a I1, L1)
         req.kill()
         launcher.join(CANCEL_WAIT)
         req.kill()

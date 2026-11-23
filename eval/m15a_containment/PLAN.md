@@ -117,15 +117,21 @@ The user narrowed and fixed what containment promises, under the review policy:
     Linux**, before its first line of Python sets the parent-death signal. The child then
     exits by itself at that first line, because it sees its parent is gone, before reading
     any request. It never runs a request unowned.
-  - **A process-creation call that stalls inside the operating system past the deadline**
-    (decided in round 6, option 1). The request then returns its time limit while the call
-    is still under way. A process that the call creates afterwards:
+  - **A process creation already under way when the request is cancelled** (decided in
+    round 6, option 1, and made precise in round 8 by the commit-point design). Each step
+    that creates a process, or lets one run, passes a **commit point**: under the request's
+    lock it either sees the cancel and stops, or marks itself in progress. The cancel is set
+    under the same lock, so every creation either committed before the cancel or never
+    begins. Everything that can be slow (the environment, the supervisor job, the child's
+    job, the guardian's pipe) is prepared before the commit point; after it comes only the
+    creation call. If a creation that committed before the cancel is still in progress
+    `CANCEL_WAIT` (2 s) after the cancel (its call stalled), the request returns its time
+    limit, and the process that the call creates afterwards:
     - is never sent the request (on Windows it is created suspended and never runs);
     - is killed the moment the creation call returns, because the request is already
       cancelled.
 
-    Every other set-up step checks the cancellation first, so nothing else can start after
-    the stop.
+    A creation that had not committed when the cancel came can never start a process.
 
 ## Excluded
 - Any change to physics, maths services or scene format. Result values must not change.
