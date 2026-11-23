@@ -164,3 +164,16 @@
 |---|---|---|---|---|
 | N1 | high | A guardian born (its `Popen` returned) but not yet recorded by its step was invisible to `kill()`, which gave up after `CANCEL_WAIT` and returned a LIMIT with it alive. The same gap existed for the request's own child. | `kill()` waits for any step that committed before the cancel until it has recorded what it made, however long that takes, then kills it. A process born in a step is therefore always killed before the result returns. The PLAN's declared exception is now the timing only: a stalled creation call delays the result. | a pause after the creation call has returned and before the step records it, past the hard stop, for the child and for the guardian (Linux) or job (Windows): a limit, and nothing alive at the moment the result returns; the J1 test now checks the late process is gone at return; a normal control |
 | N2 | medium | `math.isfinite` on a huge `int` (for example a 401-digit `--time` or `--memory`) raised `OverflowError` before the ceiling check. | Integers are compared exactly with the bounds, never converted to float first; a memory ceiling `MAX_MEMORY` = 1,048,576 MB (1 TB) is added; error messages never convert a huge integer to text. The CLI accepts ASCII digits only (`str.isdigit` also accepts `²`) and treats more than 40 digits as "above 10**40", which every limit refuses. | `10**400` as time and as memory, `-10**400`, and `MAX_MEMORY + 1`: `LimitError` with no process started; `MAX_MEMORY` accepted; the CLI with a 401-digit `--time` and `--memory`: a clear error, exit 2, no traceback; `--time ²`: usage, no traceback; an ordinary CLI run as control |
+
+## Round 11
+- **Reviewer:** ChatGPT (Astra), posted on PR #18 on 2026-11-23.
+- **Commit reviewed:** `ca6d427905be878788b73f0c60ea433d4282fbd6`.
+- **Verdict:** FAIL.
+  - Linux CI was green at this commit (run 45135074911, Python 3.10.22: 339 scenes, 110/110 review checks on Linux).
+  - Resolved: N1 (`kill()` waits for a committed step; the timing exception is recorded in the PLAN) and N2 (exact integer limits, memory ceiling).
+  - One required finding (O1, a new CLI parsing path). It is named O1 in Astra's round 11 review; it is unrelated to round 1's optional O1.
+- **Owner's decision:** none needed; a narrow fix with a different cause from earlier rounds.
+
+| # | Severity | Finding | Fix | Tests (`test_limits_review.py`) |
+|---|---|---|---|---|
+| O1 (round 11) | medium | The CLI's digit guard measured the limit without its leading zeros, but converted the whole string, so a zero-padded value such as 5,000 zeros then `60` passed 5,002 characters to `int()`. Python 3.10.7 and later refuse more than 4,300 digits there, so this gave a traceback. | Only the significant digits are converted (`text.lstrip("0") or "0"`). More than 40 of them are treated as "above 10**40", which every limit refuses with a clear error; all zeros is a usage error. | in process, with a stand-in for Python's 4,300-digit limit (the local Python 3.10.6 predates it): zero-padded 60 s and 512 MB parse to their values, an all-zero value is a usage error, and 5,000 significant digits are not converted; through the CLI: zero-padded `--time 60 --memory 512` runs the scene, an all-zero `--time` gives usage (exit 2), and 5,000 significant digits as `--memory` give a clear error (exit 2); never a traceback |

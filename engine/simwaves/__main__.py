@@ -70,7 +70,10 @@ def _options(argv):
             # with a clear error (review 15a N2)
             if not (text.isascii() and text.isdigit()):
                 return None
-            value = int(text) if len(text.lstrip("0")) <= 40 else 10 ** 40 + 1
+            # only the significant digits are ever converted (review 15a O1: leading zeros must
+            # not reach int(), whose input length Python limits)
+            digits = text.lstrip("0") or "0"
+            value = int(digits) if len(digits) <= 40 else 10 ** 40 + 1
             if value <= 0:
                 return None
             opts[names[a]] = value

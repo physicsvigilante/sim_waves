@@ -992,6 +992,49 @@ if __name__ == "__main__":
                          encoding="utf-8", timeout=180)
     check("N2 control: the CLI runs with ordinary limits", out.returncode == 0, out.stdout[-200:] + out.stderr[-300:])
 
+    # ---- O1: zero-padded CLI limits: only the significant digits are ever converted. Python
+    #      3.10.7+ refuses int() on more than 4300 digits; the in-process check imitates that limit
+    #      so it also holds on interpreters without it
+    import simwaves.__main__ as cli
+    real_int = int
+
+    def limited_int(x, *a):
+        if isinstance(x, str) and len(x) > 4300:
+            raise ValueError("Exceeds the limit (4300 digits) for integer string conversion")
+        return real_int(x, *a)
+    cli.int = limited_int
+    try:
+        parsed = cli._options(["run", "x.yaml", "--time", "0" * 5000 + "60", "--memory", "0" * 5000 + "512"])
+        zeros = cli._options(["run", "x.yaml", "--time", "0" * 5000])
+        huge = cli._options(["run", "x.yaml", "--time", "7" * 5000])
+        error = None
+    except BaseException as exc:                           # noqa: BLE001 - the wrong outcome, reported
+        error = exc
+    finally:
+        del cli.int
+    check("O1 zero-padded limits parse to their values (60 s, 512 MB) without converting the padding",
+          error is None and parsed == (["run", "x.yaml"], {"time": 60, "memory": 512}), f"{error!r} {parsed!r}")
+    check("O1 an all-zero padded limit is a usage error, not a traceback", error is None and zeros is None, repr(zeros))
+    check("O1 5000 significant digits are above 10**40 (refused by the limit check), not converted",
+          error is None and huge is not None and huge[1]["time"] > 10 ** 40, repr(error))
+    pad = "0" * 5000
+    out = subprocess.run([sys.executable, "-m", "simwaves", "run", "../format/examples/23_02_asc_005.yaml",
+                          "--time", pad + "60", "--memory", pad + "512"], cwd=HERE, env=ENV, capture_output=True,
+                         text=True, encoding="utf-8", timeout=180)
+    check("O1 the CLI runs the scene with zero-padded --time 60 and --memory 512",
+          out.returncode == 0 and "Traceback" not in out.stdout + out.stderr, out.stdout[-200:] + out.stderr[-300:])
+    out = subprocess.run([sys.executable, "-m", "simwaves", "run", "../format/examples/23_02_asc_005.yaml",
+                          "--time", pad], cwd=HERE, env=ENV, capture_output=True, text=True, encoding="utf-8",
+                         timeout=120)
+    check("O1 the CLI refuses an all-zero padded --time with usage (exit 2, no traceback)",
+          out.returncode == 2 and "Traceback" not in out.stdout + out.stderr, out.stdout[-200:] + out.stderr[-300:])
+    out = subprocess.run([sys.executable, "-m", "simwaves", "run", "../format/examples/23_02_asc_005.yaml",
+                          "--memory", "7" * 5000], cwd=HERE, env=ENV, capture_output=True, text=True,
+                         encoding="utf-8", timeout=120)
+    check("O1 the CLI refuses 5000 significant digits as --memory with a clear error (exit 2, no traceback)",
+          out.returncode == 2 and "at most" in out.stdout and "Traceback" not in out.stdout + out.stderr,
+          out.stdout[-200:] + out.stderr[-300:])
+
     # ---- K2: the bytes checked are the bytes sent, and the ceiling is exact
     def frame_size(n):
         b = contain._request_bytes(("builtins:len", ("x" * n,), 1.0e6, 512, 60.0), 10 ** 9)
