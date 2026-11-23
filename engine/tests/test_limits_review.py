@@ -328,13 +328,86 @@ if __name__ == "__main__":
     except ResourceLimitError:
         check("R5 evaluate honours its timeout", True)
 
-    # ---- G2: the deadline starts at admission, so start-up (process and imports) counts. The
-    #      target's module imports SymPy and the engine, which takes far longer than 0.05 s on any
-    #      machine; the work itself (report_pid) takes 0.5 s
-    r = run_request("simwaves.testhooks:report_pid", (None,), 0.05)
-    check("G2 start-up and imports count against the limit", isinstance(r, LimitResult), repr(r))
-    r = run_request("simwaves.testhooks:report_pid", (None,), 30)
-    check("G2 control: the same request with time to start", isinstance(r, tuple), repr(r))
+    # ---- G2, H5, H3: the deadline starts at admission and covers process set-up; checked with
+    #      injected, measured set-up delays (deterministic on any machine)
+    orig_launch = contain._Request.launch
+
+    def timed(seconds, launch=None):
+        if launch is not None:
+            contain._Request.launch = launch
+        t0 = time.monotonic()
+        try:
+            r = run_request("os:getpid", (), seconds)
+        except BaseException as exc:                      # noqa: BLE001
+            r = exc
+        finally:
+            contain._Request.launch = orig_launch
+        return r, time.monotonic() - t0
+
+    def slow_ok(self):
+        time.sleep(0.5)
+        return orig_launch(self)
+
+    def slow_fail(self):
+        time.sleep(0.5)
+        raise OSError("injected delayed set-up failure")
+
+    def fast_fail(self):
+        raise OSError("injected set-up failure")
+
+    def never(self):
+        time.sleep(3600)
+    r, dt = timed(30)
+    check("H5 control: a fast request with time to spare gives its value", isinstance(r, int), f"{r!r} {dt:.2f} s")
+    r, dt = timed(0.3, slow_ok)
+    check("G2/H5 a set-up slower than the limit (0.5 s against 0.3 s) is a limit", isinstance(r, LimitResult),
+          f"{r!r} {dt:.2f} s")
+    r, dt = timed(30, slow_ok)
+    check("H5 control: the same slow set-up within its limit gives its value", isinstance(r, int), f"{r!r} {dt:.2f} s")
+    r, dt = timed(0.3, slow_fail)
+    check("H3 a set-up failing after the deadline is a limit, not a crash", isinstance(r, LimitResult),
+          f"{r!r} {dt:.2f} s")
+    r, dt = timed(30, fast_fail)
+    check("H3 control: a set-up failing within the deadline is a crash", isinstance(r, CrashResult), f"{r!r}")
+    r, dt = timed(1, never)
+    check("H3 a set-up that never completes ends at the hard stop", isinstance(r, LimitResult) and dt < 1 + GRACE + 5,
+          f"{r!r} {dt:.1f} s")
+
+    # ---- H4: the request's size is bounded before any process starts; the memory cap comes first
+    launched = []
+    contain._Request.launch = lambda self: (launched.append(1), orig_launch(self))[1]
+    r = run_request("builtins:len", (b"x" * (20 * 1024 * 1024),), 30, 256)
+    contain._Request.launch = orig_launch
+    check("H4 a 20 MB request is refused as a memory limit before any process starts",
+          isinstance(r, LimitResult) and r.kind == "memory" and not launched, f"{r!r} launched={bool(launched)}")
+    r = run_request("builtins:len", (b"x" * (1024 * 1024),), 30, 256)
+    check("H4 control: a 1 MB request runs", r == 1024 * 1024, repr(r))
+    if not contain.WINDOWS:
+        r = run_request("resource:getrlimit", (9,), 30, 300)          # RLIMIT_AS
+        check("H4 the child's memory cap is in place (Linux)", tuple(r) == (300 * 1024 * 1024,) * 2, repr(r))
+    try:
+        export({"id": "x" * (20 * 1024 * 1024), "observe": {"v": "1"}}, memory_mb=256)
+        check("H4 export of oversized data is refused", False, "returned")
+    except ResourceLimitError:
+        check("H4 export of oversized data is refused", True)
+
+    # ---- H1 (Windows): no request process without the supervisor job
+    if contain.WINDOWS:
+        spawned = []
+        orig_sup = contain._ensure_supervisor
+        orig_popen2 = subprocess.Popen
+
+        class Rec2(orig_popen2):
+            def __init__(self, *a, **k):
+                super().__init__(*a, **k)
+                spawned.append(self.pid)
+        contain._ensure_supervisor = lambda: False
+        contain.subprocess.Popen = Rec2
+        r = run_request("os:getpid", (), 30)
+        contain._ensure_supervisor = orig_sup
+        contain.subprocess.Popen = orig_popen2
+        check("H1 Windows refuses to start a request process without the supervisor job",
+              isinstance(r, CrashResult) and not spawned and "refused" in r.message, f"{r!r} {spawned}")
 
     # ---- G1, F2: a reply complete only after the deadline is a limit, and the process is gone
     r = run_request("simwaves.testhooks:late_big", (64 * 1024 * 1024,), 3)

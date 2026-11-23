@@ -801,6 +801,10 @@ solving; relative tolerance), `abs`, `sqrt`, `sin`, `cos`, `tan`, `exp`, `log`, 
     and `--memory MB`. The time counts from the moment the request is accepted, so the
     process's start-up (about a second) is included.
   - `view` writes its page only if every scene finished within the limits.
+  - What the limits guard against is the engine's own runaway computation. A request's
+    processes are cleaned up with it (its process group on Linux, its Job on Windows); a
+    process deliberately detached into a new session is outside that guarantee. A request
+    whose data exceeds 16 MB is refused.
   - A request that passes a limit is stopped and reported as
     `RESOURCE LIMIT (time 120 s)` or `RESOURCE LIMIT (memory 2048 MB)` (exit status 3).
     This says nothing about the physics: it is not an inconsistency, a refusal or an

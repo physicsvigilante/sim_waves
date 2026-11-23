@@ -38,6 +38,7 @@ DEFAULT_MEMORY = 2048         # MB per request process
 MIN_MEMORY = 256              # MB: the engine needs about 150 MB just to start
 GRACE = 10                    # seconds beyond the time limit before the parent kills
 MAX_SCENE_BYTES = 64 * 1024   # a scene file above this is refused before parsing
+MAX_REQUEST_BYTES = 16 * 1024 * 1024   # a request (its pickled arguments) above this is refused
 WINDOWS = sys.platform == "win32"
 IN_WORKER = False             # True inside a request's process: public entry points run directly
 ENGINE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -155,10 +156,16 @@ def _cap_memory(memory_mb):
 
 
 def child_main():
-    """The request's process: read one request, run it under its time, send one result."""
+    """The request's process: read one request, run it under its time, send one result. On
+    Linux its memory cap comes from its command line and is set before the request is read
+    (review 15a H4); on Windows the job holds it from before the process runs."""
     global IN_WORKER, _reply, _deadline
     if not WINDOWS:
         _posix_first_steps()
+        try:
+            _cap_memory(int(sys.argv[1]))
+        except (IndexError, ValueError):
+            os._exit(2)
     IN_WORKER = True
     _reply = sys.stdout.buffer
     sys.stdout = sys.stderr                               # the target's prints never reach the reply
@@ -169,8 +176,6 @@ def child_main():
     except Exception:                                     # noqa: BLE001 - nothing to run
         os._exit(2)
     _deadline = time.monotonic() + seconds
-    if not WINDOWS:
-        _cap_memory(memory_mb)
     note(("pid", os.getpid()))
     from .budget import within
     from .errors import ResourceLimitError
@@ -365,13 +370,17 @@ class _Request:
         self.popen = self.job = self.guard = None
 
     def launch(self):
-        cmd = [sys.executable, "-m", "simwaves.child"]
+        cmd = [sys.executable, "-m", "simwaves.child", str(self.memory_mb)]
         env = dict(os.environ)
         env["PYTHONPATH"] = os.pathsep.join([ENGINE_DIR] + ([env["PYTHONPATH"]] if env.get("PYTHONPATH") else []))
         env["SIMWAVES_PARENT"] = str(os.getpid())
         pipes = dict(stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         if WINDOWS:
-            _ensure_supervisor()
+            if not _ensure_supervisor():
+                # without the supervisor job a child could outlive this process if it died
+                # before the child's own job was assigned: refuse (review 15a H1)
+                raise OSError("Windows refused to put this process in a job; a request's process could "
+                              "outlive it, so none is started")
             self.popen = subprocess.Popen(cmd, env=env, creationflags=0x00000004 | 0x08000000,   # SUSPENDED, NO_WINDOW
                                           **pipes)
             try:
@@ -423,11 +432,39 @@ def run_request(target, args=(), seconds=None, memory_mb=None):
     seconds, memory_mb = resolve_limits(seconds, memory_mb)
     t0 = time.monotonic()
     deadline = t0 + seconds
+    # the request's size is bounded before any process exists (review 15a H4)
+    try:
+        payload = pickle.dumps((target, tuple(args)), protocol=pickle.HIGHEST_PROTOCOL)
+    except Exception as exc:                              # noqa: BLE001
+        return CrashResult(f"the request cannot be sent ({type(exc).__name__}: {exc})")
+    if len(payload) > MAX_REQUEST_BYTES:
+        return LimitResult("memory", f"RESOURCE LIMIT (request size {len(payload)} bytes; at most "
+                                     f"{MAX_REQUEST_BYTES // (1024 * 1024)} MB)")
+    del payload
     req = _Request(memory_mb)
     notes, box, tail = [], {}, []
-    try:
-        req.launch()
-    except Exception as exc:                              # noqa: BLE001 - a result, not a hang
+
+    # launching runs under the same deadline (review 15a H3): a set-up that hangs ends at the
+    # hard stop, and one that fails after the deadline is a limit, not a crash
+    started = {}
+
+    def start():
+        try:
+            req.launch()
+            started["ok"] = True
+        except BaseException as exc:                      # noqa: BLE001 - classified below
+            started["error"] = exc
+    launcher = threading.Thread(target=start, daemon=True)
+    launcher.start()
+    launcher.join(max(0.0, deadline + GRACE - time.monotonic()))
+    if launcher.is_alive():
+        req.kill()
+        return LimitResult("time", f"RESOURCE LIMIT (time {seconds:g} s)")
+    if "error" in started:
+        req.kill()
+        if time.monotonic() > deadline:
+            return LimitResult("time", f"RESOURCE LIMIT (time {seconds:g} s)")
+        exc = started["error"]
         return CrashResult(f"the request's process could not start ({type(exc).__name__}: {exc})")
 
     def drain_stderr():                                   # never let a full stderr pipe block the child

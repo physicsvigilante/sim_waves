@@ -87,6 +87,36 @@ reply there. Agreed with the user as its own milestone; it does not change any p
   - no process it started survives it;
   - results within the limits are identical across the two platforms for the whole suite.
 
+## Containment class (decided in review rounds 2 to 4)
+The user narrowed and fixed what containment promises, under the review policy:
+- **Round 2, option B:** limits apply to the whole run. A scene cannot set its own
+  (`expect.limits` is refused), and the parent never parses a scene.
+- **Round 3, option C:** one fresh process per request, owned by the operating system from
+  creation. There are no reused workers.
+- **Round 4, option A: the threat model.** Containment protects against the engine's own
+  runaway computation (too slow, too much memory) and against a request's processes
+  outliving it. Its guarantees:
+  - **Time:** one deadline from admission covers process set-up, start-up, evaluation and
+    the whole reply. Anything complete after it is a limit, and a set-up that hangs ends at
+    the deadline plus the grace.
+  - **Memory:** the cap applies before the request is read. On Windows the Job is assigned
+    while the process is suspended; on Linux the child sets `RLIMIT_AS` from its command
+    line before reading. A request whose pickled arguments exceed 16 MB is refused before
+    any process starts.
+  - **Clean-up:** every process in the request's **process group** (Linux) or **Job**
+    (Windows) is gone before the result is returned. If the parent dies, the request's
+    process dies too.
+  - **Windows fails closed:** if the parent cannot join its kill-on-close supervisor job, no
+    request process is started.
+- **Outside the class (documented, not guaranteed):**
+  - **A process the request deliberately detaches** into a new session or process group
+    (Linux `setsid`). The engine itself starts no processes, so this needs code written to
+    escape.
+  - **The parent killed during the first instants of the child's interpreter start-up on
+    Linux**, before its first line of Python sets the parent-death signal. The child then
+    exits by itself at that first line, because it sees its parent is gone, before reading
+    any request. It never runs a request unowned.
+
 ## Excluded
 - Any change to physics, maths services or scene format. Result values must not change.
   The only allowed differences are:
