@@ -36,6 +36,8 @@ import traceback
 DEFAULT_TIME = 120            # seconds per request (start-up included)
 DEFAULT_MEMORY = 2048         # MB per request process
 MIN_MEMORY = 256              # MB: the engine needs about 150 MB just to start
+MAX_TIME = 1_000_000          # seconds (about 11.6 days): the largest time limit accepted; every
+                              # platform's thread waits support it (Windows: about 4.29 million s)
 GRACE = 10                    # seconds beyond the time limit before the parent kills
 CANCEL_WAIT = 2               # seconds a cancelled set-up is given to finish before the result returns
 MAX_SCENE_BYTES = 64 * 1024   # a scene file above this is refused before parsing
@@ -51,13 +53,16 @@ class LimitError(ValueError):
 
 def check_limits(seconds, memory_mb, max_seconds=None, max_memory=None):
     """Validate a time limit (seconds) and a memory limit (MB). Returns (float seconds, int MB).
-    Booleans, NaN, infinities, zero, negatives and non-numbers are refused. Memory must be a
+    Booleans, NaN, infinities, zero, negatives and non-numbers are refused; the time limit is at
+    most MAX_TIME (review 15a M2). Memory must be a
     whole number of MB, at least MIN_MEMORY. A maximum, when given, may not be exceeded."""
     def number(v, what):
         if isinstance(v, bool) or not isinstance(v, (int, float)) or not math.isfinite(v) or v <= 0:
             raise LimitError(f"{what} must be a finite positive number, not {v!r}")
         return v
     s = float(number(seconds, "the time limit"))
+    if s > MAX_TIME:
+        raise LimitError(f"the time limit must be at most {MAX_TIME} s (about 11.6 days), not {seconds!r}")
     m = number(memory_mb, "the memory limit")
     if isinstance(m, float):
         if not m.is_integer():
@@ -226,11 +231,14 @@ finally:
 class _Guardian:
     """Linux: a small process outside the child's group that kills the whole group when the
     pipe from the parent closes (request over, or parent dead). Constructing it only prepares
-    (the pipe and the command); start() creates the process, so all the preparation happens
-    before the request's commit point (review 15a L1)."""
+    (the pipe and the command), before the request's commit point (review 15a L1). start() is
+    the creation call alone, so the request records the guardian the moment it exists; closing
+    the parent's copy of the read end comes after that (review 15a M1). Each descriptor is
+    closed exactly once, whichever thread gets there first."""
 
     def __init__(self, pgid):
         self.proc = None
+        self._fds = threading.Lock()
         self.rfd, self.wfd = os.pipe()
         self.cmd = [sys.executable, "-c", _GUARD, str(pgid), str(self.rfd)]
 
@@ -238,26 +246,31 @@ class _Guardian:
         self.proc = subprocess.Popen(self.cmd, pass_fds=(self.rfd,), start_new_session=True,
                                      stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
                                      stderr=subprocess.DEVNULL)
-        self._close_read()
         return self
 
+    def _take(self, name):
+        with self._fds:
+            fd = getattr(self, name)
+            setattr(self, name, None)
+        if fd is not None:
+            os.close(fd)
+
     def _close_read(self):
-        if self.rfd is not None:
-            os.close(self.rfd)
-            self.rfd = None
+        """Housekeeping after the guardian is recorded: the parent's copy of the read end."""
+        self._take("rfd")
 
     def fire(self):
-        """Close the pipe (the guardian then kills the group and exits) and wait for it; a
-        guardian never started only has its pipe closed. Safe to call more than once."""
-        self._close_read()
-        if self.wfd is not None:
-            os.close(self.wfd)
-            self.wfd = None
+        """Close the pipe (the guardian then kills the group and exits) and wait for it, killing
+        it if it does not exit; a guardian never started only has its pipe closed. Safe to call
+        more than once, and while another thread is still in its housekeeping."""
+        self._take("wfd")
         if self.proc is not None:
             try:
                 self.proc.wait(10)
             except subprocess.TimeoutExpired:
                 self.proc.kill()
+                self.proc.wait()
+        self._take("rfd")
 
 
 # ---------------------------------------------------------------- Windows Job Objects
@@ -476,7 +489,8 @@ class _Request:
             guard = None
             try:
                 guard = _Guardian(self.popen.pid)         # prepared: the pipe, no process yet
-                self._step("guard", guard.start)
+                self._step("guard", guard.start)          # recorded the moment it exists
+                guard._close_read()                       # housekeeping, after it is recorded
             except BaseException:
                 if guard is not None:
                     guard.fire()                          # safe if kill() fired it already
@@ -627,6 +641,11 @@ def run_request(target, args=(), seconds=None, memory_mb=None, _registry=None):
     except MemoryError:
         req.kill()
         return LimitResult("memory", "RESOURCE LIMIT (memory: the request's data could not be prepared)")
+    except BaseException:
+        # anything else (the request's own exception, an interrupt, an unexpected runner
+        # error): cancel the request and remove its processes before passing it on (review 15a M2)
+        req.kill()
+        raise
     finally:
         if _registry is not None:
             _registry.leave(req)

@@ -77,7 +77,9 @@ reply there. Agreed with the user as its own milestone; it does not change any p
 - **Budgets:**
   - defaults of 120 s wall clock and 2 GB of memory per scene request (the current 120 s
     kept);
-  - both can be set with `--time` and `--memory` on the command line;
+  - both can be set with `--time` and `--memory` on the command line; a time limit is at
+    most 1,000,000 s (`MAX_TIME`, about 11.6 days, within every platform's thread-wait
+    range; review 15a M2), checked before any process starts;
   - a scene's `expect` block may lower its own limit, never raise it.
 - **Platforms:** Windows 10 and 11 and Linux (Ubuntu in CI), Python 3.10. macOS is not
   targeted: it should work through the POSIX path, but it is not tested.

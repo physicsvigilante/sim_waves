@@ -799,7 +799,9 @@ solving; relative tolerance), `abs`, `sqrt`, `sin`, `cos`, `tan`, `exp`, `log`, 
   scene of a `test` run, each scene of a `view`.
   - The default limits are **120 s and 2048 MB per request**; change them with `--time S`
     and `--memory MB`. The time counts from the moment the request is accepted, so the
-    process's start-up (about a second) is included.
+    process's start-up (about a second) is included. A time limit is a finite positive
+    number of seconds, at most 1,000,000 (about 11.6 days); a larger one is refused before
+    anything runs.
   - `view` writes its page only if every scene finished within the limits.
   - What the limits guard against is the engine's own runaway computation. A request's
     processes are cleaned up with it (its process group on Linux, its Job on Windows); a

@@ -843,6 +843,71 @@ if __name__ == "__main__":
         r = run_request("builtins:open", (ran, "w"), 30)
         check("L1 control: the marker request runs when it has time", os.path.exists(ran), repr(r))
 
+    # ---- M1 (Linux): a guardian that exists is recorded before any housekeeping, so a stall
+    #      after its birth cannot leave it alive after the result
+    if not contain.WINDOWS:
+        orig_close = contain._Guardian._close_read
+        entered, release, guardians = threading.Event(), threading.Event(), []
+
+        def stalled_close(self):
+            if self.proc is not None and not entered.is_set():
+                guardians.append(self.proc)            # born: Popen has returned
+                entered.set()
+                release.wait(GRACE + contain.CANCEL_WAIT + 3)
+            return orig_close(self)
+        contain._Guardian._close_read = stalled_close
+        try:
+            r = run_request("os:getpid", (), 0.1, 512)
+            at_return = [g.pid for g in guardians if g.poll() is None]
+        finally:
+            release.set()
+        time.sleep(2)
+        contain._Guardian._close_read = orig_close
+        check("M1 a guardian stalled after its birth, before its housekeeping: a limit, and it is gone when "
+              "the result returns", isinstance(r, LimitResult) and entered.is_set() and not at_return
+              and not child_procs(), f"{r!r} entered={entered.is_set()} alive_at_return={at_return}")
+        r = run_request("os:getpid", (), 30)
+        check("M1 control: a normal request with its guardian", isinstance(r, int), repr(r))
+
+    # ---- M2: a time limit is at most MAX_TIME, refused before any process starts; an
+    #      unexpected error after set-up began still cancels the request and removes its process
+    started = []
+    orig_popen8 = subprocess.Popen
+
+    class Rec8(orig_popen8):
+        def __init__(self, *a, **k):
+            super().__init__(*a, **k)
+            started.append(self.pid)
+    contain.subprocess.Popen = Rec8
+    for huge in (1e11, 100000000000, contain.MAX_TIME + 1):
+        try:
+            run_request("os:getpid", (), huge, 512)
+            refused = False
+        except LimitError:
+            refused = True
+        check(f"M2 a time limit of {huge!r} s is refused before any process starts", refused and not started,
+              f"refused={refused} started={started}")
+    contain.subprocess.Popen = orig_popen8
+    check("M2 the ceiling itself is accepted", check_limits(contain.MAX_TIME, 512) == (float(contain.MAX_TIME), 512))
+    out = subprocess.run([sys.executable, "-m", "simwaves", "run", "../format/examples/23_02_asc_005.yaml",
+                          "--time", "100000000000", "--memory", "512"], cwd=HERE, env=ENV,
+                         capture_output=True, text=True, encoding="utf-8", timeout=120)
+    check("M2 the CLI refuses --time 100000000000 with a clear error", out.returncode == 2 and
+          "at most" in out.stdout and "Traceback" not in out.stdout + out.stderr, out.stdout[-300:] + out.stderr[-300:])
+    orig_grace = contain.GRACE
+    contain.GRACE = 1e300                              # the hard-stop wait overflows after set-up began
+    try:
+        run_request("time:sleep", (60,), 30, 512)
+        raised = None
+    except BaseException as exc:                       # noqa: BLE001 - which error is checked below
+        raised = exc
+    contain.GRACE = orig_grace
+    time.sleep(2)
+    check("M2 an unexpected error after set-up began: it is passed on, and no process is left",
+          isinstance(raised, OverflowError) and not child_procs(), f"{raised!r} left={child_procs()}")
+    r = run_request("os:getpid", (), 30)
+    check("M2 control: a normal request", isinstance(r, int), repr(r))
+
     # ---- K2: the bytes checked are the bytes sent, and the ceiling is exact
     def frame_size(n):
         b = contain._request_bytes(("builtins:len", ("x" * n,), 1.0e6, 512, 60.0), 10 ** 9)
