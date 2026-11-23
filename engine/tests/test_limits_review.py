@@ -328,11 +328,13 @@ if __name__ == "__main__":
     except ResourceLimitError:
         check("R5 evaluate honours its timeout", True)
 
-    # ---- G2: the deadline starts at admission, so start-up counts
-    r = run_request("os:getpid", (), 0.05)
-    check("G2 start-up counts against the limit", isinstance(r, LimitResult), repr(r))
-    r = run_request("os:getpid", (), 30)
-    check("G2 control: the same request with time to start", isinstance(r, int), repr(r))
+    # ---- G2: the deadline starts at admission, so start-up (process and imports) counts. The
+    #      target's module imports SymPy and the engine, which takes far longer than 0.05 s on any
+    #      machine; the work itself (report_pid) takes 0.5 s
+    r = run_request("simwaves.testhooks:report_pid", (None,), 0.05)
+    check("G2 start-up and imports count against the limit", isinstance(r, LimitResult), repr(r))
+    r = run_request("simwaves.testhooks:report_pid", (None,), 30)
+    check("G2 control: the same request with time to start", isinstance(r, tuple), repr(r))
 
     # ---- G1, F2: a reply complete only after the deadline is a limit, and the process is gone
     r = run_request("simwaves.testhooks:late_big", (64 * 1024 * 1024,), 3)
