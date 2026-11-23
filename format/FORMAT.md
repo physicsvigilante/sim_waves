@@ -804,7 +804,7 @@ solving; relative tolerance), `abs`, `sqrt`, `sin`, `cos`, `tan`, `exp`, `log`, 
   - What the limits guard against is the engine's own runaway computation. A request's
     processes are cleaned up with it (its process group on Linux, its Job on Windows); a
     process deliberately detached into a new session is outside that guarantee. A request
-    whose data exceeds 16 MB is refused.
+    carries plain data only (dicts, lists, strings, numbers), at most 16 MB of it.
   - A request that passes a limit is stopped and reported as
     `RESOURCE LIMIT (time 120 s)` or `RESOURCE LIMIT (memory 2048 MB)` (exit status 3).
     This says nothing about the physics: it is not an inconsistency, a refusal or an

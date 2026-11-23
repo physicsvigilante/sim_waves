@@ -370,7 +370,8 @@ if __name__ == "__main__":
     r, dt = timed(30, fast_fail)
     check("H3 control: a set-up failing within the deadline is a crash", isinstance(r, CrashResult), f"{r!r}")
     r, dt = timed(1, never)
-    check("H3 a set-up that never completes ends at the hard stop", isinstance(r, LimitResult) and dt < 1 + GRACE + 5,
+    check("H3 a set-up that never completes ends at the hard stop", isinstance(r, LimitResult) and
+          dt < 1 + GRACE + contain.CANCEL_WAIT + 3,
           f"{r!r} {dt:.1f} s")
 
     # ---- H4: the request's size is bounded before any process starts; the memory cap comes first
@@ -476,6 +477,117 @@ if __name__ == "__main__":
               got and not alive(got["child"]), str(got))
         for pid in got.values():
             kill_quietly(pid)
+
+    # ---- I1: a request cancelled during set-up cannot leave a process behind
+    def child_procs():
+        out = []
+        for pr in psutil.Process().children(recursive=True):
+            try:
+                if "simwaves.child" in " ".join(pr.cmdline()):
+                    out.append(pr.pid)
+            except psutil.Error:
+                pass
+        return out
+
+    made = []
+    orig_popen3 = subprocess.Popen
+
+    class Rec3(orig_popen3):
+        delay = 0.0
+
+        def __init__(self, *a, **k):
+            if "simwaves.child" in " ".join(a[0]) and Rec3.delay:
+                time.sleep(Rec3.delay)
+            super().__init__(*a, **k)
+            made.append(self.pid)
+    contain.subprocess.Popen = Rec3
+    orig_launch = contain._Request.launch
+
+    def delayed_launch(self):
+        time.sleep(GRACE + 0.6)
+        return orig_launch(self)
+    contain._Request.launch = delayed_launch
+    made.clear()
+    r = run_request("os:getpid", (), 0.1, 512)
+    contain._Request.launch = orig_launch
+    time.sleep(1.2)
+    check("I1 a launch delayed past the hard stop starts no process after the result",
+          isinstance(r, LimitResult) and not any(alive(p) for p in made) and not child_procs(), f"{r!r} {made}")
+    made.clear()
+    Rec3.delay = GRACE + 0.6                              # process creation itself finishes after the stop
+    r = run_request("os:getpid", (), 0.1, 512)
+    Rec3.delay = 0.0
+    check("I1 a process created after the stop is killed before the result returns",
+          isinstance(r, LimitResult) and made and not any(alive(p) for p in made), f"{r!r} {made}")
+    made.clear()
+    if contain.WINDOWS:
+        contain._ensure_supervisor()
+        orig_job_init = contain._Job.__init__
+
+        def slow_job(self, memory_mb=None):
+            time.sleep(GRACE + 0.6)
+            orig_job_init(self, memory_mb)
+        contain._Job.__init__ = slow_job
+        r = run_request("os:getpid", (), 0.1, 512)
+        contain._Job.__init__ = orig_job_init
+        what = "job"
+    else:
+        orig_guard_init = contain._Guardian.__init__
+
+        def slow_guard(self, pgid):
+            time.sleep(GRACE + 0.6)
+            orig_guard_init(self, pgid)
+        contain._Guardian.__init__ = slow_guard
+        r = run_request("os:getpid", (), 0.1, 512)
+        contain._Guardian.__init__ = orig_guard_init
+        what = "guardian"
+    time.sleep(1)
+    check(f"I1 a {what} set up after the stop: the process is killed before the result returns",
+          isinstance(r, LimitResult) and made and not any(alive(p) for p in made), f"{r!r} {made}")
+    contain.subprocess.Popen = orig_popen3
+    r = run_request("os:getpid", (), 30)
+    check("I1 control: a normal request with time to set up", isinstance(r, int), repr(r))
+
+    # ---- I2: a Ctrl-C caught around run_dir leaves no request running
+    import _thread
+    with tempfile.TemporaryDirectory() as d:
+        for n in ("a", "b"):
+            write(d, f"{n}.yaml", "observe: {v: 'test_spin(30)'}\nexpect: {error: limit}\n")
+        fired = []
+
+        def interrupter():
+            for _ in range(200):
+                if child_procs():
+                    time.sleep(0.5)
+                    fired.append(True)
+                    _thread.interrupt_main()
+                    return
+                time.sleep(0.1)
+        threading.Thread(target=interrupter, daemon=True).start()
+        caught = False
+        try:
+            run_dir(d, 2, 30, 512)
+        except KeyboardInterrupt:
+            caught = True
+        left = child_procs()
+        check("I2 Ctrl-C caught around run_dir: no request process left running",
+              fired and caught and not left, f"fired={bool(fired)} caught={caught} left={left}")
+
+    # ---- O1: a request carries plain data only, bounded before it is copied
+    try:
+        export({"observe": {"v": "1"}, "extra": object()})
+        check("O1 non-plain data refused", False, "returned")
+    except RuntimeError as exc:
+        check("O1 non-plain data refused", "plain data" in str(exc), str(exc))
+    try:
+        export({"observe": {"v": "1"}, "notes": ["y" * (1024 * 1024)] * 20}, memory_mb=256)
+        check("O1 oversized nested data refused as a memory limit", False, "returned")
+    except ResourceLimitError as exc:
+        check("O1 oversized nested data refused as a memory limit", exc.kind == "memory", str(exc))
+    r = run_request("builtins:len", ([0] * 3_000_000,), 30)
+    check("O1 data with too many items refused", isinstance(r, LimitResult) and r.kind == "memory", repr(r))
+    out = export({"observe": {"v": "1"}})
+    check("O1 control: plain data exports", isinstance(out, dict), type(out).__name__)
 
     # ---- R6, F4: no process outlives its request (descendants included)
     with tempfile.TemporaryDirectory() as d:

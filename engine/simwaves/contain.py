@@ -37,6 +37,7 @@ DEFAULT_TIME = 120            # seconds per request (start-up included)
 DEFAULT_MEMORY = 2048         # MB per request process
 MIN_MEMORY = 256              # MB: the engine needs about 150 MB just to start
 GRACE = 10                    # seconds beyond the time limit before the parent kills
+CANCEL_WAIT = 2               # seconds a cancelled set-up is given to finish before the result returns
 MAX_SCENE_BYTES = 64 * 1024   # a scene file above this is refused before parsing
 MAX_REQUEST_BYTES = 16 * 1024 * 1024   # a request (its pickled arguments) above this is refused
 WINDOWS = sys.platform == "win32"
@@ -362,14 +363,35 @@ class CrashResult:
         return self.message
 
 
+class _Cancelled(Exception):
+    """The request was cancelled (timed out or interrupted) while its process was being set up."""
+
+
 class _Request:
-    """One running request: the child process and its owners."""
+    """One running request: the child process and its owners, with one cancellation state
+    shared by set-up and clean-up (review 15a I1). Once kill() has run, set-up cannot start a
+    process; anything set-up created just before it noticed is killed at once."""
 
     def __init__(self, memory_mb):
         self.memory_mb = memory_mb
         self.popen = self.job = self.guard = None
+        self.cancelled = False
+        self._lock = threading.Lock()
+
+    def _attach(self, name, value):
+        """Record a newly created owner or process; if the request was cancelled meanwhile,
+        kill everything (it included) and stop the set-up."""
+        with self._lock:
+            setattr(self, name, value)
+            cancelled = self.cancelled
+        if cancelled:
+            self.kill()
+            raise _Cancelled("the request was cancelled during set-up")
 
     def launch(self):
+        with self._lock:
+            if self.cancelled:
+                raise _Cancelled("the request was cancelled before its process was started")
         cmd = [sys.executable, "-m", "simwaves.child", str(self.memory_mb)]
         env = dict(os.environ)
         env["PYTHONPATH"] = os.pathsep.join([ENGINE_DIR] + ([env["PYTHONPATH"]] if env.get("PYTHONPATH") else []))
@@ -381,67 +403,122 @@ class _Request:
                 # before the child's own job was assigned: refuse (review 15a H1)
                 raise OSError("Windows refused to put this process in a job; a request's process could "
                               "outlive it, so none is started")
-            self.popen = subprocess.Popen(cmd, env=env, creationflags=0x00000004 | 0x08000000,   # SUSPENDED, NO_WINDOW
-                                          **pipes)
+            self._attach("popen", subprocess.Popen(cmd, env=env, creationflags=0x00000004 | 0x08000000,
+                                                   **pipes))                       # SUSPENDED, NO_WINDOW
             try:
-                self.job = _Job(self.memory_mb)
+                self._attach("job", _Job(self.memory_mb))
                 self.job.assign_handle(int(self.popen._handle))
-                _, _, nt, _ = _Win.get()
-                if nt.NtResumeProcess(int(self.popen._handle)) != 0:
-                    raise OSError("NtResumeProcess failed")
+                with self._lock:                          # resume only a request still wanted
+                    if self.cancelled:
+                        raise _Cancelled("the request was cancelled during set-up")
+                    _, _, nt, _ = _Win.get()
+                    if nt.NtResumeProcess(int(self.popen._handle)) != 0:
+                        raise OSError("NtResumeProcess failed")
             except BaseException:
                 self.kill()
                 raise
         else:
-            self.popen = subprocess.Popen(cmd, env=env, start_new_session=True, **pipes)
+            self._attach("popen", subprocess.Popen(cmd, env=env, start_new_session=True, **pipes))
             try:
-                self.guard = _Guardian(self.popen.pid)
+                self._attach("guard", _Guardian(self.popen.pid))
             except BaseException:
                 self.kill()
                 raise
 
     def kill(self):
-        """Kill the child and everything it started; wait for the child."""
-        if self.job is not None:
-            self.job.close()
-            self.job = None
-        if self.popen is not None:
+        """Cancel the request, kill its process and everything it started, and wait for it.
+        Safe to call more than once, and from any thread."""
+        with self._lock:
+            self.cancelled = True
+            job, popen, guard = self.job, self.popen, self.guard
+            self.job = self.guard = None
+        if job is not None:
+            job.close()
+        if popen is not None:
             if not WINDOWS:
                 import signal
                 try:
-                    os.killpg(self.popen.pid, signal.SIGKILL)
+                    os.killpg(popen.pid, signal.SIGKILL)
                 except (ProcessLookupError, PermissionError):
                     pass
             try:
-                self.popen.kill()
+                popen.kill()
             except OSError:
                 pass
             try:
-                self.popen.wait(10)
+                popen.wait(10)
             except subprocess.TimeoutExpired:
                 pass
-        if self.guard is not None:
-            self.guard.fire()
-            self.guard = None
+        if guard is not None:
+            guard.fire()
 
 
-def run_request(target, args=(), seconds=None, memory_mb=None):
+_PLAIN_NODES = 2_000_000       # at most this many items in a request's data
+
+
+def _plain_size(obj, limit):
+    """The approximate size of plain data (dicts, lists, tuples, strings, bytes, numbers, booleans,
+    None), counted without copying it; stops as soon as it passes `limit`. Anything else is
+    refused (review 15a O1: a request carries plain YAML-style data only)."""
+    total, nodes, stack = 0, 0, [obj]
+    while stack:
+        o = stack.pop()
+        nodes += 1
+        if nodes > _PLAIN_NODES:
+            return limit + 1
+        if isinstance(o, (str, bytes, bytearray)):
+            total += len(o)
+        elif isinstance(o, bool) or o is None or isinstance(o, float):
+            total += 8
+        elif isinstance(o, int):
+            total += 8 + o.bit_length() // 8
+        elif isinstance(o, (list, tuple)):
+            total += 8
+            stack.extend(o)
+        elif isinstance(o, dict):
+            total += 8
+            for k, v in o.items():
+                stack.append(k)
+                stack.append(v)
+        else:
+            raise TypeError(f"a request carries plain data only (dicts, lists, strings, numbers), not "
+                            f"{type(o).__name__}")
+        if total > limit:
+            return total
+    return total
+
+
+def run_request(target, args=(), seconds=None, memory_mb=None, _registry=None):
     """Run target(*args) in a fresh contained process. Returns its value, a LimitResult or a
     CrashResult, or re-raises the request's own exception. The deadline starts now, before the
-    process exists. The process and everything it started are gone when this returns."""
+    process exists. The process and everything it started are gone when this returns. A
+    request carries plain data only, at most MAX_REQUEST_BYTES. `_registry` (run_many's) is a
+    set of active requests, so that they can be cancelled together."""
     seconds, memory_mb = resolve_limits(seconds, memory_mb)
     t0 = time.monotonic()
     deadline = t0 + seconds
-    # the request's size is bounded before any process exists (review 15a H4)
+    # the request's data is checked (plain, bounded) before it is copied or any process exists
+    # (review 15a H4, O1)
     try:
-        payload = pickle.dumps((target, tuple(args)), protocol=pickle.HIGHEST_PROTOCOL)
-    except Exception as exc:                              # noqa: BLE001
-        return CrashResult(f"the request cannot be sent ({type(exc).__name__}: {exc})")
-    if len(payload) > MAX_REQUEST_BYTES:
-        return LimitResult("memory", f"RESOURCE LIMIT (request size {len(payload)} bytes; at most "
-                                     f"{MAX_REQUEST_BYTES // (1024 * 1024)} MB)")
-    del payload
+        size = _plain_size((target, tuple(args)), MAX_REQUEST_BYTES)
+    except TypeError as exc:
+        return CrashResult(f"the request cannot be sent: {exc}")
+    if size > MAX_REQUEST_BYTES:
+        return LimitResult("memory", f"RESOURCE LIMIT (request data over {MAX_REQUEST_BYTES // (1024 * 1024)} MB)")
     req = _Request(memory_mb)
+    if _registry is not None:
+        _registry.add(req)
+    try:
+        return _run(req, target, args, seconds, memory_mb, deadline)
+    except MemoryError:
+        req.kill()
+        return LimitResult("memory", f"RESOURCE LIMIT (memory: the request's data could not be prepared)")
+    finally:
+        if _registry is not None:
+            _registry.discard(req)
+
+
+def _run(req, target, args, seconds, memory_mb, deadline):
     notes, box, tail = [], {}, []
 
     # launching runs under the same deadline (review 15a H3): a set-up that hangs ends at the
@@ -458,8 +535,15 @@ def run_request(target, args=(), seconds=None, memory_mb=None):
     launcher.start()
     launcher.join(max(0.0, deadline + GRACE - time.monotonic()))
     if launcher.is_alive():
+        # cancel: from now the set-up cannot start a process, and whatever it creates is killed
+        # the moment it is recorded (review 15a I1). Wait a little for a set-up that is just
+        # finishing, so that its process is gone before the result returns
+        req.kill()
+        launcher.join(CANCEL_WAIT)
         req.kill()
         return LimitResult("time", f"RESOURCE LIMIT (time {seconds:g} s)")
+    if req.cancelled and "error" in started:              # cancelled from outside (run_many on Ctrl-C)
+        return CrashResult("the request was cancelled")
     if "error" in started:
         req.kill()
         if time.monotonic() > deadline:
@@ -554,13 +638,14 @@ def run_many(target, items, jobs, seconds, memory_mb=None, on_result=None):
     nxt = [0]
     lock = threading.Lock()
     stop = threading.Event()
+    active = set()                                        # the requests running now (review 15a I2)
 
     def report(i, r):
         with lock:
             if reported[i]:
                 return
             results[i], reported[i] = r, True
-            if on_result is not None:
+            if on_result is not None and not stop.is_set():   # no callbacks after an interrupt
                 on_result(i, items[i], r)
 
     def loop():
@@ -571,7 +656,7 @@ def run_many(target, items, jobs, seconds, memory_mb=None, on_result=None):
                 i = nxt[0]
                 nxt[0] += 1
             try:
-                r = run_request(target, (items[i],), seconds, memory_mb)
+                r = run_request(target, (items[i],), seconds, memory_mb, _registry=active)
             except BaseException as exc:                  # noqa: BLE001 - every item gets a result
                 r = CrashResult(f"the runner failed on this item ({type(exc).__name__}: {exc})")
             report(i, r)
@@ -584,7 +669,15 @@ def run_many(target, items, jobs, seconds, memory_mb=None, on_result=None):
             for t in threads:
                 t.join(0.2)
     except KeyboardInterrupt:
+        # cancel every running request, kill its processes, and wait for the runner threads,
+        # before passing the interrupt on (review 15a I2)
         stop.set()
+        for req in list(active):
+            req.kill()
+        for t in threads:
+            t.join(GRACE + 15)
+        for req in list(active):
+            req.kill()
         raise
     finally:
         for i in range(len(items)):

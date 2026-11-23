@@ -77,3 +77,18 @@
 | H3 | high | Process set-up was not under the deadline: a hang blocked; a late failure was a crash. | Set-up runs on its own thread under the request's deadline: a set-up that never completes ends at the hard stop; one that fails after the deadline is a limit. | a slow set-up (0.5 s against 0.3 s) is a limit, and within 30 s gives the value; a late failure is a limit, and a prompt failure a crash; a set-up that never completes stops at `1 + GRACE` |
 | H4 | high | Linux: the memory cap came after the request was unpickled; requests were unbounded. | The child's memory cap comes from its **command line** and is set before it reads the request (on Windows the Job is assigned while the process is suspended). A request over **16 MB** (pickled) is refused as a memory limit before any process starts. | a 20 MB request is refused with no process started, and 1 MB runs; Linux: the child's `RLIMIT_AS` is the requested cap; oversized `export` data is refused |
 | H5 | medium | The G2 check assumed start-up takes over 0.05 s; it fails on fast Linux. | Fixed in `9223498` (a target whose imports are slow everywhere), and now **deterministic**: injected, measured set-up delays with fast and slow controls. | 6 set-up timing checks (see H3) |
+
+## Round 5
+- **Reviewer:** ChatGPT (Astra), posted on PR #18 on 2026-11-23.
+- **Commit reviewed:** `562c961aa3524b6c17c7bbe581be41c5e4cfdc1e`.
+- **Verdict:** FAIL.
+  - Linux CI was green at this commit (run 45114596307: 339 scenes, 59/59 review checks).
+  - Resolved: H1 (Windows fails closed), H3 (set-up deadline), H4, H5. H1 (Linux) and H2 were accepted as declared exclusions.
+  - Two required findings (I1, I2) and one optional (O1).
+- **Owner's decision:** the user approved the recommended shared fix, one cancellation state per request, on 2026-11-23, after an explanation of the review history.
+
+| # | Severity | Finding | Fix | Tests (`test_limits_review.py`) |
+|---|---|---|---|---|
+| I1 | high | A launch that timed out kept running and could create the request's process after the limit was returned. | One **cancellation state** per request, shared by set-up and clean-up (`_Request`): `kill()` marks it cancelled under a lock. Set-up checks it before starting a process and records each process or owner through `_attach`, which kills everything at once if the request was cancelled meanwhile. After a cancel, `run_request` gives the set-up `CANCEL_WAIT` (2 s) to finish, so its process is gone before the result returns; a set-up that never completes still ends by the deadline + `GRACE` + `CANCEL_WAIT`. | your delayed launch: no process after the result; a process creation that finishes after the stop is killed before the result returns; a job (Windows) or guardian (Linux) set up after the stop: process killed before return; a fast control |
+| I2 | medium | A caught Ctrl-C around `run_dir` left the in-flight requests running. | `run_many` keeps the set of active requests (`run_request(..., _registry=...)`). On Ctrl-C it cancels them all, kills their processes, waits for its threads, and only then passes the interrupt on; no callbacks run after the interrupt. | a caught Ctrl-C around `run_dir` with two running requests: no request process left |
+| O1 | medium, optional | The 16 MB check pickled the whole input first, with no bound, in the parent. | A request carries **plain data only** (dicts, lists, strings, bytes, numbers, booleans, None). It is sized by a walk that copies nothing and stops past 16 MB or 2 million items; anything else is refused before pickling. A `MemoryError` while preparing it is a memory limit. | non-plain data refused; 20 MB of nested strings refused as a memory limit; 3 million items refused; plain data exports |
