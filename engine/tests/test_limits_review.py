@@ -672,6 +672,86 @@ if __name__ == "__main__":
     check("J1 declared case: a limit is returned, and the late process is killed once creation returns",
           isinstance(r, LimitResult) and sent and not any(alive(p) for p in sent), f"{r!r} {sent}")
 
+    # ---- K1: a pre-creation step delayed past the stop cannot start a process afterwards
+    import collections.abc
+    for label in (["environment"] + (["supervisor job"] if contain.WINDOWS else [])):
+        created = []
+        orig_popen5 = subprocess.Popen
+
+        class Rec5(orig_popen5):
+            def __init__(self, *a, **k):
+                super().__init__(*a, **k)
+                if "simwaves.child" in " ".join(a[0]):
+                    created.append((self.pid, time.monotonic()))
+        contain.subprocess.Popen = Rec5
+        release = threading.Event()
+        restore = None
+        if label == "environment":
+            real_env = contain.os.environ
+
+            class SlowEnv(collections.abc.Mapping):
+                def __len__(self):
+                    return len(real_env)
+
+                def __getitem__(self, key):
+                    return real_env[key]
+
+                def __iter__(self):
+                    release.wait(GRACE + contain.CANCEL_WAIT + 3)
+                    return iter(real_env)
+            contain.os.environ = SlowEnv()
+
+            def restore():
+                contain.os.environ = real_env
+        else:
+            real_sup = contain._ensure_supervisor
+
+            def slow_sup():
+                release.wait(GRACE + contain.CANCEL_WAIT + 3)
+                return real_sup()
+            contain._ensure_supervisor = slow_sup
+
+            def restore():
+                contain._ensure_supervisor = real_sup
+        r = run_request("os:getpid", (), 0.1, 512)
+        returned = time.monotonic()
+        if label == "environment":
+            restore()                                     # the env must be real again before release
+        release.set()
+        time.sleep(2)
+        if label != "environment":
+            restore()
+        contain.subprocess.Popen = orig_popen5
+        late = [pid for pid, born in created if born > returned]
+        check(f"K1 the {label} step delayed past the stop: a limit, and no process started after it",
+              isinstance(r, LimitResult) and not late and not child_procs(), f"{r!r} created={created}")
+    r = run_request("os:getpid", (), 30)
+    check("K1 control: a normal request", isinstance(r, int), repr(r))
+
+    # ---- K2: the bytes checked are the bytes sent, and the ceiling is exact
+    def frame_size(n):
+        b = contain._request_bytes(("builtins:len", ("x" * n,), 1.0e6, 512, 60.0), 10 ** 9)
+        return len(b)
+    c = frame_size(10 ** 6) - 10 ** 6                    # the frame's fixed part, for large strings
+    n = contain.MAX_REQUEST_BYTES - c
+    check("K2 the boundary is computed exactly", frame_size(n) == contain.MAX_REQUEST_BYTES,
+          f"{frame_size(n)} vs {contain.MAX_REQUEST_BYTES}")
+    r = run_request("builtins:len", ("x" * n,), 60.0, 512)
+    check("K2 a frame of exactly 16 MB is sent", r == n, repr(r))
+    r = run_request("builtins:len", ("x" * (n + 1),), 60.0, 512)
+    check("K2 one byte more is refused before any process starts", isinstance(r, LimitResult) and r.kind == "memory",
+          repr(r))
+    payload = []
+    orig_launch_k = contain._Request.launch
+
+    def mutate_then_launch(self):
+        payload.append(b"x" * (20 * 1024 * 1024))       # the caller's data grows after the check
+        return orig_launch_k(self)
+    contain._Request.launch = mutate_then_launch
+    r = run_request("builtins:len", (payload,), 60, 512)
+    contain._Request.launch = orig_launch_k
+    check("K2 data changed after the check is not sent: the request carries what was checked", r == 0, repr(r))
+
     # ---- R6, F4: no process outlives its request (descendants included)
     with tempfile.TemporaryDirectory() as d:
         for label, target, secs in (("soft time limit", "spawn_then_spin", 3),

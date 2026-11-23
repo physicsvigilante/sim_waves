@@ -173,10 +173,10 @@ def child_main():
     for var in ("OPENBLAS_NUM_THREADS", "OMP_NUM_THREADS", "MKL_NUM_THREADS"):
         os.environ.setdefault(var, "1")
     try:
-        target, args, seconds, memory_mb, nominal = _read_frame(sys.stdin.buffer)
+        target, args, deadline, memory_mb, nominal = _read_frame(sys.stdin.buffer)
     except Exception:                                     # noqa: BLE001 - nothing to run
         os._exit(2)
-    _deadline = time.monotonic() + seconds
+    _deadline = deadline                                  # the parent's, on the system-wide monotonic clock
     note(("pid", os.getpid()))
     from .budget import within
     from .errors import ResourceLimitError
@@ -369,29 +369,38 @@ class _Cancelled(Exception):
 
 class _Request:
     """One running request: the child process and its owners, with one cancellation state
-    shared by set-up and clean-up (review 15a I1). Once kill() has run, set-up cannot start a
-    process; anything set-up created just before it noticed is killed at once."""
+    shared by set-up and clean-up (review 15a I1, K1). Each creation step checks for a cancel and
+    creates its process or owner under one lock, with nothing in between, so after kill() no
+    step can begin. kill() raises the cancel signal first and waits at most CANCEL_WAIT for the
+    lock. If a creation call holds it longer (it stalled inside the operating system: the
+    declared J1 case), what it creates is killed as soon as it returns."""
 
     def __init__(self, memory_mb):
         self.memory_mb = memory_mb
         self.popen = self.job = self.guard = None
-        self.cancelled = False
+        self._cancel = threading.Event()
         self._lock = threading.Lock()
 
-    def _attach(self, name, value):
-        """Record a newly created owner or process; if the request was cancelled meanwhile,
-        kill everything (it included) and stop the set-up."""
+    @property
+    def cancelled(self):
+        return self._cancel.is_set()
+
+    def _create(self, name, make):
+        """Check for a cancel and create (make()) under the lock, then record it as `name`.
+        Returns the new object."""
         with self._lock:
-            setattr(self, name, value)
-            cancelled = self.cancelled
-        if cancelled:
+            if self._cancel.is_set():
+                raise _Cancelled("the request was cancelled before this set-up step")
+            obj = make()
+            setattr(self, name, obj)
+        if self._cancel.is_set():                         # cancelled while it was being created
             self.kill()
             raise _Cancelled("the request was cancelled during set-up")
+        return obj
 
     def launch(self):
-        with self._lock:
-            if self.cancelled:
-                raise _Cancelled("the request was cancelled before its process was started")
+        if self._cancel.is_set():
+            raise _Cancelled("the request was cancelled before its process was started")
         cmd = [sys.executable, "-m", "simwaves.child", str(self.memory_mb)]
         env = dict(os.environ)
         env["PYTHONPATH"] = os.pathsep.join([ENGINE_DIR] + ([env["PYTHONPATH"]] if env.get("PYTHONPATH") else []))
@@ -403,13 +412,20 @@ class _Request:
                 # before the child's own job was assigned: refuse (review 15a H1)
                 raise OSError("Windows refused to put this process in a job; a request's process could "
                               "outlive it, so none is started")
-            self._attach("popen", subprocess.Popen(cmd, env=env, creationflags=0x00000004 | 0x08000000,
-                                                   **pipes))                       # SUSPENDED, NO_WINDOW
+            self._create("popen", lambda: subprocess.Popen(cmd, env=env, creationflags=0x00000004 | 0x08000000,
+                                                           **pipes))               # SUSPENDED, NO_WINDOW
             try:
-                self._attach("job", _Job(self.memory_mb))
-                self.job.assign_handle(int(self.popen._handle))
+                def own_job():
+                    job = _Job(self.memory_mb)
+                    try:
+                        job.assign_handle(int(self.popen._handle))
+                    except BaseException:
+                        job.close()
+                        raise
+                    return job
+                self._create("job", own_job)
                 with self._lock:                          # resume only a request still wanted
-                    if self.cancelled:
+                    if self._cancel.is_set():
                         raise _Cancelled("the request was cancelled during set-up")
                     _, _, nt, _ = _Win.get()
                     if nt.NtResumeProcess(int(self.popen._handle)) != 0:
@@ -418,9 +434,9 @@ class _Request:
                 self.kill()
                 raise
         else:
-            self._attach("popen", subprocess.Popen(cmd, env=env, start_new_session=True, **pipes))
+            self._create("popen", lambda: subprocess.Popen(cmd, env=env, start_new_session=True, **pipes))
             try:
-                self._attach("guard", _Guardian(self.popen.pid))
+                self._create("guard", lambda: _Guardian(self.popen.pid))
             except BaseException:
                 self.kill()
                 raise
@@ -428,10 +444,14 @@ class _Request:
     def kill(self):
         """Cancel the request, kill its process and everything it started, and wait for it.
         Safe to call more than once, and from any thread."""
-        with self._lock:
-            self.cancelled = True
+        self._cancel.set()
+        got = self._lock.acquire(timeout=CANCEL_WAIT)
+        try:
             job, popen, guard = self.job, self.popen, self.guard
             self.job = self.guard = None
+        finally:
+            if got:
+                self._lock.release()
         if job is not None:
             job.close()
         if popen is not None:
@@ -461,32 +481,32 @@ class _TooBig(Exception):
     pass
 
 
-class _ByteCounter:
-    """A write-only sink for the pickler: counts the bytes, keeps none, and stops the pickling
-    as soon as the count passes the limit."""
+class _CappedBuffer:
+    """A pickler's sink that keeps the bytes and stops as soon as they pass the limit."""
 
     def __init__(self, limit):
-        self.limit, self.n = limit, 0
+        self.limit, self.data = limit, bytearray()
 
     def write(self, b):
-        self.n += len(b)
-        if self.n > self.limit:
+        if len(self.data) + len(b) > self.limit:
             raise _TooBig()
+        self.data += b
         return len(b)
 
 
 def _request_bytes(obj, limit):
-    """The exact size in bytes of the request as it will be sent, or limit + 1 if it would pass
-    the limit (review 15a J3: bytes, not characters). The data must be plain: exactly the
-    built-in types dict, list, tuple, str, bytes, bytearray, int, float, bool and None, no
-    subclasses (review 15a O1), at most _PLAIN_NODES items. It is checked first without copying
-    anything, then counted by a pickler that writes into a counter and stops at the limit."""
+    """The request frame serialised once, exactly as it will be sent, or None if it would pass
+    `limit` bytes (review 15a J3, K2: what is checked is what is sent, so later changes to the
+    caller's data cannot matter). The data must be plain: exactly the built-in types dict, list,
+    tuple, str, bytes, bytearray, int, float, bool and None, no subclasses (review 15a O1), at
+    most _PLAIN_NODES items. It is checked without copying, then serialised into a buffer that
+    stops at the limit."""
     nodes, stack = 0, [obj]
     while stack:
         o = stack.pop()
         nodes += 1
         if nodes > _PLAIN_NODES:
-            return limit + 1
+            return None
         t = type(o)
         if t not in _PLAIN_TYPES:
             raise TypeError(f"a request carries plain data only (dicts, lists, strings, numbers), not {t.__name__}")
@@ -496,12 +516,12 @@ def _request_bytes(obj, limit):
             for k, v in o.items():
                 stack.append(k)
                 stack.append(v)
-    counter = _ByteCounter(limit)
+    buf = _CappedBuffer(limit)
     try:
-        pickle.Pickler(counter, protocol=pickle.HIGHEST_PROTOCOL).dump(obj)
+        pickle.Pickler(buf, protocol=pickle.HIGHEST_PROTOCOL).dump(obj)
     except _TooBig:
-        return limit + 1
-    return counter.n
+        return None
+    return bytes(buf.data)
 
 
 class _Registry:
@@ -552,16 +572,18 @@ def run_request(target, args=(), seconds=None, memory_mb=None, _registry=None):
     try:
         # the request's data is checked (plain, exact byte count) before any process exists
         # (review 15a H4, O1, J3)
+        # the whole frame, deadline included (as a time on the system-wide monotonic clock), is
+        # serialised once here; exactly these bytes are sent (review 15a K2)
         try:
-            size = _request_bytes((target, tuple(args)), MAX_REQUEST_BYTES - 256)   # 256: the frame's other fields
+            frame = _request_bytes((target, tuple(args), deadline, memory_mb, seconds), MAX_REQUEST_BYTES)
         except TypeError as exc:
             return CrashResult(f"the request cannot be sent: {exc}")
-        if size > MAX_REQUEST_BYTES - 256:
-            return LimitResult("memory", f"RESOURCE LIMIT (request data over "
-                                         f"{MAX_REQUEST_BYTES // (1024 * 1024)} MB as sent)")
+        if frame is None:
+            return LimitResult("memory", f"RESOURCE LIMIT (request over {MAX_REQUEST_BYTES // (1024 * 1024)} MB "
+                                         f"as sent)")
         if req.cancelled:
             return CrashResult("the request was cancelled before it started")
-        return _run(req, target, args, seconds, memory_mb, deadline)
+        return _run(req, frame, seconds, memory_mb, deadline)
     except MemoryError:
         req.kill()
         return LimitResult("memory", "RESOURCE LIMIT (memory: the request's data could not be prepared)")
@@ -570,7 +592,7 @@ def run_request(target, args=(), seconds=None, memory_mb=None, _registry=None):
             _registry.leave(req)
 
 
-def _run(req, target, args, seconds, memory_mb, deadline):
+def _run(req, frame, seconds, memory_mb, deadline):
     notes, box, tail = [], {}, []
 
     # launching runs under the same deadline (review 15a H3): a set-up that hangs ends at the
@@ -613,15 +635,16 @@ def _run(req, target, args, seconds, memory_mb, deadline):
 
     def transfer():
         try:
-            left = max(0.001, deadline - time.monotonic())
-            _write_frame(req.popen.stdin, (target, tuple(args), left, memory_mb, seconds))
+            req.popen.stdin.write(struct.pack("<Q", len(frame)))
+            req.popen.stdin.write(frame)                   # exactly the bytes checked at admission
+            req.popen.stdin.flush()
             req.popen.stdin.close()
             while True:
-                frame = _read_frame(req.popen.stdout)
-                if frame[0] == "note":
-                    notes.append(frame[1])
+                reply = _read_frame(req.popen.stdout)
+                if reply[0] == "note":
+                    notes.append(reply[1])
                     continue
-                box["msg"] = frame
+                box["msg"] = reply
                 return
         except (EOFError, OSError, ValueError):
             box["msg"] = ("died",)
