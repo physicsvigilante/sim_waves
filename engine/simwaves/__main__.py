@@ -64,9 +64,16 @@ def _options(argv):
     while i < len(argv):
         a = argv[i]
         if a in names:
-            if i + 1 >= len(argv) or not argv[i + 1].isdigit() or int(argv[i + 1]) <= 0:
+            text = argv[i + 1] if i + 1 < len(argv) else ""
+            # ASCII digits only (str.isdigit also accepts '²'), and no conversion of a huge digit
+            # string: anything over 40 digits is simply "above 10**40", which every limit refuses
+            # with a clear error (review 15a N2)
+            if not (text.isascii() and text.isdigit()):
                 return None
-            opts[names[a]] = int(argv[i + 1])
+            value = int(text) if len(text.lstrip("0")) <= 40 else 10 ** 40 + 1
+            if value <= 0:
+                return None
+            opts[names[a]] = value
             i += 2
             continue
         rest.append(a)

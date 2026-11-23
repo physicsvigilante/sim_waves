@@ -79,7 +79,8 @@ reply there. Agreed with the user as its own milestone; it does not change any p
     kept);
   - both can be set with `--time` and `--memory` on the command line; a time limit is at
     most 1,000,000 s (`MAX_TIME`, about 11.6 days, within every platform's thread-wait
-    range; review 15a M2), checked before any process starts;
+    range; review 15a M2) and a memory limit at most 1,048,576 MB (`MAX_MEMORY`, 1 TB;
+    N2), checked exactly (integers are never converted to float) before any process starts;
   - a scene's `expect` block may lower its own limit, never raise it.
 - **Platforms:** Windows 10 and 11 and Linux (Ubuntu in CI), Python 3.10. macOS is not
   targeted: it should work through the POSIX path, but it is not tested.
@@ -119,21 +120,20 @@ The user narrowed and fixed what containment promises, under the review policy:
     Linux**, before its first line of Python sets the parent-death signal. The child then
     exits by itself at that first line, because it sees its parent is gone, before reading
     any request. It never runs a request unowned.
-  - **A process creation already under way when the request is cancelled** (decided in
-    round 6, option 1, and made precise in round 8 by the commit-point design). Each step
+  - **The result's timing when a creation step stalls** (decided in round 6, made precise
+    in round 8 by the commit-point design, and changed in round 10, option 1). Each step
     that creates a process, or lets one run, passes a **commit point**: under the request's
     lock it either sees the cancel and stops, or marks itself in progress. The cancel is set
     under the same lock, so every creation either committed before the cancel or never
     begins. Everything that can be slow (the environment, the supervisor job, the child's
-    job, the guardian's pipe) is prepared before the commit point; after it comes only the
-    creation call. If a creation that committed before the cancel is still in progress
-    `CANCEL_WAIT` (2 s) after the cancel (its call stalled), the request returns its time
-    limit, and the process that the call creates afterwards:
-    - is never sent the request (on Windows it is created suspended and never runs);
-    - is killed the moment the creation call returns, because the request is already
-      cancelled.
-
-    A creation that had not committed when the cancel came can never start a process.
+    job, the guardian's pipe) is prepared before the commit point; after it come only the
+    creation call and the recording of what it made.
+    - **No process is ever alive after a result.** `kill()` waits for a step that committed
+      before the cancel until it has recorded what it made, then kills it.
+    - **What is outside the class is the timing:** if a step stalls (its creation call
+      stalls inside the operating system), the result is delayed until it returns, instead
+      of arriving by the deadline + `GRACE` + `CANCEL_WAIT`. A step is one creation call, so
+      in practice it lasts milliseconds. The late process never receives the request.
 
 ## Excluded
 - Any change to physics, maths services or scene format. Result values must not change.

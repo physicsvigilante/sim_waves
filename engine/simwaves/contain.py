@@ -38,6 +38,7 @@ DEFAULT_MEMORY = 2048         # MB per request process
 MIN_MEMORY = 256              # MB: the engine needs about 150 MB just to start
 MAX_TIME = 1_000_000          # seconds (about 11.6 days): the largest time limit accepted; every
                               # platform's thread waits support it (Windows: about 4.29 million s)
+MAX_MEMORY = 1_048_576        # MB (1 TB): the largest memory limit accepted
 GRACE = 10                    # seconds beyond the time limit before the parent kills
 CANCEL_WAIT = 2               # seconds a cancelled set-up is given to finish before the result returns
 MAX_SCENE_BYTES = 64 * 1024   # a scene file above this is refused before parsing
@@ -54,16 +55,27 @@ class LimitError(ValueError):
 def check_limits(seconds, memory_mb, max_seconds=None, max_memory=None):
     """Validate a time limit (seconds) and a memory limit (MB). Returns (float seconds, int MB).
     Booleans, NaN, infinities, zero, negatives and non-numbers are refused; the time limit is at
-    most MAX_TIME (review 15a M2). Memory must be a
-    whole number of MB, at least MIN_MEMORY. A maximum, when given, may not be exceeded."""
-    def number(v, what):
-        if isinstance(v, bool) or not isinstance(v, (int, float)) or not math.isfinite(v) or v <= 0:
-            raise LimitError(f"{what} must be a finite positive number, not {v!r}")
+    most MAX_TIME and the memory limit at most MAX_MEMORY (review 15a M2, N2). Integers are
+    compared exactly, never converted to float first, so any integer gives a LimitError rather
+    than an overflow. Memory must be a whole number of MB, at least MIN_MEMORY. A maximum, when
+    given, may not be exceeded."""
+    def show(v):                                         # never converts a huge int to text
+        if isinstance(v, float) or not isinstance(v, int) or abs(v) < 10 ** 40:
+            return repr(v)
+        return "a number below -10**40" if v < 0 else "a number above 10**40"
+
+    def number(v, what, ceiling, unit):
+        if isinstance(v, bool) or not isinstance(v, (int, float)):
+            raise LimitError(f"{what} must be a finite positive number, not {show(v)}")
+        if isinstance(v, float) and not math.isfinite(v):
+            raise LimitError(f"{what} must be a finite positive number, not {show(v)}")
+        if v <= 0:                                        # exact for any int; no float conversion
+            raise LimitError(f"{what} must be a finite positive number, not {show(v)}")
+        if v > ceiling:
+            raise LimitError(f"{what} must be at most {ceiling} {unit}, not {show(v)}")
         return v
-    s = float(number(seconds, "the time limit"))
-    if s > MAX_TIME:
-        raise LimitError(f"the time limit must be at most {MAX_TIME} s (about 11.6 days), not {seconds!r}")
-    m = number(memory_mb, "the memory limit")
+    s = float(number(seconds, "the time limit", MAX_TIME, "s (about 11.6 days)"))
+    m = number(memory_mb, "the memory limit", MAX_MEMORY, "MB (1 TB)")
     if isinstance(m, float):
         if not m.is_integer():
             raise LimitError(f"the memory limit must be a whole number of MB, not {memory_mb!r}")
@@ -408,10 +420,11 @@ class _Request:
     be slow (the environment, the supervisor job, the child's job, the guardian's pipe) is
     prepared before the commit point; after it there is only the creation call itself.
 
-    kill() waits at most CANCEL_WAIT for a step that committed before the cancel. If that step
-    is still in progress then (its creation call stalled: the declared J1 case, which covers a
-    creation committed before the cancel), what it creates is killed as soon as it returns,
-    and it never receives the request."""
+    kill() waits for a step that committed before the cancel until it has recorded what it
+    made, however long that takes, and then kills it (review 15a N1): a process born in a step
+    is always visible to kill(), so none is ever alive after a result. The cost, declared in the
+    PLAN: a step stalled inside its creation call delays the result until the call returns.
+    A step is one creation call and nothing slow, so in practice it lasts milliseconds."""
 
     def __init__(self, memory_mb):
         self.memory_mb = memory_mb
@@ -502,8 +515,8 @@ class _Request:
         Safe to call more than once, and from any thread."""
         with self._cond:
             self._cancelled = True                        # no step can commit after this
-            if self._creating:                            # one committed before the cancel
-                self._cond.wait_for(lambda: not self._creating, timeout=CANCEL_WAIT)
+            while self._creating:                         # one committed before the cancel: wait
+                self._cond.wait()                         # until what it made is recorded (N1)
             job, popen, guard = self.job, self.popen, self.guard
             self.job = self.guard = None
         if job is not None:
@@ -669,8 +682,8 @@ def _run(req, frame, seconds, memory_mb, deadline):
     launcher.join(max(0.0, deadline + GRACE - time.monotonic()))
     if launcher.is_alive():
         # cancel: from now no set-up step can commit, so none can start a process; one that
-        # committed before the cancel is waited for briefly, and what it creates is killed the
-        # moment it returns (review 15a I1, L1)
+        # committed before the cancel is waited for, and what it made is killed before the
+        # result returns (review 15a I1, L1, N1)
         req.kill()
         launcher.join(CANCEL_WAIT)
         req.kill()

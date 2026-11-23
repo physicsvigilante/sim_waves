@@ -653,8 +653,8 @@ if __name__ == "__main__":
         write(d, "a.yaml", "observe: {v: '1'}\nexpect: {v: 1}\n")
         check("J2 control: a normal run_dir completes", run_dir(d, 1, 60, 512) == {"PASS": 1})
 
-    # ---- J1 (declared out of class): a process whose creation returns after the stop never gets
-    #      the request and is killed as soon as creation returns
+    # ---- J1 (declared, round 10): a creation call that returns after the stop delays the result
+    #      until it returns; its process never gets the request and is gone when the result returns
     sent = []
     orig_popen4 = subprocess.Popen
 
@@ -667,10 +667,10 @@ if __name__ == "__main__":
     contain.subprocess.Popen = LateReturn
     t0 = time.monotonic()
     r = run_request("simwaves.testhooks:report_pid", (None,), 0.1, 512)
+    at_return = [p for p in sent if alive(p)]
     contain.subprocess.Popen = orig_popen4
-    time.sleep(GRACE + contain.CANCEL_WAIT + 3)          # until creation has returned, plus margin
-    check("J1 declared case: a limit is returned, and the late process is killed once creation returns",
-          isinstance(r, LimitResult) and sent and not any(alive(p) for p in sent), f"{r!r} {sent}")
+    check("J1 declared case: a limit, delayed until creation returns, and the process is gone when it returns",
+          isinstance(r, LimitResult) and sent and not at_return, f"{r!r} {sent} alive={at_return}")
 
     # ---- K1: a pre-creation step delayed past the stop cannot start a process afterwards
     import collections.abc
@@ -831,8 +831,8 @@ if __name__ == "__main__":
         r = run_request("builtins:open", (ran, "w"), 0.1, 512)
         time.sleep(8)                                      # creation returns, then is killed
         contain.subprocess.Popen = orig_popen7
-        check("L1 declared J1 case: a creation committed before the cancel returns late; it never gets the "
-              "request and is killed", isinstance(r, LimitResult) and not os.path.exists(ran) and not child_procs(),
+        check("L1 declared J1 case: a creation committed before the cancel delays the result; it never gets "
+              "the request and is gone", isinstance(r, LimitResult) and not os.path.exists(ran) and not child_procs(),
               f"{r!r} ran={os.path.exists(ran)} left={child_procs()}")
 
     # controls: the same request with time to run; the file target really runs when allowed
@@ -907,6 +907,90 @@ if __name__ == "__main__":
           isinstance(raised, OverflowError) and not child_procs(), f"{raised!r} left={child_procs()}")
     r = run_request("os:getpid", (), 30)
     check("M2 control: a normal request", isinstance(r, int), repr(r))
+
+    # ---- N1: a process born in a step is visible to kill() before the result returns: a pause
+    #      after the creation call has returned, before the step records it (the child; the
+    #      guardian on Linux, the job on Windows), delays the result, and nothing is alive at return
+    for which in (["popen", "guard"] if not contain.WINDOWS else ["popen", "job"]):
+        orig_step9 = contain._Request._step
+        release9 = threading.Event()
+        made9 = []
+
+        def paused_step(self, name, make, which=which, orig_step9=orig_step9, release9=release9, made9=made9):
+            if name != which:
+                return orig_step9(self, name, make)
+
+            def make_then_pause():
+                obj = make()                               # the creation call has returned
+                made9.append(obj)
+                release9.wait(GRACE + contain.CANCEL_WAIT + 30)   # before the step records it
+                return obj
+            return orig_step9(self, name, make_then_pause)
+        contain._Request._step = paused_step
+        threading.Timer(GRACE + contain.CANCEL_WAIT + 2, release9.set).start()   # past the hard stop
+        t0 = time.monotonic()
+        try:
+            r = run_request("os:getpid", (), 0.1, 512)
+        finally:
+            release9.set()
+        dt = time.monotonic() - t0
+        procs = []
+        for o in made9:
+            procs.append(getattr(o, "proc", o))           # a guardian's process, or the child's Popen
+        if which != "job":
+            alive_at_return = [pr.pid for pr in procs if pr is not None and pr.poll() is None]
+        else:
+            alive_at_return = []
+        left_at_return = child_procs()
+        contain._Request._step = orig_step9
+        check(f"N1 a pause after the {which} is created, before it is recorded, past the stop: a limit, and "
+              f"nothing alive when the result returns",
+              isinstance(r, LimitResult) and made9 and not alive_at_return and not left_at_return,
+              f"{r!r} {dt:.1f} s made={len(made9)} alive={alive_at_return} left={left_at_return}")
+    r = run_request("os:getpid", (), 30)
+    check("N1 control: a normal request", isinstance(r, int), repr(r))
+
+    # ---- N2: integer limits are compared exactly (no float conversion), so any integer gives a
+    #      clear LimitError; the memory limit has a ceiling too
+    big = 10 ** 400
+    started10 = []
+    orig_popen10 = subprocess.Popen
+
+    class Rec10(orig_popen10):
+        def __init__(self, *a, **k):
+            super().__init__(*a, **k)
+            started10.append(self.pid)
+    contain.subprocess.Popen = Rec10
+    for label, sec, mem in (("time 10**400", big, 512), ("memory 10**400", 30, big), ("time -10**400", -big, 512),
+                            ("memory MAX_MEMORY + 1", 30, contain.MAX_MEMORY + 1)):
+        try:
+            run_request("os:getpid", (), sec, mem)
+            outcome = "accepted"
+        except LimitError as exc:
+            outcome = "LimitError" if "Traceback" not in str(exc) else "bad"
+        except BaseException as exc:                       # noqa: BLE001 - the wrong outcome, reported
+            outcome = repr(exc)[:200]
+        check(f"N2 {label}: a LimitError, and no process starts", outcome == "LimitError" and not started10,
+              f"{outcome} started={started10}")
+    contain.subprocess.Popen = orig_popen10
+    check("N2 the memory ceiling itself is accepted", check_limits(30, contain.MAX_MEMORY) ==
+          (30.0, contain.MAX_MEMORY))
+    for flag in ("--time", "--memory"):
+        out = subprocess.run([sys.executable, "-m", "simwaves", "run", "../format/examples/23_02_asc_005.yaml",
+                              flag, str(big)], cwd=HERE, env=ENV, capture_output=True, text=True,
+                             encoding="utf-8", timeout=120)
+        check(f"N2 the CLI refuses {flag} with 401 digits with a clear error", out.returncode == 2 and
+              "at most" in out.stdout and "Traceback" not in out.stdout + out.stderr,
+              out.stdout[-300:] + out.stderr[-300:])
+    out = subprocess.run([sys.executable, "-m", "simwaves", "run", "../format/examples/23_02_asc_005.yaml",
+                          "--time", "\u00b2"], cwd=HERE, env=ENV, capture_output=True, text=True,
+                         encoding="utf-8", timeout=120)
+    check("N2 the CLI refuses a non-ASCII digit as a limit (usage, no traceback)", out.returncode == 2 and
+          "Traceback" not in out.stdout + out.stderr, out.stdout[-200:] + out.stderr[-300:])
+    out = subprocess.run([sys.executable, "-m", "simwaves", "run", "../format/examples/23_02_asc_005.yaml",
+                          "--time", "60", "--memory", "512"], cwd=HERE, env=ENV, capture_output=True, text=True,
+                         encoding="utf-8", timeout=180)
+    check("N2 control: the CLI runs with ordinary limits", out.returncode == 0, out.stdout[-200:] + out.stderr[-300:])
 
     # ---- K2: the bytes checked are the bytes sent, and the ceiling is exact
     def frame_size(n):
