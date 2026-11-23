@@ -101,8 +101,9 @@ The user narrowed and fixed what containment promises, under the review policy:
     the deadline plus the grace.
   - **Memory:** the cap applies before the request is read. On Windows the Job is assigned
     while the process is suspended; on Linux the child sets `RLIMIT_AS` from its command
-    line before reading. A request whose pickled arguments exceed 16 MB is refused before
-    any process starts.
+    line before reading. A request whose data, as sent, exceeds 16 MB (counted exactly, in
+    bytes) is refused before any process starts. Request data is plain: the built-in dict,
+    list, tuple, str, bytes, int, float, bool and None, with no subclasses.
   - **Clean-up:** every process in the request's **process group** (Linux) or **Job**
     (Windows) is gone before the result is returned. If the parent dies, the request's
     process dies too.
@@ -116,6 +117,15 @@ The user narrowed and fixed what containment promises, under the review policy:
     Linux**, before its first line of Python sets the parent-death signal. The child then
     exits by itself at that first line, because it sees its parent is gone, before reading
     any request. It never runs a request unowned.
+  - **A process-creation call that stalls inside the operating system past the deadline**
+    (decided in round 6, option 1). The request then returns its time limit while the call
+    is still under way. A process that the call creates afterwards:
+    - is never sent the request (on Windows it is created suspended and never runs);
+    - is killed the moment the creation call returns, because the request is already
+      cancelled.
+
+    Every other set-up step checks the cancellation first, so nothing else can start after
+    the stop.
 
 ## Excluded
 - Any change to physics, maths services or scene format. Result values must not change.

@@ -580,7 +580,8 @@ if __name__ == "__main__":
     except RuntimeError as exc:
         check("O1 non-plain data refused", "plain data" in str(exc), str(exc))
     try:
-        export({"observe": {"v": "1"}, "notes": ["y" * (1024 * 1024)] * 20}, memory_mb=256)
+        export({"observe": {"v": "1"}, "notes": [("y" * (1024 * 1024)) + str(i) for i in range(20)]},
+               memory_mb=256)
         check("O1 oversized nested data refused as a memory limit", False, "returned")
     except ResourceLimitError as exc:
         check("O1 oversized nested data refused as a memory limit", exc.kind == "memory", str(exc))
@@ -588,6 +589,88 @@ if __name__ == "__main__":
     check("O1 data with too many items refused", isinstance(r, LimitResult) and r.kind == "memory", repr(r))
     out = export({"observe": {"v": "1"}})
     check("O1 control: plain data exports", isinstance(out, dict), type(out).__name__)
+
+    # ---- J3: the 16 MB ceiling is in bytes as sent, checked before any process starts
+    launched = []
+    orig_launch_j = contain._Request.launch
+    contain._Request.launch = lambda self: (launched.append(1), orig_launch_j(self))[1]
+    r = run_request("builtins:len", ("\U0001F600" * 4_500_000,), 30, 512)
+    check("J3 4.5 million emoji (18 MB as sent) refused before any process starts",
+          isinstance(r, LimitResult) and r.kind == "memory" and not launched, f"{r!r} launched={bool(launched)}")
+    launched.clear()
+    r = run_request("builtins:len", ("a" * 16_000_000,), 60, 512)
+    check("J3 control: 16 000 000 ASCII characters (under 16 MB as sent) run", r == 16_000_000 and launched, repr(r))
+    launched.clear()
+    r = run_request("builtins:len", ("a" * 16_800_000,), 60, 512)
+    check("J3 16 800 000 ASCII characters (over 16 MB as sent) refused", isinstance(r, LimitResult) and not launched,
+          repr(r))
+    launched.clear()
+    shared = "y" * (1024 * 1024)
+    r = run_request("builtins:len", ([shared] * 20,), 60, 512)
+    check("J3 repeated references to one string count once, as sent", r == 20 and launched, repr(r))
+    contain._Request.launch = orig_launch_j
+
+    class MyStr(str):
+        pass
+    r = run_request("builtins:len", (MyStr("abc"),), 30)
+    check("J3 a str subclass is not plain data", isinstance(r, CrashResult) and "plain data" in r.message, repr(r))
+    orig_rb = contain._request_bytes
+    contain._request_bytes = lambda obj, limit: (_ for _ in ()).throw(MemoryError())
+    r = run_request("os:getpid", (), 30)
+    contain._request_bytes = orig_rb
+    check("J3 running out of memory while checking the data is a memory limit",
+          isinstance(r, LimitResult) and r.kind == "memory", repr(r))
+
+    # ---- J2: Ctrl-C while a request is still in its data check: no process starts afterwards
+    import _thread
+    with tempfile.TemporaryDirectory() as d:
+        write(d, "a.yaml", "observe: {v: 'test_spin(120)'}\nexpect: {error: limit}\n")
+        entered, release = threading.Event(), threading.Event()
+        orig_rb2 = contain._request_bytes
+
+        def blocking(obj, limit):
+            entered.set()
+            release.wait(120)
+            return orig_rb2(obj, limit)
+        contain._request_bytes = blocking
+
+        def interrupter():
+            if entered.wait(60):
+                _thread.interrupt_main()
+        threading.Thread(target=interrupter, daemon=True).start()
+        caught = False
+        try:
+            run_dir(d, 1, 60, 512)
+        except KeyboardInterrupt:
+            caught = True
+        release.set()                                    # let the blocked data check continue
+        time.sleep(3)
+        contain._request_bytes = orig_rb2
+        left = child_procs()
+        check("J2 Ctrl-C during a request's data check: no process starts afterwards", caught and not left,
+              f"caught={caught} left={left}")
+    with tempfile.TemporaryDirectory() as d:
+        write(d, "a.yaml", "observe: {v: '1'}\nexpect: {v: 1}\n")
+        check("J2 control: a normal run_dir completes", run_dir(d, 1, 60, 512) == {"PASS": 1})
+
+    # ---- J1 (declared out of class): a process whose creation returns after the stop never gets
+    #      the request and is killed as soon as creation returns
+    sent = []
+    orig_popen4 = subprocess.Popen
+
+    class LateReturn(orig_popen4):
+        def __init__(self, *a, **k):
+            super().__init__(*a, **k)
+            if "simwaves.child" in " ".join(a[0]):
+                sent.append(self.pid)
+                time.sleep(GRACE + contain.CANCEL_WAIT + 1)
+    contain.subprocess.Popen = LateReturn
+    t0 = time.monotonic()
+    r = run_request("simwaves.testhooks:report_pid", (None,), 0.1, 512)
+    contain.subprocess.Popen = orig_popen4
+    time.sleep(GRACE + contain.CANCEL_WAIT + 3)          # until creation has returned, plus margin
+    check("J1 declared case: a limit is returned, and the late process is killed once creation returns",
+          isinstance(r, LimitResult) and sent and not any(alive(p) for p in sent), f"{r!r} {sent}")
 
     # ---- R6, F4: no process outlives its request (descendants included)
     with tempfile.TemporaryDirectory() as d:

@@ -454,68 +454,120 @@ class _Request:
 
 
 _PLAIN_NODES = 2_000_000       # at most this many items in a request's data
+_PLAIN_TYPES = (dict, list, tuple, str, bytes, bytearray, int, float, bool, type(None))
 
 
-def _plain_size(obj, limit):
-    """The approximate size of plain data (dicts, lists, tuples, strings, bytes, numbers, booleans,
-    None), counted without copying it; stops as soon as it passes `limit`. Anything else is
-    refused (review 15a O1: a request carries plain YAML-style data only)."""
-    total, nodes, stack = 0, 0, [obj]
+class _TooBig(Exception):
+    pass
+
+
+class _ByteCounter:
+    """A write-only sink for the pickler: counts the bytes, keeps none, and stops the pickling
+    as soon as the count passes the limit."""
+
+    def __init__(self, limit):
+        self.limit, self.n = limit, 0
+
+    def write(self, b):
+        self.n += len(b)
+        if self.n > self.limit:
+            raise _TooBig()
+        return len(b)
+
+
+def _request_bytes(obj, limit):
+    """The exact size in bytes of the request as it will be sent, or limit + 1 if it would pass
+    the limit (review 15a J3: bytes, not characters). The data must be plain: exactly the
+    built-in types dict, list, tuple, str, bytes, bytearray, int, float, bool and None, no
+    subclasses (review 15a O1), at most _PLAIN_NODES items. It is checked first without copying
+    anything, then counted by a pickler that writes into a counter and stops at the limit."""
+    nodes, stack = 0, [obj]
     while stack:
         o = stack.pop()
         nodes += 1
         if nodes > _PLAIN_NODES:
             return limit + 1
-        if isinstance(o, (str, bytes, bytearray)):
-            total += len(o)
-        elif isinstance(o, bool) or o is None or isinstance(o, float):
-            total += 8
-        elif isinstance(o, int):
-            total += 8 + o.bit_length() // 8
-        elif isinstance(o, (list, tuple)):
-            total += 8
+        t = type(o)
+        if t not in _PLAIN_TYPES:
+            raise TypeError(f"a request carries plain data only (dicts, lists, strings, numbers), not {t.__name__}")
+        if t in (list, tuple):
             stack.extend(o)
-        elif isinstance(o, dict):
-            total += 8
+        elif t is dict:
             for k, v in o.items():
                 stack.append(k)
                 stack.append(v)
-        else:
-            raise TypeError(f"a request carries plain data only (dicts, lists, strings, numbers), not "
-                            f"{type(o).__name__}")
-        if total > limit:
-            return total
-    return total
+    counter = _ByteCounter(limit)
+    try:
+        pickle.Pickler(counter, protocol=pickle.HIGHEST_PROTOCOL).dump(obj)
+    except _TooBig:
+        return limit + 1
+    return counter.n
+
+
+class _Registry:
+    """run_many's requests, with one stop state (review 15a J2). A request joins before any of
+    its work (its data check included); once stopped, nothing can join, and every request that
+    joined is cancelled, so none can start a process after the stop."""
+
+    def __init__(self):
+        self._lock = threading.Lock()
+        self._reqs = set()
+        self.stopped = False
+
+    def join(self, req):
+        with self._lock:
+            if self.stopped:
+                return False
+            self._reqs.add(req)
+            return True
+
+    def leave(self, req):
+        with self._lock:
+            self._reqs.discard(req)
+
+    def stop(self):
+        with self._lock:
+            self.stopped = True
+            reqs = list(self._reqs)
+        for req in reqs:
+            req.kill()
+
+    def active(self):
+        with self._lock:
+            return list(self._reqs)
 
 
 def run_request(target, args=(), seconds=None, memory_mb=None, _registry=None):
     """Run target(*args) in a fresh contained process. Returns its value, a LimitResult or a
     CrashResult, or re-raises the request's own exception. The deadline starts now, before the
-    process exists. The process and everything it started are gone when this returns. A
-    request carries plain data only, at most MAX_REQUEST_BYTES. `_registry` (run_many's) is a
-    set of active requests, so that they can be cancelled together."""
+    process exists. The process and everything it started are gone when this returns (see the
+    PLAN's containment class for the one documented exception). A request carries plain data
+    only, at most MAX_REQUEST_BYTES as sent. `_registry` (run_many's) cancels requests together."""
     seconds, memory_mb = resolve_limits(seconds, memory_mb)
     t0 = time.monotonic()
     deadline = t0 + seconds
-    # the request's data is checked (plain, bounded) before it is copied or any process exists
-    # (review 15a H4, O1)
-    try:
-        size = _plain_size((target, tuple(args)), MAX_REQUEST_BYTES)
-    except TypeError as exc:
-        return CrashResult(f"the request cannot be sent: {exc}")
-    if size > MAX_REQUEST_BYTES:
-        return LimitResult("memory", f"RESOURCE LIMIT (request data over {MAX_REQUEST_BYTES // (1024 * 1024)} MB)")
     req = _Request(memory_mb)
-    if _registry is not None:
-        _registry.add(req)
+    if _registry is not None and not _registry.join(req):
+        return CrashResult("the request was cancelled before it started")
     try:
+        # the request's data is checked (plain, exact byte count) before any process exists
+        # (review 15a H4, O1, J3)
+        try:
+            size = _request_bytes((target, tuple(args)), MAX_REQUEST_BYTES - 256)   # 256: the frame's other fields
+        except TypeError as exc:
+            return CrashResult(f"the request cannot be sent: {exc}")
+        if size > MAX_REQUEST_BYTES - 256:
+            return LimitResult("memory", f"RESOURCE LIMIT (request data over "
+                                         f"{MAX_REQUEST_BYTES // (1024 * 1024)} MB as sent)")
+        if req.cancelled:
+            return CrashResult("the request was cancelled before it started")
         return _run(req, target, args, seconds, memory_mb, deadline)
     except MemoryError:
         req.kill()
-        return LimitResult("memory", f"RESOURCE LIMIT (memory: the request's data could not be prepared)")
+        return LimitResult("memory", "RESOURCE LIMIT (memory: the request's data could not be prepared)")
     finally:
         if _registry is not None:
-            _registry.discard(req)
+            _registry.leave(req)
 
 
 def _run(req, target, args, seconds, memory_mb, deadline):
@@ -638,7 +690,7 @@ def run_many(target, items, jobs, seconds, memory_mb=None, on_result=None):
     nxt = [0]
     lock = threading.Lock()
     stop = threading.Event()
-    active = set()                                        # the requests running now (review 15a I2)
+    registry = _Registry()                                # the requests running now (review 15a I2, J2)
 
     def report(i, r):
         with lock:
@@ -656,7 +708,7 @@ def run_many(target, items, jobs, seconds, memory_mb=None, on_result=None):
                 i = nxt[0]
                 nxt[0] += 1
             try:
-                r = run_request(target, (items[i],), seconds, memory_mb, _registry=active)
+                r = run_request(target, (items[i],), seconds, memory_mb, _registry=registry)
             except BaseException as exc:                  # noqa: BLE001 - every item gets a result
                 r = CrashResult(f"the runner failed on this item ({type(exc).__name__}: {exc})")
             report(i, r)
@@ -671,13 +723,13 @@ def run_many(target, items, jobs, seconds, memory_mb=None, on_result=None):
     except KeyboardInterrupt:
         # cancel every running request, kill its processes, and wait for the runner threads,
         # before passing the interrupt on (review 15a I2)
+        # stop admitting, cancel every request that has joined (whatever stage it is at), and wait
+        # for the runner threads: a request can no longer start a process after this
         stop.set()
-        for req in list(active):
-            req.kill()
+        registry.stop()
         for t in threads:
-            t.join(GRACE + 15)
-        for req in list(active):
-            req.kill()
+            t.join(GRACE + CANCEL_WAIT + 15)
+        registry.stop()
         raise
     finally:
         for i in range(len(items)):
