@@ -64,12 +64,16 @@ def check(sc, got, exp, conv=None):
     return equivalent(got, want), f"want {want}"
 
 
-def run_file(path):
+def _run_file_local(path):
+    """Check one scene's expect block in this process (a contained worker's step; the public,
+    bounded form is run_file)."""
     lines, status = [], "PASS"
     name = os.path.basename(path)
     import yaml
     with open(path, encoding="utf-8") as fh:
-        expect = (yaml.safe_load(fh) or {}).get("expect") or {}
+        expect = dict((yaml.safe_load(fh) or {}).get("expect") or {})
+    if expect.get("error") == "limit":      # the parent judges a limit; here, just run it
+        expect = {}
     if "error" in expect:
         kind = ERRORS[expect["error"]]
         try:
@@ -95,6 +99,8 @@ def run_file(path):
         sol, res = evaluate(sc)
     except SceneError as exc:
         return "FAIL", [f"{name}: {type(exc).__name__}: {exc}"]
+    except MemoryError:                  # a memory limit is never swallowed (m15a)
+        raise
     except Exception:  # engine bug
         return "CRASH", [f"{name}: engine crashed\n{traceback.format_exc()}"]
     if sol:
@@ -131,36 +137,158 @@ def run_file(path):
     return status, lines
 
 
-def _timed(f):
+def timed_run(f):
+    """One scene's check with its duration (what a contained worker runs for each scene)."""
     import time
     t0 = time.time()
-    status, lines = run_file(f)
-    return f, status, lines, time.time() - t0
+    status, lines = _run_file_local(f)
+    return status, lines, time.time() - t0
 
 
-def run_dir(path, jobs=None):
-    """Run every scene's expect block; scenes run in parallel (one process each, jobs at a
-    time; default: the number of CPUs). Output keeps file order."""
+def scene_expectation(path):
+    """What a scene's expect block says about limits, read inside a contained worker (the
+    parent never parses a scene: review 15a F1). Returns (expects a limit, error or None).
+    Limits are set for the whole run (`--time`, `--memory`, or the caller's arguments); an
+    `expect.limits` block is refused."""
+    import yaml
+    from .contain import LimitError, check_scene_size
+    try:
+        check_scene_size(path)
+    except (LimitError, OSError) as exc:
+        return False, str(exc)
+    try:
+        with open(path, encoding="utf-8") as fh:
+            data = yaml.safe_load(fh) or {}
+    except MemoryError:                  # a memory limit is never swallowed (m15a)
+        raise
+    except Exception:                                   # noqa: BLE001 - the scene run reports it
+        return False, None
+    expect = data.get("expect") if isinstance(data, dict) else None
+    expect = expect if isinstance(expect, dict) else {}
+    if "limits" in expect:
+        return False, ("expect.limits is not supported: the time and memory limits apply to the whole run "
+                       "(--time, --memory)")
+    return expect.get("error") == "limit", None
+
+
+def check_scene(path):
+    """One scene's whole check in a request's process: what it expects about limits, then its
+    run, under the one budget of the request (review 15a G6). The expectation is also sent as
+    a note, so the parent knows it even if the run is stopped by a limit. Returns
+    (status, lines, seconds, expects a limit)."""
+    from . import contain
+    name = os.path.basename(path)
+    expects_limit, err = scene_expectation(path)
+    contain.note(("expects_limit", expects_limit))
+    if err:
+        return "ERROR", [f"{name}: {err}"], 0.0, expects_limit
+    status, lines, dt = timed_run(path)
+    return status, lines, dt, expects_limit
+
+
+def _outcome(name, result, expects_limit):
+    """(status, lines) from a contained result."""
+    from .contain import CrashResult, LimitResult
+    if isinstance(result, LimitResult):
+        if expects_limit:
+            return "PASS", [f"{name}: stopped by a limit as expected: {result.message}"]
+        return "LIMIT", [f"{name}: {result.message} (the scene was stopped; this says nothing about the "
+                         f"physics)"]
+    if isinstance(result, CrashResult) or not isinstance(result, tuple):
+        return "CRASH", [f"{name}: {getattr(result, 'message', result)}"]
+    status, lines = result[0], result[1]
+    if expects_limit and status != "ERROR":
+        return "FAIL", [f"{name}: expected to be stopped by a limit, but it finished ({status})"] + lines[1:]
+    return status, lines
+
+
+def _judge(path, r):
+    """(status, lines, seconds) for one scene from its request's result."""
+    name = os.path.basename(path)
+    if isinstance(r, tuple) and len(r) == 4:
+        status, lines = _outcome(name, r[:3], r[3])
+        return status, lines, r[2]
+    notes = getattr(r, "notes", [])
+    expects = any(n == ("expects_limit", True) for n in notes)
+    status, lines = _outcome(name, r, expects)
+    return status, lines, 0.0
+
+
+def run_file(path, seconds=None, memory_mb=None):
+    """Check one scene's expect block, bounded: as one contained request (its own process,
+    start-up included) under the time and memory limits (None: the defaults; any other value
+    is validated as given), honouring `error: limit`. Returns (status, lines), status one of
+    PASS, FAIL, ERROR, CRASH, LIMIT."""
+    from . import contain
+    name = os.path.basename(path)
+    try:
+        t, m = contain.resolve_limits(seconds, memory_mb)
+    except contain.LimitError as exc:
+        return "ERROR", [f"{name}: {exc}"]
+    if contain.IN_WORKER:                 # already inside a request: under its budget
+        from .budget import within
+        from .errors import ResourceLimitError
+        expects_limit, err = scene_expectation(path)
+        if err:
+            return "ERROR", [f"{name}: {err}"]
+        try:
+            result = within(t, lambda: timed_run(path), public=ResourceLimitError("time", f"{t:g} s"))
+        except ResourceLimitError as exc:
+            result = contain.LimitResult(exc.kind, str(exc))
+        return _outcome(name, result, expects_limit)
+    try:
+        r = contain.run_request("simwaves.harness:check_scene", (path,), t, m)
+    except Exception as exc:              # noqa: BLE001 - every scene gets a status
+        r = contain.CrashResult(f"{type(exc).__name__}: {exc}")
+    status, lines, _ = _judge(path, r)
+    return status, lines
+
+
+def run_dir(path, jobs=None, seconds=None, memory_mb=None):
+    """Run every scene's expect block, each as its own contained request (its own process,
+    start-up included) under the time and memory limits of the run (None: the defaults; any
+    other value is validated as given), at most `jobs` at once (default: the number of CPUs).
+    A scene stopped by a limit is LIMIT, unless its expect block says `error: limit`. The
+    parent never parses a scene. Every scene gets exactly one status; output keeps file order.
+    Returns the counts per status; the CLI succeeds only if every scene of a non-empty folder
+    passed."""
+    from .contain import LimitError, resolve_limits, run_many
+    try:
+        seconds, memory_mb = resolve_limits(seconds, memory_mb)
+    except LimitError as exc:
+        print(f"ERROR: {exc}")
+        return {"ERROR": 1}
     files = sorted(glob.glob(os.path.join(path, "*.yaml")))
+    if not files:
+        print(f"ERROR: no scenes (*.yaml) in {path}")
+        return {"ERROR": 1}
     jobs = jobs or os.cpu_count() or 1
     counts, times = {}, []
-    if jobs > 1 and len(files) > 1:
-        import multiprocessing as mp
-        # fork where the platform has it (fast start); spawn elsewhere (Windows)
-        method = "fork" if "fork" in mp.get_all_start_methods() else "spawn"
-        with mp.get_context(method).Pool(jobs, maxtasksperchild=20) as pool:
-            out = pool.imap(_timed, files)
-            for f, status, lines, dt in out:
-                counts[status] = counts.get(status, 0) + 1
-                times.append((dt, os.path.basename(f)))
-                print(f"[{status}] " + "\n".join(lines), flush=True)
-    else:
-        for f in files:
-            _, status, lines, dt = _timed(f)
+    done, printed = {}, [0]
+
+    def emit():
+        while printed[0] < len(files) and files[printed[0]] in done:
+            f = files[printed[0]]
+            status, lines, dt = done[f]
             counts[status] = counts.get(status, 0) + 1
             times.append((dt, os.path.basename(f)))
             print(f"[{status}] " + "\n".join(lines), flush=True)
+            printed[0] += 1
+
+    def on_result(i, f, r):
+        done[f] = _judge(f, r)
+        emit()
+    run_many("simwaves.harness:check_scene", files, jobs, seconds, memory_mb, on_result)
+    for f in files:                       # accounting: no scene may end without a status
+        if f not in done:
+            done[f] = ("CRASH", [f"{os.path.basename(f)}: no result was recorded for this scene"], 0.0)
+    emit()
+    if sum(counts.values()) != len(files):
+        counts["CRASH"] = counts.get("CRASH", 0) + len(files) - sum(counts.values())
     slow = sorted(times, reverse=True)[:5]
     print("\nslowest: " + ", ".join(f"{n} {dt:.1f}s" for dt, n in slow))
     print("summary: " + ", ".join(f"{k} {v}" for k, v in sorted(counts.items())))
+    limited = sorted(os.path.basename(f) for f in files if done[f][0] == "LIMIT")
+    if limited:
+        print("stopped by a limit: " + ", ".join(limited))
     return counts

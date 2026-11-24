@@ -1,0 +1,22 @@
+id: m15a/S2
+# A car sounding 500 Hz drives at 20 m/s toward a listener 150 m ahead; a still horn
+# beside the road sounds 500 Hz too. Heard frequency, wavelength and beat frequency (v = 340 m/s).
+assume:
+  - "The listener stands on the road, 50 m from the horn's position; the car is still approaching at the instants asked."
+  - "The horn and the car are treated as coherent only for drawing; beats depend on frequencies alone."
+media:
+  air: {type: gas, v: 340 m/s}
+sources:
+  car:  {on: air, at: [-100 m, 0 m], velocity: [20 m/s, 0 m/s], f: 500 Hz, A: 1, phase: 0, spreading: none}
+  horn: {on: air, at: [0 m, 0 m], f: 500 Hz, A: 1, phase: 0, spreading: none}
+points:
+  O: [50 m, 0 m]
+rays:
+  heard: {from: car, to: O}
+  still: {from: horn, to: O}
+given:
+  - {fact: "frequency(still) == 500[Hz]", source: stated}
+observe:
+  f_heard: "frequency(heard, emitted=0[s])"
+  lam_heard: "wavelength(heard, emitted=0[s])"
+  beats: "beat_frequency(heard, still, t=1[s])"

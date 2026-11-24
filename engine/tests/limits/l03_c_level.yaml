@@ -1,0 +1,4 @@
+# m15a: a request stuck in one long C call cannot be interrupted between bytecodes; the parent's hard stop
+# ends it at the limit plus the grace period
+observe: {v: "test_c_spin()"}
+expect: {error: limit}

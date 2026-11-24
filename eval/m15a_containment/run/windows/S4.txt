@@ -1,0 +1,8 @@
+# S4: exit 0, 63.3 s, simwaves.child left: none
+## stdout
+peak_p = 0.0529445743136  (= 0.0529446)
+where_p = 0.550000010095  (= 0.550000)
+peak_h = 0.999999911344  (= 1.00000)
+
+## stderr
+

@@ -795,6 +795,29 @@ solving; relative tolerance), `abs`, `sqrt`, `sin`, `cos`, `tan`, `exp`, `log`, 
 - **Redundant facts:** a fact that contains no unknowns and is identically true (e.g.
   `sin(a)**2 + cos(a)**2 == 1`) is accepted. If it is false, the scene is inconsistent.
   If it can't be decided for all symbol values, the scene is over-specified.
+- **Time and memory limits:** every request runs in its own fresh process: one `run`, each
+  scene of a `test` run, each scene of a `view`.
+  - The default limits are **120 s and 2048 MB per request**; change them with `--time S`
+    and `--memory MB`. The time counts from the moment the request is accepted, so the
+    process's start-up (about a second) is included. A time limit is a finite positive
+    number of seconds, at most 1,000,000 (about 11.6 days), and a memory limit a whole number of
+    MB from 256 to 1,048,576 (1 TB); anything else is refused with a clear error before
+    anything runs.
+  - `view` writes its page only if every scene finished within the limits.
+  - What the limits guard against is the engine's own runaway computation. A request's
+    processes are cleaned up with it (its process group on Linux, its Job on Windows); a
+    process deliberately detached into a new session is outside that guarantee. A request
+    carries plain data only (the built-in dicts, lists, strings and numbers, no subclasses),
+    at most 16 MB of it as sent.
+  - A request that passes a limit is stopped and reported as
+    `RESOURCE LIMIT (time 120 s)` or `RESOURCE LIMIT (memory 2048 MB)` (exit status 3).
+    This says nothing about the physics: it is not an inconsistency, a refusal or an
+    unsupported feature. Simplify the scene or raise the limit.
+  - The limits apply to the whole run. A scene cannot set its own (an `expect.limits` block
+    is refused). In a test, `error: limit` expects the scene to be stopped.
+  - A scene file larger than 64 KB is refused before it is read.
+  - Some slow symbolic steps have their own shorter budgets and then switch to a stated
+    numerical method or a specific refusal. These work the same on every platform.
 
 ## Views (`python -m simwaves view out.html scene.yaml ...`)
 
@@ -870,7 +893,8 @@ For a comparison, put both setups in one scene (e.g. `s1`, `s2`) and take ratios
 ## Limits (v0)
 
 - Expressions are capped at 2000 characters and exponents at 100.
-- Evaluation has a 120 s time limit on Linux/macOS. Windows has no such limit yet.
+- Every request has a time and a memory limit, 120 s and 2048 MB by default, on every
+  platform (see "How results are reported").
 - `x=`, `at=` positions that are numbers are checked against the string's extent
   (set by junctions). A symbolic `x` (e.g. `y(w, x=x, t=0)`) is not checked: keep it
   inside the string yourself.

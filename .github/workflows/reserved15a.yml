@@ -1,0 +1,42 @@
+name: m15a reserved scenes
+
+# Milestone 15a stage 2: runs the reserved scenes S1-S6 on Linux with the frozen engine.
+# A separate workflow, so the frozen tests.yml is unchanged.
+on:
+  pull_request:
+    paths:
+      - eval/m15a_containment/**
+      - .github/workflows/reserved15a.yml
+
+jobs:
+  reserved:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: engine
+    env:
+      PYTHONIOENCODING: utf-8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+          cache: pip
+          cache-dependency-path: engine/requirements-dev.txt
+      - name: Install the pinned environment
+        run: pip install -r requirements-dev.txt
+      - name: The engine is the frozen one (unchanged since 2fe4ecb, the approved commit)
+        run: git diff --exit-code 2fe4ecb6cd53b627d908a6d7dad2e907883cb772 -- simwaves requirements.txt requirements-dev.txt ../format/FORMAT.md ../.github/workflows/tests.yml
+      - name: Run the reserved scenes, each alone with the default limits
+        run: python ../eval/m15a_containment/run/run_reserved.py ../eval/m15a_containment/reserved ../eval/m15a_containment/run/linux
+      - name: Show each outcome
+        if: always()
+        run: cat ../eval/m15a_containment/run/linux/*.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: m15a-reserved-linux
+          path: eval/m15a_containment/run/linux/

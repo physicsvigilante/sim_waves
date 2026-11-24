@@ -24,6 +24,11 @@ _Loader.add_implicit_resolver("tag:yaml.org,2002:bool",
 
 
 def load(path):
+    from .contain import LimitError, check_scene_size
+    try:
+        check_scene_size(path)
+    except LimitError as exc:
+        raise SceneError(str(exc)) from None
     with open(path, encoding="utf-8") as fh:
         try:
             data = yaml.load(fh, Loader=_Loader)
@@ -120,8 +125,10 @@ def _nearest_proved(sc, names, timeout):
     try:
         scale, syms = _symbolic_scale(sc)
         sc_sym = Scene(data, scale=scale)
-        _evaluate_once(sc_sym, min(timeout, 60))
+        _evaluate_once(sc_sym, SIDE_CHECK_SECONDS)
         recorded = getattr(sc_sym, "nearest_args", {})
+    except MemoryError:                  # a memory limit is never swallowed (m15a)
+        raise
     except Exception:                  # noqa: BLE001 - no proof: refused by the caller
         return set()
     proved = set()
@@ -136,6 +143,8 @@ def _nearest_proved(sc, names, timeout):
             # the proof must agree with the numbers actually compared in the stated run
             agree = all(len(c) == len(r) and all(_same_result(x, y) for x, y in zip(c, r))
                         for c, r in zip(simp, ref))
+        except MemoryError:                  # a memory limit is never swallowed (m15a)
+            raise
         except Exception:              # noqa: BLE001
             continue
         if not free and agree:         # every compared number is the same constant: proved
@@ -146,7 +155,7 @@ def _nearest_proved(sc, names, timeout):
 def _evaluate_arbitrary(sc, timeout):
     """Run the scene at the stated arbitrary values and at two other scalings; keep only the
     observables that agree in all three runs."""
-    sol, res = _evaluate_once(sc, timeout)
+    sol, res = _evaluate_once(sc)
     names = list(sc.arbitrary)
     others = []
     for k, f in enumerate(ARBITRARY_SCALES):
@@ -158,7 +167,7 @@ def _evaluate_arbitrary(sc, timeout):
         # (k == 0: powers 1.37, 1.37^2, ...; later runs: one shared factor times 1.01, 1.08, ...)
         try:
             sc2 = Scene(copy.deepcopy(sc.data), scale=scale)
-            others.append(_evaluate_once(sc2, timeout) + (sc2, f))
+            others.append(_evaluate_once(sc2) + (sc2, f))
         except SceneError as exc:
             for name in list(res):
                 sc.obs_errors[name] = SceneError(f"with other arbitrary values the scene fails ({exc}); the "
@@ -264,8 +273,10 @@ def _check_comparisons(sc, res, timeout):
                 return lambda v: lo + (hi - lo) * s_ / (1 + s_)
             return lambda v: lo + s_
         sc_sym = Scene(copy.deepcopy(data), scale={n: mapping(n) for n in names})
-        _, r_sym = _evaluate_once(sc_sym, min(timeout, 60))
+        _, r_sym = _evaluate_once(sc_sym, SIDE_CHECK_SECONDS)
         proved = {n: v for n, v in r_sym.items() if isinstance(v, sp.logic.boolalg.BooleanAtom)}
+    except MemoryError:                  # a memory limit is never swallowed (m15a)
+        raise
     except Exception:            # noqa: BLE001 - any failure: fall back to sampling
         proved = {}
     for n in comps:
@@ -296,7 +307,7 @@ def _check_comparisons(sc, res, timeout):
     for scale in runs:
         try:
             sc2 = Scene(copy.deepcopy(data), scale=scale)
-            _, r2 = _evaluate_once(sc2, timeout)
+            _, r2 = _evaluate_once(sc2)
             errs = getattr(sc2, "obs_errors", {})
         except PhysicalRangeError as exc:
             # this scaling left the physics (e.g. a sound speed in light's range): the
@@ -334,10 +345,21 @@ def _check_comparisons(sc, res, timeout):
                            f"ends of every range (sampled, not proved){note}")
 
 
-def evaluate(sc, timeout=120):
+SIDE_CHECK_SECONDS = 60      # a symbolic proof attempt beside the main run
+
+
+def evaluate(sc, timeout=None):
+    """Solve and evaluate a scene, in this process. The CLI, the test harness and export run
+    it inside a contained worker (contain.py), which bounds time and memory. A direct caller
+    may give `timeout` (seconds): the evaluation then raises ResourceLimitError when it runs
+    out. That bounds time only, not memory."""
+    if timeout is not None:
+        from .budget import within
+        from .errors import ResourceLimitError
+        return within(timeout, lambda: evaluate(sc), public=ResourceLimitError("time", f"{timeout:g} s"))
     if getattr(sc, "arbitrary", None):
-        return _evaluate_arbitrary(sc, timeout)
-    return _evaluate_once(sc, timeout)
+        return _evaluate_arbitrary(sc, None)
+    return _evaluate_once(sc)
 
 
 def _split_unit(sc, name, text):
@@ -487,20 +509,15 @@ def _decide_comparison(sc, text, rels, sol):
     return (sp.true if all(truths) else sp.false), "decided"
 
 
-def _evaluate_once(sc, timeout=120):
-    """Solve and evaluate, with a wall-clock limit where the OS supports it (POSIX)."""
-    import signal
-    if hasattr(signal, "SIGALRM"):
-        def _stop(*_):
-            raise SceneError(f"evaluation exceeded {timeout} s; simplify the scene")
-        old = signal.signal(signal.SIGALRM, _stop)
-        signal.alarm(timeout)
-        try:
-            return _evaluate(sc)
-        finally:
-            signal.alarm(0)
-            signal.signal(signal.SIGALRM, old)
-    return _evaluate(sc)
+def _evaluate_once(sc, timeout=None):
+    """Solve and evaluate. The whole request is bounded by its container (contain.py); a
+    `timeout` here caps only a side run (a symbolic proof attempt), whose running out means
+    "not proved" to its caller, never a result about the physics."""
+    if timeout is None:
+        return _evaluate(sc)
+    from .budget import within
+    return within(timeout, lambda: _evaluate(sc),
+                  public=SceneError(f"a symbolic check did not finish within {timeout} s"))
 
 
 def _evaluate(sc):
@@ -510,6 +527,8 @@ def _evaluate(sc):
         raise
     except RecursionError as exc:
         raise SceneError("expression too deeply nested") from exc
+    except MemoryError:                  # a memory limit is never swallowed (m15a)
+        raise
     except Exception as exc:          # never show a raw traceback to the author
         raise SceneError(f"engine internal error ({type(exc).__name__}: {exc}); the scene may use a "
                          f"combination the engine cannot handle yet; please report it") from exc
@@ -601,6 +620,8 @@ def _evaluate_inner(sc):
         except SceneError as exc:
             errors.append((name, exc))
             continue
+        except MemoryError:                  # a memory limit is never swallowed (m15a)
+            raise
         except Exception as exc:                       # an engine fault in one observable only
             errors.append((name, SceneError(f"engine internal error ({type(exc).__name__}: {exc}); "
                                             f"please report it")))
@@ -660,3 +681,8 @@ def show(v):
         except (ValueError, ArithmeticError, TypeError):
             return str(v)
     return str(v)
+
+
+import os as _os                                       # noqa: E402
+if _os.environ.get("SIMWAVES_TEST_HOOKS") == "1":       # containment tests only (m15a)
+    from . import testhooks                            # noqa: E402,F401

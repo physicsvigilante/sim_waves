@@ -21,3 +21,13 @@ class PhysicalRangeError(SceneError):
 
 class UndeterminedError(SceneError):
     """A requested quantity depends on something the scene never fixed."""
+
+
+class ResourceLimitError(BaseException):
+    """The request ran out of its time or memory limit (m15a). It says nothing about the
+    physics: it is not a SceneError, and derives from BaseException so that no
+    `except Exception` can turn it into a fallback, a refusal or an inconsistency."""
+
+    def __init__(self, kind, limit, detail=""):
+        self.kind, self.limit, self.detail = kind, limit, detail
+        super().__init__(f"RESOURCE LIMIT ({kind} {limit})" + (f": {detail}" if detail else ""))

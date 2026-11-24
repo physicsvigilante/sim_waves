@@ -1,0 +1,7 @@
+# The qualified environment for the sim_waves engine (m15a). Python 3.10.
+# The test suites pass with exactly these versions; a newer SymPy is a separate decision,
+# made only after the full suite passes on it (see eval/m15a_containment/PLAN.md).
+sympy==1.12
+mpmath==1.3.0
+numpy==1.26.2
+PyYAML==6.0.1

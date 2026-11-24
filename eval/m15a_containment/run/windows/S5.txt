@@ -1,0 +1,6 @@
+# S5: exit 3, 45.9 s, simwaves.child left: none
+## stdout
+RESOURCE LIMIT (memory 2048 MB): the request was stopped before it finished; this says nothing about the physics of the scene. Use --time or --memory to change the limits.
+
+## stderr
+

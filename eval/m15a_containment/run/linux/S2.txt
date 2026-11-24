@@ -1,0 +1,8 @@
+# S2: exit 0, 0.8 s, simwaves.child left: none
+## stdout
+f_heard = 2125/4  (= 531.250)
+lam_heard = 16/25  (= 0.640000)
+beats = 125/4  (= 31.2500)
+
+## stderr
+

@@ -1,0 +1,10 @@
+# S1: exit 0, 2.7 s, simwaves.child left: none
+## stdout
+solved L = 17/20  (= 0.850000)
+length = 17/20  (= 0.850000)
+f3 = 300
+lam3 = 17/15  (= 1.13333)
+n_band = 4
+
+## stderr
+

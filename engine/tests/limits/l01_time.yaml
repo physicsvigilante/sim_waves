@@ -1,0 +1,3 @@
+# m15a: a request that runs past its time limit is stopped and reported as a limit (test hook)
+observe: {v: "test_spin(60)"}
+expect: {error: limit}

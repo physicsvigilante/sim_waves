@@ -1,0 +1,22 @@
+# S6: exit 0, 0.8 s, simwaves.child left: none
+## stdout
+v_in = 50
+v_out = 25
+lam_in = 2
+lam_out = 1
+f_out = 25
+A_out = 1/50  (= 0.0200000)
+R = 1/9  (= 0.111111)
+T = 8/9  (= 0.888889)
+R_plus_T = 1
+env_max = 1/25  (= 0.0400000)
+env_min = 1/50  (= 0.0200000)
+swr = 2
+tt = 2/25  (= 0.0800000)
+f_total = 25
+pick = 3
+chain = 50
+deep = 50
+
+## stderr
+

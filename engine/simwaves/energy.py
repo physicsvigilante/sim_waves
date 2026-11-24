@@ -255,6 +255,8 @@ def _width(sc, p):
         return sp.simplify(support.measure)
     except SceneError:
         raise
+    except MemoryError:                  # a memory limit is never swallowed (m15a)
+        raise
     except Exception as exc:
         raise SceneError(f"width(): cannot find where pulse '{pulse.name}' is non-zero ({type(exc).__name__}); "
                          f"give its shape with numbers") from exc

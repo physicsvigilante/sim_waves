@@ -1,0 +1,22 @@
+id: m15a/S3
+# A small loudspeaker radiates uniformly in all directions (spherical spreading). The sound
+# level 1 m away is 100 dB. Find its power, the level 10 m away and the intensity ratio.
+assume:
+  - "Spherical spreading in free air; no absorption, no reflections."
+unknowns: {P: positive}
+media:
+  air: {type: gas, v: 340 m/s, density: 1.29 kg/m^3}
+sources:
+  S: {on: air, at: [0 m, 0 m], f: 500 Hz, power: P, phase: 0, spreading: spherical}
+points:
+  A: [1 m, 0 m]
+  B: [10 m, 0 m]
+rays:
+  rA: {from: S, to: A}
+  rB: {from: S, to: B}
+given:
+  - {fact: "sound_level(intensity(rA)) == 100", source: stated}
+observe:
+  power: "P"
+  level_B: "sound_level(intensity(rB))"
+  ratio: "intensity(rA)/intensity(rB)"
