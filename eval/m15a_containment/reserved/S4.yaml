@@ -1,0 +1,14 @@
+id: m15a/S4
+# A pulse train built from 12 heavily overlapping Gaussian humps (each 1 cm high, spaced 10 cm,
+# 30 cm wide) travelling at 2 m/s; the largest displacement at t = 0 and where it is.
+# A second wave oscillates extremely fast; its largest displacement is asked too.
+assume:
+  - "The humps are equal and equally spaced, as the figure shows; the profile is read as a sum of exp(-((x - c)/0.3)^2) terms centred at 0, 0.1, ..., 1.1 m."
+  - "The fast wave is a unit sine, y = sin(1e17 (x - 2 t - 1)), only to ask for its peak."
+waves:
+  p: {given: "(1/100)*(exp(-((x - 2*t)/(3/10))**2) + exp(-((x - 2*t - 1/10)/(3/10))**2) + exp(-((x - 2*t - 2/10)/(3/10))**2) + exp(-((x - 2*t - 3/10)/(3/10))**2) + exp(-((x - 2*t - 4/10)/(3/10))**2) + exp(-((x - 2*t - 5/10)/(3/10))**2) + exp(-((x - 2*t - 6/10)/(3/10))**2) + exp(-((x - 2*t - 7/10)/(3/10))**2) + exp(-((x - 2*t - 8/10)/(3/10))**2) + exp(-((x - 2*t - 9/10)/(3/10))**2) + exp(-((x - 2*t - 10/10)/(3/10))**2) + exp(-((x - 2*t - 11/10)/(3/10))**2))", units: {x: m, t: s, y: m}}
+  h: {given: "sin(10**17*(x - 2*t - 1))", units: {x: m, t: s, y: m}}
+observe:
+  peak_p: "peak(p, t=0[s])"
+  where_p: "peak_position(p, t=0[s])"
+  peak_h: "peak(h, t=0[s])"

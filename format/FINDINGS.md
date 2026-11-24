@@ -834,3 +834,49 @@ minutes, and r96 grows past 4.6 GB of memory; all three do so on the engine befo
 as well. The wall-clock limit uses SIGALRM, which Windows lacks, so nothing stops a slow
 scene there. A limit that works on Windows (a worker process with a timeout) is a
 candidate for later.
+
+## Milestone 15a: containment and reproducibility (eval/m15a_containment/)
+**What changed:** how scenes run, not what they mean. Result values did not change; Windows
+now takes the numerical fallbacks Linux already took.
+- **Portable time budgets** (`budget.py`, a watchdog thread) replace SIGALRM, which
+  Windows lacks. A `ResourceLimitError` is its own result, never a physics error.
+- **One fresh, OS-owned process per request** (one `run`, each scene of `test` and of
+  `view`), with limits of 120 s and 2048 MB by default (`--time`, `--memory`). On Windows,
+  a Job Object inside a kill-on-close supervisor job; on Linux, a new session, a
+  parent-death signal and a guardian process. A scene that passes a limit is `LIMIT`.
+- **The pinned environment** (`requirements.txt`) and **Linux CI** for every pull request.
+- r84, r93 and r96 run on Windows for the first time.
+
+### Milestone 15a review (12 rounds, ChatGPT Astra, on PR #18; eval/review15a/REPORT.md)
+- **Ordering of outcomes:** a limit outranks anything that completes after the deadline;
+  the deadline starts at admission and covers process set-up (rounds 1–4).
+- **Scope decisions (the user's):** no per-scene limits in scenes (option B, round 2); one
+  fresh process per request (option C, round 3); a declared containment class in the PLAN
+  (option A, round 4); a stalled operating-system creation call out of class (option 1,
+  round 6).
+- **Lifecycle (rounds 5–10):** one cancellation state per request, and Ctrl-C cancels every
+  active request. Five successive rounds (J1, K1, L1, M1, N1) found ways for a process to
+  start, or survive, after the result had returned. The end state is the commit-point
+  design (round 8: a creation either committed before the cancel or never begins), with
+  `kill()` waiting for a creation step in progress (round 10, option 1). No process is
+  alive after a result; the declared exception is the timing when a creation call stalls.
+- **Request data:** plain built-in types only, exact bytes as sent, serialised once at
+  admission, at most 16 MB (rounds 5–7).
+- **Limits:** at most 1,000,000 s and 1,048,576 MB, checked exactly, never through float;
+  the CLI converts only a limit's significant digits (rounds 9–11).
+- **Lesson:** process containment is an infrastructure service with its own supported
+  class. Declaring that class before the build (review policy point 1) would have saved
+  rounds; the repeated cause was settled only by a shared design, not by local patches.
+
+### Milestone 15a reserved run (S1–S6; eval/m15a_containment/RESULT.md)
+- **5 of 6 acceptable on Windows,** on the engine frozen at `2fe4ecb`. Three ordinary
+  scenes (pipe, Doppler and beats, decibels) and a 17-observable nesting scene are exact;
+  a billion-mode count gives a clear memory LIMIT, as its key allows. Every scene finished
+  or stopped within its limits, with no process left. The Linux run waits for the GitHub
+  account's billing.
+- **Defect, to the error-fix milestone (the user's decision):** the numerical peak fallback
+  reported 0.999999911344 for the peak of sin(10¹⁷(x − 1)), which is exactly 1. The wave's
+  period is below the floating-point spacing near x = 1, so the search returns its best
+  sample, printed to 12 digits with no statement of precision. Fix: refuse a wave the
+  numerical search cannot resolve, or report the precision. Pre-existing (Linux always
+  took this fallback); m15a makes Windows take it too.

@@ -1,0 +1,17 @@
+id: m15a/S1
+# A pipe closed at one end, open at the other: its fundamental is 100 Hz in air at 340 m/s.
+# Find its length, the third harmonic, and how many resonances lie between 250 and 1000 Hz.
+assume:
+  - "End correction is neglected (the problem says to ignore it)."
+unknowns: {L: positive}
+media:
+  air: {type: gas, v: 340 m/s}
+resonators:
+  p: {type: pipe, on: air, length: L, ends: [closed, open], end_correction: 0 m}
+given:
+  - {fact: "frequency(p, harmonic=1) == 100[Hz]", source: stated}
+observe:
+  length: "L"
+  f3: "frequency(p, harmonic=3)"
+  lam3: "wavelength(p, harmonic=3)"
+  n_band: "count(frequencies_in(p, lo=250[Hz], hi=1000[Hz]))"

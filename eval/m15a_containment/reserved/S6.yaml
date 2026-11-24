@@ -1,0 +1,32 @@
+id: m15a/S6
+# A light string (mu1 = 0.04 kg/m) is joined at x = 0 to a heavier one (mu2 = 0.16 kg/m), both at 100 N.
+# A 3 cm, 25 Hz wave comes from the left. Reflection, transmission, the partial standing wave on the
+# left string, a travel time, and a stack of nested and combined observables.
+assume:
+  - "The junction is at x = 0, the first string is x < 0; one reflection only (the strings are long enough)."
+media:
+  s1: {type: string, mu: 0.04 kg/m, tension: 100 N}
+  s2: {type: string, mu: 0.16 kg/m, tension: 100 N}
+junctions:
+  J: {at: 0 m, left: s1, right: s2}
+waves:
+  w: {harmonic: {on: s1, A: 3 cm, f: 25 Hz, dir: +x, phase: 0}}
+  total: {sum: [w, w_reflected]}
+observe:
+  v_in: "speed(w)"
+  v_out: "speed(w_transmitted)"
+  lam_in: "wavelength(w)"
+  lam_out: "wavelength(w_transmitted)"
+  f_out: "frequency(w_transmitted)"
+  A_out: "amplitude(w_transmitted)"
+  R: "power(w_reflected)/power(w)"
+  T: "power(w_transmitted)/power(w)"
+  R_plus_T: "power(w_reflected)/power(w) + power(w_transmitted)/power(w)"
+  env_max: "max_over(t, abs(y(total, x=(-1/2)[m], t=t)))"
+  env_min: "max_over(t, abs(y(total, x=(-1)[m], t=t)))"
+  swr: "max_over(t, abs(y(total, x=(-1/2)[m], t=t)))/max_over(t, abs(y(total, x=(-1)[m], t=t)))"
+  tt: "travel_time(s1, start=(-2)[m], end=0[m]) + travel_time(s2, start=0[m], end=1[m])"
+  f_total: "frequency_of(t, y(total, x=(-1/2)[m], t=t))"
+  pick: "nearest(nearest(max_over(t, abs(y(total, x=(-1/2)[m], t=t)))/max_over(t, abs(y(total, x=(-1)[m], t=t))), 1, 3/2, 2, 3), 1, 2, 3, 4)"
+  chain: "max(min(speed(w), 3*speed(w_transmitted)), speed(w_transmitted))"
+  deep: "abs(abs(abs(abs(abs(abs(abs(abs(abs(abs(abs(abs(speed(w)))))))))))))"

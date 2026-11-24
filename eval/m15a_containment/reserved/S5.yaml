@@ -1,0 +1,16 @@
+id: m15a/S5
+# A string with a 1 Hz fundamental is driven over a huge band. How many of its modes lie between
+# 0.5 Hz and 1000000000.5 Hz? An identity of two big products is checked too.
+assume:
+  - "The wire is a uniform string fixed at both ends; the band is stated to a half hertz so that no mode sits on an edge."
+symbols: {fs: positive, a: positive, b: positive, c: positive, d: positive, e: positive}
+media:
+  wire: {type: string, mu: 1 kg/m, tension: 4 N}
+resonators:
+  r: {type: string, on: wire, length: 1 m, ends: [fixed, fixed]}
+given:
+  - {fact: "frequency(r, harmonic=1) == 1[Hz]", source: stated}
+observe:
+  n_modes: "count(resonances(r, f=fs, vary=fs, lo=0.5[Hz], hi=1000000000.5[Hz]))"
+  top: "frequency(r, harmonic=1000000000)"
+  ident: "equivalent((a + b + c + d + e)**50*(a - b + c - d + e)**50, ((a + c + e)**2 - (b + d)**2)**50)"
