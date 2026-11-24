@@ -177,3 +177,11 @@
 | # | Severity | Finding | Fix | Tests (`test_limits_review.py`) |
 |---|---|---|---|---|
 | O1 (round 11) | medium | The CLI's digit guard measured the limit without its leading zeros, but converted the whole string, so a zero-padded value such as 5,000 zeros then `60` passed 5,002 characters to `int()`. Python 3.10.7 and later refuse more than 4,300 digits there, so this gave a traceback. | Only the significant digits are converted (`text.lstrip("0") or "0"`). More than 40 of them are treated as "above 10**40", which every limit refuses with a clear error; all zeros is a usage error. | in process, with a stand-in for Python's 4,300-digit limit (the local Python 3.10.6 predates it): zero-padded 60 s and 512 MB parse to their values, an all-zero value is a usage error, and 5,000 significant digits are not converted; through the CLI: zero-padded `--time 60 --memory 512` runs the scene, an all-zero `--time` gives usage (exit 2), and 5,000 significant digits as `--memory` give a clear error (exit 2); never a traceback |
+
+## Round 12
+- **Reviewer:** ChatGPT (Astra), posted on PR #18 on 2026-11-23 (as a COMMENT review: GitHub does not let the PR's author account approve it).
+- **Commit reviewed:** `2fe4ecb6cd53b627d908a6d7dad2e907883cb772`.
+- **Verdict: PASS.** No required findings remain; stage 1 approved for the gated stage 2.
+  - Linux CI was green at this commit (run 45138968052, Python 3.10.22: 339 scenes, 116/116 review checks).
+  - O1 (round 11) resolved, checked independently against CPython's real 4,300-digit limit; N1 and N2 remain resolved.
+- **Owner's decision:** the user started stage 2 on 2026-11-24.
