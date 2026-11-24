@@ -77,6 +77,27 @@ Adopted after milestone 14, from Astra's assessment (issue #15).
    - cross-cutting invariants.
    Capability outside the agreed class is OPTIONAL or a future milestone.
 
+Added after the project review of 2026-11-25 (`eval/project_review_2026-11/DECISIONS.md`):
+
+7. **Scope by the rule, not by files.** A milestone's scope is the rule it protects (for
+   example "a known unit never becomes a wildcard") and everything that produces or relies
+   on that rule. A list of files to leave untouched is not a scope; if the rule's
+   dependencies reach further than planned, revise the PLAN before building.
+8. **Review the rule before the examples.** For each milestone, state the rule, its
+   producers and consumers, and what counts as proof or as a justified refusal. Reviews
+   check that first, then the examples.
+9. **Test transformations and compositions systematically,** from the declared class, not
+   only the latest counterexample: unit rescaling, binding before and after the solve,
+   reordered or omitted observations, equivalent spellings, zero and degenerate limits,
+   and nesting through every admitted function.
+10. **Keep separate ledgers** for confirmed defects (`eval/KNOWN_ISSUES.md`), deliberate
+    scope reductions with their coverage cost, and claims resting only on sampling or
+    static inspection. A new PASS count never erases an open defect.
+11. **No waiver of a known wrong answer.** Each open defect is fixed, fenced with a sound
+    refusal, or assigned as a required repair to a named milestone. A scheduled defect
+    stays open in `eval/KNOWN_ISSUES.md`, and any milestone that touches its path must
+    repair or fence it.
+
 ## PR contents
 Concise, but enough for independent verification:
 - a summary of the changes, by file;
