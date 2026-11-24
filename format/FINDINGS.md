@@ -869,11 +869,11 @@ now takes the numerical fallbacks Linux already took.
   rounds; the repeated cause was settled only by a shared design, not by local patches.
 
 ### Milestone 15a reserved run (S1–S6; eval/m15a_containment/RESULT.md)
-- **5 of 6 acceptable on Windows,** on the engine frozen at `2fe4ecb`. Three ordinary
+- **5 of 6 acceptable, on Windows and on Linux (CI), with identical outputs,** on the
+  engine frozen at `2fe4ecb`. Three ordinary
   scenes (pipe, Doppler and beats, decibels) and a 17-observable nesting scene are exact;
   a billion-mode count gives a clear memory LIMIT, as its key allows. Every scene finished
-  or stopped within its limits, with no process left. The Linux run waits for the GitHub
-  account's billing.
+  or stopped within its limits, with no process left.
 - **Defect, to the error-fix milestone (the user's decision):** the numerical peak fallback
   reported 0.999999911344 for the peak of sin(10¹⁷(x − 1)), which is exactly 1. The wave's
   period is below the floating-point spacing near x = 1, so the search returns its best

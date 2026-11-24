@@ -16,30 +16,35 @@
   The hashes were rechecked after the run: unchanged.
 - **Run:** each scene alone through the CLI with the default limits (120 s, 2048 MB), by
   `run/run_reserved.py`, which records the output, the exit code, the time, and any
-  `simwaves.child` process left afterwards. The outputs are in `run/windows/`. The keys
+  `simwaves.child` process left afterwards. The outputs are in `run/windows/` and
+  `run/linux/` (CI). The keys
   were then also graded by the engine's own checker (each key's values written as an
   `expect` block).
 
-| Scene | Designed to test | Windows (Python 3.10.6) | Time | Left running | Acceptable |
+| Scene | Designed to test | Outcome (identical on Windows and Linux) | Time, Windows / Linux | Left running | Acceptable |
 |---|---|---|---|---|---|
-| S1 | closed pipe: length solved from the fundamental; a mode count in a band | 17/20 m, 300 Hz, 17/15 m, 4: all exact | 2.7 s | none | **yes** |
-| S2 | Doppler (moving source) and beats | 2125/4 Hz, 16/25 m, 125/4 Hz: all exact | 2.2 s | none | **yes** |
-| S3 | intensity and decibels, power solved from a level | π/25 W, 80 dB, 100: all exact | 2.4 s | none | **yes** |
-| S4 | peak of 12 overlapping Gaussians (a numerical fallback, as in r84) and of sin(10¹⁷(x − 1)) | `peak_p` 0.0529445743 m and `where_p` 0.55000001 m, within the key's 0.1%; **`peak_h` 0.999999911344 m, key exactly 1 m** | 63 s | none | **no** (`peak_h`) |
-| S5 | a count over a billion modes, and a degree-100 expansion in 5 variables | `LIMIT (memory 2048 MB)`, exit 3 | 46 s | none | **yes** (the key accepts LIMIT) |
-| S6 | 17 observables: nearest inside nearest, max/min chains, 12 nested abs, a standing wave's envelope, travel time across a junction | all 17 exact | 2.3 s | none | **yes** |
+| S1 | closed pipe: length solved from the fundamental; a mode count in a band | 17/20 m, 300 Hz, 17/15 m, 4: all exact | 2.7 s / 0.9 s | none | **yes** |
+| S2 | Doppler (moving source) and beats | 2125/4 Hz, 16/25 m, 125/4 Hz: all exact | 2.2 s / 0.8 s | none | **yes** |
+| S3 | intensity and decibels, power solved from a level | π/25 W, 80 dB, 100: all exact | 2.4 s / 0.9 s | none | **yes** |
+| S4 | peak of 12 overlapping Gaussians (a numerical fallback, as in r84) and of sin(10¹⁷(x − 1)) | `peak_p` 0.0529445743 m and `where_p` 0.55000001 m, within the key's 0.1%; **`peak_h` 0.999999911344 m, key exactly 1 m** | 63 s / 60 s | none | **no** (`peak_h`) |
+| S5 | a count over a billion modes, and a degree-100 expansion in 5 variables | `LIMIT (memory 2048 MB)`, exit 3 | 46 s / 35 s | none | **yes** (the key accepts LIMIT) |
+| S6 | 17 observables: nearest inside nearest, max/min chains, 12 nested abs, a standing wave's envelope, travel time across a junction | all 17 exact | 2.3 s / 0.8 s | none | **yes** |
 
-**On Windows, 5 of 6 outcomes are acceptable.** Every scene finished or stopped within its
+Windows: Python 3.10.6 on Windows 11. Linux: CI (Python 3.10.22, Ubuntu 22.04).
+
+**On both platforms, 5 of 6 outcomes are acceptable, and the outputs are identical, digit
+for digit** (S4's 0.999999911344 included). Every scene finished or stopped within its
 limits, and no process was left behind after any of them. The engine's checker agrees:
 S1, S2, S3 and S6 match their keys; S5 is stopped by a memory limit (its key's LIMIT
 outcome); S4 fails on `peak_h` alone. S3's level shows as a mismatch only because the key
 writes `80 dB` and an `expect` value cannot carry dB; the value is 80.
 
-**Linux (CI):** not run yet. GitHub did not start the CI jobs on the freeze commit
-("recent account payments have failed or your spending limit needs to be increased").
-The run is ready as its own workflow (`.github/workflows/reserved15a.yml`, so the frozen
-`tests.yml` is unchanged). It first checks that the engine is unchanged since `2fe4ecb`,
-then runs the same script. Its outcome will be added here.
+**Linux (CI):** run by its own workflow (`.github/workflows/reserved15a.yml`, so the frozen
+`tests.yml` is unchanged; run 45385186787, green). It first checked that the engine is
+unchanged since `2fe4ecb`, then ran the same script. GitHub first refused to start the
+jobs (the private repository's Actions billing); the user made the repository public on
+2026-11-24 and both workflows were re-run on `e415b20`. The main `tests` workflow is green
+there too (run 45385186339: 339 scenes, 116/116 review checks).
 
 ### S4: the one unacceptable outcome
 The largest |y| of sin(10¹⁷(x − 1)) is exactly 1. The engine's symbolic search ran past its
@@ -63,12 +68,13 @@ The largest |y| of sin(10¹⁷(x − 1)) is exactly 1. The engine's symbolic sea
   stopped within their limits; S5 gave a clear memory LIMIT.
 - **(b) Ctrl-C without orphaned processes:** confirmed by the review regressions (a caught
   Ctrl-C around `run_dir`, and Ctrl-C during a request's data check).
-- **(c) A PR gets its full test results from CI without a local run:** confirmed through
-  stage 1 (every commit sent for review was green in CI, Python 3.10.22). It is blocked at the
-  moment only by the GitHub account's billing.
+- **(c) A PR gets its full test results from CI without a local run:** confirmed (every
+  commit sent for review was green in CI, Python 3.10.22, and the stage 2 commit too). CI
+  stopped once, when GitHub would not bill Actions for the private repository; it is
+  public now.
 - **(d) The same scene gives the same result on both platforms:** confirmed for the
-  regression suite (339/339 on Linux, 336/336 plus r84/r93/r96 on Windows). For the
-  reserved scenes, pending the Linux run.
+  regression suite (339/339 on Linux, 336/336 plus r84/r93/r96 on Windows) and for the
+  reserved scenes, whose outputs are identical on the two platforms.
 - **(e) A reviewer can reproduce the environment from `requirements.txt`:** confirmed;
   Astra's reviews used CI's pinned environment.
 - **Cost:** the containment runner took **12 review rounds** with Astra
@@ -103,7 +109,6 @@ None. The S4 defect is recorded for the error-fix milestone (see above and FINDI
 
 ## Open limitations (to the project review and later milestones)
 - **S4's numerical peak** (above): to the error-fix milestone.
-- **The Linux run of the reserved scenes** waits for the GitHub account's billing.
 - **Declared out of class (PLAN):** a process the request deliberately detaches; the parent
   killed in the first instants of the child's start-up on Linux; the result's timing when a
   creation call stalls inside the operating system.

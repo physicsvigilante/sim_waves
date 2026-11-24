@@ -1,0 +1,9 @@
+# S3: exit 0, 0.9 s, simwaves.child left: none
+## stdout
+solved P = pi/25  (= 0.125664)
+power = pi/25  (= 0.125664)
+level_B = 80
+ratio = 100
+
+## stderr
+
