@@ -1,0 +1,8 @@
+# m15b F2: the model the refusal points to: a ray in 20 m/s wind, 360 m downstream: 360 - 20 t = 340 t, t = 1 s
+media: {air: {type: gas, v: 340 m/s, wind: [20 m/s, 0 m/s]}}
+sources:
+  S: {on: air, at: [0 m, 0 m], f: 500 Hz, A: 1, phase: 0, spreading: none}
+points: {P: [360 m, 0 m]}
+rays: {r: {from: S, to: P}}
+observe: {t: "arrives_at(r, emitted=0[s])"}
+expect: {t: 1}

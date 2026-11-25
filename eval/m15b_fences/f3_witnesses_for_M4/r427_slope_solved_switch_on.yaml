@@ -1,0 +1,8 @@
+# m15b round 3 R13 (F3): the same with a solved to 2: the slope at 2 m is at the corner: refused
+unknowns: {a: real}
+waves:
+  w: {given: "0.01*abs(x-a)", units: {x: m, t: s, y: m}}
+given:
+  - {fact: "a == 2", source: stated}
+observe: {s: "slope(w, x=2[m], t=0[s])"}
+expect: {error: rejected, message: "is a corner or jump of the shape"}

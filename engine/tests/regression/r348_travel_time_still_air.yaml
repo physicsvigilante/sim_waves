@@ -1,0 +1,9 @@
+# m15b F2 valid neighbours: zero wind and no wind give 360/340 = 18/17 s both ways
+media:
+  calm: {type: gas, v: 340 m/s, wind: [0 m/s, 0 m/s]}
+  air: {type: gas, v: 340 m/s}
+observe:
+  d0: "travel_time(calm, start=0[m], end=360[m])"
+  u0: "travel_time(calm, start=360[m], end=0[m])"
+  d1: "travel_time(air, start=0[m], end=360[m])"
+expect: {d0: "18/17", u0: "18/17", d1: "18/17"}

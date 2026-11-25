@@ -1,0 +1,7 @@
+# m15b round 1 R1 (F3): y = 0.01(|x - 10t| + |x + 10t|): at x = 0, y = 0.2|t|, so vy jumps from -0.2 to +0.2 m/s at t = 0: refused (was 0.2; the slice in x at t = 0 has equal one-sided time derivatives)
+waves:
+  w:
+    given: "0.01*(abs(x-10*t)+abs(x+10*t))"
+    units: {x: m, t: s, y: m}
+observe: {v: "vy(w, x=0[m], t=0[s])"}
+expect: {error: rejected, message: "is a corner or jump of the shape"}

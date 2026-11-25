@@ -1,0 +1,4 @@
+# m15b round 1 F2 control: a 3-D wind with only a z component: refused
+media: {air: {type: gas, v: 340 m/s, wind: [0 m/s, 0 m/s, 5 m/s]}}
+observe: {d: "travel_time(air, start=0[m], end=360[m])"}
+expect: {error: rejected, message: "is for a still medium"}

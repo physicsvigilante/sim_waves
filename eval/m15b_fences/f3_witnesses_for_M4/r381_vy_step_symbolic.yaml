@@ -1,0 +1,6 @@
+# m15b round 1 R2 (F3) equivalent spelling: vy at a symbolic t, then at(t = 0.1 s): refused
+media: {rope: {type: string, mu: 10 g/m, tension: 1 N}}
+waves:
+  p: {pulse: {on: rope, shape: "0.01*step(x)", units: {x: m, y: m}, dir: +x}}
+observe: {v: "at(vy(p, x=1[m], t=t), t=0.1[s])"}
+expect: {error: rejected, message: "a derivative is taken at a corner or jump"}

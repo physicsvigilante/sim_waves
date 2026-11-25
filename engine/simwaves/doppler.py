@@ -300,13 +300,28 @@ class Leg:
                 hi = lo + step
                 if step > 1e12:
                     raise SceneError(f"{self.what}: the sound never arrives")
+        # Both g above increase strictly with their variable while the motion is slower than
+        # sound relative to the air (enforced by _check_subsonic): the emission branch has
+        # dg/dtau >= v - |dE/dtau - wind| > 0, the arrival branch dg/dt >= v - |dR/dt - wind| > 0.
+        # So the root is bracketed by g(lo) <= 0 <= g(hi), and the same update keeps that
+        # bracket in both branches (review m15b, D3-6: the arrival branch used to move the
+        # wrong end and returned a time that was not a root).
+        if not (g(lo) <= 0 <= g(hi)):
+            raise SceneError(f"{self.what}: the propagation time could not be bracketed; it is not established")
         for _ in range(200):
             mid = (lo + hi) / 2
-            if (g(mid) > 0) == below:
+            if g(mid) > 0:
                 hi = mid
             else:
                 lo = mid
-        return sp.Float(str((lo + hi) / 2), 30)
+        root = (lo + hi) / 2
+        # the unsquared propagation equation must hold at the returned time: |g| is at most
+        # 2 v times the final bracket width (about 1e-49 s here), far below this bound, which
+        # in turn is far below any physically different answer
+        if abs(g(root)) > mpmath.mpf("1e-20") * max(mpmath.mpf(1), v * abs(root - ref_)):
+            raise SceneError(f"{self.what}: the propagation time could not be established (the equation "
+                             f"is not satisfied at the computed time)")
+        return sp.Float(str(root), 30)
 
     def _valid(self, c, seg, ref, below):
         if c.is_real is False or (c.is_number and abs(complex(sp.N(c)).imag) > 1e-20):

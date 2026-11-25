@@ -1,0 +1,8 @@
+# m15b round 1 F5 control: a pulse with an unspecified F cannot be reflected (its start cannot be checked), so no derived pulse carries F into width(): the scene is refused
+functions: [F]
+media: {s: {type: string, mu: 0.01 kg/m, tension: 4 N}}
+junctions: {end: {at: 2 m, left: s, right: fixed}}
+waves:
+  p: {pulse: {on: s, shape: "F(x)*(step(x)-step(x-1))", units: {x: m, y: m}, dir: +x}}
+observe: {w: "width(p_reflected)"}
+expect: {error: rejected, message: "cannot check that it starts"}

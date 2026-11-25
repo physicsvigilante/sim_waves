@@ -1,0 +1,7 @@
+# m15b round 3 R11 (F3): 0.01*sqrt(x^2 + (10t)^2) has a cusp at x = 0, t = 0 (at t = 0 it is 0.01|x|): the base of the root is 0 there, a branch point; the direct slope refused by the fence
+waves:
+  w:
+    given: "0.01*sqrt(x^2+(10*t)^2)"
+    units: {x: m, t: s, y: m}
+observe: {s: "slope(w, x=0[m], t=0[s])"}
+expect: {error: rejected, message: "is a corner or jump of the shape"}

@@ -1,0 +1,8 @@
+# m15b F3 valid neighbours beside the tip: before it passes, y = 0.01 - (1 m/s)|t - 0.1|, so vy = +1 m/s; behind it at t = 0.1 s the slope is +0.1, so vy = -10 * 0.1 = -1 m/s
+media: {rope: {type: string, mu: 10 g/m, tension: 1 N}}
+waves:
+  p: {pulse: {on: rope, shape: "0.01*max(0, 1 - abs(x - 0.5)/0.1)", units: {x: m, y: m}, dir: +x}}
+observe:
+  v1: "at(diff(y(p, x=1.5[m], t=t), t), t=0.099[s])"
+  v2: "at(vy(p, x=x, t=0.1[s]), x=1.49[m])"
+expect: {v1: 1, v2: -1}

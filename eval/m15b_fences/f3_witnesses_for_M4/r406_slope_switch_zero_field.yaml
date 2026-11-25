@@ -1,0 +1,6 @@
+# m15b round 2 R8 (F3): 0.01*x*step(x)*step(-x) is identically 0, but u = 0 is a switching point, so the fence refuses there (coverage cost; round 1 returned 0.01 or 0.00005 J/m by some spellings): slope
+media: {rope: {type: string, mu: 10 g/m, tension: 1 N}}
+waves:
+  p: {pulse: {on: rope, shape: "0.01*x*step(x)*step(-x)", units: {x: m, y: m}, dir: +x}}
+observe: {s: "slope(p, x=0[m], t=0[s])"}
+expect: {error: rejected, message: "is a corner or jump of the shape"}

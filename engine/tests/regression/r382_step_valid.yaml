@@ -1,0 +1,9 @@
+# m15b round 1 R2 valid neighbours: away from the step (x = 1.5 m and x = 0.5 m at t = 0.1 s) vy, ay and slope are 0
+media: {rope: {type: string, mu: 10 g/m, tension: 1 N}}
+waves:
+  p: {pulse: {on: rope, shape: "0.01*step(x)", units: {x: m, y: m}, dir: +x}}
+observe:
+  v: "vy(p, x=1.5[m], t=0.1[s])"
+  a: "ay(p, x=0.5[m], t=0.1[s])"
+  s: "slope(p, x=0.5[m], t=0.1[s])"
+expect: {v: 0, a: 0, s: 0}

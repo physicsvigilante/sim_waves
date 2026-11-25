@@ -1,0 +1,4 @@
+# m15b F2 (D3-2): upstream too (9/8 s, not 18/17 s): refused
+media: {air: {type: gas, v: 340 m/s, wind: [20 m/s, 0 m/s]}}
+observe: {u: "travel_time(air, start=360[m], end=0[m])"}
+expect: {error: rejected, message: "is for a still medium"}

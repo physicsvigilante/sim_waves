@@ -1,0 +1,7 @@
+# m15b round 1 R5 (F4): at a symbolic t, then at(): refused
+media: {air: {type: gas, v: 340 m/s}}
+sources:
+  S: {on: air, f: 500 Hz, A: 1, phase: 0, spreading: none, emits_from: 0 s}
+rays: {r: {from: S, length: 340 m}}
+observe: {ph: "at(phase(r, t=t), t=1.1[s])"}
+expect: {error: rejected, message: "cannot tell whether the source was already emitting"}

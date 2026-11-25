@@ -1,0 +1,6 @@
+# m15b round 2 R9 valid neighbour: at 2e-13 m, past both switching points, the slope is 0.02*2e-13 = 4e-15
+media: {rope: {type: string, mu: 10 g/m, tension: 1 N}}
+waves:
+  p: {pulse: {on: rope, shape: "0.01*(x^2*step(x)+step(x-1e-13))", units: {x: m, y: m}, dir: +x}}
+observe: {s: "slope(p, x=2e-13[m], t=0[s])"}
+expect: {s: 4.0e-15}

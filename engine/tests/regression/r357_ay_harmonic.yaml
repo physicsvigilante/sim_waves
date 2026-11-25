@@ -1,0 +1,6 @@
+# m15b F3 valid neighbour: a harmonic, A = 1 cm, f = 1 Hz: ay = -w^2 A sin(pi/2) = -pi^2/25
+media: {rope: {type: string, mu: 10 g/m, tension: 1 N}}
+waves:
+  w: {harmonic: {on: rope, A: 1 cm, f: 1 Hz, dir: +x, phase: 0}}
+observe: {a: "ay(w, x=0[m], t=0.25[s])"}
+expect: {a: "-pi**2/25"}

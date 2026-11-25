@@ -1,0 +1,8 @@
+# m15b round 3 R13 (F3): the same by the symbolic spelling: refused
+unknowns: {a: real}
+waves:
+  w: {given: "0.01*abs(x-a)", units: {x: m, t: s, y: m}}
+given:
+  - {fact: "a == 2", source: stated}
+observe: {s: "at(slope(w, x=x, t=0[s]), x=2[m])"}
+expect: {error: rejected, message: "a derivative is taken at a corner or jump"}

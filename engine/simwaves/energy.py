@@ -227,6 +227,12 @@ def _extreme_in(kind):
 def _width(sc, p):
     """Length of the one stretch of x over which a shaped pulse is non-zero."""
     pulse = _obj(p, (ShapedPulse,), "width")
+    from sympy.core.function import AppliedUndef
+    if sp.sympify(pulse.g).has(AppliedUndef):
+        # where an unspecified profile F is non-zero is not known, so neither is the width
+        # (review m15b, D2-3: a window around F(x) was taken as the support)
+        raise SceneError(f"width(): the shape of pulse '{pulse.name}' contains an unspecified function, so "
+                         f"where it is non-zero (and its width) is not determined; give the shape explicitly")
     defined = _defined_set(pulse, None, f"width() of '{pulse.name}'", shape=True)
     if defined != sp.S.Reals:
         raise SceneError(f"width(): the shape of pulse '{pulse.name}' as written is defined only for x in {defined}")

@@ -1,0 +1,4 @@
+# m15b F2: a fluid with flow is refused the same way
+media: {sea: {type: fluid, v: 1500 m/s, density: 1000 kg/m^3, flow: [5 m/s, 0 m/s]}}
+observe: {d: "travel_time(sea, start=0[m], end=1500[m])"}
+expect: {error: rejected, message: "is for a still medium"}

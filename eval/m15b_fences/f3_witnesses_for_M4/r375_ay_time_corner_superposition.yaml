@@ -1,0 +1,7 @@
+# m15b round 1 R1 (F3): the same point, ay: refused (was 0)
+waves:
+  w:
+    given: "0.01*(abs(x-10*t)+abs(x+10*t))"
+    units: {x: m, t: s, y: m}
+observe: {a: "ay(w, x=0[m], t=0[s])"}
+expect: {error: rejected, message: "is a corner or jump of the shape"}

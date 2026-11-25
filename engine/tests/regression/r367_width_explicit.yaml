@@ -1,0 +1,9 @@
+# m15b F5 valid neighbours: explicit triangles in the same window: widths 1 m and 1/2 m
+media: {rope: {type: string, mu: 10 g/m, tension: 1 N}}
+waves:
+  p1: {pulse: {on: rope, shape: "max(0,1-abs(2*x-1))*(step(x)-step(x-1))", units: {x: m, y: cm}, dir: +x}}
+  p2: {pulse: {on: rope, shape: "max(0,1-abs(4*x-2))*(step(x)-step(x-1))", units: {x: m, y: cm}, dir: +x}}
+observe:
+  w1: "width(p1)"
+  w2: "width(p2)"
+expect: {w1: 1, w2: "1/2"}

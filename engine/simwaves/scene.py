@@ -3080,6 +3080,13 @@ def _travel_time(sc, m, start=None, end=None):
     med = _obj(m, (StringMedium, GasMedium), "travel_time")
     if start is None or end is None:
         raise SceneError("travel_time(medium, start=..., end=...): give both positions")
+    # a still-medium service: in moving air (wind) or a moving fluid (flow) the transit time
+    # depends on the direction and the frame, which this integral ignores (review m15b, D3-2)
+    sol = getattr(sc, "solution", None) or {}
+    for c in (getattr(med, "wind", None) or []):
+        if sp.sympify(c).xreplace(sol).is_zero is not True:
+            raise SceneError(f"travel_time(): '{med.name}' moves (wind or flow), and travel_time() is for a "
+                             f"still medium; use a ray and arrives_at(ray, emitted=...) instead")
     a, b = sp.sympify(start), sp.sympify(end)
     lo_, hi_ = getattr(med, "extent", None) or (None, None)
     for pos in (a, b):

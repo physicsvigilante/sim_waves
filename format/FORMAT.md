@@ -84,6 +84,10 @@ Write YAML booleans only as `true`/`false`; `on`, `yes`, `no` are plain words.
   - `degC` is not allowed inside brackets: `20[degC]` could be a temperature or a
     difference. Write temperatures in K (`293.15[K]`) and differences as `20[K]`. A
     field (`now: 30 degC`) and a result `in degC` are fine.
+  - An absolute Celsius temperature must be written exactly as `degC` (`27 degC`): any other
+    spelling of it, such as `27 (degC)`, `27 degC^1` or `27 degC*m/m`, is refused, because the
+    273.15 K offset is tied to that spelling. Inside a compound unit, degC is a temperature
+    difference and keeps working: `alpha: 1.7e-5 1/degC` is the same as `1/K`.
 - **Internals:** the engine works in exact SI.
 
 ## Media
@@ -419,7 +423,9 @@ rays:
   - The sound heard at time t left the source at the emission time te, where
     |R(t) − E(te) − wind·(t − te)| = v (t − te).
   - The heard frequency is f · dte/dt: exact when te is (a line, a still side), and a
-    30-digit decimal when an unknown time sits on a circle.
+    30-digit decimal when an unknown time sits on a circle. Such a decimal is accepted only
+    if it satisfies the propagation equation above; otherwise the time is refused as not
+    established.
   - Wind at an angle is treated exactly, not by its component along the line, so the
     result can differ slightly from the book's formula; choose the nearest option.
 - **Observables:**
@@ -483,7 +489,11 @@ rays:
 - **Refused:**
   - motion at or above the speed of sound (relative to the air);
   - an instant exactly when a motion starts, where the frequency jumps;
-  - sound asked for before it was emitted ("no sound yet").
+  - sound asked for before it was emitted ("no sound yet"). For a source with `emits_from`,
+    this covers `phase(ray, t=...)` too (on a stated-length path the delay is length/v), and a
+    phase at a symbolic time is then refused, because whether the sound exists cannot be
+    decided. A ray in moving air (`wind`), whether geometric or of stated length, has no phase
+    at all in v0.
 
 ## Energy on strings
 
@@ -508,7 +518,8 @@ or transmitted parts):
 - **Averages over a period:** `mean_over(t, kinetic_energy(w, start=0[m], end=wavelength(w)/2, t=t), 0[s], period(w))`.
 - **Pulse width:** `width(p)` is the length over which a shaped pulse is non-zero; for a
   transmitted pulse it is v2/v1 times the incident width. A shape that never reaches zero
-  (e.g. a Gaussian) has no width.
+  (e.g. a Gaussian) has no width. A shape written with an unspecified function
+  (`functions: [F]`) has no determined width either, and `width()` is refused for it.
 - **Refusals:**
   - A shape with a jump (e.g. a rectangle) is refused: it has infinite stretching energy.
     Continuity can only be checked where corners and edges are at numeric positions, so
@@ -708,6 +719,8 @@ never `omega(w)`: both are 1/s, so the dimension check cannot catch it.
     infinitely many breakpoints (`step(sin(x))`) is handled only over a finite range. An energy needs the profile defined over the whole
     stretch, and `width` needs the shape defined everywhere.
   - At a corner of a shape, `vy` and `slope` are undefined and refused; ask just beside it.
+    (Known gaps at corners, jumps and branch points, for example `ay` at a corner or a derivative
+    placed on a corner with `at(...)`, are open defect D3-1, to be fenced in milestone M4.)
   - Observables can be nested, e.g.
     `front(p, t=travel_time(rope, start=0[m], end=3[m])/2)`.
   - `step(u)` is 1 for u >= 0, else 0. Shapes can be built from `max`, `abs` and `step`.
@@ -722,6 +735,8 @@ never `omega(w)`: both are 1/s, so the dimension check cannot catch it.
   from start to end: the integral of ds/v, which also works with a coordinate variable.
   - It is never negative.
   - Both ends must lie on that string. Across a junction, add the times on each string.
+  - It is for a still medium. In moving air (`wind`) or a moving fluid (`flow`) it is refused,
+    since the time then depends on the direction; use a ray and `arrives_at(ray, emitted=...)`.
 - `envelope(var, expr)` gives the beat envelope of a sum of two sinusoids with different
   frequencies: sqrt(A1^2 + A2^2 + 2*A1*A2*cos(dw*var + dc)).
   - Its maximum and minimum are `max_over(t, envelope(t, ...))` (A1 + A2) and
