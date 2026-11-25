@@ -1,0 +1,10 @@
+# m15b round 1 R1 valid neighbours: at x = 0, t = 0.01 s, vy = 0.2 m/s; at x = 0.5 m, t = 0.01 s both profiles are on straight flanks of opposite slope, vy = 0; the slope at x = 0, t = 0.1 s is 0 (|x - 1| + |x + 1|)
+waves:
+  w:
+    given: "0.01*(abs(x-10*t)+abs(x+10*t))"
+    units: {x: m, t: s, y: m}
+observe:
+  v1: "vy(w, x=0[m], t=0.01[s])"
+  v2: "vy(w, x=0.5[m], t=0.01[s])"
+  s: "slope(w, x=0[m], t=0.1[s])"
+expect: {v1: 0.2, v2: 0, s: 0}

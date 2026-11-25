@@ -6,8 +6,9 @@ from the wave's string at the point (strings with a coordinate variable included
 import sympy as sp
 
 from .errors import SceneError, UndeterminedError
-from .scene import (LENGTH, OBS_DIMS, OBSERVABLES, StringMedium, ShapedPulse, T, WAVES, X,
-                    _Budget, _check_point, _check_wave_x, _defined_set, _obj, _within, dim)
+from .scene import (LENGTH, OBS_DIMS, OBSERVABLES, StringMedium, ShapedPulse, T, WAVES, X, _NONSMOOTH,
+                    _Budget, _check_point, _check_wave_x, _defined_set, _note_corners, _obj,
+                    _point_regular, _regular_along, _switching_args, _within, dim)
 
 D_ENERGY, D_ELEN = dim(2, 1, -2), dim(1, 1, -2)       # J, J/m
 SYMBOLIC_BUDGET = 10                                 # seconds before a numerical integral is used
@@ -102,13 +103,20 @@ def _density(kind):
         m, mu, ten = _string_of(wave, fname)
         pwf, vy, sl = _fields(wave, fname)
         xv, tv = sp.sympify(x), sp.sympify(t)
-        at_t = pwf.xreplace({T: tv})
-        if xv.is_number and isinstance(at_t, sp.Piecewise):
-            if any(sp.simplify(q - xv) == 0 for q in _breakpoints(at_t, xv - 1, xv + 1, f"{fname}()")):
-                da, db = (_side_piece(sp.diff(at_t, X), xv, s) for s in (-1, 1))
-                if da is not None and db is not None and sp.simplify((da - db).xreplace({X: xv})) != 0:
-                    raise SceneError(f"{fname}(): x = {xv} m is a corner of the shape, where the slope (and the "
-                                     f"stretching energy density) is not defined; ask just beside it")
+        # the density needs the velocity (kinetic), the slope (potential) or both at the point:
+        # the same regularity rule as vy and slope (review m15b round 1, R3: the symbolic
+        # spelling at(potential_density(p, x=x, t=..), x=corner) gave a value at a corner)
+        f0 = wave.field()
+        needs = {"kinetic": (T,), "potential": (X,), "total": (T, X)}[kind]
+        if f0.has(sp.Piecewise, *_NONSMOOTH):
+            if xv.is_number and tv.is_number:
+                for var in needs:
+                    word = ("velocity (and the kinetic energy density)" if var == T else
+                            "slope (and the stretching energy density)")
+                    _regular_along(f0, var, 1, xv, tv, fname, word)
+            else:
+                _note_corners(sc, [g.xreplace({X: x, T: t}) for g in _switching_args(f0, needs)],
+                              _point_regular(f0, needs, 1, x, t, fname, "energy density"))
         rep = {X: xv, T: tv}
         k = (mu * vy ** 2 / 2).xreplace(rep)
         u = (ten * sl ** 2 / 2).xreplace(rep)

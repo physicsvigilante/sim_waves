@@ -1,0 +1,7 @@
+# m15b round 1 R5 (F4): the same path at 0.5 s: no sound yet
+media: {air: {type: gas, v: 340 m/s}}
+sources:
+  S: {on: air, f: 500 Hz, A: 1, phase: 0, spreading: none, emits_from: 0 s}
+rays: {r: {from: S, length: 340 m}}
+observe: {ph: "phase(r, t=0.5[s])"}
+expect: {error: rejected, message: "no sound yet"}

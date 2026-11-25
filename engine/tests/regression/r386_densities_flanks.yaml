@@ -1,0 +1,9 @@
+# m15b round 1 R3 valid neighbours: on the flanks |slope| = 0.1, |vy| = 1 m/s: potential 1*0.01/2 = 0.005 J/m, kinetic 0.01*1/2 = 0.005 J/m, total 0.01 J/m, by both spellings
+media: {rope: {type: string, mu: 10 g/m, tension: 1 N}}
+waves:
+  p: {pulse: {on: rope, shape: "0.01*max(0, 1 - abs(x - 0.5)/0.1)", units: {x: m, y: m}, dir: +x}}
+observe:
+  u: "at(potential_density(p, x=x, t=0.1[s]), x=1.49[m])"
+  k: "at(kinetic_density(p, x=1.5[m], t=t), t=0.099[s])"
+  e: "energy_density(p, x=1.45[m], t=0.1[s])"
+expect: {u: 0.005, k: 0.005, e: 0.01}

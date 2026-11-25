@@ -1,0 +1,8 @@
+# m15b round 1 F1 control (reviewer's oracle): source circling the origin at 30 m, 10 m/s; still listener at [130, 0] m; heard at 1 s: emitted at 0.7027659548733808953913096897499 s
+media: {air: {type: gas, v: 340 m/s}}
+sources:
+  S: {on: air, at: [30 m, 0 m], circle: {center: [0 m, 0 m], speed: 10 m/s, sense: ccw}, f: 500 Hz, A: 1, phase: 0, spreading: none}
+points: {P: [130 m, 0 m]}
+rays: {r: {from: S, to: P}}
+observe: {te: "emitted_at(r, t=1[s])"}
+expect: {te: {value: 0.7027659548733808953913096897499, tol: 1e-20}}

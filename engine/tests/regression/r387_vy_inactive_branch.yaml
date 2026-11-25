@@ -1,0 +1,8 @@
+# m15b round 1 R4 (F3): shape max(0, 1 - |u|, 3 - |u - 1|) with u = x - 10t: near u = 0 the third branch (2 + u) is the largest, so at x = 0, t = 0 vy = -10*0.01 = -0.1 m/s by both spellings (the |u| corner is inactive; the old symbolic rule refused it, and the direct spelling hit a recursion error)
+media: {rope: {type: string, mu: 10 g/m, tension: 1 N}}
+waves:
+  p: {pulse: {on: rope, shape: "0.01*max(0, 1 - abs(x), 3 - abs(x - 1))", units: {x: m, y: m}, dir: +x}}
+observe:
+  v1: "vy(p, x=0[m], t=0[s])"
+  v2: "at(diff(y(p, x=0[m], t=t), t), t=0[s])"
+expect: {v1: -0.1, v2: -0.1}

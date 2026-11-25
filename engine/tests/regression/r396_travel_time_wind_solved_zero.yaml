@@ -1,0 +1,6 @@
+# m15b round 1 F2 control: wind solved to 0 from a fact: 360/340 = 18/17 s
+unknowns: {w: real}
+media: {air: {type: gas, v: 340 m/s, wind: [w m/s, 0 m/s]}}
+given: ["w == 0"]
+observe: {d: "travel_time(air, start=0[m], end=360[m])"}
+expect: {d: "18/17"}

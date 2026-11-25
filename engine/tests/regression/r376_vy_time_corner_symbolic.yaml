@@ -1,0 +1,7 @@
+# m15b round 1 R1 (F3) equivalent spelling: vy at a symbolic t, then at(t = 0): refused
+waves:
+  w:
+    given: "0.01*(abs(x-10*t)+abs(x+10*t))"
+    units: {x: m, t: s, y: m}
+observe: {v: "at(vy(w, x=0[m], t=t), t=0[s])"}
+expect: {error: rejected, message: "a derivative is taken at a corner or jump"}

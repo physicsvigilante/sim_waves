@@ -540,10 +540,22 @@ def _ray_amplitude(o):
 def _ray_phase(o, x=None, t=None):
     if not isinstance(o, Ray) or x is not None or t is None:
         raise SceneError("phase(ray, t=...): the phase of one ray at its end point")
-    if o.source.emits_from is not None:
+    src = o.source
+    if src.emits_from is not None:
         # a switched-on source: the sound heard at t must exist, the same causal check as a
         # timed frequency (review m15b, D3-3: a phase was given before any sound arrived)
-        _dop.trace(o, t=t)
+        if o.to is None:
+            # a stated-length path in still air: the delay is L/v (review m15b round 1, R5:
+            # trace() needs positions, which such a path has none of)
+            te = _dop._sol(o, t) - o.L / src.medium.speed()
+            ok = _dop._ge(te, src.emits_from)
+            if ok is None:
+                raise UndeterminedError(f"ray '{o.name}': cannot tell whether the source was already emitting")
+            if not ok:
+                raise _dop.NoSound(f"ray '{o.name}': no sound yet: the sound arriving then would have left the "
+                                   f"source at t = {te}, before it starts emitting at {src.emits_from}")
+        else:
+            _dop.trace(o, t=t)
     return o.total_phase(t)
 
 

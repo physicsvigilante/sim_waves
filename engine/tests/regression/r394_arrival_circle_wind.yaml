@@ -1,0 +1,9 @@
+# m15b round 1 F1 control (reviewer's oracle): listener circling at 85 m, 17 m/s, wind [20, 0] m/s, emitted at 0: arrives at 0.2361265964843030086528995191749 s (65-digit mpmath)
+media: {air: {type: gas, v: 340 m/s, wind: [20 m/s, 0 m/s]}}
+sources:
+  S: {on: air, at: [0 m, 0 m], f: 500 Hz, A: 1, phase: 0, spreading: none}
+points:
+  P: {at: [85 m, 0 m], circle: {center: [0 m, 0 m], speed: 17 m/s, sense: ccw}}
+rays: {r: {from: S, to: P}}
+observe: {t1: "arrives_at(r, emitted=0[s])"}
+expect: {t1: {value: 0.2361265964843030086528995191749, tol: 1e-20}}

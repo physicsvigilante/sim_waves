@@ -1,0 +1,6 @@
+# m15b round 1 R2 (F3): the same point, slope: refused (was 0)
+media: {rope: {type: string, mu: 10 g/m, tension: 1 N}}
+waves:
+  p: {pulse: {on: rope, shape: "0.01*step(x)", units: {x: m, y: m}, dir: +x}}
+observe: {s: "slope(p, x=1[m], t=0.1[s])"}
+expect: {error: rejected, message: "jumps along x"}

@@ -1,0 +1,6 @@
+# m15b round 1 F2 control: wind solved to 20 m/s from a fact: refused
+unknowns: {w: real}
+media: {air: {type: gas, v: 340 m/s, wind: [w m/s, 0 m/s]}}
+given: ["w == 20"]
+observe: {d: "travel_time(air, start=0[m], end=360[m])"}
+expect: {error: rejected, message: "is for a still medium"}

@@ -2425,35 +2425,31 @@ def _point(sc, fname, deriv):
             raise SceneError(f"{fname}(): give both x= and t=")
         _check_wave_x(wave, x)
         e = wave.field()
-        if deriv and e.has(sp.Max, sp.Min, sp.Abs, sp.Heaviside, sp.Piecewise, sp.sign):
-            e0 = e
-            e = sp.piecewise_fold(e.rewrite(sp.Piecewise))
-            ds, d = [], e
-            for var in deriv:
-                d = sp.diff(d, var)
-                ds.append(d)
+        if deriv and e.has(sp.Piecewise, *_NONSMOOTH):
             xv, tv = sp.sympify(x), sp.sympify(t)
             if xv.is_number and tv.is_number:
-                # at a breakpoint, a derivative of order n exists only if every derivative of
-                # order 1..n has equal one-sided values there (review m15b, D3-1: comparing
-                # only the last order let ay = 0 through at a corner where vy jumps)
-                from .energy import _breakpoints, _side_piece
+                # the derivative is taken along one variable; it exists at the point only if the
+                # field along that variable, through the point, is regular there: every order
+                # 0..n continuous (review m15b, D3-1; round 1: R1 a corner in t at a fixed x,
+                # R2 a jump in the displacement itself)
                 word = {"vy": "velocity", "ay": "acceleration", "slope": "slope"}.get(fname, "derivative")
-                corners = [q for q in _breakpoints(sp.piecewise_fold(e.xreplace({T: tv})), xv - 1, xv + 1,
-                                                    f"{fname}()") if sp.simplify(q - xv) == 0]
-                for q in corners:
-                    for dk in ds:
-                        at_t = sp.piecewise_fold(dk.xreplace({T: tv}))
-                        a, b = _side_piece(at_t, xv, -1), _side_piece(at_t, xv, +1)
-                        if a is not None and b is not None and sp.simplify((a - b).xreplace({X: xv})) != 0:
-                            raise SceneError(f"{fname}(): x = {xv} m is a corner of the shape at that instant, "
-                                             f"where the {word} is not defined; ask just beside it")
-            else:
-                # a symbolic point: record that it must not be a corner, so at() refuses one
-                # (the same rule as a numeric point, kept beside the value)
-                for g in _switching_args(e0, deriv):
-                    _note(_sc, "nonzero", g.xreplace({X: x, T: t}))
+                val = _regular_along(e, deriv[0], len(deriv), xv, tv, fname, word)
+                _check_point(_sc, wave, x, t, fname)
+                return val
+            # a symbolic point: record where it would be a corner or jump, so at() refuses one
+            # (each zero of a switching argument is decided by the numeric rule; review m15b
+            # round 1, R4: an inactive branch's zero is not a corner)
+            word = {"vy": "velocity", "ay": "acceleration", "slope": "slope"}.get(fname, "derivative")
+            _note_corners(_sc, [g.xreplace({X: x, T: t}) for g in _switching_args(e, deriv)],
+                          _point_regular(e, deriv[:1], len(deriv), x, t, fname, word))
             _check_point(_sc, wave, x, t, fname)
+            try:
+                d = sp.piecewise_fold(e.rewrite(sp.Piecewise))
+            except RecursionError:
+                raise SceneError(f"{fname}(): the shape could not be split into smooth pieces; ask at a "
+                                 f"numeric point") from None
+            for var in deriv:
+                d = sp.diff(d, var)
             return d.xreplace({X: x, T: t}).doit()
         _check_point(_sc, wave, x, t, fname)
         for var in deriv:
@@ -2461,6 +2457,133 @@ def _point(sc, fname, deriv):
         return e.xreplace({X: x, T: t}).doit()
     return f
 
+
+_NONSMOOTH = (sp.Abs, sp.Heaviside, sp.sign, sp.DiracDelta, sp.Max, sp.Min, sp.floor, sp.ceiling, sp.frac, sp.Mod)
+_UNSPLIT = (sp.Abs, sp.Heaviside, sp.sign, sp.Max, sp.Min, sp.floor, sp.ceiling, sp.frac, sp.Mod)
+
+
+def _pieces_1d(r, fname, word):
+    """r (an expression in X only) split into smooth pieces, or refused."""
+    try:
+        r = sp.piecewise_fold(sp.sympify(r).rewrite(sp.Piecewise))
+    except RecursionError:
+        r = None
+    if r is None or r.has(*_UNSPLIT):
+        raise SceneError(f"{fname}(): the shape near this point could not be split into smooth pieces, so "
+                         f"whether the {word} exists here cannot be checked; ask just beside it")
+    return r
+
+
+def _regular_1d(r, s0, n, fname, word, what, unit, last_only=False):
+    """The n-th derivative at s0 of r, a piecewise expression in X alone (the field along one
+    variable through the point). At a breakpoint it exists only if the one-sided values of
+    every order 0..n agree (a jump in the function or in a lower derivative leaves none), and
+    then it is that common value; otherwise it is refused. last_only: r is already the
+    derivative, and only its own one-sided values are compared (returns None)."""
+    from .energy import _breakpoints
+    pts = _breakpoints(r, s0 - 1, s0 + 1, f"{fname}()") if isinstance(r, sp.Piecewise) else []
+    scale = max(1, abs(float(sp.N(s0))))
+    near = [q for q in pts if abs(float(sp.N(q - s0, 30))) <= 1e-12 * scale]
+    if not near:
+        return None if last_only else sp.diff(r, X, n).xreplace({X: s0}).doit()
+    q = near[0]
+    others = [abs(sp.N(p_ - q, 30)) for p_ in pts if sp.simplify(p_ - q) != 0]
+    h = sp.Rational(1, 10 ** 12)
+    if others:
+        h = min(h, sp.nsimplify(min(others) / 4, rational=True))
+
+    def side(expr, sgn):
+        if not isinstance(expr, sp.Piecewise):
+            return None if expr.has(sp.DiracDelta) else expr
+        probe = q + sgn * h
+        for piece, cond in expr.args:
+            c = cond.xreplace({X: probe})
+            if c is sp.true:
+                return None if piece.has(*_NONSMOOTH) else piece
+            if c is not sp.false:
+                return None
+        return None
+
+    def same(a, b):
+        d = sp.simplify((a - b).xreplace({X: q}))
+        if d == 0:
+            return True
+        if not d.is_number:
+            return False
+        dv = abs(sp.N(d, 40))
+        return bool(dv.is_finite) and dv <= sp.Float("1e-30", 40) * max(1, abs(sp.N(a.xreplace({X: q}), 40)))
+
+    dk = r
+    for k in ([0] if last_only else range(n + 1)):
+        if k:
+            dk = sp.piecewise_fold(sp.diff(dk, X))
+        a, b = side(dk, -1), side(dk, +1)
+        if a is None or b is None:
+            raise SceneError(f"{fname}(): {what} = {s0} {unit} is a breakpoint of the shape where its pieces "
+                             f"could not be established, so the {word} cannot be checked; ask just beside it")
+        if not same(a, b):
+            kind = "has a corner" if (k or last_only) else "jumps"
+            raise SceneError(f"{fname}(): at this point the wave {kind} along {what} (at {what} = {s0} {unit}), "
+                             f"where the {word} is not defined; ask just beside it")
+    if last_only:
+        return None
+    piece = b if sp.N(s0 - q, 30) >= 0 else a
+    return piece.xreplace({X: s0}).doit()
+
+
+def _regular_along(e, var, n, xv, tv, fname, word):
+    """The n-th derivative in var (X or T) of the field e at the numeric point (xv, tv),
+    computed from the field along var through the point only (rewriting the whole field into
+    pieces can exhaust the recursion limit; review m15b round 1, R4). It is refused at a
+    breakpoint where any order 0..n jumps along var (round 1: R1, a corner in t at a fixed x;
+    R2, a jump in the displacement itself). For a time derivative the existing comparison
+    stays as well: its one-sided values along x must agree (a velocity that jumps in x, as
+    where two opposite pulses meet, is refused; conservative)."""
+    if var == X:
+        return _regular_1d(_pieces_1d(e.xreplace({T: tv}), fname, word), xv, n, fname, word, "x", "m")
+    val = _regular_1d(_pieces_1d(e.xreplace({X: xv, T: X}), fname, word), tv, n, fname, word, "t", "s")
+    _regular_1d(_pieces_1d(sp.diff(e, T, n).xreplace({T: tv}), fname, word), xv, n, fname, word, "x", "m",
+                last_only=True)
+    return val
+
+
+def _note_corners(sc, gs, regular):
+    """Record where a derivative read at a symbolic point does not exist. gs are the switching
+    arguments already taken at the point. When one has a single free symbol s and finitely many
+    real zeros, regular(s, s0) decides each zero exactly (the numeric rule), and only the
+    irregular zeros are recorded (s != s0); otherwise g != 0 itself is recorded (conservative)."""
+    for g in gs:
+        g = sp.sympify(g)
+        fs = g.free_symbols
+        roots = None
+        if len(fs) == 1:
+            s = next(iter(fs))
+            try:
+                roots = sp.solveset(g, s, sp.S.Reals)
+            except Exception:
+                roots = None
+        if not (isinstance(roots, sp.FiniteSet) and len(roots) <= 20 and all(r_.is_number for r_ in roots)):
+            _note(sc, "nonzero", g)
+            continue
+        for s0 in roots:
+            try:
+                ok = regular(s, s0)
+            except SceneError:
+                ok = False
+            if not ok:
+                _note(sc, "nonzero", s - s0)
+
+
+def _point_regular(e, needs, n, x, t, fname, word):
+    """regular(s, s0) for _note_corners: the numeric rule at the point with s = s0."""
+    def regular(s, s0):
+        px, pt = sp.sympify(x).xreplace({s: s0}), sp.sympify(t).xreplace({s: s0})
+        if not (px.is_number and pt.is_number):
+            return False
+        for var in needs:
+            _regular_along(e, var, n, px, pt, fname, word)
+        return True
+    return regular
 
 def _phase(_sc, w, x=None, t=None):
     wave = _obj(w, WAVES, "phase")
@@ -2788,9 +2911,14 @@ def _switching_args(e, variables):
     A derivative in those variables does not exist where one of them is zero (in general;
     a smooth join is decided exactly only by the one-sided check at a numeric point)."""
     out = []
-    for a in sp.sympify(e).atoms(sp.Abs, sp.Heaviside, sp.sign, sp.DiracDelta, sp.Max, sp.Min):
+    for a in sp.sympify(e).atoms(sp.Piecewise, *_NONSMOOTH):
         if isinstance(a, (sp.Max, sp.Min)):
             cands = [p - q for i, p in enumerate(a.args) for q in a.args[i + 1:]]
+        elif isinstance(a, sp.Piecewise):
+            cands = [rel.lhs - rel.rhs for _, c in a.args for rel in
+                     ([c] if isinstance(c, sp.Rel) else list(sp.sympify(c).atoms(sp.Rel)))]
+        elif isinstance(a, (sp.floor, sp.ceiling, sp.frac, sp.Mod)):
+            cands = [sp.sin(sp.pi * a.args[0])] if not isinstance(a, sp.Mod) else [sp.sin(sp.pi * a.args[0] / a.args[1])]
         else:
             cands = [a.args[0]]
         out += [g for g in cands if any(g.has(v) for v in variables)]
@@ -2811,8 +2939,13 @@ def _diff(_sc, e, var, n=sp.Integer(1)):
     # the derivative does not exist where a corner or jump of e in var lies: record that, so
     # that at() refuses such a point (review m15b, D3-1: at(diff(y(p, x=.., t=t), t), t=corner)
     # gave 0 from sign(0) = 0)
-    for g in _switching_args(e, [var_]):
-        _note(_sc, "nonzero", g)
+    def regular(sym, s0):
+        if sym != var_ or not sp.sympify(e).free_symbols <= {var_}:
+            return False
+        r = sp.sympify(e).xreplace({var_: X}) if var_ != X else sp.sympify(e)
+        _regular_1d(_pieces_1d(r, "diff", "derivative"), s0, int(n), "diff", "derivative", str(var_), "")
+        return True
+    _note_corners(_sc, _switching_args(e, [var_]), regular)
     return out
 
 

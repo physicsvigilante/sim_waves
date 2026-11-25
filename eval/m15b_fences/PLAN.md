@@ -185,6 +185,7 @@ Existing r168, r203, r204, n11 and example 11_02_cnt_007 must be unchanged.
 | F6 | `parse_unit` (Celsius rule) | every unit parse; r168, r203, r204, n11, 11_02_cnt_007 |
 
 - **Expected size:** about 100–150 changed production lines, plus FORMAT.md notes for each refusal.
+- **Scope change, approved by the owner on 2026-11-25 (review round 1, R3):** F3's producers now include the energy densities (`energy.py` `_density`), which share F3's regularity check; the stop rule was applied and the owner chose to extend F3 rather than leave that spelling open.
 - **Stop rule:** if any rule's dependency reaches beyond its listed producers (for example, F3's `diff` route needs changes to the expression parser or the limit machinery), the build **stops and reports**, and that item moves to its milestone.
 - **Unchanged:** physics formulas, the solver, searches, grading. G1 is not touched here; it is M1's.
 
