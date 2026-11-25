@@ -62,3 +62,30 @@ Astra's review: [6052771314](https://github.com/physicsvigilante/sim_waves/pull/
 - r98: `max_in` of a kinetic density over a range containing the transmitted pulse's smooth edges, which was 9π²/3200. r401 keeps that value with a range inside the pulse.
 
 The expectations of r358 and r98 were changed to refusals. Both comments say why.
+
+## Round 3: commit `319eaac66dbce930a6226c3c59d579374ed44df3`, verdict FAIL
+
+Astra's review: a source trace and component reproductions in SymPy 1.14.
+- **R1–R10:** resolved or accepted as coverage cost.
+- **R11–R14:** new, REQUIRED.
+- **The stop rule:** Astra said it still applies to F3, and asked for a supported-class decision on radicals and on the order of solved substitution, not a precise repair.
+- **Also asked:** reconcile the older PLAN and BRIEF wording with the scope notes.
+
+**The owner's decisions (2026-11-25, recorded in the PLAN):**
+- **Branch points join the fence.**
+- **Solved values go in before switches are classified.**
+
+| # | Astra's finding | Reproduced at 319eaac? | What was done | Regressions |
+|---|---|---|---|---|
+| **R11** | A radical cusp: `0.01*sqrt(x^2+(10t)^2)`, `at(slope(w, x=0, t=t), t=0)` gave **0** (no `abs`/`max`/`step` atom, so no fence); with `sqrt(x^2+a)` and a solved to 0, the direct slope gave **0** | yes: both 0, and `at(vy(x=x, t=0), x=0)` also 0 | **Branch points are switching points:** the base of any non-integer power, and 1 ∓ the argument of asin/acos. The fence now triggers on any switching or branch point, by every spelling | r420–r422 (refused), r424 (solved a = 0, refused), r431 (acos edge, refused); valid r423 (0 at t = 1 s, 0.01 at x = 1 m) |
+| **R12** | Numeric densities ran the whole-field rewrite before the fence: a RecursionError at r400's valid point | yes | At a numeric point with only numeric switches, densities take vy and the slope from the one-variable restriction and **never call the whole-field rewrite** | r425 (1/20000, 1/20000, 1/10000 J/m) |
+| **R13** | The fence ignored solved values: `0.01*abs(x-a)`, a = 1, slope at 2 m refused ("cannot tell whether a − 2 = 0") | yes, at 0, 1 and 2 m | **The solution is substituted into the field first** (`_point`, `_density`). A switch that still depends on an unsolved unknown goes to the symbolic route, where it is recorded as a condition | r426 (0.01, −0.01, 0.01 by the symbolic spelling); r427, r428 (a = 2: refused by both spellings) |
+| **R14** | `diff` recorded only switches in its own variable: `at(diff(field(w), t), x=0, t=1)` of `0.01 t \|x\|` gave 0, but `vy` there is refused | yes | `diff` records switches in x and t as well as its variable (**parity** with the point fence) | r429 (refused), r430 (x = 1 m: 0.01) |
+
+**Also done:** the PLAN's F3 section is marked superseded, and its cost hypothesis (c) and coverage cost now state the fence. The BRIEF's coverage line is updated.
+
+**The 12 new scenes on 319eaac: 8 fail.**
+- Four accepted wrong values: r420, r421, r424, r429.
+- The recursion error: r425.
+- A wrongly refused valid neighbour: r426.
+- Two message changes: r422, r428.

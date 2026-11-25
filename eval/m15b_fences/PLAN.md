@@ -78,6 +78,8 @@ Each fence leaves its defect **open** in `eval/KNOWN_ISSUES.md`, with the full r
 
 ### F3: D3-1, fence. A point derivative at a corner needs every lower order to exist there
 
+> **Superseded in review (rounds 2 and 3):** the owner reduced F3 to a switching-point fence. See "Scope, footprint and stop rule" below. The rule and witnesses here are the original plan.
+
 **Defect** ([#21](https://github.com/physicsvigilante/sim_waves/issues/21), severity 1). `_point` ([scene.py L2421–L2452](https://github.com/physicsvigilante/sim_waves/blob/7244bb6fa984c441d9fbcdcbf2954e99c44b5efb/engine/simwaves/scene.py#L2421-L2452)) compares one-sided values of only the **final** derivative at a breakpoint. For `ay` at a triangular pulse's corner, both second-derivative branches are 0, so it reports 0. But the velocity jumps from +1 m/s to −1 m/s there, so there is no finite acceleration.
 
 **The rule:** at a breakpoint of a piecewise field at the stated instant, a point derivative of order n (`vy`, `slope`, `ay`) is accepted only if, for **every** order k = 1…n along the requested variables, the one-sided values agree. Otherwise it is refused as a corner. The existing order-n comparison stays.
@@ -195,6 +197,12 @@ Existing r168, r203, r204, n11 and example 11_02_cnt_007 must be unchanged.
     - `max_in` over a range that contains a smooth edge (r98; r401 keeps the value inside the pulse).
   - **The precise rule stays M4's.**
   - **F4's producers now include the `Ray` constructor:** a stated-length path in moving air is `moving`, as a geometric path already was (R10).
+- **Scope decisions, by the owner on 2026-11-25 (review round 3):**
+  - **The F3 fence's switching points include branch points:** a zero of the base of a root or other non-integer power, and an asin/acos argument of ±1 (R11).
+  - **Values solved from facts are substituted before switches are classified** (R13). A switching point that still depends on an unsolved unknown is recorded as a condition, as at a symbolic point.
+  - **Sequencing and parity fixes in the same rule:**
+    - numeric densities skip the whole-field rewrite (R12);
+    - `diff` records switches in x and t too (R14).
 - **Stop rule:** if any rule's dependency reaches beyond its listed producers (for example, F3's `diff` route needs changes to the expression parser or the limit machinery), the build **stops and reports**, and that item moves to its milestone.
 - **Unchanged:** physics formulas, the solver, searches, grading. G1 is not touched here; it is M1's.
 
@@ -214,14 +222,14 @@ Existing r168, r203, r204, n11 and example 11_02_cnt_007 must be unchanged.
 After this milestone, without further work:
 - **(a)** every arrival or emission time on circular or piecewise motion is either correct, with a verified residual, or refused;
 - **(b)** no `travel_time` on a moving medium returns a value;
-- **(c)** no point derivative at a corner of a piecewise field returns a value unless every lower order exists there;
+- **(c)** no point derivative or energy density at a switching or branch point of a shape returns a value, by any spelling (as reduced by the owner's scope decisions in rounds 2 and 3; first written as "unless every lower order exists there");
 - **(d)** no ray phase is reported before its sound exists;
 - **(e)** no width is reported for an unspecified profile;
 - **(f)** no absolute Celsius value loses its offset through its spelling.
 
 **Coverage cost** (recorded in RESULT.md):
 - `travel_time` in wind (use rays);
-- `ay` at corners;
+- `vy`, `ay`, `slope` and the energy densities exactly at switching and branch points, including smooth ones (C¹ joins, inactive `max` branches, nodes, zero fields, smooth branch points), and `max_in`/`min_in` over ranges containing them (rounds 2 and 3);
 - timed phase with a symbolic time for switched-on sources;
 - `width` of arbitrary-function pulses;
 - non-canonical Celsius spellings.

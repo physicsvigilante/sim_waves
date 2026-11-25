@@ -1,0 +1,5 @@
+# m15b round 3 R11 class (F3): 0.01*acos(x) at x = 1 is a branch point (its slope is unbounded there): refused
+waves:
+  w: {given: "0.01*acos(x)", units: {x: m, t: s, y: m}}
+observe: {s: "at(slope(w, x=x, t=0[s]), x=1[m])"}
+expect: {error: rejected, message: "a derivative is taken at a corner or jump"}

@@ -1,0 +1,9 @@
+# m15b round 3 R12 (F3): the r400 shape at x = 0.01 m, t = 0 (off every switching point; the third branch 2 + u, slope 0.01, vy -0.1 m/s): potential and kinetic 1/20000 J/m, total 1/10000 J/m (was an internal recursion error from the whole-field rewrite)
+media: {rope: {type: string, mu: 10 g/m, tension: 1 N}}
+waves:
+  p: {pulse: {on: rope, shape: "0.01*max(0, 1 - abs(x), 3 - abs(x - 1))", units: {x: m, y: m}, dir: +x}}
+observe:
+  u: "potential_density(p, x=0.01[m], t=0[s])"
+  k: "kinetic_density(p, x=0.01[m], t=0[s])"
+  e: "energy_density(p, x=0.01[m], t=0[s])"
+expect: {u: 0.00005, k: 0.00005, e: 0.0001}

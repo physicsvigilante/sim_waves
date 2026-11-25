@@ -102,19 +102,23 @@ def _density(kind):
         _check_wave_x(wave, x)
         _check_point(sc, wave, x, t, fname)
         m, mu, ten = _string_of(wave, fname)
-        pwf, vy, sl = _fields(wave, fname)
         xv, tv = sp.sympify(x), sp.sympify(t)
-        # F3 fence: a density is refused exactly at a switching point of the shape, by either
-        # spelling (review m15b rounds 1-2, R3 and R8); off it, vy and the slope are the field's
-        # own derivatives there
-        f0 = wave.field()
-        if f0.has(sp.Piecewise, *_NONSMOOTH):
-            if xv.is_number and tv.is_number:
-                vy = _deriv_off_switch(f0, T, 1, xv, tv, fname, "energy density")
-                sl = _deriv_off_switch(f0, X, 1, xv, tv, fname, "energy density")
-            else:
-                for g in _switching_args(f0, (X, T)):
-                    _note(sc, "nonzero", g.xreplace({X: x, T: t}))
+        # F3 fence: a density is refused exactly at a switching or branch point of the shape, by
+        # either spelling (review m15b rounds 1-3: R3, R8, R11). Solved values go in first (R13);
+        # at a numeric point vy and the slope come from the field along one variable, with no
+        # whole-field rewrite, which can exhaust the recursion limit (R12)
+        f0 = wave.field().xreplace(getattr(sc, "solution", None) or {})
+        if not f0.has(X):
+            raise SceneError(f"{fname}(): wave '{wave.name}' does not depend on x")
+        gs = _switching_args(f0, (X, T))
+        at_pt = [sp.sympify(g).xreplace({X: x, T: t}) for g in gs]
+        if gs and xv.is_number and tv.is_number and all(g.is_number for g in at_pt):
+            vy = _deriv_off_switch(f0, T, 1, xv, tv, fname, "energy density")
+            sl = _deriv_off_switch(f0, X, 1, xv, tv, fname, "energy density")
+        else:
+            pwf, vy, sl = _fields(wave, fname)
+            for g in at_pt:
+                _note(sc, "nonzero", g)
         rep = {X: xv, T: tv}
         k = (mu * vy ** 2 / 2).xreplace(rep)
         u = (ten * sl ** 2 / 2).xreplace(rep)

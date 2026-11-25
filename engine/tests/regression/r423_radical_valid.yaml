@@ -1,0 +1,9 @@
+# m15b round 3 R11 valid neighbours: at x = 0, t = 1 s the shape is 0.01 sqrt(x^2 + 100) (smooth): slope 0 by the symbolic spelling; at x = 1 m, t = 0 it is 0.01|x|: slope 0.01
+waves:
+  w:
+    given: "0.01*sqrt(x^2+(10*t)^2)"
+    units: {x: m, t: s, y: m}
+observe:
+  s1: "at(slope(w, x=0[m], t=t), t=1[s])"
+  s2: "slope(w, x=1[m], t=0[s])"
+expect: {s1: 0, s2: 0.01}

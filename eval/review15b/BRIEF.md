@@ -56,7 +56,7 @@ Expected values below are computed by hand. No reserved problems exist for this 
 ## Limitations, and what is deliberately left open
 
 - **Conservative refusals (a declared cost):** through `diff` or a symbolic point, a derivative exactly at a switching point is refused even where it exists (a smooth C¹ join). The precise one-sided check runs only at a numeric point in `vy`/`slope`/`ay`.
-- **Coverage cost:** `travel_time` in wind; `ay` at corners; timed phase at a symbolic time for switched-on sources; `width` of unspecified profiles; non-canonical Celsius spellings.
+- **Coverage cost:** `travel_time` in wind; `vy`/`ay`/`slope`/densities exactly at switching and branch points (rounds 2–3; see the PLAN's scope decisions); timed phase at a symbolic time for switched-on sources; `width` of unspecified profiles; non-canonical Celsius spellings.
 - **Found during the build, not fixed here (outside the stop list):** a value that cannot be converted to a number (for example DiracDelta(0)) makes `run.py`'s realness check abort the **whole scene**, outside the per-observable error handling ([run.py L644](https://github.com/physicsvigilante/sim_waves/blob/7244bb6fa984c441d9fbcdcbf2954e99c44b5efb/engine/simwaves/run.py#L644)). It was reached by `at(diff(y, t, 2), corner)`, which F3 now refuses earlier. It will be added to the ledger as **G4**.
 - **Test grading:** G1 (the harness passes symbolic comparisons unchecked) is unfixed until M1. So every new expected value here is a number or a refusal, and every refusal is a scene with one observable.
 - **Untouched:** the solver, searches, grading, `expr.py` and `run.py`.

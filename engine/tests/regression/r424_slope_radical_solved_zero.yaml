@@ -1,0 +1,8 @@
+# m15b round 3 R11 (F3): 0.01*sqrt(x^2 + a) with a solved to 0 is 0.01|x|: the slope at 0 is refused (was 0, the formal derivative taken before the solution)
+unknowns: {a: real}
+waves:
+  w: {given: "0.01*sqrt(x^2+a)", units: {x: m, t: s, y: m}}
+given:
+  - {fact: "a == 0", source: stated}
+observe: {s: "slope(w, x=0[m], t=0[s])"}
+expect: {error: rejected, message: "is a corner or jump of the shape"}

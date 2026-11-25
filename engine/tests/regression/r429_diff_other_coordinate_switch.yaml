@@ -1,0 +1,5 @@
+# m15b round 3 R14 (F3 parity): diff in t of 0.01 t |x| placed at x = 0 is at a switching point in x: refused, as vy(w, x=0, t=1) is (it returned 0)
+waves:
+  w: {given: "0.01*t*abs(x)", units: {x: m, t: s, y: m}}
+observe: {v: "at(diff(field(w), t), x=0[m], t=1[s])"}
+expect: {error: rejected, message: "a derivative is taken at a corner or jump"}

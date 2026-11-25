@@ -2424,23 +2424,30 @@ def _point(sc, fname, deriv):
         if x is None or t is None:
             raise SceneError(f"{fname}(): give both x= and t=")
         _check_wave_x(wave, x)
-        e = wave.field()
-        if deriv and e.has(sp.Piecewise, *_NONSMOOTH):
+        # values already solved from facts go in first, before any switch is classified (review
+        # m15b round 3, R13 and R11: a solved parameter decides where the switching points are)
+        e = wave.field().xreplace(getattr(_sc, "solution", None) or {})
+        gs = _switching_args(e, (X, T)) if deriv else []
+        if gs:
             # F3 (D3-1), a fence: a point derivative is refused exactly at a switching point of
             # the shape (a zero of an argument of abs, step or sign, of a difference inside max
-            # or min, or of a piecewise condition), by every spelling. Elsewhere the shape is
-            # smooth around the point and the formula's derivative is exact. Whether such a point
-            # is a smooth join is not decided here (review m15b round 2: owner's scope decision;
-            # the precise rule is M4's)
+            # or min, or of a piecewise condition) or a branch point (a zero of the base of a
+            # root or fractional power; asin/acos at +-1), by every spelling. Elsewhere the shape
+            # is smooth around the point and the formula's derivative is exact. Whether such a
+            # point is a smooth join is not decided here (review m15b rounds 2-3: the owner's
+            # scope decisions; the precise rule is M4's)
             word = {"vy": "velocity", "ay": "acceleration", "slope": "slope"}.get(fname, "derivative")
-            xv, tv = sp.sympify(x), sp.sympify(t)
-            if xv.is_number and tv.is_number:
-                val = _deriv_off_switch(e, deriv[0], len(deriv), xv, tv, fname, word)
+            at_pt = [sp.sympify(g).xreplace({X: x, T: t}) for g in gs]
+            if all(sp.sympify(g).is_number for g in at_pt) and sp.sympify(x).is_number and \
+                    sp.sympify(t).is_number:
+                val = _deriv_off_switch(e, deriv[0], len(deriv), sp.sympify(x), sp.sympify(t), fname, word)
                 _check_point(_sc, wave, x, t, fname)
                 return val
-            # a symbolic point: each switching argument must be nonzero there, checked by at()
-            for g in _switching_args(e, (X, T)):
-                _note(_sc, "nonzero", g.xreplace({X: x, T: t}))
+            # a symbolic point, or switching points that depend on an unknown not yet solved:
+            # each switching argument must be nonzero there, recorded for at() or the post-solve
+            # check
+            for g in at_pt:
+                _note(_sc, "nonzero", g)
             _check_point(_sc, wave, x, t, fname)
             try:
                 d = sp.piecewise_fold(e.rewrite(sp.Piecewise))
@@ -2482,9 +2489,9 @@ def _off_switch(e, xv, tv, fname, word):
         if z is None:
             z = sp.simplify(gp).is_zero
         if z is True:
-            raise SceneError(f"{fname}(): this point is a corner or jump of the shape (a switching point, "
-                             f"where {g} = 0, inside abs, max, min or step), where the {word} is not "
-                             f"defined or not checked; ask just beside it")
+            raise SceneError(f"{fname}(): this point is a corner or jump of the shape (a switching or branch "
+                             f"point, where {g} = 0, inside abs, max, min, step, a root or asin/acos), where "
+                             f"the {word} is not defined or not checked; ask just beside it")
         if z is not False:
             raise SceneError(f"{fname}(): cannot tell whether this point is a corner or jump of the shape "
                              f"(whether {gp} = 0), so the {word} is not checked; ask just beside it")
@@ -2825,9 +2832,10 @@ def _limit(_sc, e, var, value, _written=(), _obligations=()):
 
 def _switching_args(e, variables):
     """The expressions whose zeros are the corners and jumps of e in the given variables:
-    the arguments of abs, step and sign, and the pairwise differences inside max and min.
-    A derivative in those variables does not exist where one of them is zero (in general;
-    a smooth join is decided exactly only by the one-sided check at a numeric point)."""
+    the arguments of abs, step and sign, the pairwise differences inside max and min, and
+    piecewise conditions; and its branch points: the base of a root or other non-integer power,
+    and 1 -+ the argument of asin/acos. A derivative may not exist where one of them is zero; the
+    F3 fence refuses there without deciding whether it does."""
     out = []
     for a in sp.sympify(e).atoms(sp.Piecewise, *_NONSMOOTH):
         if isinstance(a, (sp.Max, sp.Min)):
@@ -2840,6 +2848,14 @@ def _switching_args(e, variables):
         else:
             cands = [a.args[0]]
         out += [g for g in cands if any(g.has(v) for v in variables)]
+    # branch points (review m15b round 3, R11: sqrt(x^2 + (10 t)^2) has a cusp where its base
+    # is 0): the base of a root or other non-integer power, and asin/acos at +-1
+    for a in sp.sympify(e).atoms(sp.Pow):
+        if a.exp.is_integer is not True:
+            out += [a.base] if any(a.base.has(v) for v in variables) else []
+    for a in sp.sympify(e).atoms(sp.asin, sp.acos):
+        if any(a.args[0].has(v) for v in variables):
+            out += [1 - a.args[0], 1 + a.args[0]]
     return out
 
 
@@ -2857,7 +2873,9 @@ def _diff(_sc, e, var, n=sp.Integer(1)):
     # the derivative does not exist where a corner or jump of e in var lies: record that, so
     # that at() refuses such a point (review m15b, D3-1: at(diff(y(p, x=.., t=t), t), t=corner)
     # gave 0 from sign(0) = 0)
-    for g in _switching_args(e, [var_]):
+    # the same switching and branch points as the point fence: those in x and t as well as in
+    # the variable (review m15b round 3, R14: at(diff(field(w), t), x=0, t=1) of t*abs(x))
+    for g in _switching_args(e, {var_, X, T}):
         _note(_sc, "nonzero", g)
     return out
 
