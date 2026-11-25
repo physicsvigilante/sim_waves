@@ -540,6 +540,10 @@ def _ray_amplitude(o):
 def _ray_phase(o, x=None, t=None):
     if not isinstance(o, Ray) or x is not None or t is None:
         raise SceneError("phase(ray, t=...): the phase of one ray at its end point")
+    if o.source.emits_from is not None:
+        # a switched-on source: the sound heard at t must exist, the same causal check as a
+        # timed frequency (review m15b, D3-3: a phase was given before any sound arrived)
+        _dop.trace(o, t=t)
     return o.total_phase(t)
 
 

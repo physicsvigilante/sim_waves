@@ -1,0 +1,7 @@
+# m15b F5 equivalent spelling: F inside max(0, ...)
+functions: [F]
+media: {rope: {type: string, mu: 10 g/m, tension: 1 N}}
+waves:
+  p: {pulse: {on: rope, shape: "max(0, F(2*x))*(step(x)-step(x-1))", units: {x: m, y: cm}, dir: +x}}
+observe: {w: "width(p)"}
+expect: {error: rejected, message: "contains an unspecified function"}

@@ -1,0 +1,5 @@
+# m15b F6 equivalent spelling: 27 degC^1: refused
+media:
+  air: {type: gas, gamma: 7/5, temperature: 27 degC^1, molar_mass: 29 g/mol, gas_constant: 8.31 J/(mol*K)}
+observe: {v: "speed(air)"}
+expect: {error: rejected, message: "write an absolute Celsius temperature exactly as degC"}

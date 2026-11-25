@@ -1,0 +1,7 @@
+# m15b F5 (D2-3): width of F(x) windowed to [0, 1] is not determined (was 1 m)
+functions: [F]
+media: {rope: {type: string, mu: 10 g/m, tension: 1 N}}
+waves:
+  p: {pulse: {on: rope, shape: "F(x)*(step(x)-step(x-1))", units: {x: m, y: cm}, dir: +x}}
+observe: {w: "width(p)"}
+expect: {error: rejected, message: "contains an unspecified function"}

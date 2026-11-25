@@ -1,0 +1,8 @@
+# m15b F6 valid neighbours: 27 degC = 300.15 K: v = sqrt(1.4 * 8.31 * 300.15 / 0.029) = 347.0041786491915 m/s
+media:
+  a: {type: gas, gamma: 7/5, temperature: 27 degC, molar_mass: 29 g/mol, gas_constant: 8.31 J/(mol*K)}
+  b: {type: gas, gamma: 7/5, temperature: 300.15 K, molar_mass: 29 g/mol, gas_constant: 8.31 J/(mol*K)}
+observe:
+  va: "speed(a)"
+  vb: "speed(b)"
+expect: {va: {value: "sqrt(1.4*8.31*300.15/0.029)", tol: 1e-12}, vb: {value: "sqrt(1.4*8.31*300.15/0.029)", tol: 1e-12}}

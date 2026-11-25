@@ -1,0 +1,8 @@
+# m15b F3 valid neighbours: on the straight flanks just before and after, ay = 0
+media: {rope: {type: string, mu: 10 g/m, tension: 1 N}}
+waves:
+  p: {pulse: {on: rope, shape: "0.01*max(0, 1 - abs(x - 0.5)/0.1)", units: {x: m, y: m}, dir: +x}}
+observe:
+  a1: "ay(p, x=1.5[m], t=0.099[s])"
+  a2: "ay(p, x=1.5[m], t=0.101[s])"
+expect: {a1: 0, a2: 0}

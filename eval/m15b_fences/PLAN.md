@@ -1,6 +1,6 @@
 # Milestone 15b: wrong-answer fences: PLAN
 
-**Status:** a draft for the owner's approval. Nothing is built until it is approved.
+**Status:** **approved by the owner on 2026-11-25**, including the exception for the blind stage (see "Process, and the exception requested").
 **Base:** `main` at `7244bb6`.
 **Context:** step 0 of the roadmap accepted at the project review of 2026-11-25 (`eval/project_review_2026-11/DECISIONS.md`, in PR #24). The defects are listed in `eval/KNOWN_ISSUES.md`, also in PR #24.
 

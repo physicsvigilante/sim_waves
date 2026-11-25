@@ -1,0 +1,6 @@
+# m15b F3: the same edge, ay: y_xx jumps from 0 to 8 1/m there, so y_tt jumps from 0 to 800 m/s^2: refused
+media: {rope: {type: string, mu: 10 g/m, tension: 1 N}}
+waves:
+  p: {pulse: {on: rope, shape: "0.01*max(0, 1 - ((x - 0.5)/0.1)**2)**2", units: {x: m, y: m}, dir: +x}}
+observe: {a: "ay(p, x=1.6[m], t=0.1[s])"}
+expect: {error: rejected, message: "where the acceleration is not defined"}

@@ -1,0 +1,3 @@
+# m15b F6: output in degC^1 would skip the offset (300 K is 26.85 degC): refused
+observe: {c: "300[K] in degC^1"}
+expect: {error: rejected, message: "degC^1"}

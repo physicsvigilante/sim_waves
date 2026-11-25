@@ -1,0 +1,10 @@
+# m15b F4 valid neighbour: at 1.1 s the sound left at 0.1 s: phase = 2 pi 500 * 1.1 - k * 340 = 100 pi; f = 500 Hz
+media: {air: {type: gas, v: 340 m/s}}
+sources:
+  S: {on: air, at: [0 m, 0 m], f: 500 Hz, A: 1, phase: 0, spreading: none, emits_from: 0 s}
+points: {P: [340 m, 0 m]}
+rays: {r: {from: S, to: P}}
+observe:
+  ph: "phase(r, t=1.1[s])"
+  f: "frequency(r, t=1.1[s])"
+expect: {ph: "100*pi", f: 500}

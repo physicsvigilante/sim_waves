@@ -11,7 +11,7 @@ from sympy.simplify.fu import TR8
 from .errors import AmbiguousError, SceneError, UndeterminedError
 import ast
 
-from .expr import Ref, dimension_of, show_dim, translate
+from .expr import Ref, _note, dimension_of, show_dim, translate
 
 ast_unparse = ast.unparse
 from .units import CELSIUS_OFFSET, DIMLESS, FORCE, LENGTH, MASS, TEMP, TIME, dim, split_quantity
@@ -2426,22 +2426,33 @@ def _point(sc, fname, deriv):
         _check_wave_x(wave, x)
         e = wave.field()
         if deriv and e.has(sp.Max, sp.Min, sp.Abs, sp.Heaviside, sp.Piecewise, sp.sign):
+            e0 = e
             e = sp.piecewise_fold(e.rewrite(sp.Piecewise))
-            d = e
+            ds, d = [], e
             for var in deriv:
                 d = sp.diff(d, var)
+                ds.append(d)
             xv, tv = sp.sympify(x), sp.sympify(t)
             if xv.is_number and tv.is_number:
+                # at a breakpoint, a derivative of order n exists only if every derivative of
+                # order 1..n has equal one-sided values there (review m15b, D3-1: comparing
+                # only the last order let ay = 0 through at a corner where vy jumps)
                 from .energy import _breakpoints, _side_piece
-                at_t = sp.piecewise_fold(d.xreplace({T: tv}))
-                for q in _breakpoints(sp.piecewise_fold(e.xreplace({T: tv})), xv - 1, xv + 1, f"{fname}()"):
-                    if sp.simplify(q - xv) != 0:
-                        continue
-                    a, b = _side_piece(at_t, xv, -1), _side_piece(at_t, xv, +1)
-                    if a is not None and b is not None and sp.simplify((a - b).xreplace({X: xv})) != 0:
-                        raise SceneError(f"{fname}(): x = {xv} m is a corner of the shape at that instant, "
-                                         f"where the {'slope' if X in deriv else 'velocity'} is not defined; "
-                                         f"ask just beside it")
+                word = {"vy": "velocity", "ay": "acceleration", "slope": "slope"}.get(fname, "derivative")
+                corners = [q for q in _breakpoints(sp.piecewise_fold(e.xreplace({T: tv})), xv - 1, xv + 1,
+                                                    f"{fname}()") if sp.simplify(q - xv) == 0]
+                for q in corners:
+                    for dk in ds:
+                        at_t = sp.piecewise_fold(dk.xreplace({T: tv}))
+                        a, b = _side_piece(at_t, xv, -1), _side_piece(at_t, xv, +1)
+                        if a is not None and b is not None and sp.simplify((a - b).xreplace({X: xv})) != 0:
+                            raise SceneError(f"{fname}(): x = {xv} m is a corner of the shape at that instant, "
+                                             f"where the {word} is not defined; ask just beside it")
+            else:
+                # a symbolic point: record that it must not be a corner, so at() refuses one
+                # (the same rule as a numeric point, kept beside the value)
+                for g in _switching_args(e0, deriv):
+                    _note(_sc, "nonzero", g.xreplace({X: x, T: t}))
             _check_point(_sc, wave, x, t, fname)
             return d.xreplace({X: x, T: t}).doit()
         _check_point(_sc, wave, x, t, fname)
@@ -2771,16 +2782,38 @@ def _limit(_sc, e, var, value, _written=(), _obligations=()):
     return vals[sides[0]]
 
 
+def _switching_args(e, variables):
+    """The expressions whose zeros are the corners and jumps of e in the given variables:
+    the arguments of abs, step and sign, and the pairwise differences inside max and min.
+    A derivative in those variables does not exist where one of them is zero (in general;
+    a smooth join is decided exactly only by the one-sided check at a numeric point)."""
+    out = []
+    for a in sp.sympify(e).atoms(sp.Abs, sp.Heaviside, sp.sign, sp.DiracDelta, sp.Max, sp.Min):
+        if isinstance(a, (sp.Max, sp.Min)):
+            cands = [p - q for i, p in enumerate(a.args) for q in a.args[i + 1:]]
+        else:
+            cands = [a.args[0]]
+        out += [g for g in cands if any(g.has(v) for v in variables)]
+    return out
+
+
 def _diff(_sc, e, var, n=sp.Integer(1)):
     if not (n.is_Integer and 1 <= n <= 10):
         raise SceneError("diff(): order must be an integer from 1 to 10")
     bv = None if isinstance(var, sp.Symbol) else _sc.bound_variable(var)
     if bv is not None:                 # a bounded symbol n = base + s*offset: d/dn = s*d/d(offset)
         _, p_off, sgn, _ = bv
-        return sp.diff(e, p_off, int(n)) * sgn ** int(n)
-    if not isinstance(var, sp.Symbol):
+        var_, out = p_off, sp.diff(e, p_off, int(n)) * sgn ** int(n)
+    elif not isinstance(var, sp.Symbol):
         raise SceneError("diff(): the second argument must be a variable or symbol")
-    return sp.diff(e, var, int(n))
+    else:
+        var_, out = var, sp.diff(e, var, int(n))
+    # the derivative does not exist where a corner or jump of e in var lies: record that, so
+    # that at() refuses such a point (review m15b, D3-1: at(diff(y(p, x=.., t=t), t), t=corner)
+    # gave 0 from sign(0) = 0)
+    for g in _switching_args(e, [var_]):
+        _note(_sc, "nonzero", g)
+    return out
 
 
 def sample_value(sym, rng):
@@ -3022,7 +3055,7 @@ def _at(sc, e, _obligations=(), **values):
         if h is False and not gs.free_symbols:
             raise SceneError(f"at(): the expression is not defined at these values: it needs {gs} to be "
                              f"{_KIND_WORD[kind]} (a log, root, division, power, tan, asin/acos or wave profile "
-                             f"written in it fails there)")
+                             f"written in it fails there, or a derivative is taken at a corner or jump)")
         if h is not True:
             _note(sc, kind, gs)
     if isinstance(e, sp.Tuple):
@@ -3080,6 +3113,13 @@ def _travel_time(sc, m, start=None, end=None):
     med = _obj(m, (StringMedium, GasMedium), "travel_time")
     if start is None or end is None:
         raise SceneError("travel_time(medium, start=..., end=...): give both positions")
+    # a still-medium service: in moving air (wind) or a moving fluid (flow) the transit time
+    # depends on the direction and the frame, which this integral ignores (review m15b, D3-2)
+    sol = getattr(sc, "solution", None) or {}
+    for c in (getattr(med, "wind", None) or []):
+        if sp.sympify(c).xreplace(sol).is_zero is not True:
+            raise SceneError(f"travel_time(): '{med.name}' moves (wind or flow), and travel_time() is for a "
+                             f"still medium; use a ray and arrives_at(ray, emitted=...) instead")
     a, b = sp.sympify(start), sp.sympify(end)
     lo_, hi_ = getattr(med, "extent", None) or (None, None)
     for pos in (a, b):

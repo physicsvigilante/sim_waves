@@ -1,0 +1,8 @@
+# m15b F4 equivalent spelling: phase at a symbolic t, then at(): refused
+media: {air: {type: gas, v: 340 m/s}}
+sources:
+  S: {on: air, at: [0 m, 0 m], f: 500 Hz, A: 1, phase: 0, spreading: none, emits_from: 0 s}
+points: {P: [340 m, 0 m]}
+rays: {r: {from: S, to: P}}
+observe: {ph: "at(phase(r, t=t), t=0.5[s])"}
+expect: {error: rejected, message: "cannot tell whether the source was already emitting"}

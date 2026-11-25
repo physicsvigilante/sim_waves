@@ -71,12 +71,37 @@ def unit_from_ast(node):
     raise SceneError("malformed unit expression")
 
 
+def _degc_power(node):
+    """The net power of degC in a unit expression (0 if it does not occur)."""
+    if isinstance(node, ast.Name):
+        return 1 if node.id == "degC" else 0
+    if isinstance(node, ast.BinOp):
+        if isinstance(node.op, ast.Pow):
+            n = node.right
+            sign = -1 if isinstance(n, ast.UnaryOp) and isinstance(n.op, ast.USub) else 1
+            n = n.operand if sign == -1 else n
+            return _degc_power(node.left) * sign * (n.value if isinstance(n, ast.Constant) else 0)
+        a, b = _degc_power(node.left), _degc_power(node.right)
+        return a - b if isinstance(node.op, ast.Div) else a + b
+    return 0
+
+
 def parse_unit(text):
     try:
         node = ast.parse(text.replace("^", "**"), mode="eval").body
     except SyntaxError as exc:
         raise SceneError(f"malformed unit '{text}'") from exc
-    return unit_from_ast(node)
+    factor, d = unit_from_ast(node)
+    # degC carries the 273.15 K offset only when written exactly as `degC` (the offset is
+    # applied by that spelling): any other spelling of an absolute Celsius temperature, such
+    # as (degC) or degC^1, would silently lose it, so it is refused (review m15b, D4-5).
+    # Inside a compound unit (1/degC, J/degC, degC/s) degC is a temperature difference, where
+    # no offset applies, and it keeps its meaning.
+    p = _degc_power(node)
+    if p != 0 and (abs(p) > 1 or (d == TEMP and text.strip() != "degC")):
+        raise SceneError(f"unit '{text}': write an absolute Celsius temperature exactly as degC (e.g. 27 degC), "
+                         f"or give it in K")
+    return factor, d
 
 
 _UNIT_TOKEN = re.compile(r"^[A-Za-z0-9_*/^().\-µμ]+$")
@@ -95,5 +120,6 @@ def split_quantity(text):
             factor, d = parse_unit(m.group(2))
             return m.group(1), m.group(2), factor, d
         except SceneError:
-            pass
+            if "degC" in m.group(2):
+                raise                  # a Celsius spelling that would lose its offset (D4-5)
     return text, None, sp.Integer(1), None

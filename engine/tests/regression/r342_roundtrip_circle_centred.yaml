@@ -1,0 +1,9 @@
+# m15b F1: emitted_at(arrives_at(emitted=0)) returns 0
+media: {air: {type: gas, v: 340 m/s}}
+sources:
+  S: {on: air, at: [0 m, 0 m], f: 500 Hz, A: 1, phase: 0, spreading: none}
+points:
+  P: {at: [85 m, 0 m], circle: {center: [0 m, 0 m], speed: 17 m/s, sense: ccw}}
+rays: {r: {from: S, to: P}}
+observe: {back: "emitted_at(r, t=arrives_at(r, emitted=0[s]))"}
+expect: {back: {value: 0, tol: 1e-20}}
