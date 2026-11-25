@@ -6,10 +6,8 @@ from the wave's string at the point (strings with a coordinate variable included
 import sympy as sp
 
 from .errors import SceneError, UndeterminedError
-from .expr import _note
-from .scene import (LENGTH, OBS_DIMS, OBSERVABLES, StringMedium, ShapedPulse, T, WAVES, X, _NONSMOOTH,
-                    _Budget, _check_point, _check_wave_x, _defined_set, _deriv_off_switch, _obj,
-                    _switching_args, _within, dim)
+from .scene import (LENGTH, OBS_DIMS, OBSERVABLES, StringMedium, ShapedPulse, T, WAVES, X,
+                    _Budget, _check_point, _check_wave_x, _defined_set, _obj, _within, dim)
 
 D_ENERGY, D_ELEN = dim(2, 1, -2), dim(1, 1, -2)       # J, J/m
 SYMBOLIC_BUDGET = 10                                 # seconds before a numerical integral is used
@@ -102,23 +100,15 @@ def _density(kind):
         _check_wave_x(wave, x)
         _check_point(sc, wave, x, t, fname)
         m, mu, ten = _string_of(wave, fname)
+        pwf, vy, sl = _fields(wave, fname)
         xv, tv = sp.sympify(x), sp.sympify(t)
-        # F3 fence: a density is refused exactly at a switching or branch point of the shape, by
-        # either spelling (review m15b rounds 1-3: R3, R8, R11). Solved values go in first (R13);
-        # at a numeric point vy and the slope come from the field along one variable, with no
-        # whole-field rewrite, which can exhaust the recursion limit (R12)
-        f0 = wave.field().xreplace(getattr(sc, "solution", None) or {})
-        if not f0.has(X):
-            raise SceneError(f"{fname}(): wave '{wave.name}' does not depend on x")
-        gs = _switching_args(f0, (X, T))
-        at_pt = [sp.sympify(g).xreplace({X: x, T: t}) for g in gs]
-        if gs and xv.is_number and tv.is_number and all(g.is_number for g in at_pt):
-            vy = _deriv_off_switch(f0, T, 1, xv, tv, fname, "energy density")
-            sl = _deriv_off_switch(f0, X, 1, xv, tv, fname, "energy density")
-        else:
-            pwf, vy, sl = _fields(wave, fname)
-            for g in at_pt:
-                _note(sc, "nonzero", g)
+        at_t = pwf.xreplace({T: tv})
+        if xv.is_number and isinstance(at_t, sp.Piecewise):
+            if any(sp.simplify(q - xv) == 0 for q in _breakpoints(at_t, xv - 1, xv + 1, f"{fname}()")):
+                da, db = (_side_piece(sp.diff(at_t, X), xv, s) for s in (-1, 1))
+                if da is not None and db is not None and sp.simplify((da - db).xreplace({X: xv})) != 0:
+                    raise SceneError(f"{fname}(): x = {xv} m is a corner of the shape, where the slope (and the "
+                                     f"stretching energy density) is not defined; ask just beside it")
         rep = {X: xv, T: tv}
         k = (mu * vy ** 2 / 2).xreplace(rep)
         u = (ten * sl ** 2 / 2).xreplace(rep)

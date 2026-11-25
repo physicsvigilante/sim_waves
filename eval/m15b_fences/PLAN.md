@@ -78,7 +78,7 @@ Each fence leaves its defect **open** in `eval/KNOWN_ISSUES.md`, with the full r
 
 ### F3: D3-1, fence. A point derivative at a corner needs every lower order to exist there
 
-> **Superseded in review (rounds 2 and 3):** the owner reduced F3 to a switching-point fence. See "Scope, footprint and stop rule" below. The rule and witnesses here are the original plan.
+> **Moved to M4 (owner, 2026-11-25, after review round 4).** In rounds 2 and 3 the owner first reduced F3 to a switching-point fence. In round 4 the stop rule applied a third time, with causes outside F3's producers, and the owner moved F3 out of this milestone. Its code was reverted to `main`; D3-1 stays open, and its witnesses are kept in `f3_witnesses_for_M4/`. The rule and witnesses below are the original plan, kept as history.
 
 **Defect** ([#21](https://github.com/physicsvigilante/sim_waves/issues/21), severity 1). `_point` ([scene.py L2421–L2452](https://github.com/physicsvigilante/sim_waves/blob/7244bb6fa984c441d9fbcdcbf2954e99c44b5efb/engine/simwaves/scene.py#L2421-L2452)) compares one-sided values of only the **final** derivative at a breakpoint. For `ay` at a triangular pulse's corner, both second-derivative branches are 0, so it reports 0. But the velocity jumps from +1 m/s to −1 m/s there, so there is no finite acceleration.
 
@@ -203,6 +203,17 @@ Existing r168, r203, r204, n11 and example 11_02_cnt_007 must be unchanged.
   - **Sequencing and parity fixes in the same rule:**
     - numeric densities skip the whole-field rewrite (R12);
     - `diff` records switches in x and t too (R14).
+- **Scope decision, by the owner on 2026-11-25 (review round 4): F3 is moved to M4.**
+  - **Why:** the stop rule applied a third time. The causes were outside F3's producers:
+    - `expr.holds` accepts exact-zero conditions on floating-point evidence (R15);
+    - simplification erases roots before any check sees them (R16);
+    - `diff` sees expressions already restricted (R18).
+  - **What was done:**
+    - the F3 code (`_point`, `_diff`, `_at`'s message, the densities) is reverted to `main`;
+    - D3-1 stays open;
+    - the 41 F3 scenes that fail on `main` are kept in `f3_witnesses_for_M4/` as M4's test set;
+    - the valid controls that pass stay in the regression suite.
+  - **This milestone now delivers F1, F2, F4, F5 and F6.** The round-2 and round-3 F3 decisions above are superseded; the round-2 F4 constructor fix (R10) stands.
 - **Stop rule:** if any rule's dependency reaches beyond its listed producers (for example, F3's `diff` route needs changes to the expression parser or the limit machinery), the build **stops and reports**, and that item moves to its milestone.
 - **Unchanged:** physics formulas, the solver, searches, grading. G1 is not touched here; it is M1's.
 
@@ -222,15 +233,15 @@ Existing r168, r203, r204, n11 and example 11_02_cnt_007 must be unchanged.
 After this milestone, without further work:
 - **(a)** every arrival or emission time on circular or piecewise motion is either correct, with a verified residual, or refused;
 - **(b)** no `travel_time` on a moving medium returns a value;
-- **(c)** no point derivative or energy density at a switching or branch point of a shape returns a value, by any spelling (as reduced by the owner's scope decisions in rounds 2 and 3; first written as "unless every lower order exists there");
+- ~~**(c)**~~ (F3, moved to M4 in review round 4; no claim is made for point derivatives at corners);
 - **(d)** no ray phase is reported before its sound exists;
 - **(e)** no width is reported for an unspecified profile;
 - **(f)** no absolute Celsius value loses its offset through its spelling.
 
 **Coverage cost** (recorded in RESULT.md):
 - `travel_time` in wind (use rays);
-- `vy`, `ay`, `slope` and the energy densities exactly at switching and branch points, including smooth ones (C¹ joins, inactive `max` branches, nodes, zero fields, smooth branch points), and `max_in`/`min_in` over ranges containing them (rounds 2 and 3);
 - timed phase with a symbolic time for switched-on sources;
+- every length-based result (phase, phase difference, intensity) of a stated-length ray in wind (review round 2, R10);
 - `width` of arbitrary-function pulses;
 - non-canonical Celsius spellings.
 

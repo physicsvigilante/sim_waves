@@ -1,5 +1,5 @@
-# m15b round 2: r98's maximum over a range inside the transmitted pulse (its smooth edges at x = 6/5 m and 9/5 m excluded,
-# where the F3 fence refuses the density): the same 9 pi^2/3200
+# m15b control: r98's maximum over a range inside the transmitted pulse (its edges at x = 6/5 m and 9/5 m
+# excluded): the same 9 pi^2/3200
 assume:
   - "Joint is massless, strings are long (one junction only); only the first interaction is modelled."
   - "Observation instant for (d) is t = 0.05 s, after the pulse has fully crossed; any later instant gives the same maximum."

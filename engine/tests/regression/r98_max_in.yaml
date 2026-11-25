@@ -1,8 +1,4 @@
 # m8 post-run: max_in / min_in, the largest value over a range (reserved R2(d) needed it by hand)
-# m15b round 2 (coverage cost of the F3 switching-point fence, owner's decision): the range [1, 2] m
-# contains the transmitted pulse's smooth edges at x = 6/5 m and 9/5 m, switching points of step(), so the
-# density is refused there and max_in is refused (it was 9 pi^2/3200); r401 keeps the value with a
-# range inside the pulse
 assume:
   - "Joint is massless, strings are long (one junction only); only the first interaction is modelled."
   - "Observation instant for (d) is t = 0.05 s, after the pulse has fully crossed; any later instant gives the same maximum."
@@ -19,4 +15,4 @@ given:
   - {fact: "tension(left) == 36[N]", source: stated}
 observe:
   KEd_max: "max_in(x, kinetic_density(p_transmitted, x=x, t=0.05[s]), 1.0[m], 2.0[m])"
-expect: {error: rejected, message: "is not defined for every x in the range"}
+expect: {KEd_max: "9*pi**2/3200"}

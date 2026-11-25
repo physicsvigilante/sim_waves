@@ -89,3 +89,33 @@ Astra's review: a source trace and component reproductions in SymPy 1.14.
 - The recursion error: r425.
 - A wrongly refused valid neighbour: r426.
 - Two message changes: r422, r428.
+
+## Round 4: commit `b8021de58501bf3a5e7f0a348bdc9f1ad08230be`, verdict FAIL
+
+Astra's review was published as a PR comment, [7155552505](https://github.com/physicsvigilante/sim_waves/pull/25#issuecomment-7155552505). It was a source trace plus SymPy 1.14 component reproductions.
+- **R1–R14:** resolved, or accepted costs.
+- **R15–R19:** new and REQUIRED.
+- **The stop rule:** Astra said it applies again. R15, R16 and R18 share one structural cause: the canonical expression, its written domain and switch provenance, and the admissibility of the returned derivative do not travel together. That reaches `expr.py`'s condition semantics, the capture of the written profile, and restriction before `diff`.
+
+| # | Astra's finding | Disposition |
+|---|---|---|
+| **R15** | `at(slope(w, x=x, t=0), x=0)` for `0.01*step(x+sin(π/7)^2+cos(π/7)^2-1)`: the exact zero `x + c` is accepted as nonzero, because `holds` falls back to a floating-point residual (~1e-166). The result is a slope of 0 at a jump | **Moved to M4 with F3.** The cause is `expr.holds`' proof standard, outside F3's producers |
+| **R16** | `0.01*sqrt(-x^2)^2` (and `cos(acos(1+x^2))`) simplifies to a smooth polynomial before the fence sees the root, so the slope at 0 is 0 where no neighbourhood exists | **Moved to M4 with F3.** It needs switch and branch provenance from the written profile |
+| **R17** | Solved-first is not used by `diff` (through `field(w)`) or by the density fallback: `0.01*(x-10t)^a` with a = 1 is refused or undefined, where the slope is 0.01 and the potential density 1/20000 J/m | **Moot after the revert.** `diff` and the densities are back to `main` and refuse these points; no wrong value. Kept for M4's solved-first contract |
+| **R18** | Parity: `diff(y(w, x=0, t=t), t)` of `0.01 t \|x\|` gives 0 (true), while the fence refuses `vy` there | **Moved to M4 with F3:** whether the contract covers restricted expressions |
+| **R19** | Linux CI red: r02_symbolic_period hit the 2048 MB memory limit; the other suites were skipped | r02 uses only `y` and the solver, not code changed in round 3. It passes locally at 256 MB on b8021de and on a1387e3, and it passed in every earlier CI run. **The failed job was re-run;** its result is in the PR comment for the next commit |
+
+**The owner's decision (2026-11-25), applying the PLAN's stop rule ("that item moves to its milestone"): F3 is moved to M4.**
+- **Production code:** `scene.py` (`_point`, `_diff`, `_switching_args` and the fence helpers, `_at`'s message, the import) and `energy.py` (`_density`) are reverted to `main` (`7244bb6`). F2's `_travel_time` guard and F5's `_width` guard are kept.
+- **Production diff against `main`:** `doppler.py` (F1), `scene.py` (F2), `rays.py` (F4, including R5 and R10), `energy.py` (F5), `units.py` (F6). 78 lines added, 5 removed.
+- **Tests:**
+  - The 41 F3 scenes that fail on the reverted engine moved to `eval/m15b_fences/f3_witnesses_for_M4/`, with a README listing their classes and the round-4 witnesses still to add.
+  - r98 is restored to `main`'s version.
+  - r358 is restored to its stage-1 version (`vy` = 0 at the C¹ edge; `main` gives it).
+  - The valid controls that pass stay in the regression suite: r352, r356, r357, r358, r377, r382, r401, r411, r415, r416, r423, r430.
+- **Documentation:**
+  - **FORMAT.md:** the derivative section is back to `main`'s text, with a note that D3-1 is open for M4. The F1, F2, F4, F5 and F6 notes stay.
+  - **PLAN:** the round-4 scope decision is recorded, F3's section is marked as moved, and cost hypothesis (c) is withdrawn. The coverage cost gains R10's stated-length rays in wind.
+  - **BRIEF:** the F3 row, witnesses and limitations are marked as history.
+  - **PR description:** updated.
+- **D3-1 stays open** in the known-issues ledger, with every witness from rounds 1–4. Policy point 11 is respected: no wrong value is accepted as fixed. The engine's F3 behaviour is exactly `main`'s.

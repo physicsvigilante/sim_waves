@@ -11,7 +11,7 @@ from sympy.simplify.fu import TR8
 from .errors import AmbiguousError, SceneError, UndeterminedError
 import ast
 
-from .expr import Ref, _note, dimension_of, show_dim, translate
+from .expr import Ref, dimension_of, show_dim, translate
 
 ast_unparse = ast.unparse
 from .units import CELSIUS_OFFSET, DIMLESS, FORCE, LENGTH, MASS, TEMP, TIME, dim, split_quantity
@@ -2424,38 +2424,25 @@ def _point(sc, fname, deriv):
         if x is None or t is None:
             raise SceneError(f"{fname}(): give both x= and t=")
         _check_wave_x(wave, x)
-        # values already solved from facts go in first, before any switch is classified (review
-        # m15b round 3, R13 and R11: a solved parameter decides where the switching points are)
-        e = wave.field().xreplace(getattr(_sc, "solution", None) or {})
-        gs = _switching_args(e, (X, T)) if deriv else []
-        if gs:
-            # F3 (D3-1), a fence: a point derivative is refused exactly at a switching point of
-            # the shape (a zero of an argument of abs, step or sign, of a difference inside max
-            # or min, or of a piecewise condition) or a branch point (a zero of the base of a
-            # root or fractional power; asin/acos at +-1), by every spelling. Elsewhere the shape
-            # is smooth around the point and the formula's derivative is exact. Whether such a
-            # point is a smooth join is not decided here (review m15b rounds 2-3: the owner's
-            # scope decisions; the precise rule is M4's)
-            word = {"vy": "velocity", "ay": "acceleration", "slope": "slope"}.get(fname, "derivative")
-            at_pt = [sp.sympify(g).xreplace({X: x, T: t}) for g in gs]
-            if all(sp.sympify(g).is_number for g in at_pt) and sp.sympify(x).is_number and \
-                    sp.sympify(t).is_number:
-                val = _deriv_off_switch(e, deriv[0], len(deriv), sp.sympify(x), sp.sympify(t), fname, word)
-                _check_point(_sc, wave, x, t, fname)
-                return val
-            # a symbolic point, or switching points that depend on an unknown not yet solved:
-            # each switching argument must be nonzero there, recorded for at() or the post-solve
-            # check
-            for g in at_pt:
-                _note(_sc, "nonzero", g)
-            _check_point(_sc, wave, x, t, fname)
-            try:
-                d = sp.piecewise_fold(e.rewrite(sp.Piecewise))
-            except RecursionError:
-                raise SceneError(f"{fname}(): the shape could not be split into smooth pieces; ask at a "
-                                 f"numeric point") from None
+        e = wave.field()
+        if deriv and e.has(sp.Max, sp.Min, sp.Abs, sp.Heaviside, sp.Piecewise, sp.sign):
+            e = sp.piecewise_fold(e.rewrite(sp.Piecewise))
+            d = e
             for var in deriv:
                 d = sp.diff(d, var)
+            xv, tv = sp.sympify(x), sp.sympify(t)
+            if xv.is_number and tv.is_number:
+                from .energy import _breakpoints, _side_piece
+                at_t = sp.piecewise_fold(d.xreplace({T: tv}))
+                for q in _breakpoints(sp.piecewise_fold(e.xreplace({T: tv})), xv - 1, xv + 1, f"{fname}()"):
+                    if sp.simplify(q - xv) != 0:
+                        continue
+                    a, b = _side_piece(at_t, xv, -1), _side_piece(at_t, xv, +1)
+                    if a is not None and b is not None and sp.simplify((a - b).xreplace({X: xv})) != 0:
+                        raise SceneError(f"{fname}(): x = {xv} m is a corner of the shape at that instant, "
+                                         f"where the {'slope' if X in deriv else 'velocity'} is not defined; "
+                                         f"ask just beside it")
+            _check_point(_sc, wave, x, t, fname)
             return d.xreplace({X: x, T: t}).doit()
         _check_point(_sc, wave, x, t, fname)
         for var in deriv:
@@ -2463,52 +2450,6 @@ def _point(sc, fname, deriv):
         return e.xreplace({X: x, T: t}).doit()
     return f
 
-
-_NONSMOOTH = (sp.Abs, sp.Heaviside, sp.sign, sp.DiracDelta, sp.Max, sp.Min, sp.floor, sp.ceiling, sp.frac, sp.Mod)
-_UNSPLIT = (sp.Abs, sp.Heaviside, sp.sign, sp.Max, sp.Min, sp.floor, sp.ceiling, sp.frac, sp.Mod)
-
-
-def _pieces_1d(r, fname, word):
-    """r (an expression in X only) split into smooth pieces, or refused."""
-    try:
-        r = sp.piecewise_fold(sp.sympify(r).rewrite(sp.Piecewise))
-    except RecursionError:
-        r = None
-    if r is None or r.has(*_UNSPLIT):
-        raise SceneError(f"{fname}(): the shape near this point could not be split into smooth pieces, so "
-                         f"whether the {word} exists here cannot be checked; ask just beside it")
-    return r
-
-
-def _off_switch(e, xv, tv, fname, word):
-    """Refuse the numeric point (xv, tv) if it is a switching point of e, or if that cannot be
-    decided exactly: every switching argument must be proved nonzero there."""
-    for g in _switching_args(e, (X, T)):
-        gp = sp.sympify(g).xreplace({X: xv, T: tv})
-        z = gp.is_zero
-        if z is None:
-            z = sp.simplify(gp).is_zero
-        if z is True:
-            raise SceneError(f"{fname}(): this point is a corner or jump of the shape (a switching or branch "
-                             f"point, where {g} = 0, inside abs, max, min, step, a root or asin/acos), where "
-                             f"the {word} is not defined or not checked; ask just beside it")
-        if z is not False:
-            raise SceneError(f"{fname}(): cannot tell whether this point is a corner or jump of the shape "
-                             f"(whether {gp} = 0), so the {word} is not checked; ask just beside it")
-
-
-def _deriv_off_switch(e, var, n, xv, tv, fname, word):
-    """The n-th derivative in var (X or T) of the field e at a numeric point that is not a
-    switching point (refused otherwise). It is taken from the field along var through the point
-    only (rewriting the whole field into pieces can exhaust the recursion limit); the point is
-    inside one piece, so the piece's derivative is the derivative."""
-    _off_switch(e, xv, tv, fname, word)
-    s0 = xv if var == X else tv
-    r = _pieces_1d(e.xreplace({T: tv}) if var == X else e.xreplace({X: xv, T: X}), fname, word)
-    val = sp.diff(r, X, n).xreplace({X: s0}).doit()
-    if val.has(sp.Piecewise, *_NONSMOOTH):
-        raise SceneError(f"{fname}(): the {word} could not be evaluated at this point; ask just beside it")
-    return val
 
 def _phase(_sc, w, x=None, t=None):
     wave = _obj(w, WAVES, "phase")
@@ -2830,54 +2771,16 @@ def _limit(_sc, e, var, value, _written=(), _obligations=()):
     return vals[sides[0]]
 
 
-def _switching_args(e, variables):
-    """The expressions whose zeros are the corners and jumps of e in the given variables:
-    the arguments of abs, step and sign, the pairwise differences inside max and min, and
-    piecewise conditions; and its branch points: the base of a root or other non-integer power,
-    and 1 -+ the argument of asin/acos. A derivative may not exist where one of them is zero; the
-    F3 fence refuses there without deciding whether it does."""
-    out = []
-    for a in sp.sympify(e).atoms(sp.Piecewise, *_NONSMOOTH):
-        if isinstance(a, (sp.Max, sp.Min)):
-            cands = [p - q for i, p in enumerate(a.args) for q in a.args[i + 1:]]
-        elif isinstance(a, sp.Piecewise):
-            cands = [rel.lhs - rel.rhs for _, c in a.args for rel in
-                     ([c] if isinstance(c, sp.Rel) else list(sp.sympify(c).atoms(sp.Rel)))]
-        elif isinstance(a, (sp.floor, sp.ceiling, sp.frac, sp.Mod)):
-            cands = [sp.sin(sp.pi * a.args[0])] if not isinstance(a, sp.Mod) else [sp.sin(sp.pi * a.args[0] / a.args[1])]
-        else:
-            cands = [a.args[0]]
-        out += [g for g in cands if any(g.has(v) for v in variables)]
-    # branch points (review m15b round 3, R11: sqrt(x^2 + (10 t)^2) has a cusp where its base
-    # is 0): the base of a root or other non-integer power, and asin/acos at +-1
-    for a in sp.sympify(e).atoms(sp.Pow):
-        if a.exp.is_integer is not True:
-            out += [a.base] if any(a.base.has(v) for v in variables) else []
-    for a in sp.sympify(e).atoms(sp.asin, sp.acos):
-        if any(a.args[0].has(v) for v in variables):
-            out += [1 - a.args[0], 1 + a.args[0]]
-    return out
-
-
 def _diff(_sc, e, var, n=sp.Integer(1)):
     if not (n.is_Integer and 1 <= n <= 10):
         raise SceneError("diff(): order must be an integer from 1 to 10")
     bv = None if isinstance(var, sp.Symbol) else _sc.bound_variable(var)
     if bv is not None:                 # a bounded symbol n = base + s*offset: d/dn = s*d/d(offset)
         _, p_off, sgn, _ = bv
-        var_, out = p_off, sp.diff(e, p_off, int(n)) * sgn ** int(n)
-    elif not isinstance(var, sp.Symbol):
+        return sp.diff(e, p_off, int(n)) * sgn ** int(n)
+    if not isinstance(var, sp.Symbol):
         raise SceneError("diff(): the second argument must be a variable or symbol")
-    else:
-        var_, out = var, sp.diff(e, var, int(n))
-    # the derivative does not exist where a corner or jump of e in var lies: record that, so
-    # that at() refuses such a point (review m15b, D3-1: at(diff(y(p, x=.., t=t), t), t=corner)
-    # gave 0 from sign(0) = 0)
-    # the same switching and branch points as the point fence: those in x and t as well as in
-    # the variable (review m15b round 3, R14: at(diff(field(w), t), x=0, t=1) of t*abs(x))
-    for g in _switching_args(e, {var_, X, T}):
-        _note(_sc, "nonzero", g)
-    return out
+    return sp.diff(e, var, int(n))
 
 
 def sample_value(sym, rng):
@@ -3119,7 +3022,7 @@ def _at(sc, e, _obligations=(), **values):
         if h is False and not gs.free_symbols:
             raise SceneError(f"at(): the expression is not defined at these values: it needs {gs} to be "
                              f"{_KIND_WORD[kind]} (a log, root, division, power, tan, asin/acos or wave profile "
-                             f"written in it fails there, or a derivative is taken at a corner or jump)")
+                             f"written in it fails there)")
         if h is not True:
             _note(sc, kind, gs)
     if isinstance(e, sp.Tuple):

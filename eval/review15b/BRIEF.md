@@ -2,7 +2,7 @@
 
 **For:** ChatGPT (Astra), the independent reviewer.
 **PLAN (approved 2026-11-25):** `eval/m15b_fences/PLAN.md`. Base: `main` at `7244bb6`.
-**What this milestone is:** one correct fix and five fences (sound refusals) for six confirmed defects. No physics formula changes, and no new capability. The fenced defects stay open in the known-issues ledger for their later milestones.
+**What this milestone is:** one correct fix and five fences (sound refusals) for six confirmed defects. **Update after review round 4:** the owner moved F3 (D3-1) to M4; its code was reverted, so the F3 row, witnesses and limitations below are history only (see the PLAN and `f3_witnesses_for_M4/`). No physics formula changes, and no new capability. The fenced defects stay open in the known-issues ledger for their later milestones.
 
 **What to hunt for, in order:**
 1. **A wrong value still accepted through another spelling of a fenced input** (the review policy: a rule must cover equivalent ways of writing the same input).
@@ -17,7 +17,7 @@ Expected values below are computed by hand. No reserved problems exist for this 
 |---|---|---|---|
 | **F1** (D3-6, a fix) | `doppler.py` `Leg._bisect` | Both bisected functions increase strictly when motion is subsonic relative to the air, so one update rule (g > 0 moves the upper end) serves both branches. The bracket g(lo) ≤ 0 ≤ g(hi) is checked first; the unsquared residual must be ≤ 10⁻²⁰·max(1, v·\|x − ref\|) at the result, or the time is refused | other circular geometries; a source on a circle (emission branch); wind with circular motion; echoes involving a circle; times at segment boundaries (`starts`) |
 | **F2** (D3-2) | `scene.py` `_travel_time` | `travel_time` is refused on a gas or fluid unless every `wind`/`flow` component is proved zero after the solve | wind solved from a fact; symbolic wind; wind in other units; 3-D wind; a fluid with `flow` |
-| **F3** (D3-1) | `scene.py` `_point`, `_switching_args`, `_diff`; the message in `_at` | **Numeric point:** at a breakpoint, a derivative of order n needs every order 1…n to have equal one-sided values. **Symbolic point, or `diff`:** the switching argument (inside abs, max/min, step, sign) must be nonzero, recorded as a condition that `at()` checks | other routes to a point derivative at a corner (`max_in`, `frequency_of`, energy densities, views); `diff` in x at a spatial corner; nested `at`; a C¹ join through the `diff` route (refused conservatively; see Limitations) |
+| **F3** (D3-1) | *moved to M4 in round 4; code reverted to main* | (history: a precise one-sided rule, then a switching-point fence) | — |
 | **F4** (D3-3) | `rays.py` `_ray_phase` | For a source with `emits_from`, `phase(ray, t=)` runs the same causal check as a timed frequency (`doppler.trace`); "no sound yet", or refused if it cannot be decided | reflected rays; `phase_difference`; a source with `starts`; a time just after onset |
 | **F5** (D2-3) | `energy.py` `_width` | `width()` is refused when the shape contains any unspecified function | F through a derived (reflected or transmitted) pulse; F combined with explicit terms |
 | **F6** (D4-5) | `units.py` `parse_unit` (and `split_quantity`) | If degC's net power in a unit is nonzero, either it is ±1 inside a compound unit that is not pure temperature (a difference, allowed), or the unit text must be exactly `degC`; anything else is refused | spellings in fields, `in <unit>`, `nearest(x in …)`, expected values; `degC^-1`; `K*degC/K` |
@@ -33,7 +33,7 @@ Expected values below are computed by hand. No reserved problems exist for this 
 - the refused cases would be 1 s downstream and 9/8 s upstream; the old engine gave 18/17 s both ways;
 - valid neighbours: zero wind gives 18/17 s; a string at 10 m/s over 2 m gives 0.2 s; a ray in the wind gives **1 s** (360 − 20t = 340t).
 
-**F3:** string at v = 10 m/s.
+**F3 (history; moved to M4):** string at v = 10 m/s.
 - The triangle's tip passes x = 1.5 m at t = 0.1 s: there, y(t) = 0.01 − \|t − 0.1\|, so vy jumps from +1 to −1, and `ay` is refused (the old engine gave 0). On the flanks, `ay` = 0.
 - `at(diff(y, t), t=0.099)` = **+1 m/s**.
 - `at(vy(x=x, t=0.1), x=1.49)` = **−1 m/s**.
@@ -55,8 +55,8 @@ Expected values below are computed by hand. No reserved problems exist for this 
 
 ## Limitations, and what is deliberately left open
 
-- **Conservative refusals (a declared cost):** through `diff` or a symbolic point, a derivative exactly at a switching point is refused even where it exists (a smooth C¹ join). The precise one-sided check runs only at a numeric point in `vy`/`slope`/`ay`.
-- **Coverage cost:** `travel_time` in wind; `vy`/`ay`/`slope`/densities exactly at switching and branch points (rounds 2–3; see the PLAN's scope decisions); timed phase at a symbolic time for switched-on sources; `width` of unspecified profiles; non-canonical Celsius spellings.
+- **F3 moved to M4 (round 4):** no corner-derivative rule is delivered here; the earlier "conservative refusals" and "precise one-sided check" limitations no longer apply.
+- **Coverage cost:** `travel_time` in wind; every L-based ray result in wind, including stated-length paths (R10); timed phase at a symbolic time for switched-on sources; `width` of unspecified profiles; non-canonical Celsius spellings.
 - **Found during the build, not fixed here (outside the stop list):** a value that cannot be converted to a number (for example DiracDelta(0)) makes `run.py`'s realness check abort the **whole scene**, outside the per-observable error handling ([run.py L644](https://github.com/physicsvigilante/sim_waves/blob/7244bb6fa984c441d9fbcdcbf2954e99c44b5efb/engine/simwaves/run.py#L644)). It was reached by `at(diff(y, t, 2), corner)`, which F3 now refuses earlier. It will be added to the ledger as **G4**.
 - **Test grading:** G1 (the harness passes symbolic comparisons unchecked) is unfixed until M1. So every new expected value here is a number or a refusal, and every refusal is a scene with one observable.
 - **Untouched:** the solver, searches, grading, `expr.py` and `run.py`.

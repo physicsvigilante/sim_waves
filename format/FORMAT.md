@@ -718,26 +718,9 @@ never `omega(w)`: both are 1/s, so the dimension check cannot catch it.
     `max_in` and `min_in` likewise need their extreme value taken somewhere. A shape with
     infinitely many breakpoints (`step(sin(x))`) is handled only over a finite range. An energy needs the profile defined over the whole
     stretch, and `width` needs the shape defined everywhere.
-  - A derivative at a point (`vy`, `ay`, `slope`) and an energy density (`kinetic_density`,
-    `potential_density`, `energy_density`) are refused exactly at a **switching point** of the
-    shape: where an argument of `abs` or `step` is 0, or where two arguments of `max` or `min`
-    are equal. It also covers **branch points**: where the expression under a root or other
-    fractional power is 0 (`sqrt(x^2 + (10*t)^2)` has a cusp at x = 0, t = 0), or the argument
-    of `asin`/`acos` is ±1. The derivative may not exist there (a corner, a jump, an isolated
-    spike, a cusp), and the engine does not decide whether it does. Ask just beside it. Away
-    from these points the shape is smooth around the point, and the value is exact.
-  - Values solved from `given` facts are put in first, so a switching point that depends on a
-    solved unknown (`abs(x - a)` with `a == 1`) is found where it lies.
-  - The same holds for a derivative written with `diff(...)` (including switching points in
-    x or t when differentiating in the other), or read at a symbolic point, and then placed on
-    a switching point with `at(...)`. It also holds for `max_in`/`min_in` of such an expression
-    over a range that contains a switching point.
-  - **Coverage cost:** some switching points are smooth, and these are refused too:
-    - a C¹ edge such as `max(0, 1 - u^2)^2` (where `vy` is 0);
-    - an inactive branch of a `max`;
-    - a node where two opposite pulses meet;
-    - a field that is identically 0 there;
-    - a smooth branch point.
+  - At a corner of a shape, `vy` and `slope` are undefined and refused; ask just beside it.
+    (Known gaps at corners, jumps and branch points, for example `ay` at a corner or a derivative
+    placed on a corner with `at(...)`, are open defect D3-1, to be fenced in milestone M4.)
   - Observables can be nested, e.g.
     `front(p, t=travel_time(rope, start=0[m], end=3[m])/2)`.
   - `step(u)` is 1 for u >= 0, else 0. Shapes can be built from `max`, `abs` and `step`.
