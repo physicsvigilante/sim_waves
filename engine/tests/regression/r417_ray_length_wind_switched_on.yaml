@@ -1,0 +1,7 @@
+# m15b round 2 R10 (F4): a stated-length path in a 20 m/s wind: the delay depends on the direction, which a length does not give (1 s downstream, 9/8 s upstream; round 1 returned 700 pi/17): phase refused
+media: {air: {type: gas, v: 340 m/s, wind: [20 m/s, 0 m/s]}}
+sources:
+  S: {on: air, f: 500 Hz, A: 1, phase: 0, spreading: none, emits_from: 0 s}
+rays: {r: {from: S, length: 360 m}}
+observe: {ph: "phase(r, t=1.1[s])"}
+expect: {error: rejected, message: "the air moves"}

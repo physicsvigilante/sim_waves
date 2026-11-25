@@ -186,6 +186,15 @@ Existing r168, r203, r204, n11 and example 11_02_cnt_007 must be unchanged.
 
 - **Expected size:** about 100–150 changed production lines, plus FORMAT.md notes for each refusal.
 - **Scope change, approved by the owner on 2026-11-25 (review round 1, R3):** F3's producers now include the energy densities (`energy.py` `_density`), which share F3's regularity check; the stop rule was applied and the owner chose to extend F3 rather than leave that spelling open.
+- **Scope decisions, by the owner on 2026-11-25 (review round 2):**
+  - **The stop rule (CLAUDE.md point 5) applied to F3,** after two rounds with the same cause: a precise regularity check missed edge cases. **F3 is reduced to a switching-point fence.** A point derivative or energy density is refused exactly at any zero of a switching argument (abs, step, sign, max/min differences, piecewise conditions), decided exactly; elsewhere the formula's derivative is exact.
+  - **The coverage cost is recorded in FORMAT.md:**
+    - C¹ joins (r358);
+    - inactive `max` branches (r387);
+    - nodes;
+    - `max_in` over a range that contains a smooth edge (r98; r401 keeps the value inside the pulse).
+  - **The precise rule stays M4's.**
+  - **F4's producers now include the `Ray` constructor:** a stated-length path in moving air is `moving`, as a geometric path already was (R10).
 - **Stop rule:** if any rule's dependency reaches beyond its listed producers (for example, F3's `diff` route needs changes to the expression parser or the limit machinery), the build **stops and reports**, and that item moves to its milestone.
 - **Unchanged:** physics formulas, the solver, searches, grading. G1 is not touched here; it is M1's.
 

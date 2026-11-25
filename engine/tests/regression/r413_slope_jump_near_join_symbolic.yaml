@@ -1,0 +1,6 @@
+# m15b round 2 R9 (F3): 0.01*(x^2*step(x) + step(x - 1e-13)): a smooth join at 0 and a 0.01 m jump at 1e-13 m, closer than the old 1e-12 tolerance (round 1 checked the wrong breakpoint and returned 2e-15): at(slope(x=x), x=1e-13) refused
+media: {rope: {type: string, mu: 10 g/m, tension: 1 N}}
+waves:
+  p: {pulse: {on: rope, shape: "0.01*(x^2*step(x)+step(x-1e-13))", units: {x: m, y: m}, dir: +x}}
+observe: {s: "at(slope(p, x=x, t=0[s]), x=1e-13[m])"}
+expect: {error: rejected, message: "a derivative is taken at a corner or jump"}

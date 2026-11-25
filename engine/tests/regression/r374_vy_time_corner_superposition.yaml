@@ -4,4 +4,4 @@ waves:
     given: "0.01*(abs(x-10*t)+abs(x+10*t))"
     units: {x: m, t: s, y: m}
 observe: {v: "vy(w, x=0[m], t=0[s])"}
-expect: {error: rejected, message: "has a corner along t"}
+expect: {error: rejected, message: "is a corner or jump of the shape"}

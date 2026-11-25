@@ -1,0 +1,19 @@
+# m15b round 2: r98's maximum over a range inside the transmitted pulse (its smooth edges at x = 6/5 m and 9/5 m excluded,
+# where the F3 fence refuses the density): the same 9 pi^2/3200
+assume:
+  - "Joint is massless, strings are long (one junction only); only the first interaction is modelled."
+  - "Observation instant for (d) is t = 0.05 s, after the pulse has fully crossed; any later instant gives the same maximum."
+media:
+  left: {type: string, mu: 0.090 kg/m, tension: 36 N}
+  right: {type: string, mu: 0.010 kg/m, tension: 36 N}
+junctions:
+  J: {at: 0 m, left: left, right: right}
+waves:
+  p: {pulse: {on: left, shape: "0.0025*(1 + cos(pi*(x + 0.5)/0.1))*(step(x + 0.6) - step(x + 0.4))", units: {x: m, y: m}, dir: +x}}
+given:
+  - {fact: "mu(left) == 0.090[kg/m]", source: stated}
+  - {fact: "mu(right) == 0.010[kg/m]", source: stated}
+  - {fact: "tension(left) == 36[N]", source: stated}
+observe:
+  KEd_max: "max_in(x, kinetic_density(p_transmitted, x=x, t=0.05[s]), 1.21[m], 1.79[m])"
+expect: {KEd_max: "9*pi**2/3200"}

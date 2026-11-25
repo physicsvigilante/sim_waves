@@ -213,7 +213,10 @@ class Ray:
             if self.L.is_positive is False or (self.L.is_number and not self.L > 0):
                 raise SceneError(f"{w}.length: must be positive")
             self.to = None
-            self.moving = src.motion.moving
+            # moving air makes a stated path moving too, as it does a geometric one: the delay
+            # then depends on the direction, which a length does not give (review m15b round 2, R10)
+            wind = getattr(src.medium, "wind", None)
+            self.moving = src.motion.moving or bool(wind and any(_dop._decide(c) != "zero" for c in wind))
             if "phase_change" in spec:
                 self.dphi = sc.quantity(spec["phase_change"], DIMLESS, f"{w}.phase_change")
             return

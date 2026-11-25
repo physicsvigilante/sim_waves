@@ -492,7 +492,8 @@ rays:
   - sound asked for before it was emitted ("no sound yet"). For a source with `emits_from`,
     this covers `phase(ray, t=...)` too (on a stated-length path the delay is length/v), and a
     phase at a symbolic time is then refused, because whether the sound exists cannot be
-    decided. A ray in moving air (`wind`) has no phase at all in v0.
+    decided. A ray in moving air (`wind`), whether geometric or of stated length, has no phase
+    at all in v0.
 
 ## Energy on strings
 
@@ -717,20 +718,20 @@ never `omega(w)`: both are 1/s, so the dimension check cannot catch it.
     `max_in` and `min_in` likewise need their extreme value taken somewhere. A shape with
     infinitely many breakpoints (`step(sin(x))`) is handled only over a finite range. An energy needs the profile defined over the whole
     stretch, and `width` needs the shape defined everywhere.
-  - A derivative at a point is taken along one variable: `vy` and `ay` along t at the given x,
-    `slope` along x at the given t. Where the wave, taken along that variable through the
-    point, has a jump or a corner, the derivative is undefined and refused; ask just beside
-    it. This includes a jump in the displacement itself (a `step` passing), a corner in time
-    at a fixed x (as where two opposite V profiles cross), and, for `ay`, a jump in the
-    velocity. A corner of an inactive branch (inside a `max` whose value comes from another
-    argument there) is not a corner of the wave and is no obstacle. For `vy` and `ay`, the
-    velocity must also agree on both sides in x: where two opposite pulses meet at a node it
-    is refused, although the node itself does not move (conservative).
-  - The same holds for a derivative written with `diff(...)` or read at a symbolic point and
-    then placed on a corner with `at(...)`, and for the energy densities (`kinetic_density`
-    needs the velocity, `potential_density` the slope, `energy_density` both), by either
-    spelling. At a symbolic point each switching point (inside `abs`, `max`, `min`, `step`)
-    is decided by the same rule; one that cannot be decided is refused.
+  - A derivative at a point (`vy`, `ay`, `slope`) and an energy density (`kinetic_density`,
+    `potential_density`, `energy_density`) are refused exactly at a **switching point** of the
+    shape: where an argument of `abs` or `step` is 0, or where two arguments of `max` or `min`
+    are equal. The derivative may not exist there (a corner, a jump, an isolated spike), and the
+    engine does not decide whether it does. Ask just beside it. Away from switching points the
+    shape is smooth around the point, and the value is exact.
+  - The same holds for a derivative written with `diff(...)`, or read at a symbolic point, and
+    then placed on a switching point with `at(...)`. It also holds for `max_in`/`min_in` of such
+    an expression over a range that contains a switching point.
+  - **Coverage cost:** some switching points are smooth, and these are refused too:
+    - a C¹ edge such as `max(0, 1 - u^2)^2` (where `vy` is 0);
+    - an inactive branch of a `max`;
+    - a node where two opposite pulses meet;
+    - a field that is identically 0 there.
   - Observables can be nested, e.g.
     `front(p, t=travel_time(rope, start=0[m], end=3[m])/2)`.
   - `step(u)` is 1 for u >= 0, else 0. Shapes can be built from `max`, `abs` and `step`.

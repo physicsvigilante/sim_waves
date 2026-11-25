@@ -1,6 +1,9 @@
-# m15b F3 valid neighbour: a pulse with a smooth (C1) edge, 0.01*max(0, 1 - u^2)^2 with u = (x - 0.5 - 10 t)/0.1; at its edge (x = 1.6 m, t = 0.1 s) the slope is 0 on both sides, so vy = 0
+# m15b F3 (round 2, coverage cost of the switching-point fence chosen by the owner): a pulse with a smooth
+# (C1) edge, 0.01*max(0, 1 - u^2)^2 with u = (x - 0.5 - 10 t)/0.1; at its edge (x = 1.6 m, t = 0.1 s) the
+# true vy is 0 (the slope is 0 on both sides), but the edge is a switching point, so it is refused; the
+# precise rule is M4's
 media: {rope: {type: string, mu: 10 g/m, tension: 1 N}}
 waves:
   p: {pulse: {on: rope, shape: "0.01*max(0, 1 - ((x - 0.5)/0.1)**2)**2", units: {x: m, y: m}, dir: +x}}
 observe: {v: "vy(p, x=1.6[m], t=0.1[s])"}
-expect: {v: 0}
+expect: {error: rejected, message: "is a corner or jump of the shape"}

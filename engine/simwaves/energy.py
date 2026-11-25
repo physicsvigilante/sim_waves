@@ -6,9 +6,10 @@ from the wave's string at the point (strings with a coordinate variable included
 import sympy as sp
 
 from .errors import SceneError, UndeterminedError
+from .expr import _note
 from .scene import (LENGTH, OBS_DIMS, OBSERVABLES, StringMedium, ShapedPulse, T, WAVES, X, _NONSMOOTH,
-                    _Budget, _check_point, _check_wave_x, _defined_set, _note_corners, _obj,
-                    _point_regular, _regular_along, _switching_args, _within, dim)
+                    _Budget, _check_point, _check_wave_x, _defined_set, _deriv_off_switch, _obj,
+                    _switching_args, _within, dim)
 
 D_ENERGY, D_ELEN = dim(2, 1, -2), dim(1, 1, -2)       # J, J/m
 SYMBOLIC_BUDGET = 10                                 # seconds before a numerical integral is used
@@ -103,20 +104,17 @@ def _density(kind):
         m, mu, ten = _string_of(wave, fname)
         pwf, vy, sl = _fields(wave, fname)
         xv, tv = sp.sympify(x), sp.sympify(t)
-        # the density needs the velocity (kinetic), the slope (potential) or both at the point:
-        # the same regularity rule as vy and slope (review m15b round 1, R3: the symbolic
-        # spelling at(potential_density(p, x=x, t=..), x=corner) gave a value at a corner)
+        # F3 fence: a density is refused exactly at a switching point of the shape, by either
+        # spelling (review m15b rounds 1-2, R3 and R8); off it, vy and the slope are the field's
+        # own derivatives there
         f0 = wave.field()
-        needs = {"kinetic": (T,), "potential": (X,), "total": (T, X)}[kind]
         if f0.has(sp.Piecewise, *_NONSMOOTH):
             if xv.is_number and tv.is_number:
-                for var in needs:
-                    word = ("velocity (and the kinetic energy density)" if var == T else
-                            "slope (and the stretching energy density)")
-                    _regular_along(f0, var, 1, xv, tv, fname, word)
+                vy = _deriv_off_switch(f0, T, 1, xv, tv, fname, "energy density")
+                sl = _deriv_off_switch(f0, X, 1, xv, tv, fname, "energy density")
             else:
-                _note_corners(sc, [g.xreplace({X: x, T: t}) for g in _switching_args(f0, needs)],
-                              _point_regular(f0, needs, 1, x, t, fname, "energy density"))
+                for g in _switching_args(f0, (X, T)):
+                    _note(sc, "nonzero", g.xreplace({X: x, T: t}))
         rep = {X: xv, T: tv}
         k = (mu * vy ** 2 / 2).xreplace(rep)
         u = (ten * sl ** 2 / 2).xreplace(rep)

@@ -32,3 +32,33 @@ Astra's review: a source trace with independent SymPy 1.14 and 65-digit mpmath c
 **Coverage cost, disclosed:**
 - `vy` and `ay` at a node where two opposite pulses meet (r99) stay refused, though the node does not move. This is the PLAN's kept x-side comparison.
 - A switching argument whose zeros cannot be listed (more than one free symbol, or no finite solution) is still recorded whole.
+
+## Round 2: commit `963f25ea8288646dc4ab0bf6396fa538a73e8002`, verdict FAIL
+
+Astra's review: [6052771314](https://github.com/physicsvigilante/sim_waves/pull/25#pullrequestreview-6052771314). It was a source trace plus a reconstruction of the helpers in SymPy 1.14 and 60-digit mpmath checks.
+- **R1–R5:** the original witnesses are resolved.
+- **R6:** withdrawn. Geometric rays in wind are already refused.
+- **R7–R10:** new, all REQUIRED.
+- **The stop rule:** Astra said CLAUDE.md point 5 applies to R7–R9. They share round 1's cause: local piecewise regularity, symbolic admissibility and the returned value are not one contract.
+
+**The owner's scope decisions (2026-11-25, recorded in the PLAN):**
+- **F3 is reduced to a switching-point fence**, not repaired precisely. The precise rule is M4's.
+- **For F4, the `Ray` constructor fix is approved.**
+
+| # | Astra's finding | Reproduced at 963f25e? | What was done | Regressions |
+|---|---|---|---|---|
+| **R7** | An isolated spike, `0.01*step(x)*step(-x)`: slope, vy and potential density returned 0; the open-side values match, but the point value differs | yes | **The fence:** at a numeric point, every switching argument (of abs, step, sign; the pairwise differences in max and min; piecewise conditions) must be **proved** nonzero, exactly, or the point is refused, whether it is a corner or cannot be decided. Away from those points, the derivative comes from the piece containing the point, along the one variable. At a symbolic point, and through `diff`, every switching argument is recorded as nonzero for `at()` to check. The precise one-sided machinery (`_regular_1d`, `_regular_along`, `_note_corners`, `_point_regular`) is removed | r402–r405 |
+| **R8** | A switching point where the field is 0 (`0.01*x*step(x)*step(-x)`): the symbolic, `diff` and density spellings returned 0.01 or 0.00005 J/m. And `abs(x)*(2*step(x)-1)` through `diff` gave 0 | yes | **The same fence.** All spellings refuse at the switching point (a coverage cost: there the field is identically 0). Numeric densities now use the derivative of the piece containing the point, not the whole-field branch | r406–r410; valid neighbours r411 (0.01, 0.01, 0) |
+| **R9** | Breakpoints closer than the 1e-12 tolerance: the wrong one was checked, and slope at 1e-13 m returned 2e-15 where the shape jumps; `1e-31*step(x)` was accepted under the 1e-30 tolerance; `abs(x)` at 1e-13 m was refused | yes | **The same fence.** There is no tolerance: each switching argument is decided exactly at the point (decimals are exact rationals) | r412–r414 (refused); r415 (4e-15 beside both points), r416 (`abs(x)` at 1e-13 m: 0.01) |
+| **R10** | A stated-length ray in wind skipped the wind check: `phase` returned 700π/17 | yes | **The constructor fix:** a stated-length path in nonzero (or unproved) wind is `moving`, as a geometric path already was. So `L`, and every phase built from it, is refused | r417, r418 (refused); r419 (zero wind: 100π) |
+
+**Optional hardening (the `MemoryError` catch around `solveset`):** moot, because `_note_corners` is removed.
+
+**Coverage cost of the fence (the owner's decision; in FORMAT.md):** these smooth switching points are now refused:
+- r358: the C¹ pulse edge, where `vy` = 0 was expected (it was a PLAN valid neighbour);
+- r387: an inactive `max` branch (−0.1 m/s), with r400 just beside it;
+- r406–r409: the identically-zero field;
+- r99: the meeting node;
+- r98: `max_in` of a kinetic density over a range containing the transmitted pulse's smooth edges, which was 9π²/3200. r401 keeps that value with a range inside the pulse.
+
+The expectations of r358 and r98 were changed to refusals. Both comments say why.
